@@ -1,0 +1,33 @@
+package mayfly.dao;
+
+import mayfly.dao.base.BaseMapper;
+import mayfly.entity.Menu;
+import org.apache.ibatis.annotations.Select;
+
+import java.util.List;
+
+/**
+ * @Description: 菜单Mapper
+ * @author: hml
+ * @date: 2018/6/27 下午2:36
+ */
+public interface MenuMapper extends BaseMapper<Menu> {
+
+//    @Select("SELECT m.id, m.pid, m.weight, m.name, m.type, m.code, " +
+//            "m.api_id AS 'api.id', a.method AS 'api.method', a.status As 'api.status', a.uri_pattern AS 'api.uriPattern' " +
+//            "FROM tb_menu m LEFT JOIN tb_api a ON m.api_id = a.id " +
+//            "WHERE m.status = 1 AND m.id IN " +
+//            "(SELECT DISTINCT(rm.menu_id) " +
+//            "FROM tb_permission p JOIN tb_role r ON p.role_Id = r.id AND p.user_id = #{userId} AND r.status = 1 " +
+//            "JOIN tb_role_menu rm ON r.id = rm.role_id)")
+//    List<Menu> selectByUserId(Integer userId);
+
+    @Select("SELECT m.id, m.pid, m.weight, m.name, m.code, m.icon, m.path " +
+            "FROM tb_menu m WHERE m.status = 1 AND " +
+            "m.id IN " +
+            "(SELECT DISTINCT(rmb.menu_btn_id) " +
+            "FROM tb_permission p JOIN tb_role r ON p.role_Id = r.id AND p.user_id = #{userId} AND r.status = 1 " +
+            "JOIN tb_role_menu_btn rmb ON rmb.role_id = r.id AND rmb.type = 1)" +
+            "ORDER BY m.pid ASC, m.weight DESC")
+    List<Menu> selectByUserId(Integer userId);
+}
