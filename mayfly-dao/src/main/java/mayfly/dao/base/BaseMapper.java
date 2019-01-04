@@ -11,11 +11,16 @@ import org.apache.ibatis.jdbc.SQL;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
 
+/**
+ * meilin.huang
+ * @param <Entity>
+ */
 public interface BaseMapper<Entity> {
 
     /**
@@ -26,6 +31,10 @@ public interface BaseMapper<Entity> {
     @InsertProvider(type = InsertSqlProvider.class, method = "sql")
     @Options(useGeneratedKeys = true)
     Integer insert(Entity entity);
+
+//    @InsertProvider(type = BatchInsertSqlProvider.class, method = "sql")
+//    @Options(useGeneratedKeys = true)
+//    Integer batchInsert(List<Entity> entities);
 
     /**
      * 根据主键id更新实体，若实体field为null，则对应数据库的字段也更新为null
@@ -84,6 +93,25 @@ public interface BaseMapper<Entity> {
                     .INTO_VALUES(Stream.of(table.getFields()).map(this::bindParameter).toArray(String[]::new))
                     .toString();
 
+        }
+    }
+
+    class BatchInsertSqlProvider extends SqlProviderSupport {
+        public String sql(Object entities, ProviderContext context) {
+            TableInfo table = tableInfo(context);
+
+            int size = ((List)((Map)entities).get("list")).size();
+            String value = "(" + String.join(",", Stream.of(table.getFields()).map(this::bindParameter).toArray(String[]::new)) + ")";
+            String[] values = new String[size];
+            Arrays.fill(values, value);
+
+            SQL sql = new SQL()
+                    .INSERT_INTO(table.getTableName())
+                    .INTO_COLUMNS(table.getColumns());
+            StringBuilder sqlBuilder =  new StringBuilder(sql.toString());
+            sqlBuilder.append(" VALUES ");
+            sqlBuilder.append(String.join(",", values));
+            return sqlBuilder.toString();
         }
     }
 

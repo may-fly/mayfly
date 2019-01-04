@@ -51,6 +51,11 @@ public class BaseServiceImpl<M extends BaseMapper<E>, E> implements BaseService<
     }
 
     @Override
+    public List<E> listAll() {
+        return getMapper().selectAll("id DESC");
+    }
+
+    @Override
     public List<E> listByCondition(E e) {
         return getMapper().selectByCriteria(e);
     }

@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSON;
 import java.io.Serializable;
 
 /**
- * controller 统一结果返回
+ * web 统一结果返回
  * @author meilin.huang
  * @version 1.0
  * @date 2018-09-14 上午10:53

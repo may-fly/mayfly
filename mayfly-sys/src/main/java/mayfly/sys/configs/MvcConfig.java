@@ -4,7 +4,7 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import mayfly.sys.interceptor.PermissionInterceptor;
-import mayfly.sys.service.PermissionService;
+import mayfly.sys.service.permission.PermissionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;

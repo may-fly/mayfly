@@ -13,7 +13,7 @@ public class StringUtils {
         return str == null || str.trim().length() == 0;
     }
 
-    public static void main(String[] args) {
-        isEmpty("");
-    }
+//    public static void main(String[] args) {
+//        isEmpty("");
+//    }
 }

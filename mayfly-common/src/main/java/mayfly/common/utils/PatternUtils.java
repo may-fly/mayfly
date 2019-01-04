@@ -26,7 +26,7 @@ public class PatternUtils {
     }
 
     class Registery{
-        private Map<String, String> store = new HashMap<>();
+        private Map<String, String> store = new HashMap();
 
         public void put(String key, String value) {
             store.put(key, value);
@@ -37,25 +37,6 @@ public class PatternUtils {
         }
     }
 
-    public static void main(String[] args) throws Exception{
-        String urlPattern = "/v1/hospital/{id}/doctors/1";
-        String uri = "/v1/hospital/1/doctors/1";
-        String uri2 = "/v1/hospital/doctors";
-
-//        PatternUtils p = new PatternUtils();
-//        p.set("1", "haha");
-//
-//        PatternUtils p2 = new PatternUtils();
-//        p2.set("1","hehe");
-//        System.out.println(p.get("1"));
-//        System.out.println(p2.get("1"));
-//
-//        BitSet bit = new BitSet(21);
-//        System.out.println(Integer.toBinaryString(65));
-//        System.out.println(128 >> 6);
-
-        System.out.println(match(uri, Arrays.asList("/v1/hospital/{id}/doctors/{did}", "/v1/hospital/doctors")));
-    }
 
     public static boolean match(String requestUri, List<String> uris) {
         if (uris.contains(requestUri)) {

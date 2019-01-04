@@ -213,8 +213,8 @@ public class PlaceholderResolver {
         String replace(String placeholderValue);
     }
 
-    public static void main(String[] args) {
-        String tem = "${id}:${userId}";
-        System.out.print(getDefaultResolver().resolveByObject(tem,1));
-    }
+//    public static void main(String[] args) {
+//        String tem = "${id}:${userId}";
+//        System.out.print(getDefaultResolver().resolveByObject(tem,1));
+//    }
 }

@@ -14,7 +14,7 @@ import java.util.List;
 public interface MenuMapper extends BaseMapper<Menu> {
 
 //    @Select("SELECT m.id, m.pid, m.weight, m.name, m.type, m.code, " +
-//            "m.api_id AS 'api.id', a.method AS 'api.method', a.status As 'api.status', a.uri_pattern AS 'api.uriPattern' " +
+//            "m.api_id AS 'permission.id', a.method AS 'permission.method', a.status As 'permission.status', a.uri_pattern AS 'permission.uriPattern' " +
 //            "FROM tb_menu m LEFT JOIN tb_api a ON m.api_id = a.id " +
 //            "WHERE m.status = 1 AND m.id IN " +
 //            "(SELECT DISTINCT(rm.menu_id) " +
@@ -25,9 +25,9 @@ public interface MenuMapper extends BaseMapper<Menu> {
     @Select("SELECT m.id, m.pid, m.weight, m.name, m.code, m.icon, m.path " +
             "FROM tb_menu m WHERE m.status = 1 AND " +
             "m.id IN " +
-            "(SELECT DISTINCT(rmb.menu_btn_id) " +
-            "FROM tb_permission p JOIN tb_role r ON p.role_Id = r.id AND p.user_id = #{userId} AND r.status = 1 " +
-            "JOIN tb_role_menu_btn rmb ON rmb.role_id = r.id AND rmb.type = 1)" +
+            "(SELECT DISTINCT(rmb.resource_id) " +
+            "FROM tb_role_user p JOIN tb_role r ON p.role_Id = r.id AND p.user_id = #{userId} AND r.status = 1 " +
+            "JOIN tb_role_resource rmb ON rmb.role_id = r.id AND rmb.type = 1)" +
             "ORDER BY m.pid ASC, m.weight DESC")
     List<Menu> selectByUserId(Integer userId);
 }

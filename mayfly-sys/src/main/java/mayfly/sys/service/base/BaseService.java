@@ -52,6 +52,8 @@ public interface BaseService< E> {
      */
     List<E> listAll(String orderBy);
 
+    List<E> listAll();
+
     /**
      * 根据实体条件查询实体列表
      * @param e

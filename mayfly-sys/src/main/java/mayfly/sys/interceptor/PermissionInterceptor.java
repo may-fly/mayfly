@@ -1,12 +1,13 @@
 package mayfly.sys.interceptor;
 
+import mayfly.common.exception.BusinessException;
 import mayfly.common.result.Result;
 import mayfly.common.utils.StringUtils;
-import mayfly.common.web.PermissionHandler;
-import mayfly.common.web.RequestUri;
-import mayfly.common.web.UriPattern;
-import mayfly.sys.service.PermissionService;
+import mayfly.common.web.auth.PermissionHandler;
+import mayfly.common.web.auth.PermissionInfo;
+import mayfly.sys.service.permission.PermissionService;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
@@ -28,6 +29,7 @@ public class PermissionInterceptor implements HandlerInterceptor {
         this.permissionService = permissionService;
     }
 
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         if (request.getMethod().equals(RequestMethod.OPTIONS.name())) {
@@ -42,16 +44,32 @@ public class PermissionInterceptor implements HandlerInterceptor {
             sendErrorMessage(response, Result.withoutPermission());
             return false;
         }
-
-        //校验用户权限uri中是否含有该uri匹配的uriPattern
-        UriPattern pattern = permissionHandler.matchAndReturnPattern(new RequestUri(request.getMethod(), request.getRequestURI())
-                , permissionService.getUriPermissionByToken(token));
-        if (pattern == null){
-            sendErrorMessage(response, Result.withoutPermission());
+        //获取该方法上的权限code
+        PermissionInfo pi = PermissionHandler.getInstance().getPermissionInfo(((HandlerMethod)handler).getMethod());
+        if (pi == null) {
+            return true;
+        }
+        try {
+            if (permissionService.hasPermission(token, pi.getPermissionCode())) {
+                return true;
+            }
+        } catch (BusinessException e) {
+            sendErrorMessage(response, Result.error(e.getMessage()));
             return false;
         }
 
-        return true;
+        sendErrorMessage(response, Result.withoutPermission());
+        return false;
+
+
+//        //校验用户权限uri中是否含有该uri匹配的uriPattern
+//        UriPattern pattern = permissionHandler.matchAndReturnPattern(new RequestUri(request.getMethod(), request.getRequestURI())
+//                , permissionService.getUriPermissionByToken(token));
+//        if (pattern == null){
+//            sendErrorMessage(response, Result.withoutPermission());
+//            return false;
+//        }
+
     }
 
     /**

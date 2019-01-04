@@ -4,6 +4,7 @@ import lombok.Data;
 import mayfly.dao.base.annotation.NoColumn;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -18,9 +19,13 @@ public class Role implements Serializable {
 
     private String name;
 
-    private Integer menuId;
+    private String remark;
 
     private Byte status;
+
+    private LocalDateTime createTime;
+
+    private LocalDateTime updateTime;
 
     @NoColumn
     private List<Menu> menus;
