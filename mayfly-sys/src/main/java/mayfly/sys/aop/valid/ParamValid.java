@@ -1,7 +1,7 @@
 package mayfly.sys.aop.valid;
 
 import mayfly.common.result.Result;
-import mayfly.common.validation.ParamErrorException;
+import mayfly.common.validation.ParamValidErrorException;
 import mayfly.common.validation.aop.AopParamValidator;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -33,7 +33,7 @@ public class ParamValid {
 
         try {
             AopParamValidator.getInstance().validate(method, args);
-        } catch (ParamErrorException e) {
+        } catch (ParamValidErrorException e) {
             return Result.paramError(e.getMessage());
         }
         return joinPoint.proceed();

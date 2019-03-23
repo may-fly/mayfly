@@ -1,8 +1,11 @@
 package mayfly.sys.service.base.impl;
 
+import com.github.pagehelper.PageHelper;
+import mayfly.common.result.Page;
 import mayfly.dao.base.BaseMapper;
-import mayfly.sys.common.SpringUtils;
+import mayfly.sys.common.utils.SpringUtils;
 import mayfly.sys.service.base.BaseService;
+import mayfly.sys.web.form.PageForm;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
@@ -58,6 +61,17 @@ public class BaseServiceImpl<M extends BaseMapper<E>, E> implements BaseService<
     @Override
     public List<E> listByCondition(E e) {
         return getMapper().selectByCriteria(e);
+    }
+
+    @Override
+    public Page<E> listByCondition(E e, PageForm pageForm) {
+        PageHelper.startPage(pageForm.getPageNum(), pageForm.getPageSize());
+        List<E> result = listByCondition(e);
+        if (result instanceof com.github.pagehelper.Page) {
+            com.github.pagehelper.Page<E> pageResult = (com.github.pagehelper.Page<E>)result;
+            return Page.with(pageResult.getTotal(), pageResult.getResult());
+        }
+        return Page.empty();
     }
 
     @Override

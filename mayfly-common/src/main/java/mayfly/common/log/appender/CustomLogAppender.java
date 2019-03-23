@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
  */
 public class CustomLogAppender extends AppenderBase<ILoggingEvent> {
 
-    private static final String IP = LocalUtils.getLocalIp();
+    private static final String IP = LocalUtils.getLocalAddress();
 
     /**
      * 日志格式编码

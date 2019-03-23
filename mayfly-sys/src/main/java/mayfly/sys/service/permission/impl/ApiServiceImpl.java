@@ -44,7 +44,7 @@ public class ApiServiceImpl extends BaseServiceImpl<ApiMapper, Permission> imple
         LocalDateTime now = LocalDateTime.now();
         permission.setCreateTime(now);
         permission.setUpdateTime(now);
-        permission.setStatus(StatusEnum.ENABLE.value());
+        permission.setStatus(StatusEnum.ENABLE.getValue());
         return save(permission);
     }
 

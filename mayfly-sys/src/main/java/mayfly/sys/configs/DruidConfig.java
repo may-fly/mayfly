@@ -32,7 +32,7 @@ public class DruidConfig {
 
         //白名单：
         servletRegistrationBean.addInitParameter("allow", druidProperties.getAllow());
-        //IP黑名单 (存在共同时，deny优先于allow) : 如果满足deny的话提示:Sorry, you are not permitted to view this page.
+        //IP黑名单 (存在共同时，deny优先于allow) : 如果满足deny的话提示:Sorry, you are not permitted to view this pageNum.
         servletRegistrationBean.addInitParameter("deny", druidProperties.getDeny());
         //登录查看信息的账号密码.
         servletRegistrationBean.addInitParameter("loginUsername", druidProperties.getLoginUsername());

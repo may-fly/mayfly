@@ -30,7 +30,7 @@ public class ApiGroupServiceImpl extends BaseServiceImpl<ApiGroupMapper, ApiGrou
         LocalDateTime now = LocalDateTime.now();
         apiGroup.setCreateTime(now);
         apiGroup.setUpdateTime(now);
-        apiGroup.setStatus(StatusEnum.ENABLE.value());
+        apiGroup.setStatus(StatusEnum.ENABLE.getValue());
         return save(apiGroup);
     }
 }

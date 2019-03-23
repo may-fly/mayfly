@@ -24,7 +24,7 @@ public class ApiGroup {
 
     private String description;
 
-    private Byte status;
+    private Integer status;
 
     private LocalDateTime createTime;
 

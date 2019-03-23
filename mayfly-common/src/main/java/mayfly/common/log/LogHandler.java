@@ -2,8 +2,8 @@ package mayfly.common.log;
 
 import mayfly.common.utils.StringUtils;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -39,11 +39,7 @@ public class LogHandler {
      */
     public LogInfo getLogInfo(Method method) {
         String invoke = method.getDeclaringClass().getName() + "." + method.getName();
-        LogInfo logInfo = LOG_CACHE.get(invoke);
-        if (logInfo == null) {
-            logInfo = parseLogMsg(method);
-        }
-        return logInfo;
+        return LOG_CACHE.computeIfAbsent(invoke, key -> parseLogMsg(method));
     }
 
 
@@ -59,17 +55,15 @@ public class LogHandler {
 
         MethodLog log = method.getAnnotation(MethodLog.class);
         if (log == null) {
-            throw new RuntimeException(invoke + "方法必须添加@MethodLog注解！");
+            throw new IllegalArgumentException(invoke + "方法必须添加@MethodLog注解！");
         }
 
         //获取调用方法中不需要记录日志的参数索引位置
         List<Integer> noNeedLogParamIndex = new ArrayList<>(8);
-        Annotation[][] as = method.getParameterAnnotations();
-        for (int i = 0; i < as.length; i++) {
-            for (int j = 0; j < as[i].length; j++) {
-                if (as[i][j] instanceof NoNeedLogParam) {
-                    noNeedLogParamIndex.add(i);
-                }
+        Parameter[] params = method.getParameters();
+        for (int i = 0; i < params.length; i++) {
+            if (params[i].isAnnotationPresent(NoNeedLogParam.class)) {
+                noNeedLogParamIndex.add(i);
             }
         }
 
@@ -77,8 +71,6 @@ public class LogHandler {
         String paramPlaceholder = "";
         if (noNeedLogParamIndex.isEmpty()) {
             //如果没有不需要记录的参数则直接根据参数个数生成对应个数的占位符
-            //jdk8
-//                paramPlaceholder = Stream.of(args).map(a -> "[" + index.getAndIncrement() + "]:{}").collect(Collectors.joining(","));
             StringBuilder builder = new StringBuilder();
             for (int i = 0; i < argsCount; i++) {
                 if (i == 0) {
@@ -120,7 +112,6 @@ public class LogHandler {
 
         LogInfo logInfo = LogInfo.builder(descAndInvoke.toString()).noNeedLogParamIndex(noNeedLogParamIndex)
                 .time(log.time()).result(log.result()).build();
-        LOG_CACHE.put(invoke, logInfo);
         return logInfo;
     }
 

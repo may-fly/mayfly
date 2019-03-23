@@ -7,7 +7,7 @@ import mayfly.common.validation.annotation.Valid;
 import mayfly.common.web.auth.Permission;
 import mayfly.entity.Role;
 import mayfly.entity.RoleResource;
-import mayfly.sys.common.BeanUtils;
+import mayfly.sys.common.utils.BeanUtils;
 import mayfly.sys.service.permission.RoleService;
 import mayfly.sys.web.permission.form.RoleForm;
 import org.springframework.beans.factory.annotation.Autowired;

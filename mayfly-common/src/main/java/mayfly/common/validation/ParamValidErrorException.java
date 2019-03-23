@@ -6,9 +6,9 @@ package mayfly.common.validation;
  * @description: 校验参数错误异常
  * @date 2018-10-28 10:35 AM
  */
-public class ParamErrorException extends Exception {
+public class ParamValidErrorException extends Exception {
 
-    public ParamErrorException(String msg) {
+    public ParamValidErrorException(String msg) {
         super(msg);
     }
 }

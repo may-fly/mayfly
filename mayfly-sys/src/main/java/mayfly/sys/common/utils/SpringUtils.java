@@ -1,4 +1,4 @@
-package mayfly.sys.common;
+package mayfly.sys.common.utils;
 
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;

@@ -6,7 +6,7 @@ import mayfly.common.result.Result;
 import mayfly.common.validation.annotation.Valid;
 import mayfly.common.web.auth.Permission;
 import mayfly.entity.ApiGroup;
-import mayfly.sys.common.BeanUtils;
+import mayfly.sys.common.utils.BeanUtils;
 import mayfly.sys.service.permission.ApiGroupService;
 import mayfly.sys.web.permission.form.ApiGroupForm;
 import org.springframework.beans.factory.annotation.Autowired;

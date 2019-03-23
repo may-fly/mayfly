@@ -22,11 +22,11 @@ public class PermissionForm {
     private String code;
 
     @NotNull
-    private Byte method;
+    private Integer method;
 
     @NotBlank
     private String description;
 
     @ValueIn(values = {"0", "1"})
-    private Byte status;
+    private Integer status;
 }

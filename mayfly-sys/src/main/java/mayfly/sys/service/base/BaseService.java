@@ -1,5 +1,8 @@
 package mayfly.sys.service.base;
 
+import mayfly.common.result.Page;
+import mayfly.sys.web.form.PageForm;
+
 import java.util.List;
 
 /**
@@ -60,6 +63,8 @@ public interface BaseService< E> {
      * @return
      */
     List<E> listByCondition(E e);
+
+    Page<E> listByCondition(E e, PageForm pageForm);
 
     E getById(Integer id);
 

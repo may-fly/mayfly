@@ -6,7 +6,7 @@ import mayfly.common.result.Result;
 import mayfly.common.validation.annotation.Valid;
 import mayfly.common.web.auth.Permission;
 import mayfly.entity.Menu;
-import mayfly.sys.common.BeanUtils;
+import mayfly.sys.common.utils.BeanUtils;
 import mayfly.sys.service.permission.MenuService;
 import mayfly.sys.web.permission.form.MenuForm;
 import mayfly.sys.web.permission.form.MenuQueryForm;

@@ -45,7 +45,7 @@ public class MenuServiceImpl extends BaseServiceImpl<MenuMapper, Menu> implement
             }
         }
         //默认启用
-        menu.setStatus(StatusEnum.ENABLE.value());
+        menu.setStatus(StatusEnum.ENABLE.getValue());
         menu.setCreateTime(LocalDateTime.now());
         menu.setUpdateTime(LocalDateTime.now());
         return save(menu);

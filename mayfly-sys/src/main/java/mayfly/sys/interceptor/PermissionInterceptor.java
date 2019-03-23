@@ -1,6 +1,6 @@
 package mayfly.sys.interceptor;
 
-import mayfly.common.exception.BusinessException;
+import mayfly.common.exception.BusinessRuntimeException;
 import mayfly.common.result.Result;
 import mayfly.common.utils.StringUtils;
 import mayfly.common.web.auth.PermissionHandler;
@@ -53,7 +53,7 @@ public class PermissionInterceptor implements HandlerInterceptor {
             if (permissionService.hasPermission(token, pi.getPermissionCode())) {
                 return true;
             }
-        } catch (BusinessException e) {
+        } catch (BusinessRuntimeException e) {
             sendErrorMessage(response, Result.error(e.getMessage()));
             return false;
         }

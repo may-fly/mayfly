@@ -18,9 +18,9 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ValidationHandler {
 
     /**
-     * 字段校验缓存，key:className   value: fieldInfo对象
+     * 字段校验缓存，key:class   value: fieldInfo对象
      */
-    private static final Map<String, List<FieldInfo>> CATCH = new ConcurrentHashMap<>(32);
+    private static final Map<Class, List<FieldInfo>> CACHE = new ConcurrentHashMap<>(32);
 
     /**
      * 校验器注册
@@ -48,9 +48,9 @@ public class ValidationHandler {
     /**
      * 校验对象中字段是否符合字段注解上的规则
      * @param obj  需要校验参数值的对象
-     * @throws ParamErrorException  若不符合指定注解的参数值则抛出该异常
+     * @throws ParamValidErrorException  若不符合指定注解的参数值则抛出该异常
      */
-    public void validate(Object obj) throws ParamErrorException {
+    public void validate(Object obj) throws ParamValidErrorException {
         for (FieldInfo fieldInfo : getFieldInfoList(obj)) {
             Field field = fieldInfo.field;
             Object fieldValue = null;
@@ -58,13 +58,13 @@ public class ValidationHandler {
                 field.setAccessible(true);
                 fieldValue = field.get(obj);
             } catch (Exception e) {
-                throw new ParamErrorException(fieldInfo.field.getName() + "参数异常");
+                throw new ParamValidErrorException(fieldInfo.field.getName() + "参数异常");
             }
             //遍历field字段需要校验的校验器
             for(Validator validator : fieldInfo.validators) {
                 ValidResult result = validator.validation(field, fieldValue);
                 if (!result.isRight()) {
-                    throw new ParamErrorException(result.getMessage());
+                    throw new ParamValidErrorException(result.getMessage());
                 }
             }
         }
@@ -77,9 +77,7 @@ public class ValidationHandler {
      */
     public List<FieldInfo> getFieldInfoList(Object obj) {
         Class clazz = obj.getClass();
-        String className = clazz.getName();
-
-        List<FieldInfo> fieldInfoList = CATCH.get(className);
+        List<FieldInfo> fieldInfoList = CACHE.get(clazz);
         if (fieldInfoList == null) {
             fieldInfoList = new ArrayList<>(8);
             for (Field field : clazz.getDeclaredFields()) {
@@ -88,7 +86,7 @@ public class ValidationHandler {
                     fieldInfoList.add(fi);
                 }
             }
-            CATCH.put(className, fieldInfoList);
+            CACHE.put(clazz, fieldInfoList);
         }
         return fieldInfoList;
     }

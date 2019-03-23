@@ -2,8 +2,10 @@ package mayfly.common.utils;
 
 import java.lang.reflect.Field;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.function.Function;
 
 /**
  * 占位符解析器
@@ -91,7 +93,7 @@ public class PlaceholderResolver {
      * @param rule  解析规则回调
      * @return
      */
-    public String resolveByRule(String content, ReplaceRule rule) {
+    public String resolveByRule(String content, Function<String, String> rule) {
         int start = content.indexOf(this.placeholderPrefix);
         if (start == -1) {
             return content;
@@ -102,7 +104,7 @@ public class PlaceholderResolver {
             //获取占位符属性值，如${id}, 即获取id
             String placeholder = result.substring(start + this.placeholderPrefix.length(), end);
             //替换整个占位符内容，即将${id}值替换为替换规则回调中的内容
-            String replaceContent = placeholder.trim().isEmpty() ? "" : rule.replace(placeholder);
+            String replaceContent = placeholder.trim().isEmpty() ? "" : rule.apply(placeholder);
             result.replace(start, end + this.placeholderSuffix.length(), replaceContent);
             start = result.indexOf(this.placeholderPrefix, start + replaceContent.length());
         }
@@ -200,21 +202,11 @@ public class PlaceholderResolver {
     }
 
 
-    /**
-     * 替换规则回调
-     */
-    @FunctionalInterface
-    interface ReplaceRule {
-        /**
-         * 替换占位符方法
-         * @param placeholderValue  占位符中的属性值，如模板中含有${id}，则其placeholderValue 为id
-         * @return
-         */
-        String replace(String placeholderValue);
+    public static void main(String[] args) {
+        String tem = "${id}:${userId}";
+        Map<String, Object> map = new HashMap<>();
+        map.put("id", "1");
+        map.put("userId", "2323");
+        System.out.print(getDefaultResolver().resolveByMap(tem, map));
     }
-
-//    public static void main(String[] args) {
-//        String tem = "${id}:${userId}";
-//        System.out.print(getDefaultResolver().resolveByObject(tem,1));
-//    }
 }

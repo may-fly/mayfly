@@ -26,11 +26,11 @@ public class Permission implements Serializable {
 
     private String uriPattern;
 
-    private Byte method;
+    private Integer method;
 
     private Integer groupId;
 
-    private Byte status;
+    private Integer status;
 
     public LocalDateTime createTime;
 

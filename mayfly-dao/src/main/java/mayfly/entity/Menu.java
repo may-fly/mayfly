@@ -35,7 +35,7 @@ public class Menu implements Serializable {
 
     private String code;
 
-    private Byte status ;
+    private Integer status ;
 
     private LocalDateTime createTime;
 

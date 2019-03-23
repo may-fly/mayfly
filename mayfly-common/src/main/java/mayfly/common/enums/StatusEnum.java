@@ -1,56 +1,41 @@
 package mayfly.common.enums;
 
-import java.util.stream.Stream;
-
 /**
  * @author meilin.huang
  * @version 1.0
  * @date 2018-12-07 1:43 PM
  */
-public enum StatusEnum {
+public enum StatusEnum implements BaseEnum{
     /**
      * 禁用状态
      */
-    DISABLE((byte)0),
+    DISABLE(0, "禁用"),
 
     /**
      * 启用状态
      */
-    ENABLE((byte)1);
+    ENABLE(1, "启用");
 
     /**
      * 状态值
      */
-    private byte value;
-    StatusEnum(byte value) {
+    private Integer value;
+
+    private String name;
+
+    StatusEnum(Integer value, String name) {
         this.value = value;
-    }
-
-    public byte value() {
-        return value;
+        this.name = name;
     }
 
 
-    /**
-     * 校验该状态值是否存在
-     * @param value
-     * @return
-     */
-    public static boolean checkStatusValue(byte value) {
-        for (StatusEnum statusEnum : StatusEnum.values()) {
-            if (value == statusEnum.value) {
-                return true;
-            }
-        }
-        return false;
+    @Override
+    public Integer getValue() {
+        return this.value;
     }
 
-    /**
-     * 将所有状态值转换为String类型，以便于在@ValueIn注解中使用
-     * @return
-     */
-    public static String[] toStringArr() {
-        return Stream.of(StatusEnum.values()).map(status -> String.valueOf(status.value)).toArray(String[]::new);
+    @Override
+    public String getName() {
+        return this.name;
     }
-
 }

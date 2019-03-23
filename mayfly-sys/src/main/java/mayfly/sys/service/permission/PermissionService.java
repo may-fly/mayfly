@@ -44,14 +44,16 @@ public interface PermissionService extends BaseService<Permission> {
      * @return
      * @throws BusinessException  权限被禁用
      */
-    boolean hasPermission(String token, String permissionCode) throws BusinessException;
+    boolean hasPermission(String token, String permissionCode);
 
     /**
      * 保存权限
      * @param permission
      * @return
      */
-    Permission savePermission(Permission permission) throws BusinessException;
+    Permission savePermission(Permission permission);
+
+    Permission updatePermission(Permission permission);
 
     /**
      * 删除权限，并且删除角色关联的该权限记录

@@ -1,7 +1,7 @@
 package mayfly.common.utils;
 
-import java.net.InetAddress;
-import java.net.NetworkInterface;
+import java.net.*;
+import java.util.ArrayList;
 import java.util.Enumeration;
 
 /**
@@ -15,25 +15,57 @@ public final class LocalUtils {
      * 获取本地ip地址
      * @return
      */
-    public static String getLocalIp(){
-        try{
-            //根据网卡取本机配置的IP
-            Enumeration<NetworkInterface> netInterfaces = NetworkInterface.getNetworkInterfaces();
-            String serverIp = null;
-            while(netInterfaces.hasMoreElements()){
-                NetworkInterface ni = netInterfaces.nextElement();
-                Enumeration<InetAddress> ips = ni.getInetAddresses();
-                while (ips.hasMoreElements()) {
-                    InetAddress ip = ips.nextElement();
-                    if (ip.isSiteLocalAddress() && !ip.isLoopbackAddress() && ip.getHostAddress().indexOf(":") == -1) {
-                        serverIp =  ip.getHostAddress();
-                        return serverIp;
+    public static String getLocalAddress() {
+        try {
+            // Traversal Network interface to get the first non-loopback and non-private address
+            Enumeration<NetworkInterface> enumeration = NetworkInterface.getNetworkInterfaces();
+            ArrayList<String> ipv4Result = new ArrayList<>();
+            ArrayList<String> ipv6Result = new ArrayList<>();
+            while (enumeration.hasMoreElements()) {
+                final NetworkInterface networkInterface = enumeration.nextElement();
+                final Enumeration<InetAddress> en = networkInterface.getInetAddresses();
+                while (en.hasMoreElements()) {
+                    final InetAddress address = en.nextElement();
+                    if (!address.isLoopbackAddress()) {
+                        if (address instanceof Inet6Address) {
+                            ipv6Result.add(normalizeHostAddress(address));
+                        } else {
+                            ipv4Result.add(normalizeHostAddress(address));
+                        }
                     }
                 }
             }
-        }catch (Exception e){
-           return null;
+            // prefer ipv4
+            if (!ipv4Result.isEmpty()) {
+                for (String ip : ipv4Result) {
+                    if (ip.startsWith("127.0") || ip.startsWith("192.168")) {
+                        continue;
+                    }
+
+                    return ip;
+                }
+
+                return ipv4Result.get(ipv4Result.size() - 1);
+            } else if (!ipv6Result.isEmpty()) {
+                return ipv6Result.get(0);
+            }
+            //If failed to find,fall back to localhost
+            final InetAddress localHost = InetAddress.getLocalHost();
+            return normalizeHostAddress(localHost);
+        } catch (SocketException e) {
+            e.printStackTrace();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
         }
-        throw new RuntimeException("获取ip错误!");
+
+        return null;
+    }
+
+    public static String normalizeHostAddress(final InetAddress localHost) {
+        if (localHost instanceof Inet6Address) {
+            return "[" + localHost.getHostAddress() + "]";
+        } else {
+            return localHost.getHostAddress();
+        }
     }
 }

@@ -12,7 +12,7 @@ import mayfly.common.validation.annotation.Size;
 @Data
 public class PageForm {
     @NotNull
-    private Integer currentPage;
+    private Integer pageNum;
 
     @NotNull
     @Size(min = 1, max = 20)

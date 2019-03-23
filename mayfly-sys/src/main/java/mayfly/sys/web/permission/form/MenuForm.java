@@ -14,7 +14,7 @@ public class MenuForm {
     private Integer pid;
 
     @NotBlank
-    @Size(min = 2, max = 6)
+    @Size(min = 2, max = 12)
     private String name;
 
     private String path;

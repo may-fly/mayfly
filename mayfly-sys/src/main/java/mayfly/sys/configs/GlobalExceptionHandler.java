@@ -1,6 +1,7 @@
 package mayfly.sys.configs;
 
 import mayfly.common.exception.BusinessException;
+import mayfly.common.exception.BusinessRuntimeException;
 import mayfly.common.result.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +21,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public Result handleException(Exception e) {
         log.error("异常：", e);
-        if (e instanceof BusinessException) {
+        if (e instanceof BusinessException || e instanceof BusinessRuntimeException) {
             return Result.paramError(e.getMessage());
         }
 

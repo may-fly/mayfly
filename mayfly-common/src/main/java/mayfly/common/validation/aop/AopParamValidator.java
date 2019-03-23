@@ -1,12 +1,13 @@
 package mayfly.common.validation.aop;
 
-import mayfly.common.validation.ParamErrorException;
+import mayfly.common.validation.ParamValidErrorException;
 import mayfly.common.validation.ValidationHandler;
 import mayfly.common.validation.annotation.Valid;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -24,11 +25,6 @@ public class AopParamValidator {
     private static Map<String, List<Integer>> indexCache = new ConcurrentHashMap<>(64);
 
 
-    /**
-     * 不包含@Valid的方法对应的value都指向该对象,节省不必要的内存
-     */
-    private static final List<Integer> EMPTY = new ArrayList<>();
-
     private AopParamValidator(){}
 
     private static AopParamValidator validator = new AopParamValidator();
@@ -38,10 +34,9 @@ public class AopParamValidator {
     }
 
 
-    public void validate(Method method, Object[] args) throws ParamErrorException {
+    public void validate(Method method, Object[] args) throws ParamValidErrorException {
         String invoke = method.getDeclaringClass().getName() + "." + method.getName();
         List<Integer> index = indexCache.get(invoke);
-
         if (index == null) {
             Parameter[] params = method.getParameters();
             for (int i = 0; i < params.length; i++) {
@@ -53,7 +48,7 @@ public class AopParamValidator {
                 }
             }
             if (index == null) {
-                index = EMPTY;
+                index = Collections.emptyList();
             }
             indexCache.put(invoke, index);
         }
