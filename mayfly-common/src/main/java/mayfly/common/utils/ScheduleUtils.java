@@ -66,7 +66,9 @@ public class ScheduleUtils {
 
     public static void cancel(String id) {
         Optional.ofNullable(scheduledFutureMap.get(id)).ifPresent(x -> {
-            x.cancel(true);
+            if (!x.isDone()) {
+                x.cancel(true);
+            }
         });
     }
 

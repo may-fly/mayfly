@@ -1,6 +1,7 @@
 package mayfly.common.validation;
 
 
+import mayfly.common.utils.ReflectionUtils;
 import mayfly.common.validation.annotation.*;
 import mayfly.common.validation.annotation.validator.*;
 
@@ -53,13 +54,7 @@ public class ValidationHandler {
     public void validate(Object obj) throws ParamValidErrorException {
         for (FieldInfo fieldInfo : getFieldInfoList(obj)) {
             Field field = fieldInfo.field;
-            Object fieldValue = null;
-            try {
-                field.setAccessible(true);
-                fieldValue = field.get(obj);
-            } catch (Exception e) {
-                throw new ParamValidErrorException(fieldInfo.field.getName() + "参数异常");
-            }
+            Object fieldValue = ReflectionUtils.getFieldValue(field, obj);
             //遍历field字段需要校验的校验器
             for(Validator validator : fieldInfo.validators) {
                 ValidResult result = validator.validation(field, fieldValue);
@@ -80,7 +75,7 @@ public class ValidationHandler {
         List<FieldInfo> fieldInfoList = CACHE.get(clazz);
         if (fieldInfoList == null) {
             fieldInfoList = new ArrayList<>(8);
-            for (Field field : clazz.getDeclaredFields()) {
+            for (Field field : ReflectionUtils.getFields(clazz)) {
                 FieldInfo fi = buildFieldInfo(field);
                 if (fi != null) {
                     fieldInfoList.add(fi);

@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ApiGroup {
+public class PermissionGroup {
 
     private Integer id;
 

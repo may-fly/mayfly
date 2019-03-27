@@ -1,6 +1,6 @@
 package mayfly.common.web;
 
-import java.util.List;
+import java.util.Collection;
 
 /**
  * uri匹配处理器
@@ -17,7 +17,7 @@ public class UriMatchHandler {
         return handler;
     }
 
-    public boolean match(RequestUri requestUri, List<UriPattern> uris) {
+    public boolean match(RequestUri requestUri, Collection<UriPattern> uris) {
         for (UriPattern up : uris) {
             if (up.match(requestUri) != null) {
                 return true;
@@ -26,7 +26,7 @@ public class UriMatchHandler {
         return false;
     }
 
-    public UriPattern.MatchResult matchAndReturnResult(RequestUri requestUri, List<UriPattern> uriPatterns) {
+    public UriPattern.MatchResult matchAndReturnResult(RequestUri requestUri, Collection<UriPattern> uriPatterns) {
         for (UriPattern up : uriPatterns) {
             UriPattern.MatchResult result = up.match(requestUri);
             if (result != null) {
@@ -36,7 +36,7 @@ public class UriMatchHandler {
         return null;
     }
 
-    public UriPattern matchAndReturnPattern(RequestUri requestUri, List<UriPattern> uriPatterns) {
+    public UriPattern matchAndReturnPattern(RequestUri requestUri, Collection<UriPattern> uriPatterns) {
         UriPattern.MatchResult result = matchAndReturnResult(requestUri, uriPatterns);
         return result != null ? result.getUriPattern() : null;
     }

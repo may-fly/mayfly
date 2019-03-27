@@ -27,33 +27,7 @@ public class RoleResource {
     /**
      * 资源类型，1：菜单；2：权限
      */
-    private Byte type;
+    private Integer type;
 
     private LocalDateTime createTime;
-
-    /**
-     * 资源类型枚举
-     */
-    public enum TypeEnum{
-        /**
-         * 按钮类型
-         */
-        MENU(Byte.valueOf("1"), "菜单"),
-        /**
-         * 权限类型
-         */
-        PERMISSION(Byte.valueOf("2"), "权限");
-
-        Byte type;
-        String description;
-
-        TypeEnum(Byte type, String description) {
-            this.type = type;
-            this.description = description;
-        }
-
-        public Byte type() {
-            return this.type;
-        }
-    }
 }

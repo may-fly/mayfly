@@ -1,6 +1,6 @@
 package mayfly.sys.service.permission;
 
-import mayfly.common.exception.BusinessException;
+import mayfly.common.permission.PermissionHandler;
 import mayfly.common.web.UriPattern;
 import mayfly.entity.Permission;
 import mayfly.sys.service.base.BaseService;
@@ -14,6 +14,9 @@ import java.util.List;
  * @date: 2018/6/26 上午9:48
  */
 public interface PermissionService extends BaseService<Permission> {
+
+
+    PermissionHandler getPermissionHandler();
 
     /**
      * 保存id以及对应的权限
@@ -36,16 +39,6 @@ public interface PermissionService extends BaseService<Permission> {
      */
     List<UriPattern> getUriPermissionByToken(String token);
 
-
-    /**
-     * 判断用户指定权限code是否存在
-     * @param token
-     * @param permissionCode
-     * @return
-     * @throws BusinessException  权限被禁用
-     */
-    boolean hasPermission(String token, String permissionCode);
-
     /**
      * 保存权限
      * @param permission
@@ -54,6 +47,14 @@ public interface PermissionService extends BaseService<Permission> {
     Permission savePermission(Permission permission);
 
     Permission updatePermission(Permission permission);
+
+    /**
+     * 改变redis中权限状态code
+     * @param id 权限code
+     * @param status
+     * @return
+     */
+    Permission changeStatus(Integer id, Integer status);
 
     /**
      * 删除权限，并且删除角色关联的该权限记录

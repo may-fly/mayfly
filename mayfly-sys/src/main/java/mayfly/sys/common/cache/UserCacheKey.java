@@ -7,7 +7,7 @@ package mayfly.sys.common.cache;
  */
 public class UserCacheKey {
 
-    public static final Integer EXPIRE_TIME = 2;
+    public static final Integer EXPIRE_TIME = 30;
 
     /**
      * 用户id
@@ -16,5 +16,5 @@ public class UserCacheKey {
     /**
      *  用户权限
      */
-    public static final String USER_PERMISSION_KEY = "user:token:${token}:permission";
+    public static final String USER_PERMISSION_KEY = "user:id:${id}:permissions";
 }

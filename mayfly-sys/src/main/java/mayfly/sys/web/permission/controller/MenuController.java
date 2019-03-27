@@ -4,7 +4,7 @@ import mayfly.common.exception.BusinessException;
 import mayfly.common.log.MethodLog;
 import mayfly.common.result.Result;
 import mayfly.common.validation.annotation.Valid;
-import mayfly.common.web.auth.Permission;
+import mayfly.common.permission.Permission;
 import mayfly.entity.Menu;
 import mayfly.sys.common.utils.BeanUtils;
 import mayfly.sys.service.permission.MenuService;

@@ -11,14 +11,12 @@ import mayfly.sys.web.permission.form.PermissionForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
-
 /**
  * @author meilin.huang
  * @version 1.0
  * @date 2018-12-14 5:09 PM
  */
-@mayfly.common.web.auth.Permission(code = "permission:")
+@mayfly.common.permission.Permission(code = "permission:")
 @RestController
 @RequestMapping("/sys")
 public class PermissionController {
@@ -101,12 +99,10 @@ public class PermissionController {
         return Result.success().withData(permissionService.updatePermission(permission));
     }
 
-    @MethodLog("启用禁用权限")
+    @MethodLog(value = "启用禁用权限", time = true)
     @PutMapping("/v1/permissions/{id}/{status}")
     public Result changeStatus(@PathVariable Integer id, @PathVariable Integer status) {
-        Permission permission = Permission.builder().id(id).status(status).updateTime(LocalDateTime.now()).build();
-        permissionService.updateById(permission);
-        return Result.success().withData(permission);
+        return Result.success().withData(permissionService.changeStatus(id, status));
     }
 
     @DeleteMapping("/v1/permissions/{id}")

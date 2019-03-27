@@ -6,10 +6,8 @@ import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.util.*;
 
 import static java.lang.annotation.ElementType.FIELD;
@@ -21,51 +19,12 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  * @description:
  * @date 2018-11-17 2:13 PM
  */
-public class BeanUtils {
+public final class BeanUtils {
 
     /**
      * 转换器缓存
      */
-    private static Map<Class<? extends FieldValueConverter>, FieldValueConverter> converterCache = Collections.synchronizedMap(new WeakHashMap<Class<? extends FieldValueConverter>, FieldValueConverter>(32));
-
-    /**
-     * 获取指定类的指定field,包括父类
-     * @param clazz
-     * @param name
-     * @return
-     */
-    public static Field getField(Class clazz, String name) {
-        while (clazz != null) {
-            Field field = null;
-            try {
-                field = clazz.getDeclaredField(name);
-            } catch (NoSuchFieldException e) {
-                clazz = clazz.getSuperclass();
-            }
-            if (field != null) {
-                return field;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * 获取指定类的所有非static的field,包括父类
-     * @param clazz
-     * @return
-     */
-    public static Field[] getFields(Class clazz) {
-        List<Field> fields = new ArrayList<>(32);
-        while (clazz != null) {
-            for (Field field : clazz.getDeclaredFields()) {
-                if (!Modifier.isStatic(field.getModifiers())) {
-                    fields.add(field);
-                }
-            }
-            clazz = clazz.getSuperclass();
-        }
-        return fields.toArray(new Field[fields.size()]);
-    }
+    private static Map<Class<? extends FieldValueConverter>, FieldValueConverter> converterCache = Collections.synchronizedMap(new WeakHashMap<>(32));
 
     /**
      * 将list中的bean转为map, key:fieldName, value:fieldValue  <br/> </br/>
@@ -137,7 +96,7 @@ public class BeanUtils {
                     returnMap.putAll(doBean2Map(propertyName, result));
                     continue;
                 }
-                Bean2MapFieldConverter converterAnnotation = getField(type, propertyName).getAnnotation(Bean2MapFieldConverter.class);
+                Bean2MapFieldConverter converterAnnotation = ReflectionUtils.getFieldAnnotation(type, propertyName, Bean2MapFieldConverter.class);
                 if (converterAnnotation != null) {
                     Class<? extends FieldValueConverter> converterClazz = converterAnnotation.converter();
                     // 转换器缓存中获取

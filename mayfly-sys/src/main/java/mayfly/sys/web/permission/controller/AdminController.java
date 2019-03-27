@@ -24,7 +24,7 @@ public class AdminController {
     @Autowired
     private MenuService menuService;
 
-    @MethodLog("管理员登录")
+    @MethodLog(value = "管理员登录", result = false, time = true)
     @PostMapping("/v1/login")
     public Result login(AdminLoginForm loginForm) {
         return Result.success().withData(permissionService.saveIdAndPermission(1));

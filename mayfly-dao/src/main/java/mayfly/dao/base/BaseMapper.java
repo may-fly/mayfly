@@ -1,7 +1,7 @@
 package mayfly.dao.base;
 
 
-import com.google.common.base.CaseFormat;
+import mayfly.common.utils.ReflectionUtils;
 import mayfly.common.utils.StringUtils;
 import mayfly.dao.base.annotation.NoColumn;
 import mayfly.dao.base.annotation.Primary;
@@ -232,14 +232,20 @@ public interface BaseMapper<Entity> {
 
     abstract class SqlProviderSupport {
 
+        /**
+         * 表前缀
+         */
         private static final String TABLE_PREFIX = "tb_";
 
+        /**
+         * 主键名
+         */
         private static final String DEFAULT_PRIMARY_KEY = "id";
 
         /**
          * key:interface class   value:tableInfo
          */
-        private static final Map<Class, TableInfo> tableCache = new ConcurrentHashMap<>(256);
+        private static Map<Class, TableInfo> tableCache = new ConcurrentHashMap<>(256);
 
 
         /**
@@ -255,7 +261,7 @@ public interface BaseMapper<Entity> {
 
             Class<?> entityClass = entityType(context);
             //获取不含有@NoColumn注解的fields
-            Field[] fields = excludeNoColumnField(entityClass.getDeclaredFields());
+            Field[] fields = excludeNoColumnField(ReflectionUtils.getFields(entityClass));
             info = TableInfo.entityClass(entityClass)
                     .fields(fields)
                     .tableName(tableName(entityClass))
@@ -281,12 +287,12 @@ public interface BaseMapper<Entity> {
                     .findFirst()
                     .map(type -> type.getActualTypeArguments()[0])
                     .filter(Class.class::isInstance).map(Class.class::cast)
-                    .orElseThrow(() -> new IllegalStateException("The SimpleCrudMapper does not found in " + context.getMapperType().getName() + "."));
+                    .orElseThrow(() -> new IllegalStateException("未找到BaseMapper的泛型类 " + context.getMapperType().getName() + "."));
         }
 
 
         protected String tableName(Class<?> entityType) {
-            return TABLE_PREFIX + CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, entityType.getSimpleName());
+            return TABLE_PREFIX + StringUtils.camel2Underscore(entityType.getSimpleName());
         }
 
         /**
@@ -339,7 +345,7 @@ public interface BaseMapper<Entity> {
          * @return
          */
         protected String selectColumnName(Field field) {
-            String camel = CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, field.getName());
+            String camel = StringUtils.camel2Underscore(field.getName());
             return camel.contains("_") ? camel + " AS " + field.getName() : camel;
         }
 
@@ -350,7 +356,7 @@ public interface BaseMapper<Entity> {
          * @return
          */
         protected String columnName(Field field) {
-            return CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, field.getName());
+            return StringUtils.camel2Underscore(field.getName());
         }
 
         protected String bindParameter(Field field) {

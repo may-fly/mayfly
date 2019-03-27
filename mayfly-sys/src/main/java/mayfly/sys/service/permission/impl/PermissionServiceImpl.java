@@ -3,6 +3,8 @@ package mayfly.sys.service.permission.impl;
 import mayfly.common.enums.StatusEnum;
 import mayfly.common.exception.BusinessRuntimeException;
 import mayfly.common.log.MethodLog;
+import mayfly.common.permission.PermissionHandler;
+import mayfly.common.permission.registry.PermissionCodeRegistry;
 import mayfly.common.utils.EnumUtils;
 import mayfly.common.utils.PlaceholderResolver;
 import mayfly.common.utils.UUIDUtils;
@@ -14,6 +16,7 @@ import mayfly.entity.Permission;
 import mayfly.entity.RoleResource;
 import mayfly.sys.common.cache.UserCacheKey;
 import mayfly.sys.common.enums.MethodEnum;
+import mayfly.sys.common.enums.ResourceTypeEnum;
 import mayfly.sys.service.base.impl.BaseServiceImpl;
 import mayfly.sys.service.permission.MenuService;
 import mayfly.sys.service.permission.PermissionService;
@@ -24,6 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -34,7 +38,7 @@ import java.util.stream.Collectors;
  * @date: 2018/6/26 上午9:49
  */
 @Service
-public class PermissionServiceImpl extends BaseServiceImpl<PermissionMapper, Permission> implements PermissionService {
+public class PermissionServiceImpl extends BaseServiceImpl<PermissionMapper, Permission> implements PermissionService, PermissionCodeRegistry {
     /**
      * 占位符解析器
      */
@@ -53,7 +57,13 @@ public class PermissionServiceImpl extends BaseServiceImpl<PermissionMapper, Per
     private RoleResourceMapper roleResourceMapper;
     @Autowired
     private MenuService menuService;
+    //权限处理器
+    private PermissionHandler permissionHandler = PermissionHandler.getInstance();
 
+    @Override
+    public PermissionHandler getPermissionHandler() {
+        return permissionHandler;
+    }
 
     @MethodLog(value = "保存id以及权限列表", time = true)
     @Override
@@ -66,13 +76,8 @@ public class PermissionServiceImpl extends BaseServiceImpl<PermissionMapper, Per
                 .collect(Collectors.toList());
         //缓存用户id
         redisTemplate.opsForValue().set(resolver.resolveByObject(UserCacheKey.USER_ID_KEY, token), id, UserCacheKey.EXPIRE_TIME, TimeUnit.HOURS);
-        //缓存用户权限code列表
-        if (!permissionCodes.isEmpty()) {
-            String permissionKey = resolver.resolveByObject(UserCacheKey.USER_PERMISSION_KEY, token);
-            redisTemplate.boundSetOps(permissionKey).add(permissionCodes.toArray());
-            redisTemplate.boundSetOps(permissionKey).expire(UserCacheKey.EXPIRE_TIME, TimeUnit.HOURS);
-        }
-
+        //保存用户权限code
+        permissionHandler.savePermission(id, permissionCodes, UserCacheKey.EXPIRE_TIME, TimeUnit.MINUTES);
         return LoginSuccessVO.builder().token(token).menus(menus).permissions(permissionCodes).build();
     }
 
@@ -87,18 +92,29 @@ public class PermissionServiceImpl extends BaseServiceImpl<PermissionMapper, Per
     }
 
     @Override
-    public boolean hasPermission(String token, String permissionCode) {
-        String key = resolver.resolveByObject(UserCacheKey.USER_PERMISSION_KEY, token);
-        if (redisTemplate.opsForSet().isMember(key, permissionCode)) {
-            return true;
+    public Permission changeStatus(Integer id, Integer status) {
+        Permission p = getById(id);
+        if (p == null) {
+            throw new BusinessRuntimeException("该权限不存在！");
         }
-
-        String disableCode = permissionCode + CODE_STATUS_SEPARATOR + StatusEnum.DISABLE.getValue();
-        if (redisTemplate.opsForSet().isMember(key, disableCode)) {
-            throw new BusinessRuntimeException("该权限暂时被禁用！");
+        if (!EnumUtils.isExist(StatusEnum.values(), status)) {
+            throw new BusinessRuntimeException("权限status错误！");
         }
-
-        return false;
+        if (p.getStatus().equals(status)) {
+            return p;
+        }
+        // 重命名redis key,是禁用则将key改为 code:0形式，否则将code:0改为code
+        String code = p.getCode();
+        if (StatusEnum.DISABLE.getValue().equals(status)) {
+            permissionHandler.disabledPermission(code);
+        } else {
+            permissionHandler.enablePermission(code);
+        }
+        //更新数据库
+        p.setStatus(status);
+        p.setUpdateTime(LocalDateTime.now());
+        updateById(p);
+        return p;
     }
 
     @Override
@@ -121,7 +137,7 @@ public class PermissionServiceImpl extends BaseServiceImpl<PermissionMapper, Per
         if (!EnumUtils.isExist(MethodEnum.values(), permission.getMethod())) {
             throw new BusinessRuntimeException("权限method错误！");
         }
-        Permission old =getById(permission.getId());
+        Permission old = getById(permission.getId());
         if (old == null) {
             throw new BusinessRuntimeException("权限id不存在！");
         }
@@ -140,9 +156,27 @@ public class PermissionServiceImpl extends BaseServiceImpl<PermissionMapper, Per
     public Boolean deletePermission(Integer id) {
         if (deleteById(id)) {
             roleResourceMapper.deleteByCriteria(RoleResource.builder()
-                    .resourceId(id).type(RoleResource.TypeEnum.PERMISSION.type()).build());
+                    .resourceId(id).type(ResourceTypeEnum.PERMISSION.getValue()).build());
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void save(Integer userId, Collection<String> permissionCodes, long time, TimeUnit timeUnit) {
+        // 给权限code key添加用户id
+        String permissionKey = resolver.resolveByObject(UserCacheKey.USER_PERMISSION_KEY, userId);
+        redisTemplate.boundSetOps(permissionKey).add(permissionCodes.toArray());
+        redisTemplate.boundSetOps(permissionKey).expire(time, timeUnit);
+    }
+
+    @Override
+    public void delete(Integer userId) {
+        redisTemplate.delete(resolver.resolveByObject(UserCacheKey.USER_PERMISSION_KEY, userId));
+    }
+
+    @Override
+    public boolean has(Integer userId, String permissionCode) {
+        return redisTemplate.opsForSet().isMember(resolver.resolveByObject(UserCacheKey.USER_PERMISSION_KEY, userId), permissionCode);
     }
 }

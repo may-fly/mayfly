@@ -17,7 +17,7 @@ public @interface MethodLog {
     /**
      * 是否记录返回结果，默认true
      */
-    boolean result() default true;
+    boolean result() default false;
 
     /**
      * 是否记录执行时间

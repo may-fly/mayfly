@@ -2,11 +2,11 @@ package mayfly.sys.web.permission.controller;
 
 import mayfly.common.exception.BusinessException;
 import mayfly.common.log.MethodLog;
+import mayfly.common.permission.Permission;
 import mayfly.common.result.Result;
 import mayfly.common.validation.annotation.Valid;
-import mayfly.common.web.auth.Permission;
 import mayfly.entity.Role;
-import mayfly.entity.RoleResource;
+import mayfly.sys.common.enums.ResourceTypeEnum;
 import mayfly.sys.common.utils.BeanUtils;
 import mayfly.sys.service.permission.RoleService;
 import mayfly.sys.web.permission.form.RoleForm;
@@ -50,7 +50,7 @@ public class RoleController {
     @MethodLog("获取角色拥有的权限")
     @GetMapping("/v1/roles/{id}/permissions")
     public Result rolePermissions(@PathVariable Integer id) {
-        return Result.success().withData(roleService.listResourceId(id, RoleResource.TypeEnum.PERMISSION));
+        return Result.success().withData(roleService.listResourceId(id, ResourceTypeEnum.PERMISSION));
     }
 
     @MethodLog("保存角色权限")
@@ -64,13 +64,13 @@ public class RoleController {
             return Result.paramError("permissionIds参数错误！");
         }
 
-        return Result.success().withData(roleService.saveResource(id, ids, RoleResource.TypeEnum.PERMISSION));
+        return Result.success().withData(roleService.saveResource(id, ids, ResourceTypeEnum.PERMISSION));
     }
 
     @MethodLog("获取角色拥有的菜单")
     @GetMapping("/v1/roles/{id}/menus")
     public  Result roleMenus(@PathVariable Integer id) {
-        return Result.success().withData(roleService.listResourceId(id, RoleResource.TypeEnum.MENU));
+        return Result.success().withData(roleService.listResourceId(id, ResourceTypeEnum.MENU));
     }
 
     @MethodLog("保存角色菜单")
@@ -84,6 +84,6 @@ public class RoleController {
             return Result.paramError("menuIds参数错误！");
         }
 
-        return Result.success().withData(roleService.saveResource(id, ids, RoleResource.TypeEnum.MENU));
+        return Result.success().withData(roleService.saveResource(id, ids, ResourceTypeEnum.MENU));
     }
 }

@@ -1,6 +1,7 @@
 package mayfly.common.validation.annotation.validator;
 
 
+import mayfly.common.utils.ReflectionUtils;
 import mayfly.common.validation.annotation.NotNull;
 
 import java.lang.reflect.Field;
@@ -14,7 +15,7 @@ import java.lang.reflect.Field;
 public class NotNullValidator implements Validator {
     @Override
     public ValidResult validation(Field field, Object fieldValue) {
-        NotNull notNull = field.getAnnotation(NotNull.class);
+        NotNull notNull = ReflectionUtils.getFieldAnnotation(field, NotNull.class);
         if (notNull != null) {
             if (fieldValue != null) {
                 return ValidResult.right();

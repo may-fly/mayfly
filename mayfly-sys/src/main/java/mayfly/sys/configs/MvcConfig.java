@@ -26,6 +26,8 @@ public class MvcConfig implements WebMvcConfigurer {
     @Autowired
     private PermissionService permissionService;
 
+//    private PermissionHandler permissionHandler = PermissionHandler.getInstance();
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new PermissionInterceptor(permissionService)).addPathPatterns("/sys/**");

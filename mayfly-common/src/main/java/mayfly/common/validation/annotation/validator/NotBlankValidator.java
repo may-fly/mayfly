@@ -1,6 +1,7 @@
 package mayfly.common.validation.annotation.validator;
 
 
+import mayfly.common.utils.ReflectionUtils;
 import mayfly.common.validation.annotation.NotBlank;
 
 import java.lang.reflect.Field;
@@ -15,7 +16,7 @@ public class NotBlankValidator implements Validator {
 
     @Override
     public ValidResult validation(Field field, Object fieldValue) {
-        NotBlank notBlank = field.getAnnotation(NotBlank.class);
+        NotBlank notBlank = ReflectionUtils.getFieldAnnotation(field, NotBlank.class);
         if (notBlank != null) {
             if (fieldValue == null) {
                 String message = "".equals(notBlank.message()) ? field.getName() + "值不能为空！" : notBlank.message();

@@ -2,7 +2,7 @@ package mayfly.sys.service.permission;
 
 import mayfly.common.exception.BusinessException;
 import mayfly.entity.Role;
-import mayfly.entity.RoleResource;
+import mayfly.sys.common.enums.ResourceTypeEnum;
 import mayfly.sys.service.base.BaseService;
 
 import java.util.List;
@@ -19,7 +19,7 @@ public interface RoleService extends BaseService<Role> {
      * @param roleId
      * @return
      */
-    List<Integer> listResourceId(Integer roleId, RoleResource.TypeEnum type);
+    List<Integer> listResourceId(Integer roleId, ResourceTypeEnum type);
 
-    Boolean saveResource(Integer roleId, List<Integer> resourceIds, RoleResource.TypeEnum type) throws BusinessException;
+    Boolean saveResource(Integer roleId, List<Integer> resourceIds, ResourceTypeEnum type) throws BusinessException;
 }

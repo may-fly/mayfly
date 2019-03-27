@@ -6,6 +6,7 @@ import mayfly.dao.RoleMapper;
 import mayfly.dao.RoleResourceMapper;
 import mayfly.entity.Role;
 import mayfly.entity.RoleResource;
+import mayfly.sys.common.enums.ResourceTypeEnum;
 import mayfly.sys.service.base.impl.BaseServiceImpl;
 import mayfly.sys.service.permission.MenuService;
 import mayfly.sys.service.permission.PermissionService;
@@ -38,14 +39,14 @@ public class RoleServiceImpl extends BaseServiceImpl<RoleMapper, Role> implement
     private PermissionService permissionService;
 
     @Override
-    public List<Integer> listResourceId(Integer roleId, RoleResource.TypeEnum type) {
-        RoleResource condition = RoleResource.builder().roleId(roleId).type(type.type()).build();
+    public List<Integer> listResourceId(Integer roleId, ResourceTypeEnum type) {
+        RoleResource condition = RoleResource.builder().roleId(roleId).type(type.getValue()).build();
         return roleResourceMapper.selectByCriteria(condition).stream().map(r -> r.getResourceId()).collect(Collectors.toList());
     }
 
     @Transactional
     @Override
-    public Boolean saveResource(Integer roleId, List<Integer> resourceIds, RoleResource.TypeEnum type) throws BusinessException {
+    public Boolean saveResource(Integer roleId, List<Integer> resourceIds, ResourceTypeEnum type) throws BusinessException {
         List<Integer> oldIds = listResourceId(roleId, type);
         //和之前存的权限列表id比较，哪些是新增已经哪些是修改以及不变的
         CollectionUtils.CompareResult<Integer> compareResult = CollectionUtils
@@ -56,13 +57,13 @@ public class RoleServiceImpl extends BaseServiceImpl<RoleMapper, Role> implement
 
         delIds.forEach(id -> {
             roleResourceMapper.deleteByCriteria(RoleResource.builder()
-                    .roleId(roleId).resourceId(id).type(type.type()).build());
+                    .roleId(roleId).resourceId(id).type(type.getValue()).build());
         });
 
         LocalDateTime now = LocalDateTime.now();
         List<RoleResource> addValues = new ArrayList<>(addIds.size());
         for (Integer id : addIds) {
-            if (type.type().equals(RoleResource.TypeEnum.PERMISSION.type())) {
+            if (type.getValue().equals(ResourceTypeEnum.PERMISSION.getValue())) {
                 if (permissionService.getById(id) == null) {
                     throw new BusinessException("id : " + id + "的权限不存在！");
                 }
@@ -71,7 +72,7 @@ public class RoleServiceImpl extends BaseServiceImpl<RoleMapper, Role> implement
                     throw new BusinessException("id : " + id + "的菜单不存在！");
                 }
             }
-            RoleResource rr = RoleResource.builder().roleId(roleId).resourceId(id).type(type.type()).createTime(now).build();
+            RoleResource rr = RoleResource.builder().roleId(roleId).resourceId(id).type(type.getValue()).createTime(now).build();
             roleResourceMapper.insert(rr);
         }
 

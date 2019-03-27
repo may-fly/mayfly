@@ -1,4 +1,4 @@
-package mayfly.common.web.auth;
+package mayfly.common.permission;
 
 /**
  * @author meilin.huang
