@@ -1,5 +1,7 @@
 package mayfly.common.permission.registry;
 
+import mayfly.common.permission.check.UserPermissionCheck;
+
 import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 
@@ -9,7 +11,7 @@ import java.util.concurrent.TimeUnit;
  * @version 1.0
  * @date 2019-03-23 8:17 PM
  */
-public interface UserPermissionCodeRegistry {
+public interface UserPermissionCodeRegistry extends UserPermissionCheck {
 
     /**
      * 保存用户权限码列表
@@ -25,13 +27,5 @@ public interface UserPermissionCodeRegistry {
      * @param userId
      */
     void delete(Integer userId);
-
-    /**
-     * 判断用户是否具有该权限码（即是否有该权限）
-     * @param userId   用户id
-     * @param permissionCode  权限code
-     * @return
-     */
-    boolean has(Integer userId, String permissionCode);
 
 }

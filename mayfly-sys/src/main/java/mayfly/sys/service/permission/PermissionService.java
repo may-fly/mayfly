@@ -1,6 +1,6 @@
 package mayfly.sys.service.permission;
 
-import mayfly.common.permission.PermissionHandler;
+import mayfly.common.permission.PermissionCacheHandler;
 import mayfly.common.web.UriPattern;
 import mayfly.entity.Permission;
 import mayfly.sys.service.base.BaseService;
@@ -16,7 +16,7 @@ import java.util.List;
 public interface PermissionService extends BaseService<Permission> {
 
 
-    PermissionHandler getPermissionHandler();
+    PermissionCacheHandler getPermissionCacheHandler();
 
     /**
      * 保存id以及对应的权限

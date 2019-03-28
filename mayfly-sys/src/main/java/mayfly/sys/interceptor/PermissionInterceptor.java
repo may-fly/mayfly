@@ -1,9 +1,9 @@
 package mayfly.sys.interceptor;
 
+import mayfly.common.permission.PermissionCheckHandler;
 import mayfly.common.permission.PermissionDisabledException;
 import mayfly.common.result.Result;
 import mayfly.common.utils.StringUtils;
-import mayfly.sys.service.permission.PermissionService;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -19,12 +19,14 @@ import java.io.PrintWriter;
  */
 public class PermissionInterceptor implements HandlerInterceptor {
 
-    private PermissionService permissionService;
+    private PermissionCheckHandlerService checkHandlerService;
 
-    public PermissionInterceptor(PermissionService permissionService) {
-        this.permissionService = permissionService;
+    private PermissionCheckHandler checkHandler;
+
+    public PermissionInterceptor(PermissionCheckHandlerService checkHandlerService) {
+        this.checkHandlerService = checkHandlerService;
+        this.checkHandler = checkHandlerService.getCheckHandler();
     }
-
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
@@ -37,13 +39,13 @@ public class PermissionInterceptor implements HandlerInterceptor {
             return false;
         }
         Integer userId;
-        if ((userId = permissionService.getIdByToken(token)) == null) {
+        if ((userId = checkHandlerService.getIdByToken(token)) == null) {
             sendErrorMessage(response, Result.withoutPermission());
             return false;
         }
         // 判断该用户是否有执行该方法的权限
         try {
-            if (handler instanceof  HandlerMethod && permissionService.getPermissionHandler().hasPermission(userId, ((HandlerMethod)handler).getMethod())) {
+            if (handler instanceof HandlerMethod && checkHandler.hasPermission(userId, ((HandlerMethod)handler).getMethod())) {
                 return true;
             }
         } catch (PermissionDisabledException e) {

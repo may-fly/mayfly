@@ -14,10 +14,18 @@ import java.util.concurrent.TimeUnit;
  */
 public class DefaultUserPermissionCodeRegistry implements UserPermissionCodeRegistry {
 
+    private static DefaultUserPermissionCodeRegistry defaultUserPermissionCodeRegistry = new DefaultUserPermissionCodeRegistry();
+
+    public static DefaultUserPermissionCodeRegistry getInstance() {
+        return defaultUserPermissionCodeRegistry;
+    }
+
     /**
      * 权限缓存
      */
     private static Map<Integer, Collection<String>> permissionCache = new ConcurrentHashMap<>(255);
+
+    private DefaultUserPermissionCodeRegistry(){}
 
     @Override
     public void save(Integer userId, Collection<String> permissionCodes, long time, TimeUnit timeUnit) {

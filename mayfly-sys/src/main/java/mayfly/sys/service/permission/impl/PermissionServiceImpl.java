@@ -3,7 +3,7 @@ package mayfly.sys.service.permission.impl;
 import mayfly.common.enums.StatusEnum;
 import mayfly.common.exception.BusinessRuntimeException;
 import mayfly.common.log.MethodLog;
-import mayfly.common.permission.PermissionHandler;
+import mayfly.common.permission.PermissionCacheHandler;
 import mayfly.common.permission.registry.SysPermissionCodeRegistry;
 import mayfly.common.permission.registry.UserPermissionCodeRegistry;
 import mayfly.common.utils.EnumUtils;
@@ -21,7 +21,6 @@ import mayfly.sys.common.enums.ResourceTypeEnum;
 import mayfly.sys.service.base.impl.BaseServiceImpl;
 import mayfly.sys.service.permission.MenuService;
 import mayfly.sys.service.permission.PermissionService;
-import mayfly.sys.service.permission.registry.DefaultSysPermissionCodeRegistry;
 import mayfly.sys.web.permission.vo.LoginSuccessVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -56,12 +55,13 @@ public class PermissionServiceImpl extends BaseServiceImpl<PermissionMapper, Per
     private MenuService menuService;
 
     //权限处理器
-    private PermissionHandler permissionHandler = PermissionHandler.getInstance()
-            .withSysCodeRegistry(new DefaultSysPermissionCodeRegistry(this));
+    private PermissionCacheHandler permissionCacheHandler = PermissionCacheHandler.getInstance()
+            .withUserCodeRegistry(this)
+            .withSysCodeRegistry(this);
 
     @Override
-    public PermissionHandler getPermissionHandler() {
-        return permissionHandler;
+    public PermissionCacheHandler getPermissionCacheHandler() {
+        return permissionCacheHandler;
     }
 
     @MethodLog(value = "保存id以及权限列表", time = true)
@@ -71,12 +71,12 @@ public class PermissionServiceImpl extends BaseServiceImpl<PermissionMapper, Per
         List<Menu> menus = menuService.getByUserId(id);
         //如果权限被禁用，将会在code后加上:0标志
         List<String> permissionCodes = permissionMapper.selectByUserId(id).stream()
-                .map(p -> p.getStatus().equals(StatusEnum.DISABLE.getValue()) ? PermissionHandler.getDisablePermissionCode(p.getCode()) : p.getCode())
+                .map(p -> p.getStatus().equals(StatusEnum.DISABLE.getValue()) ? PermissionCacheHandler.getDisablePermissionCode(p.getCode()) : p.getCode())
                 .collect(Collectors.toList());
         //缓存用户id
         redisTemplate.opsForValue().set(resolver.resolveByObject(UserCacheKey.USER_ID_KEY, token), id, UserCacheKey.EXPIRE_TIME, TimeUnit.HOURS);
         //保存用户权限code
-        permissionHandler.savePermission(id, permissionCodes, UserCacheKey.EXPIRE_TIME, TimeUnit.MINUTES);
+        permissionCacheHandler.savePermission(id, permissionCodes, UserCacheKey.EXPIRE_TIME, TimeUnit.MINUTES);
         return LoginSuccessVO.builder().token(token).menus(menus).permissions(permissionCodes).build();
     }
 
@@ -105,9 +105,9 @@ public class PermissionServiceImpl extends BaseServiceImpl<PermissionMapper, Per
         // 重命名redis key,是禁用则将key改为 code:0形式，否则将code:0改为code
         String code = p.getCode();
         if (StatusEnum.DISABLE.getValue().equals(status)) {
-            permissionHandler.disabledPermission(code);
+            permissionCacheHandler.disabledPermission(code);
         } else {
-            permissionHandler.enablePermission(code);
+            permissionCacheHandler.enablePermission(code);
         }
         //更新数据库
         p.setStatus(status);
@@ -182,7 +182,7 @@ public class PermissionServiceImpl extends BaseServiceImpl<PermissionMapper, Per
     @Override
     public void save() {
         String[] permissions = this.listAll().stream()
-                .map(p -> p.getStatus().equals(StatusEnum.DISABLE.getValue()) ? PermissionHandler.getDisablePermissionCode(p.getCode()) : p.getCode())
+                .map(p -> p.getStatus().equals(StatusEnum.DISABLE.getValue()) ? PermissionCacheHandler.getDisablePermissionCode(p.getCode()) : p.getCode())
                 .toArray(String[]::new);
         redisTemplate.boundSetOps(UserCacheKey.ALL_PERMISSION_KEY).add(permissions);
     }

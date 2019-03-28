@@ -35,7 +35,7 @@ public class PermissionController {
 //        WebApplicationContext wc = (WebApplicationContext) request.getAttribute(DispatcherServlet.WEB_APPLICATION_CONTEXT_ATTRIBUTE);
 //        RequestMappingHandlerMapping bean = wc.getBean(RequestMappingHandlerMapping.class);
 //        Map<RequestMappingInfo, HandlerMethod> handlerMethods = bean.getHandlerMethods();
-//        PermissionHandler ph = PermissionHandler.getInstance();
+//        PermissionCacheHandler ph = PermissionCacheHandler.getInstance();
 //        for (RequestMappingInfo rmi : handlerMethods.keySet()) {
 //            HandlerMethod hm = handlerMethods.get(rmi);
 //            Method method = hm.getMethod();
