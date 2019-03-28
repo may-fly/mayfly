@@ -10,7 +10,7 @@
  - 进入项目目录安装依赖
 
 ``` bash
-yarn
+npm install
 ```
 
 ## Develop
