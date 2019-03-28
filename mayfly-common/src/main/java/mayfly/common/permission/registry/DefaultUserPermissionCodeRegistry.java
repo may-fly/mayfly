@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
  * @version 1.0
  * @date 2019-03-23 8:25 PM
  */
-public class DefaultPermissionCodeRegistry implements PermissionCodeRegistry {
+public class DefaultUserPermissionCodeRegistry implements UserPermissionCodeRegistry {
 
     /**
      * 权限缓存

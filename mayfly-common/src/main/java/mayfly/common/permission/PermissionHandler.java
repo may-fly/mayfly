@@ -1,17 +1,16 @@
 package mayfly.common.permission;
 
 import mayfly.common.enums.StatusEnum;
-import mayfly.common.permission.registry.DefaultPermissionCodeRegistry;
-import mayfly.common.permission.registry.PermissionCodeRegistry;
+import mayfly.common.permission.registry.DefaultUserPermissionCodeRegistry;
+import mayfly.common.permission.registry.SysPermissionCodeRegistry;
+import mayfly.common.permission.registry.UserPermissionCodeRegistry;
 import mayfly.common.web.RequestUri;
 import mayfly.common.web.UriMatchHandler;
 import mayfly.common.web.UriPattern;
 
 import java.lang.reflect.Method;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Optional;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -26,39 +25,61 @@ public final class PermissionHandler {
      */
     public static final String CODE_STATUS_SEPARATOR = ":";
 
-    private static PermissionHandler permissionHandler = new PermissionHandler(new DefaultPermissionCodeRegistry());
+    private static PermissionHandler permissionHandler = new PermissionHandler(new DefaultUserPermissionCodeRegistry(), null);
 
     /**
-     * 权限码注册
+     * 用户权限码注册
      */
-    private PermissionCodeRegistry codeRegistry;
+    private UserPermissionCodeRegistry userCodeRegistry;
 
     /**
-     * 所有最新的权限信息，包含最新是否禁用状态
+     * 系统所有权限码注册
      */
-    private Set<String> allCode = new HashSet<>();
+    private SysPermissionCodeRegistry sysCodeRegistry;
+
+    /**
+     * 判断是否保存了系统所有权限信息
+     */
+    private boolean saveSysCode = false;
 
     /**
      * uri匹配处理器
      */
     private UriMatchHandler uriMatchHandler = UriMatchHandler.getInstance();
 
-    private PermissionHandler(PermissionCodeRegistry codeRegistry){
-        this.codeRegistry = codeRegistry;
+    private PermissionHandler(UserPermissionCodeRegistry userCodeRegistry, SysPermissionCodeRegistry sysCodeRegistry){
+        this.userCodeRegistry = userCodeRegistry;
+        this.sysCodeRegistry = sysCodeRegistry;
     }
 
     public static final PermissionHandler getInstance() {
         return permissionHandler;
     }
 
-    public PermissionHandler withCodeRegistry(PermissionCodeRegistry registry) {
-        this.codeRegistry = registry;
+    public PermissionHandler withUserCodeRegistry(UserPermissionCodeRegistry registry) {
+        this.userCodeRegistry = registry;
         return this;
     }
 
+    public PermissionHandler withSysCodeRegistry(SysPermissionCodeRegistry sysCodeRegistry) {
+        this.sysCodeRegistry = sysCodeRegistry;
+        return this;
+    }
+
+    /**
+     * 保存用户权限列表
+     * @param userId  用户id
+     * @param permissionCodes  权限列表
+     * @param time  时间
+     * @param timeUnit  时间单位
+     */
     public void savePermission(Integer userId, Collection<String> permissionCodes, long time, TimeUnit timeUnit) {
-        allCode.addAll(permissionCodes);
-        codeRegistry.save(userId, permissionCodes, time, timeUnit);
+        //如果首次没有保存系统所有权限，则保存系统所有权限
+        if (!saveSysCode && sysCodeRegistry != null) {
+            sysCodeRegistry.save();
+            saveSysCode = true;
+        }
+        userCodeRegistry.save(userId, permissionCodes, time, timeUnit);
     }
 
     /**
@@ -70,15 +91,15 @@ public final class PermissionHandler {
      */
     public boolean hasPermission(Integer userId, String permissionCode) throws PermissionDisabledException{
         //判断code注册器是否含有该用户的权限code
-        if (codeRegistry.has(userId, permissionCode)) {
+        if (userCodeRegistry.has(userId, permissionCode)) {
             // 判断该权限是否有被禁用,可用于判断实时禁用
-            if (allCode.contains(getDisablePermissionCode(permissionCode))) {
+            if (sysCodeRegistry != null && sysCodeRegistry.has(getDisablePermissionCode(permissionCode))) {
                 throw new PermissionDisabledException();
             }
             return true;
         }
         // 判断该权限是否有被禁用
-        if (codeRegistry.has(userId, getDisablePermissionCode(permissionCode))) {
+        if (userCodeRegistry.has(userId, getDisablePermissionCode(permissionCode))) {
             throw new PermissionDisabledException();
         }
         return false;
@@ -142,9 +163,8 @@ public final class PermissionHandler {
      * @param permissionCode
      */
     public void disabledPermission(String permissionCode) {
-        if (allCode.contains(permissionCode)) {
-            allCode.remove(permissionCode);
-            allCode.add(getDisablePermissionCode(permissionCode));
+        if (sysCodeRegistry != null && sysCodeRegistry.has(permissionCode)) {
+            sysCodeRegistry.rename(permissionCode, getDisablePermissionCode(permissionCode));
         }
     }
 
@@ -154,9 +174,8 @@ public final class PermissionHandler {
      */
     public void enablePermission(String permissionCode) {
         String disableCode = getDisablePermissionCode(permissionCode);
-        if (allCode.contains(disableCode)) {
-            allCode.remove(disableCode);
-            allCode.add(permissionCode);
+        if (sysCodeRegistry != null && sysCodeRegistry.has(disableCode)) {
+            sysCodeRegistry.rename(disableCode, permissionCode);
         }
     }
 
@@ -176,7 +195,7 @@ public final class PermissionHandler {
      * @param code
      * @return
      */
-    private String getDisablePermissionCode(String code) {
+    public static String getDisablePermissionCode(String code) {
         return code + CODE_STATUS_SEPARATOR + StatusEnum.DISABLE.getValue();
     }
 }

@@ -21,8 +21,6 @@
         <div slot-scope="scope" style="width: 100%;">
           <span v-if="scope.row.status == 0">禁用</span>
           <span type="success" v-if="scope.row.status == 1">启用</span>
-          <span type="warning" v-if="scope.row.status == 2">api已失效（及时删除）</span>
-          <span type="warning" v-if="scope.row.status == 3">未入库</span>
         </div>
       </el-table-column>
       <el-table-column prop="createTime" label="创建时间">
@@ -30,14 +28,14 @@
       <el-table-column prop="updateTime" label="更新时间">
       </el-table-column>
       <el-table-column label="操作">
-        <template slot-scope="scope">
+       <!-- <template slot-scope="scope">
           <el-button @click="changeStatus(scope.row, 1)"
             type="success" :ref="scope.row.id" size="small">启用</el-button>
           <el-button @click="changeStatus(scope.row, 0)"
             type="danger" size="small">禁用</el-button>
           <el-button @click="deleteApi(scope.row.id)" type="danger"
             size="small">删除</el-button>
-        </template>
+        </template> -->
       </el-table-column>
     </el-table>
     <el-pagination @current-change="handlePageChange" style="text-align: center;margin-top: 20px;" background layout="prev, pager, next, total, jumper"

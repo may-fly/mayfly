@@ -19,7 +19,7 @@ public class MachineHandler {
 
     public static String getMachineInfo(String ip, int port, String username, String password) {
         try {
-            String top = SSHUtils.execute(ip, port, username, password, COMMAND_DF_LH);
+            String top = SSHUtils.execute(ip, port, username, password, COMMAND_TOP);
             return top;
         } catch (SSHException e) {
             throw new BusinessRuntimeException(e.getMessage());

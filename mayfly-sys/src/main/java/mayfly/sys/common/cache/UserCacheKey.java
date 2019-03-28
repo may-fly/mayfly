@@ -9,6 +9,8 @@ public class UserCacheKey {
 
     public static final Integer EXPIRE_TIME = 30;
 
+    public static final String ALL_PERMISSION_KEY = "permissions";
+
     /**
      * 用户id
      */

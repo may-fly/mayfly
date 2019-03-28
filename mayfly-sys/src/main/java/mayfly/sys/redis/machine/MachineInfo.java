@@ -14,7 +14,7 @@ public class MachineInfo {
     /**
      * ssh用户名
      */
-    private String sshUserv;
+    private String sshUser;
 
     /**
      * ssh密码

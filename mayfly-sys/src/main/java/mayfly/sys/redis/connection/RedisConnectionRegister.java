@@ -30,6 +30,9 @@ public class RedisConnectionRegister {
 
     private static final Logger LOG = LoggerFactory.getLogger(RedisConnectionRegister.class);
 
+    /**
+     *
+     */
     private Map<Integer, RedisConnection> standaloneConMap = new ConcurrentHashMap<>();
 
     private Map<Integer, RedisConnection> clusterConMap = new ConcurrentHashMap<>();

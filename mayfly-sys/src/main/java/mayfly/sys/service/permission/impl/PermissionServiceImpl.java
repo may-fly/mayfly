@@ -4,7 +4,8 @@ import mayfly.common.enums.StatusEnum;
 import mayfly.common.exception.BusinessRuntimeException;
 import mayfly.common.log.MethodLog;
 import mayfly.common.permission.PermissionHandler;
-import mayfly.common.permission.registry.PermissionCodeRegistry;
+import mayfly.common.permission.registry.SysPermissionCodeRegistry;
+import mayfly.common.permission.registry.UserPermissionCodeRegistry;
 import mayfly.common.utils.EnumUtils;
 import mayfly.common.utils.PlaceholderResolver;
 import mayfly.common.utils.UUIDUtils;
@@ -20,6 +21,7 @@ import mayfly.sys.common.enums.ResourceTypeEnum;
 import mayfly.sys.service.base.impl.BaseServiceImpl;
 import mayfly.sys.service.permission.MenuService;
 import mayfly.sys.service.permission.PermissionService;
+import mayfly.sys.service.permission.registry.DefaultSysPermissionCodeRegistry;
 import mayfly.sys.web.permission.vo.LoginSuccessVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -38,16 +40,11 @@ import java.util.stream.Collectors;
  * @date: 2018/6/26 上午9:49
  */
 @Service
-public class PermissionServiceImpl extends BaseServiceImpl<PermissionMapper, Permission> implements PermissionService, PermissionCodeRegistry {
+public class PermissionServiceImpl extends BaseServiceImpl<PermissionMapper, Permission> implements PermissionService, UserPermissionCodeRegistry, SysPermissionCodeRegistry {
     /**
      * 占位符解析器
      */
     private static PlaceholderResolver resolver = PlaceholderResolver.getDefaultResolver();
-
-    /**
-     * 权限码与状态分割符号
-     */
-    public static final String CODE_STATUS_SEPARATOR = ":";
 
     @Autowired
     private RedisTemplate redisTemplate;
@@ -57,8 +54,10 @@ public class PermissionServiceImpl extends BaseServiceImpl<PermissionMapper, Per
     private RoleResourceMapper roleResourceMapper;
     @Autowired
     private MenuService menuService;
+
     //权限处理器
-    private PermissionHandler permissionHandler = PermissionHandler.getInstance();
+    private PermissionHandler permissionHandler = PermissionHandler.getInstance()
+            .withSysCodeRegistry(new DefaultSysPermissionCodeRegistry(this));
 
     @Override
     public PermissionHandler getPermissionHandler() {
@@ -72,7 +71,7 @@ public class PermissionServiceImpl extends BaseServiceImpl<PermissionMapper, Per
         List<Menu> menus = menuService.getByUserId(id);
         //如果权限被禁用，将会在code后加上:0标志
         List<String> permissionCodes = permissionMapper.selectByUserId(id).stream()
-                .map(p -> p.getStatus().equals(StatusEnum.DISABLE.getValue()) ? p.getCode() + CODE_STATUS_SEPARATOR + p.getStatus() : p.getCode())
+                .map(p -> p.getStatus().equals(StatusEnum.DISABLE.getValue()) ? PermissionHandler.getDisablePermissionCode(p.getCode()) : p.getCode())
                 .collect(Collectors.toList());
         //缓存用户id
         redisTemplate.opsForValue().set(resolver.resolveByObject(UserCacheKey.USER_ID_KEY, token), id, UserCacheKey.EXPIRE_TIME, TimeUnit.HOURS);
@@ -178,5 +177,24 @@ public class PermissionServiceImpl extends BaseServiceImpl<PermissionMapper, Per
     @Override
     public boolean has(Integer userId, String permissionCode) {
         return redisTemplate.opsForSet().isMember(resolver.resolveByObject(UserCacheKey.USER_PERMISSION_KEY, userId), permissionCode);
+    }
+
+    @Override
+    public void save() {
+        String[] permissions = this.listAll().stream()
+                .map(p -> p.getStatus().equals(StatusEnum.DISABLE.getValue()) ? PermissionHandler.getDisablePermissionCode(p.getCode()) : p.getCode())
+                .toArray(String[]::new);
+        redisTemplate.boundSetOps(UserCacheKey.ALL_PERMISSION_KEY).add(permissions);
+    }
+
+    @Override
+    public boolean has(String permissionCode) {
+        return redisTemplate.boundSetOps(UserCacheKey.ALL_PERMISSION_KEY).isMember(permissionCode);
+    }
+
+    @Override
+    public void rename(String oldCode, String newCode) {
+        redisTemplate.boundSetOps(UserCacheKey.ALL_PERMISSION_KEY).remove(oldCode);
+        redisTemplate.boundSetOps(UserCacheKey.ALL_PERMISSION_KEY).add(newCode);
     }
 }
