@@ -42,7 +42,29 @@ public Result list(PermissionForm condition, @Valid PageForm pageForm)
 参数校验才用AOP拦截所有Controller中的方法带有mayfly.common.validation.annotation.Valid注解的参数，并校验对应的参数字段注解以及值。
 
 给需要校验的参数字段添加相应的校验规则：
-![校验规则注解](https://images.gitee.com/uploads/images/2019/0329/132223_dec28a08_1240250.png "屏幕截图.png")
+```
+@Data
+public class PermissionForm {
+    private Integer groupId;
+    /**
+     * 字符串非空检验
+     */
+    @NotBlank
+    private String uriPattern;
+    @NotBlank
+    private String code;
+    /**
+     * method不能为空且只能是MethodEnum中对应的枚举值value
+     */
+    @EnumValue(clazz = MethodEnum.class)
+    @NotNull
+    private Integer method;
+    @NotBlank
+    private String description;
+    @EnumValue(clazz = StatusEnum.class)
+    private Integer status;
+}
+```
 
 Controller方法参数校验用法：
 ![参数前加@Valid注解](https://images.gitee.com/uploads/images/2019/0329/131943_438c4935_1240250.png "屏幕截图.png")
