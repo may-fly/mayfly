@@ -38,6 +38,41 @@ public Result list(PermissionForm condition, @Valid PageForm pageForm)
 打印结果如图：
 ![输出日志](https://images.gitee.com/uploads/images/2019/0329/125647_5fca5971_1240250.png "屏幕截图.png")
 
+- #### 自定义参数校验器(支持入参枚举值自动校验等)
+参数校验才用AOP拦截所有Controller中的方法带有mayfly.common.validation.annotation.Valid注解的参数，并校验对应的参数字段注解以及值。
+```
+要校验的参数
+@Data
+public class PermissionForm {
+
+    private Integer groupId;
+
+    /**
+     * 字符串非空检验
+     */
+    @NotBlank
+    private String uriPattern;
+
+    @NotBlank
+    private String code;
+
+    /**
+     * method不能为空且只能是MethodEnum中对应的枚举值value
+     */
+    @EnumValue(clazz = MethodEnum.class)
+    @NotNull
+    private Integer method;
+
+    @NotBlank
+    private String description;
+
+    @EnumValue(clazz = StatusEnum.class)
+    private Integer status;
+}
+```
+Controller方法参数校验用法：
+![参数前加@Valid注解](https://images.gitee.com/uploads/images/2019/0329/131943_438c4935_1240250.png "屏幕截图.png")
+
 ### 系统页面
 
 1.权限页面列表
