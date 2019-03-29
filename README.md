@@ -1,13 +1,26 @@
 # mayfly
 
 #### 介绍
-mayfly前后端分离的后台系统(包含按钮级别的权限管理，以及权限禁止，触发按钮置灰禁用状态)。后期补充redis系统管理
+mayfly前后端分离的后台系统(包含按钮级别的权限管理，以及权限禁用，触发按钮置灰禁用状态)。后期补充redis系统管理
 
 
-#### 软件架构
+#### 系统环境
 前端：node，vue，element
-后端：SpringBoot，java8开发
+后端：SpringBoot, jdk8
+数据库： mysql, redis
 
+#### 模块介绍
+> mayfly-admin-front
+前端系统
+
+> mayfly-common
+后端公用模块，包括一些常用的uitls以及权限管理，参数校验器，日志处理等。
+
+> mayfly-dao
+后端DAO模块，主要包含通用BaseMapper的封装，系统需要的PO以及Mapper等
+
+> mayfly-sys
+后端系统主要模块，包含BaseService以及各功能对应的Service和Controller等
 
 #### 系统页面
 
