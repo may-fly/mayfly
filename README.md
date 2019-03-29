@@ -69,6 +69,8 @@ public class PermissionForm {
     private Integer status;
 }
 ```
+更多可使用的参数字段校验规则，详见：mayfly.common.validation.annotation包
+  
 
 Controller方法参数校验用法：
 ![参数前加@Valid注解](https://images.gitee.com/uploads/images/2019/0329/131943_438c4935_1240250.png "屏幕截图.png")
