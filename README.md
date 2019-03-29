@@ -40,7 +40,7 @@ public Result list(PermissionForm condition, @Valid PageForm pageForm)
 
 - #### 自定义参数校验器(支持入参枚举值自动校验等)
 参数校验才用AOP拦截所有Controller中的方法带有mayfly.common.validation.annotation.Valid注解的参数，并校验对应的参数字段注解以及值。
-```
+
 给需要校验的参数字段添加相应的校验规则：
 ![校验规则注解](https://images.gitee.com/uploads/images/2019/0329/132223_dec28a08_1240250.png "屏幕截图.png")
 
