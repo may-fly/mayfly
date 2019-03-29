@@ -50,17 +50,21 @@ public class PermissionForm {
      * 字符串非空检验
      */
     @NotBlank
-    private String uriPattern;
+    private String uriPattern; 
+
     @NotBlank
     private String code;
+
     /**
      * method不能为空且只能是MethodEnum中对应的枚举值value
      */
     @EnumValue(clazz = MethodEnum.class)
     @NotNull
     private Integer method;
+
     @NotBlank
     private String description;
+
     @EnumValue(clazz = StatusEnum.class)
     private Integer status;
 }
