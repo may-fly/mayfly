@@ -1,15 +1,15 @@
 # mayfly
 
-#### 介绍
+### 介绍
 mayfly前后端分离的后台系统(包含按钮级别的权限管理，以及权限禁用，触发按钮置灰禁用状态)。后期补充redis系统管理
 
 
-#### 系统环境
+### 系统环境
 - 前端：node  vue  element-ui
 - 后端：jdk8  SpringBoot  Mybatis
 - 数据库： mysql  redis
 
-#### 模块介绍
+### 模块介绍
 > mayfly-admin-front
 前端系统
 
@@ -21,6 +21,8 @@ mayfly前后端分离的后台系统(包含按钮级别的权限管理，以及�
 
 > mayfly-sys
 后端系统主要模块，包含BaseService以及各功能对应的Service和Controller等
+
+###项目特点 
 
 #### 系统页面
 
