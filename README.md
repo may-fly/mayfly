@@ -94,7 +94,7 @@ public class PermissionController
 - ### 前端枚举值统一管理维护
 具体细节可见前端模块：mayfly-admin-front 或者博客：https://blog.csdn.net/mayfly_hml/article/details/88558895
 
-## 系统页面
+## 系统部分页面
 
 1.权限页面列表
 ![权限列表](https://images.gitee.com/uploads/images/2019/0329/140632_8cf39721_1240250.png "屏幕截图.png")
