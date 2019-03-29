@@ -22,9 +22,11 @@ mayfly前后端分离的后台系统(包含按钮级别的权限管理，以及�
 > mayfly-sys
 后端系统主要模块，包含BaseService以及各功能对应的Service和Controller等
 
-###项目特点 
+### 项目特点 
+1.#### 方法日志记录
 
-#### 系统页面
+
+### 系统页面
 
 1.权限页面列表
 ![权限页面列表](https://images.gitee.com/uploads/images/2019/0327/143455_07c3dc2d_1240250.png "屏幕截图.png")
