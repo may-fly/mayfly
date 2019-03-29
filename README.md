@@ -97,4 +97,4 @@ public class PermissionController
 ### 系统页面
 
 1.权限页面列表
-![权限页面列表](https://images.gitee.com/uploads/images/2019/0327/143455_07c3dc2d_1240250.png "屏幕截图.png")
+![权限列表页面](https://images.gitee.com/uploads/images/2019/0329/135425_810110ff_1240250.png "屏幕截图.png")
