@@ -5,9 +5,9 @@ mayfly前后端分离的后台系统(包含按钮级别的权限管理，以及�
 
 
 #### 系统环境
-- 前端：node，vue，element-ui
-- 后端：SpringBoot, jdk8
-- 数据库： mysql, redis
+- 前端：node  vue  element-ui
+- 后端：jdk8  SpringBoot  Mybatis
+- 数据库： mysql  redis
 
 #### 模块介绍
 > mayfly-admin-front
