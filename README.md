@@ -90,6 +90,9 @@ Controller方法参数校验用法：
 public class PermissionController 
 ```
 
+- #### 前端枚举值统一管理维护
+具体细节可见前端模块或者博客：https://blog.csdn.net/mayfly_hml/article/details/88558895
+
 ### 系统页面
 
 1.权限页面列表
