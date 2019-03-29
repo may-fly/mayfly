@@ -78,7 +78,7 @@ Controller方法参数校验用法：
 
 
 - #### 自定义权限校验注解
-系统使用自定义权限注解@mayfly.common.permission.Permission来控制用户的操作权限（即后端接口调用的权限，可实时禁用以及删除权限），和通过权限code控制前端页面的列表权限以及按钮权限（显示与否，以及是否为禁用状态。前端通过VUE的自定义指令v-permission进行按钮的控制，详情可见前端模块：mayfly-admin-front 。
+系统使用自定义权限注解@mayfly.common.permission.Permission来控制用户的操作权限（即后端接口调用的权限，可实时禁用以及删除权限），和通过权限code控制前端页面的列表权限以及按钮权限（显示与否，以及是否为禁用状态。前端通过VUE的自定义指令v-permission进行按钮的控制，详情可见前端模块：mayfly-admin-front ）。
 ```
 /**
 *每个方法都有丢应的权限code(用来进行权限校验以及前端页面按钮控制)  
@@ -89,6 +89,7 @@ Controller方法参数校验用法：
 @RequestMapping("/sys")
 public class PermissionController 
 ```
+具体如何拦截以及实时启用禁用可见对应拦截器:mayfly.sys.interceptor.PermissionInterceptor
 
 - #### 前端枚举值统一管理维护
 具体细节可见前端模块：mayfly-admin-front 或者博客：https://blog.csdn.net/mayfly_hml/article/details/88558895
