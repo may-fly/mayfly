@@ -1,6 +1,6 @@
 package mayfly.sys.service.permission;
 
-import mayfly.common.permission.PermissionCacheHandler;
+import mayfly.common.permission.registry.PermissionCacheHandler;
 import mayfly.common.web.UriPattern;
 import mayfly.entity.Permission;
 import mayfly.sys.service.base.BaseService;

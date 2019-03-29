@@ -1,6 +1,6 @@
 package mayfly.sys.interceptor;
 
-import mayfly.common.permission.PermissionCheckHandler;
+import mayfly.common.permission.check.PermissionCheckHandler;
 import mayfly.common.permission.PermissionDisabledException;
 import mayfly.common.result.Result;
 import mayfly.common.utils.StringUtils;

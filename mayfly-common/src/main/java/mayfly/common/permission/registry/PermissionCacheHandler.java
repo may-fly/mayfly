@@ -1,9 +1,6 @@
-package mayfly.common.permission;
+package mayfly.common.permission.registry;
 
 import mayfly.common.enums.StatusEnum;
-import mayfly.common.permission.registry.DefaultUserPermissionCodeRegistry;
-import mayfly.common.permission.registry.SysPermissionCodeRegistry;
-import mayfly.common.permission.registry.UserPermissionCodeRegistry;
 import mayfly.common.web.RequestUri;
 import mayfly.common.web.UriMatchHandler;
 import mayfly.common.web.UriPattern;

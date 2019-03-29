@@ -2,10 +2,13 @@ package mayfly.sys.web.permission.controller;
 
 import mayfly.common.log.MethodLog;
 import mayfly.common.result.Result;
+import mayfly.common.validation.annotation.Valid;
 import mayfly.sys.service.permission.MenuService;
 import mayfly.sys.service.permission.PermissionService;
 import mayfly.sys.web.permission.form.AdminLoginForm;
+import mayfly.sys.web.permission.form.PermissionForm;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,6 +31,11 @@ public class AdminController {
     @PostMapping("/v1/login")
     public Result login(AdminLoginForm loginForm) {
         return Result.success().withData(permissionService.saveIdAndPermission(1));
+    }
+
+    @GetMapping("/v1/test")
+    public Result test(@Valid PermissionForm permissionForm) {
+        return Result.success();
     }
 
 }

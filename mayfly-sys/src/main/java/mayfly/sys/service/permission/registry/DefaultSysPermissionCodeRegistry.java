@@ -1,7 +1,7 @@
 package mayfly.sys.service.permission.registry;
 
 import mayfly.common.enums.StatusEnum;
-import mayfly.common.permission.PermissionCacheHandler;
+import mayfly.common.permission.registry.PermissionCacheHandler;
 import mayfly.common.permission.registry.SysPermissionCodeRegistry;
 import mayfly.sys.service.permission.PermissionService;
 

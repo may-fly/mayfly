@@ -33,6 +33,7 @@ public class ValidationHandler {
         validatorRegister.put(ValueIn.class, new ValueInValidator());
         validatorRegister.put(Size.class, new SizeValidator());
         validatorRegister.put(Pattern.class, new PatternValidator());
+        validatorRegister.put(EnumValue.class, new EnumValueValidator());
     }
 
     private static ValidationHandler instance = new ValidationHandler();

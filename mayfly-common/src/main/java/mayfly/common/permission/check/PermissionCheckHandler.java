@@ -1,7 +1,9 @@
-package mayfly.common.permission;
+package mayfly.common.permission.check;
 
-import mayfly.common.permission.check.SysPermissionCheck;
-import mayfly.common.permission.check.UserPermissionCheck;
+import mayfly.common.permission.Permission;
+import mayfly.common.permission.registry.PermissionCacheHandler;
+import mayfly.common.permission.PermissionDisabledException;
+import mayfly.common.permission.PermissionInfo;
 
 import java.lang.reflect.Method;
 import java.util.Collection;

@@ -3,7 +3,7 @@ package mayfly.sys.service.permission.impl;
 import mayfly.common.enums.StatusEnum;
 import mayfly.common.exception.BusinessRuntimeException;
 import mayfly.common.log.MethodLog;
-import mayfly.common.permission.PermissionCacheHandler;
+import mayfly.common.permission.registry.PermissionCacheHandler;
 import mayfly.common.permission.registry.SysPermissionCodeRegistry;
 import mayfly.common.permission.registry.UserPermissionCodeRegistry;
 import mayfly.common.utils.EnumUtils;

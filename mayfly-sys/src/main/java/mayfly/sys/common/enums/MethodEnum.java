@@ -7,7 +7,7 @@ import mayfly.common.enums.BaseEnum;
  * @version 1.0
  * @date 2019-03-23 10:49 AM
  */
-public enum  MethodEnum implements BaseEnum {
+public enum MethodEnum implements BaseEnum {
 
     /**
      * get请求方法

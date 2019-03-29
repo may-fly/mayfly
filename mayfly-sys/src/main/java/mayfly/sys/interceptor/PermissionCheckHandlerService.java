@@ -1,6 +1,6 @@
 package mayfly.sys.interceptor;
 
-import mayfly.common.permission.PermissionCheckHandler;
+import mayfly.common.permission.check.PermissionCheckHandler;
 import mayfly.common.utils.PlaceholderResolver;
 import mayfly.sys.common.cache.UserCacheKey;
 import org.springframework.beans.factory.annotation.Autowired;
