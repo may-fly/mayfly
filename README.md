@@ -98,3 +98,12 @@ public class PermissionController
 
 1.权限页面列表
 ![权限列表](https://images.gitee.com/uploads/images/2019/0329/140632_8cf39721_1240250.png "屏幕截图.png")
+
+2.菜单管理页面
+![菜单管理](https://images.gitee.com/uploads/images/2019/0329/163134_e7ef9bba_1240250.png "屏幕截图.png")
+
+3.分配角色权限
+![分配角色权限](https://images.gitee.com/uploads/images/2019/0329/163315_36ed462b_1240250.png "屏幕截图.png")
+
+4.分配菜单
+![分配菜单](https://images.gitee.com/uploads/images/2019/0329/163414_b445068b_1240250.png "屏幕截图.png")
