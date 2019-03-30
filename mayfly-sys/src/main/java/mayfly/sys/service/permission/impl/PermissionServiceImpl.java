@@ -16,7 +16,6 @@ import mayfly.entity.Menu;
 import mayfly.entity.Permission;
 import mayfly.entity.RoleResource;
 import mayfly.sys.common.cache.UserCacheKey;
-import mayfly.sys.common.enums.MethodEnum;
 import mayfly.sys.common.enums.ResourceTypeEnum;
 import mayfly.sys.service.base.impl.BaseServiceImpl;
 import mayfly.sys.service.permission.MenuService;
@@ -118,9 +117,6 @@ public class PermissionServiceImpl extends BaseServiceImpl<PermissionMapper, Per
 
     @Override
     public Permission savePermission(Permission permission) {
-        if (!EnumUtils.isExist(MethodEnum.values(), permission.getMethod())) {
-            throw new BusinessRuntimeException("权限method错误！");
-        }
         if (countByCondition(Permission.builder().code(permission.getCode()).build()) != 0) {
             throw new BusinessRuntimeException("该权限code已经存在！");
         }
@@ -133,9 +129,6 @@ public class PermissionServiceImpl extends BaseServiceImpl<PermissionMapper, Per
 
     @Override
     public Permission updatePermission(Permission permission) {
-        if (!EnumUtils.isExist(MethodEnum.values(), permission.getMethod())) {
-            throw new BusinessRuntimeException("权限method错误！");
-        }
         Permission old = getById(permission.getId());
         if (old == null) {
             throw new BusinessRuntimeException("权限id不存在！");

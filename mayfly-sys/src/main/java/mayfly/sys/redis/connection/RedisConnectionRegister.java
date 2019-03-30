@@ -17,7 +17,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.nio.ByteBuffer;
-import java.util.*;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
@@ -31,11 +34,14 @@ public class RedisConnectionRegister {
     private static final Logger LOG = LoggerFactory.getLogger(RedisConnectionRegister.class);
 
     /**
-     *
+     * 单机连接  key:节点
      */
-    private Map<Integer, RedisConnection> standaloneConMap = new ConcurrentHashMap<>();
+    private Map<Integer, RedisConnection> standaloneConMap = new ConcurrentHashMap<>(8);
 
-    private Map<Integer, RedisConnection> clusterConMap = new ConcurrentHashMap<>();
+    /**
+     * 集群连接  key:集群id
+     */
+    private Map<Integer, RedisConnection> clusterConMap = new ConcurrentHashMap<>(8);
 
     /**
      * 所有连接过的redis信息
@@ -50,7 +56,7 @@ public class RedisConnectionRegister {
 
     private RedisConnectionRegister(){}
 
-    public synchronized void register(RedisInfo redisInfo) {
+    public synchronized void registerStandalone(RedisInfo redisInfo) {
         Assert.notNull(redisInfo, "单机节点uri不能为空！");
         Assert.notNull(redisInfo.getUri(), "单机节点uri不能为空！");
 
@@ -62,7 +68,7 @@ public class RedisConnectionRegister {
         allRedis.add(rc.getRedisInfo());
     }
 
-    public synchronized void register(Set<RedisInfo> redisCluster) {
+    public synchronized void registerCluster(Set<RedisInfo> redisCluster) {
         Assert.notEmpty(redisCluster, "集群节点uri不能为空！");
 
         int clusterId = redisCluster.iterator().next().getClusterId();
@@ -109,10 +115,11 @@ public class RedisConnectionRegister {
     public StatefulRedisConnection<String, byte[]> getConnection(int redisId) {
         RedisInfo ri = getRedisInfo(redisId);
         Assert.notNull(ri, "不存在该redis实例连接");
-
-        if (ri.getClusterId() == RedisInfo.STANDALONE) {
+        //如果是单机则返回单机连接
+        if (ri.isStandalone()) {
             return (StatefulRedisConnection<String, byte[]>) standaloneConMap.get(redisId).getRequireConnection();
         }
+        //如果是集群，则从集群中获取具体节点连接
         return getClusterConnection(ri.getClusterId()).getConnection(ri.getHost(), ri.getPort());
     }
 
@@ -134,14 +141,11 @@ public class RedisConnectionRegister {
      * @return
      */
     public RedisInfo getRedisInfo(int redisId) {
-        Iterator<RedisInfo> it = allRedis.iterator();
-        while (it.hasNext()) {
-            RedisInfo ri = it.next();
-            if (ri.getId() == redisId) {
-                return ri;
+        for (RedisInfo r : allRedis) {
+            if (r.getId() == redisId) {
+                return r;
             }
         }
-
         return null;
     }
 

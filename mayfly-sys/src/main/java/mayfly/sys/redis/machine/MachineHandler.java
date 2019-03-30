@@ -25,14 +25,4 @@ public class MachineHandler {
             throw new BusinessRuntimeException(e.getMessage());
         }
     }
-
-
-
-    public static void main(String[] args) throws Exception{
-        String host = "94.191.96.31";
-        int port = 22;
-        String username = "root";
-        String password = "hml,.111049";
-        System.out.println(getMachineInfo(host, port, username, password));
-    }
 }

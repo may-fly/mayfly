@@ -2,6 +2,7 @@ package mayfly.sys.redis.connection;
 
 import io.lettuce.core.RedisURI;
 import lombok.Data;
+import mayfly.common.utils.StringUtils;
 
 /**
  * @author meilin.huang
@@ -31,26 +32,17 @@ public class RedisInfo implements Comparable<RedisInfo>{
      */
     private RedisURI uri;
 
-
-
-    public String getHost() {
-        return uri.getHost();
-    }
-
-    public int getPort() {
-        return uri.getPort();
+    /**
+     * 是否为单机模式
+     * @return
+     */
+    public boolean isStandalone() {
+        return clusterId == STANDALONE;
     }
 
     public static Builder builder(int id) {
         return new Builder(id);
     }
-
-
-    @Override
-    public int compareTo(RedisInfo o) {
-        return id == o.getId() ? 0 : -1;
-    }
-
 
     public static class Builder{
         private RedisInfo redisInfo;
@@ -60,23 +52,39 @@ public class RedisInfo implements Comparable<RedisInfo>{
             redisInfo.id = id;
         }
 
-        public Builder uri(RedisURI redisURI) {
-            redisInfo.uri = redisURI;
+        public Builder clusterId(int clusterId) {
+            redisInfo.clusterId = clusterId;
             return this;
         }
 
-        public Builder clusterId(int clusterId) {
-            redisInfo.clusterId = clusterId;
+        public Builder info(String host, int port, String password) {
+            RedisURI redisURI = RedisURI.create(host, port);
+            if (!StringUtils.isEmpty(password)) {
+                redisURI.setPassword(password);
+            }
+            redisInfo.uri = redisURI;
             return this;
         }
 
         public RedisInfo build() {
             return redisInfo;
         }
-
     }
 
-    public Integer getId() {
+    @Override
+    public int compareTo(RedisInfo o) {
+        return id == o.getId() ? 0 : -1;
+    }
+
+    public String getHost() {
+        return uri.getHost();
+    }
+
+    public int getPort() {
+        return uri.getPort();
+    }
+
+    public int getId() {
         return id;
     }
 }

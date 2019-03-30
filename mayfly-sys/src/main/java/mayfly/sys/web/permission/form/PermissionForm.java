@@ -5,6 +5,7 @@ import mayfly.common.enums.StatusEnum;
 import mayfly.common.validation.annotation.EnumValue;
 import mayfly.common.validation.annotation.NotBlank;
 import mayfly.common.validation.annotation.NotNull;
+import mayfly.sys.common.enums.MethodEnum;
 
 /**
  * @author meilin.huang
@@ -16,13 +17,19 @@ public class PermissionForm {
 
     private Integer groupId;
 
+    /**
+     * 字符串非空检验
+     */
     @NotBlank
     private String uriPattern;
 
     @NotBlank
     private String code;
 
-    @EnumValue(clazz = StatusEnum.class)
+    /**
+     * method不能为空且只能是MethodEnum中对应的枚举值value
+     */
+    @EnumValue(clazz = MethodEnum.class)
     @NotNull
     private Integer method;
 
