@@ -69,7 +69,7 @@ public class SSHUtils {
         Assert.notEmpty(ip, "ip不能为空！");
         Assert.notEmpty(command, "command不能为空");
         Assert.notEmpty(username, "username不能为空！");
-        Assert.notEmpty(password, "username不能为空！");
+        Assert.notEmpty(password, "password不能为空！");
 
         Session session = null;
         ChannelExec channel = null;
@@ -90,7 +90,7 @@ public class SSHUtils {
             channel.setErrStream(System.err);
             //stdout
             read = new BufferedReader(new InputStreamReader(channel.getInputStream()));
-            String line = "";
+            String line;
             int lineNumber = 1;
             while ((line = read.readLine()) != null) {
                 if (lineNumber++ > 1) {

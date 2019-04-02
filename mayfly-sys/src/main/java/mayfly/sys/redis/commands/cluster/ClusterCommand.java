@@ -9,7 +9,7 @@ import io.lettuce.core.cluster.models.partitions.Partitions;
 import io.lettuce.core.cluster.models.partitions.RedisClusterNode;
 import mayfly.common.exception.BusinessRuntimeException;
 import mayfly.common.utils.StringUtils;
-import mayfly.sys.redis.connection.RedisConnectionRegister;
+import mayfly.sys.redis.connection.RedisConnectionRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,7 +22,7 @@ import java.util.*;
  */
 public class ClusterCommand {
 
-    private static RedisConnectionRegister register = RedisConnectionRegister.getInstance();
+    private static RedisConnectionRegistry register = RedisConnectionRegistry.getInstance();
 
     private static final Logger LOG = LoggerFactory.getLogger(ClusterCommand.class);
 

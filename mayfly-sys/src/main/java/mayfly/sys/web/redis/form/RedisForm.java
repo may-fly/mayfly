@@ -1,4 +1,4 @@
-package mayfly.sys.redis.web.form;
+package mayfly.sys.web.redis.form;
 
 import lombok.Data;
 import mayfly.common.validation.annotation.NotBlank;
@@ -19,6 +19,8 @@ public class RedisForm {
     private int port = 6379;
 
     private String pwd;
+
+    private Integer clusterId;
 
     private String description;
 }

@@ -13,6 +13,7 @@ import io.lettuce.core.cluster.api.sync.RedisClusterCommands;
 import io.lettuce.core.codec.RedisCodec;
 import mayfly.common.exception.BusinessRuntimeException;
 import mayfly.common.utils.Assert;
+import mayfly.common.utils.ScheduleUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,6 +23,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -29,82 +31,88 @@ import java.util.stream.Collectors;
  * @version 1.0
  * @date 2019-01-16 5:26 PM
  */
-public class RedisConnectionRegister {
+public class RedisConnectionRegistry {
 
-    private static final Logger LOG = LoggerFactory.getLogger(RedisConnectionRegister.class);
-
-    /**
-     * 单机连接  key:节点
-     */
-    private Map<Integer, RedisConnection> standaloneConMap = new ConcurrentHashMap<>(8);
+    private static final Logger LOG = LoggerFactory.getLogger(RedisConnectionRegistry.class);
 
     /**
-     * 集群连接  key:集群id
+     * 连接缓存  key: 单机：standalone_{id}  集群：cluster_{clusterId}
      */
-    private Map<Integer, RedisConnection> clusterConMap = new ConcurrentHashMap<>(8);
+    private Map<String, RedisConnection> connectionCache = new ConcurrentHashMap<>(8);
 
     /**
      * 所有连接过的redis信息
      */
     private Set<RedisInfo> allRedis = new TreeSet<>();
 
-    private static final RedisConnectionRegister instance = new RedisConnectionRegister();
+    private static final RedisConnectionRegistry instance = new RedisConnectionRegistry();
 
-    public static RedisConnectionRegister getInstance() {
+    public static RedisConnectionRegistry getInstance() {
         return instance;
     }
 
-    private RedisConnectionRegister(){}
+    private RedisConnectionRegistry(){}
 
     public synchronized void registerStandalone(RedisInfo redisInfo) {
         Assert.notNull(redisInfo, "单机节点uri不能为空！");
         Assert.notNull(redisInfo.getUri(), "单机节点uri不能为空！");
 
-        if (standaloneConMap.containsKey(redisInfo.getId())) {
+        if (connectionCache.containsKey(getStandaloneKey(redisInfo.getId()))) {
             return;
         }
         RedisConnection rc = RedisConnection.connectStandalone(redisInfo);
-        standaloneConMap.put(redisInfo.getId(), rc);
+        connectionCache.put(getStandaloneKey(redisInfo.getId()), rc);
         allRedis.add(rc.getRedisInfo());
     }
 
     public synchronized void registerCluster(Set<RedisInfo> redisCluster) {
         Assert.notEmpty(redisCluster, "集群节点uri不能为空！");
 
-        int clusterId = redisCluster.iterator().next().getClusterId();
+        int clusterId = redisCluster.stream().findFirst().get().getClusterId();
         Assert.assertState(clusterId != RedisInfo.STANDALONE, "集群id不存在！");
 
-        if (clusterConMap.containsKey(clusterId)) {
+        if (connectionCache.containsKey(getClusterKey(clusterId))) {
             return;
         }
         RedisConnection rc = RedisConnection.connectCluster(redisCluster);
-        clusterConMap.put(clusterId, rc);
+        connectionCache.put(getClusterKey(clusterId), rc);
         allRedis.addAll(rc.getRedisInfos());
     }
 
+    /**
+     * 移除单机
+     * @param redisInfo
+     */
     public void remove(RedisInfo redisInfo) {
-        int id = redisInfo.getId();
-        standaloneConMap.get(id).close();
-        standaloneConMap.remove(id);
+        String key = getStandaloneKey(redisInfo.getId());
+        connectionCache.get(key).close();
+        connectionCache.remove(key);
         allRedis.remove(redisInfo);
+        ScheduleUtils.cancel(key);
     }
 
+    /**
+     * 移除集群
+     * @param clusterId
+     */
     public void remove(int clusterId) {
-        clusterConMap.get(clusterId).close();
-        allRedis.removeAll(getClusterRedisInfo(clusterId));
-        clusterConMap.remove(clusterId);
+        String key = getClusterKey(clusterId);
+        connectionCache.get(key).close();
+        allRedis.removeAll(connectionCache.get(key).getRedisInfos());
+        connectionCache.remove(key);
+        ScheduleUtils.cancel(key);
     }
 
     public boolean contains(boolean cluster, int id) {
-        return cluster ? clusterConMap.containsKey(id) : standaloneConMap.containsKey(id);
+        return cluster ? connectionCache.containsKey(getClusterKey(id)) : connectionCache.containsKey(getStandaloneKey(id));
     }
 
     public RedisClient getClient(int id) {
-        return (RedisClient) standaloneConMap.get(id).getRequireRedisClient();
+        return (RedisClient) connectionCache.get(id).getRequireRedisClient();
     }
 
     public RedisClusterClient getClusterClient(int clusterId) {
-        return (RedisClusterClient) clusterConMap.get(clusterId).getRequireRedisClient();
+        return (RedisClusterClient) connectionCache.get(getClusterKey(clusterId)).getRequireRedisClient();
     }
 
     /**
@@ -117,7 +125,7 @@ public class RedisConnectionRegister {
         Assert.notNull(ri, "不存在该redis实例连接");
         //如果是单机则返回单机连接
         if (ri.isStandalone()) {
-            return (StatefulRedisConnection<String, byte[]>) standaloneConMap.get(redisId).getRequireConnection();
+            return (StatefulRedisConnection<String, byte[]>) connectionCache.get(getStandaloneKey(redisId)).getRequireConnection();
         }
         //如果是集群，则从集群中获取具体节点连接
         return getClusterConnection(ri.getClusterId()).getConnection(ri.getHost(), ri.getPort());
@@ -129,7 +137,7 @@ public class RedisConnectionRegister {
      * @return
      */
     public StatefulRedisClusterConnection<String, byte[]> getClusterConnection(int clusterId) {
-        return Optional.ofNullable(clusterConMap.get(clusterId))
+        return Optional.ofNullable(connectionCache.get(getClusterKey(clusterId)))
                 .map(x -> (StatefulRedisClusterConnection<String, byte[]>)x.getRequireConnection())
                 .orElseThrow(() -> new BusinessRuntimeException("不存在该集群连接实例！"));
     }
@@ -149,16 +157,8 @@ public class RedisConnectionRegister {
         return null;
     }
 
-    public Set<RedisInfo> getClusterRedisInfo(int clusterId) {
-        return clusterConMap.get(clusterId).getRedisInfos();
-    }
-
-    public Set<RedisInfo> getAllRedis() {
-        return allRedis;
-    }
-
     /**
-     * 获取指定机器的命令操作
+     * 获取指定机器的命令操作对象
      * @param redisId
      * @return
      */
@@ -166,8 +166,31 @@ public class RedisConnectionRegister {
         return getConnection(redisId).sync();
     }
 
+    /**
+     * 获取集群命令操作对象
+     * @param clusterId
+     * @return
+     */
     public RedisClusterCommands<String, byte[]> getClusterCmds(int clusterId) {
         return getClusterConnection(clusterId).sync();
+    }
+
+    /**
+     * 获取集群缓存key
+     * @param clusterId  集群id
+     * @return
+     */
+    public static String getClusterKey(int clusterId) {
+        return "cluster_" + clusterId;
+    }
+
+    /**
+     * 获取单机缓存key
+     * @param redisId
+     * @return
+     */
+    public static String getStandaloneKey(int redisId) {
+        return "redis_" + redisId;
     }
 
 
@@ -185,7 +208,7 @@ public class RedisConnectionRegister {
         /**
          * 是否为集群模式
          */
-        private boolean cluster;
+        private int clusterId = RedisInfo.STANDALONE;
 
         private Set<RedisInfo> redisInfos;
 
@@ -201,12 +224,11 @@ public class RedisConnectionRegister {
 
 
         private RedisConnection(RedisInfo redisInfo) {
-            this.cluster = false;
             this.redisInfo = redisInfo;
         }
 
         private RedisConnection(Set<RedisInfo> redisCluster) {
-            this.cluster = true;
+            this.clusterId = redisCluster.stream().findFirst().get().getClusterId();
             this.redisInfos = redisCluster;
         }
 
@@ -216,7 +238,6 @@ public class RedisConnectionRegister {
          * @return
          */
         public static RedisConnection connectStandalone(RedisInfo redisInfo) {
-            LOG.debug("连接redis----> id: {}", redisInfo.getId());
             return new RedisConnection(redisInfo).connect();
         }
 
@@ -226,12 +247,12 @@ public class RedisConnectionRegister {
          * @return
          */
         public static RedisConnection connectCluster(Set<RedisInfo> redisCluster) {
-            LOG.debug("连接redis集群----> id: {}", redisCluster.iterator().next().getClusterId());
             return new RedisConnection(redisCluster).connect();
         }
 
         public synchronized RedisConnection connect() {
-            if (!cluster) {
+            LOG.debug("连接redis----> cluster:{}, id:{}", isCluster(), isCluster() ? clusterId : redisInfo.getId());
+            if (!isCluster()) {
                 redisClient = RedisClient.create(redisInfo.getUri());
                 try {
                     connection = ((RedisClient) redisClient).connect(byteCodec);
@@ -250,6 +271,10 @@ public class RedisConnectionRegister {
                     throw new BusinessRuntimeException("连接redis实例失败！");
                 }
             }
+
+            ScheduleUtils.schedule(getKey(), () -> {
+                close();
+            }, 10, TimeUnit.MINUTES);
             return this;
         }
 
@@ -257,16 +282,14 @@ public class RedisConnectionRegister {
          * 关闭连接
          */
         public void close() {
-            LOG.debug("断开redis连接----> cluster:{}, id: {}", this.cluster, cluster ? getRedisInfos().iterator().next().getClusterId() : redisInfo.getId());
+            LOG.debug("断开redis----> cluster:{}, id: {}", isCluster(), isCluster() ? clusterId : redisInfo.getId());
+            if (connection != null) {
+                connection.close();
+                connection = null;
+            }
             if (redisClient != null) {
                 redisClient.shutdown();
                 redisClient = null;
-            }
-            if (connection != null) {
-                if (connection.isOpen()) {
-                    connection.close();
-                }
-                connection = null;
             }
         }
 
@@ -300,7 +323,11 @@ public class RedisConnectionRegister {
         }
 
         public boolean isCluster() {
-            return cluster;
+            return clusterId != RedisInfo.STANDALONE;
+        }
+
+        public String getKey() {
+            return isCluster() ? getClusterKey(clusterId) : getStandaloneKey(redisInfo.getId());
         }
     }
 

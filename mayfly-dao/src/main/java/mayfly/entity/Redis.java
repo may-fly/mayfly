@@ -20,7 +20,7 @@ public class Redis {
 
     private Integer id;
 
-    private String ip;
+    private String host;
 
     private Integer port;
 

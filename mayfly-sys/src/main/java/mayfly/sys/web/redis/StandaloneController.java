@@ -1,12 +1,11 @@
-package mayfly.sys.redis.web;
+package mayfly.sys.web.redis;
 
-import io.lettuce.core.KeyScanCursor;
 import io.lettuce.core.api.sync.RedisCommands;
 import mayfly.common.result.Result;
 import mayfly.sys.redis.commands.KeyCommand;
 import mayfly.sys.redis.commands.ServerCommand;
-import mayfly.sys.redis.service.RedisService;
-import mayfly.sys.redis.web.vo.KeyScanVO;
+import mayfly.sys.service.redis.RedisService;
+import mayfly.sys.web.redis.vo.KeyScanVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,10 +28,10 @@ public class StandaloneController {
     }
 
     @GetMapping("/{id}/scan")
-    public Result scan(@PathVariable Integer id, String match) {
+    public Result scan(@PathVariable Integer id, String cursor, Integer count, String match) {
         RedisCommands<String, byte[]> cmds = redisService.getCmds(id);
-        KeyScanCursor<String> scan = KeyCommand.scan(cmds, 500,  match);
-        KeyScanVO vo = KeyScanVO.builder().cursor(scan.getCursor()).keys(scan.getKeys()).dbsize(ServerCommand.dbsize(cmds)).build();
-        return Result.success().withData(vo);
+        KeyScanVO scan = KeyCommand.scan(cmds, cursor,count,  match);
+        scan.setDbsize(ServerCommand.dbsize(cmds));
+        return Result.success().withData(scan);
     }
 }

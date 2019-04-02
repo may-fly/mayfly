@@ -23,15 +23,6 @@ let RouteList = [{
 				component: resolve => require(['~/views/Home/Index.vue'], resolve),
 			},
 			{
-				path: '/user_manage',
-				name: 'UserManage',
-				meta: {
-					title: '用户列表',
-					keepAlive: true
-				},
-				component: resolve => require(['~/views/UserManage/Index.vue'], resolve),
-			},
-			{
 				path: '/role_manage',
 				name: 'RoleManage',
 				meta: {
@@ -103,16 +94,16 @@ let RouteList = [{
 
 ]
 
-
-RouteList[0].children.push({
-	path: '/build_code',
-	name: 'BuildCode',
-	meta: {
-		title: '构建代码',
-		keepAlive: true
-	},
-	component: resolve => require(['~/views/DevelopmentTool/Build.vue'], resolve),
-});
+// 
+// RouteList[0].children.push({
+// 	path: '/build_code',
+// 	name: 'BuildCode',
+// 	meta: {
+// 		title: '构建代码',
+// 		keepAlive: true
+// 	},
+// 	component: resolve => require(['~/views/DevelopmentTool/Build.vue'], resolve),
+// });
 
 export default new Router({
 	routes: RouteList

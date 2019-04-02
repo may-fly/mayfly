@@ -5,6 +5,7 @@ import mayfly.common.exception.BusinessRuntimeException;
 import mayfly.common.result.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -23,6 +24,9 @@ public class GlobalExceptionHandler {
         log.error("异常：", e);
         if (e instanceof BusinessException || e instanceof BusinessRuntimeException) {
             return Result.paramError(e.getMessage());
+        }
+        if (e instanceof HttpRequestMethodNotSupportedException) {
+            return Result.serverError("url请求方法错误！");
         }
 
         return Result.serverError();

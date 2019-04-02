@@ -1,4 +1,4 @@
-package mayfly.sys.redis.service.impl;
+package mayfly.sys.service.redis.impl;
 
 import io.lettuce.core.api.sync.RedisCommands;
 import io.lettuce.core.cluster.api.sync.RedisClusterCommands;
@@ -6,9 +6,9 @@ import mayfly.common.exception.BusinessRuntimeException;
 import mayfly.common.utils.Assert;
 import mayfly.dao.RedisMapper;
 import mayfly.entity.Redis;
-import mayfly.sys.redis.connection.RedisConnectionRegister;
+import mayfly.sys.redis.connection.RedisConnectionRegistry;
 import mayfly.sys.redis.connection.RedisInfo;
-import mayfly.sys.redis.service.RedisService;
+import mayfly.sys.service.redis.RedisService;
 import mayfly.sys.service.base.impl.BaseServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,7 +28,7 @@ public class RedisServiceImpl extends BaseServiceImpl<RedisMapper, Redis> implem
     @Autowired
     private RedisMapper redisMapper;
 
-    private RedisConnectionRegister register = RedisConnectionRegister.getInstance();
+    private RedisConnectionRegistry register = RedisConnectionRegistry.getInstance();
 
     @Override
     public void connect(boolean cluster, int id) {
@@ -58,13 +58,13 @@ public class RedisServiceImpl extends BaseServiceImpl<RedisMapper, Redis> implem
         if (redis.getClusterId() != null && redis.getClusterId() != RedisInfo.STANDALONE) {
             throw new BusinessRuntimeException("该redis为集群模式！");
         }
-        return RedisInfo.builder(redis.getId()).info(redis.getIp(), redis.getPort(), redis.getPwd()).build();
+        return RedisInfo.builder(redis.getId()).info(redis.getHost(), redis.getPort(), redis.getPwd()).build();
     }
 
     private Set<RedisInfo> toRedisCluster(int id) {
         List<Redis> nodes = listByCondition(Redis.builder().clusterId(id).build());
         Assert.notEmpty(nodes, "不存在该redis集群实例！");
-        return nodes.stream().map(n -> RedisInfo.builder(n.getId()).clusterId(id).info(n.getIp(), n.getPort(), n.getPwd()).build())
+        return nodes.stream().map(n -> RedisInfo.builder(n.getId()).clusterId(id).info(n.getHost(), n.getPort(), n.getPwd()).build())
                 .collect(Collectors.toSet());
     }
 }

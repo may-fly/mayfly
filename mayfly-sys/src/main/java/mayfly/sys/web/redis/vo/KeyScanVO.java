@@ -1,4 +1,4 @@
-package mayfly.sys.redis.web.vo;
+package mayfly.sys.web.redis.vo;
 
 import lombok.Builder;
 import lombok.Data;
@@ -16,7 +16,7 @@ public class KeyScanVO {
 
     private String cursor;
 
-    private List<String> keys;
+    private List<KeyInfo> keys;
 
     private long dbsize;
 }

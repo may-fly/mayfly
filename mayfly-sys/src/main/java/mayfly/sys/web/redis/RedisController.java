@@ -1,9 +1,10 @@
-package mayfly.sys.redis.web;
+package mayfly.sys.web.redis;
 
 import mayfly.common.result.Result;
 import mayfly.entity.Redis;
-import mayfly.sys.redis.connection.RedisInfo;
-import mayfly.sys.redis.service.RedisService;
+import mayfly.sys.common.utils.BeanUtils;
+import mayfly.sys.service.redis.RedisService;
+import mayfly.sys.web.redis.form.RedisForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,8 +21,8 @@ public class RedisController {
     @Autowired
     private RedisService redisService;
 
-    @GetMapping("/list")
-    public Result redisList() {
-        return Result.success().withData(redisService.listByCondition(Redis.builder().clusterId(RedisInfo.STANDALONE).build()));
+    @GetMapping()
+    public Result redisList(RedisForm query) {
+        return Result.success().withData(redisService.listByCondition(BeanUtils.copyProperties(query, Redis.class)));
     }
 }

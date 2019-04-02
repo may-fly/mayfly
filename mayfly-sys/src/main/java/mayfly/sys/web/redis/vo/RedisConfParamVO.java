@@ -1,4 +1,4 @@
-package mayfly.sys.redis.web.vo;
+package mayfly.sys.web.redis.vo;
 
 import lombok.Data;
 import mayfly.common.validation.annotation.NotBlank;

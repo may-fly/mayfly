@@ -6,7 +6,7 @@
 				<el-input placeholder="请输入api功能！" size="small" style="width: 140px" v-model="params.name" @clear="searchApi"
 				 clearable>
 				</el-input>
-        <el-select v-model="query.groupId" clearable placeholder="请选择权限组">
+        <el-select v-model="query.groupId" size="small" clearable placeholder="请选择权限组">
           <el-option v-for="item in groups" :key="item.id" :value="item.id" :label="item.name">
           </el-option>
         </el-select>

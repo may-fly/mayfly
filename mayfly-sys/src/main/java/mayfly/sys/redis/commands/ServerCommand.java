@@ -5,7 +5,7 @@ import io.lettuce.core.api.sync.RedisServerCommands;
 import mayfly.common.exception.BusinessRuntimeException;
 import mayfly.common.utils.Assert;
 import mayfly.common.utils.StringUtils;
-import mayfly.sys.redis.connection.RedisConnectionRegister;
+import mayfly.sys.redis.connection.RedisConnectionRegistry;
 import mayfly.sys.redis.enumration.RedisConfEnum;
 import mayfly.sys.redis.enumration.RedisInfoEnum;
 import mayfly.sys.redis.parser.RedisInfoParser;
@@ -20,7 +20,7 @@ import java.util.Map;
  */
 public class ServerCommand {
 
-    private static RedisConnectionRegister register = RedisConnectionRegister.getInstance();
+    private static RedisConnectionRegistry register = RedisConnectionRegistry.getInstance();
 
     /**
      * 获取redis命令操作
@@ -33,7 +33,7 @@ public class ServerCommand {
 
     /**
      * 获取redis info信息
-     * @param redisId  redis id
+     * @param serverCommands  命令操作对象
      * @return
      */
     public static Map<RedisInfoEnum, Map<String, Object>> info(RedisServerCommands serverCommands) {

@@ -5,9 +5,10 @@ import io.lettuce.core.ScanArgs;
 import io.lettuce.core.ScanCursor;
 import io.lettuce.core.api.sync.RedisKeyCommands;
 import mayfly.common.utils.StringUtils;
+import mayfly.sys.web.redis.vo.KeyInfo;
+import mayfly.sys.web.redis.vo.KeyScanVO;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  * @author meilin.huang
@@ -16,20 +17,23 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class KeyCommand {
 
-    private static Map<RedisKeyCommands, ScanCursor> scanCursorMap = new ConcurrentHashMap<>();
-
-    public static KeyScanCursor<String> scan(RedisKeyCommands<String, byte[]> commands, int count, String match) {
+    public static KeyScanVO scan(RedisKeyCommands<String, byte[]> commands, String cursor, int count, String match) {
         if (StringUtils.isEmpty(match)) {
             match = "*";
         }
         ScanArgs args = ScanArgs.Builder.limit(count).match(match);
-        ScanCursor c = scanCursorMap.get(commands);
-        if (c == null || c.isFinished()) {
+        ScanCursor c;
+        if (StringUtils.isEmpty(cursor)) {
             c = ScanCursor.INITIAL;
+        } else {
+            c = ScanCursor.of(cursor);
         }
         KeyScanCursor<String> result = commands.scan(c, args);
-        scanCursorMap.put(commands, result);
-        return result;
+        return KeyScanVO.builder().keys(result.getKeys().stream()
+                .map(k -> KeyInfo.builder().key(k)
+                        .ttl(commands.ttl(k))
+                        .type(commands.type(k)).build())
+                .collect(Collectors.toList())).cursor(result.getCursor()).build();
     }
 
 

@@ -1,4 +1,4 @@
-package mayfly.sys.redis.web.vo;
+package mayfly.sys.web.redis.vo;
 
 import lombok.Builder;
 import lombok.Data;

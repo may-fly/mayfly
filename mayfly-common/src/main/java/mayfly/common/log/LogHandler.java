@@ -20,7 +20,7 @@ public class LogHandler {
     /**
      * 缓存日志的基本信息，key : 方法全限定名  value : LogInfo对象
      */
-    private static final Map<String, LogInfo> LOG_CACHE = new ConcurrentHashMap(128);
+    private static final Map<String, LogInfo> LOG_CACHE = new ConcurrentHashMap<>(128);
 
     private LogHandler() {
     }
@@ -39,20 +39,18 @@ public class LogHandler {
      */
     public LogInfo getLogInfo(Method method) {
         String invoke = method.getDeclaringClass().getName() + "." + method.getName();
-        return LOG_CACHE.computeIfAbsent(invoke, key -> parseLogMsg(method));
+        return LOG_CACHE.computeIfAbsent(invoke, key -> parseLogMsg(key, method));
     }
 
 
     /**
      * 解析方法上对应的注解，生成对应的LogInfo对象
+     * @param invoke 方法调用名
      * @param method
      * @return
      */
-    private LogInfo parseLogMsg(Method method) {
-        // 方法调用全路径名
-        String invoke = method.getDeclaringClass().getName() + "." + method.getName();
+    private LogInfo parseLogMsg(String invoke, Method method) {
         int argsCount = method.getParameterCount();
-
         MethodLog log = method.getAnnotation(MethodLog.class);
         if (log == null) {
             throw new IllegalArgumentException(invoke + "方法必须添加@MethodLog注解！");

@@ -75,6 +75,10 @@ public final class Result implements Serializable {
         return new Result(SERVER_ERROR, "服务器异常！");
     }
 
+    public static Result serverError(String msg) {
+        return new Result(SERVER_ERROR, msg);
+    }
+
     public static Result noFound() {
         return new Result(NO_FOUND, "未找到对应的资源");
     }

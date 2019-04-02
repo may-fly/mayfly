@@ -1,4 +1,4 @@
-package mayfly.sys.redis.web.vo;
+package mayfly.sys.web.redis.vo;
 
 import io.lettuce.core.cluster.models.partitions.RedisClusterNode;
 import lombok.Builder;

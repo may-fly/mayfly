@@ -1,4 +1,4 @@
-package mayfly.sys.redis.web.vo;
+package mayfly.sys.web.redis.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class KeyValue<T> {
+public class KeyInfo<T> {
 
     private long ttl;
 

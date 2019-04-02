@@ -1,14 +1,13 @@
-package mayfly.sys.redis.web;
+package mayfly.sys.web.redis;
 
-import io.lettuce.core.KeyScanCursor;
 import io.lettuce.core.cluster.api.sync.RedisClusterCommands;
 import mayfly.common.result.Result;
 import mayfly.sys.redis.commands.KeyCommand;
 import mayfly.sys.redis.commands.ServerCommand;
 import mayfly.sys.redis.commands.cluster.ClusterCommand;
-import mayfly.sys.redis.service.RedisService;
-import mayfly.sys.redis.web.vo.KeyScanVO;
-import mayfly.sys.redis.web.vo.RedisClusterNodeVO;
+import mayfly.sys.service.redis.RedisService;
+import mayfly.sys.web.redis.vo.KeyScanVO;
+import mayfly.sys.web.redis.vo.RedisClusterNodeVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -58,11 +57,11 @@ public class ClusterController {
     }
 
     @GetMapping("/{id}/scan")
-    public Result scan(@PathVariable Integer id, String match) {
+    public Result scan(@PathVariable Integer id, String cursor, Integer count, String match) {
         RedisClusterCommands<String, byte[]> clusterCmds = redisService.getClusterCmds(id);
-        KeyScanCursor<String> scan = KeyCommand.scan(clusterCmds, 500,  match);
-        KeyScanVO vo = KeyScanVO.builder().cursor(scan.getCursor()).keys(scan.getKeys()).dbsize(ServerCommand.dbsize(clusterCmds)).build();
-        return Result.success().withData(vo);
+        KeyScanVO scan = KeyCommand.scan(clusterCmds, cursor, count,  match);
+        scan.setDbsize(ServerCommand.dbsize(clusterCmds));
+        return Result.success().withData(scan);
     }
 
 //    @GetMapping("/{id}/keys")

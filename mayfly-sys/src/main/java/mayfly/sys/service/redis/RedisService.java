@@ -1,4 +1,4 @@
-package mayfly.sys.redis.service;
+package mayfly.sys.service.redis;
 
 import io.lettuce.core.api.sync.RedisCommands;
 import io.lettuce.core.cluster.api.sync.RedisClusterCommands;
