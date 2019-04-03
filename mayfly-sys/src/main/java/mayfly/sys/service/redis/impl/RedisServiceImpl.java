@@ -8,8 +8,8 @@ import mayfly.dao.RedisMapper;
 import mayfly.entity.Redis;
 import mayfly.sys.redis.connection.RedisConnectionRegistry;
 import mayfly.sys.redis.connection.RedisInfo;
-import mayfly.sys.service.redis.RedisService;
 import mayfly.sys.service.base.impl.BaseServiceImpl;
+import mayfly.sys.service.redis.RedisService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,32 +28,32 @@ public class RedisServiceImpl extends BaseServiceImpl<RedisMapper, Redis> implem
     @Autowired
     private RedisMapper redisMapper;
 
-    private RedisConnectionRegistry register = RedisConnectionRegistry.getInstance();
-
-    @Override
-    public void connect(boolean cluster, int id) {
-        if (register.contains(cluster, id)) {
-            return;
-        }
-        if (cluster) {
-            register.registerCluster(toRedisCluster(id));
-        } else {
-            register.registerStandalone(toRedisInfo(id));
-        }
-    }
+    private RedisConnectionRegistry registry = RedisConnectionRegistry.getInstance();
 
     @Override
     public RedisCommands<String, byte[]> getCmds(int redisId) {
-        return register.getCmds(redisId);
+        //如果不存在该redis信息，则先连接对应的单机or集群连接
+        if (registry.getRedisInfo(redisId) == null) {
+            Redis redis = getById(redisId);
+            if (redis.getClusterId() == RedisInfo.STANDALONE) {
+                registry.registerStandalone(toRedisInfo(redis));
+            } else {
+                registry.registerCluster(toRedisCluster(redis.getClusterId()));
+            }
+        }
+        return registry.getCmds(redisId);
     }
 
     @Override
     public RedisClusterCommands<String, byte[]> getClusterCmds(int clusterId) {
-        return register.getClusterCmds(clusterId);
+        //如果不存在该集群连接，则先连接
+        if (!registry.contains(true, clusterId)) {
+            registry.registerCluster(toRedisCluster(clusterId));
+        }
+        return registry.getClusterCmds(clusterId);
     }
 
-    private RedisInfo toRedisInfo(int id) {
-        Redis redis = getById(id);
+    private RedisInfo toRedisInfo(Redis redis) {
         Assert.notNull(redis, "不存在该redis实例！");
         if (redis.getClusterId() != null && redis.getClusterId() != RedisInfo.STANDALONE) {
             throw new BusinessRuntimeException("该redis为集群模式！");
@@ -61,10 +61,10 @@ public class RedisServiceImpl extends BaseServiceImpl<RedisMapper, Redis> implem
         return RedisInfo.builder(redis.getId()).info(redis.getHost(), redis.getPort(), redis.getPwd()).build();
     }
 
-    private Set<RedisInfo> toRedisCluster(int id) {
-        List<Redis> nodes = listByCondition(Redis.builder().clusterId(id).build());
+    private Set<RedisInfo> toRedisCluster(int clusterId) {
+        List<Redis> nodes = listByCondition(Redis.builder().clusterId(clusterId).build());
         Assert.notEmpty(nodes, "不存在该redis集群实例！");
-        return nodes.stream().map(n -> RedisInfo.builder(n.getId()).clusterId(id).info(n.getHost(), n.getPort(), n.getPwd()).build())
+        return nodes.stream().map(n -> RedisInfo.builder(n.getId()).clusterId(clusterId).info(n.getHost(), n.getPort(), n.getPwd()).build())
                 .collect(Collectors.toSet());
     }
 }

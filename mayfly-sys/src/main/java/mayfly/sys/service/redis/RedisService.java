@@ -13,14 +13,16 @@ import mayfly.sys.service.base.BaseService;
 public interface RedisService extends BaseService<Redis> {
 
     /**
-     * 连接redis
-     * @param cluster  是否是集群模式
-     * @param id       机器id or 集群id
+     * 获取单台机器的redis命令操作对象，可以是单机版也可以是集群版
+     * @param redisId
+     * @return
      */
-    void connect(boolean cluster, int id);
-
-
     RedisCommands<String, byte[]> getCmds(int redisId);
 
+    /**
+     * 获取集群连接
+     * @param clusterId
+     * @return
+     */
     RedisClusterCommands<String, byte[]> getClusterCmds(int clusterId);
 }

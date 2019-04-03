@@ -36,7 +36,7 @@ public class ServerController {
         redis.setUpdateTime(now);
         redisService.save(redis);
         // 连接该redis
-        redisService.connect(false, redis.getId());
+//        redisService.connect(false, redis.getId());
         return Result.success().withData(redis);
     }
 

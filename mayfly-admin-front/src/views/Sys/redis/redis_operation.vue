@@ -1,8 +1,8 @@
 <template>
-	<div>
-		<el-container>
-			<el-aside width="500">
-				<!-- <el-row>
+  <div>
+    <!-- <el-container>
+      <el-aside width="500"> -->
+    <!-- <el-row>
 					<el-col :span="span.title">
 						<div class="grid-title">版本:</div>
 					</el-col>
@@ -20,7 +20,7 @@
 					</el-col>
 				</el-row>
 				 -->
-				<!-- <el-row>
+    <!-- <el-row>
 					<el-col :span="span.title">
 						<div class="grid-title">版本:</div>
 					</el-col>
@@ -100,7 +100,7 @@
 						<div class="grid-content">{{redis.info.Memory.mem_fragmentation_ratio}}%</div>
 					</el-col>
 				</el-row> -->
-				<!-- <div>
+    <!-- <div>
 					<span>Server</span>
 					<div>
 						<span>版本:</span><span>{{redis.info.Server.redis_version}}</span>
@@ -109,178 +109,152 @@
 						<span>服务器系统:</span><span>{{redis.info.Server.os}}</span>
 					</div>
 				</div> -->
-        
-        <div class="dbsize">
-        	<div>
-        		<el-input placeholder="请输入key" size="small" style="width: 60%;" clearable>
-        		</el-input>
-                  
-        		keys：{{dbsize}}
-        	</div>
+
+
+    <!-- </el-aside>
+      <el-main>
+        <div class="value">
+
         </div>
-        <el-table :data="keys"  border stripe height="600" :highlight-current-row="true" style="cursor:;">
-        	<el-table-column type="selection" width="55">
-        	</el-table-column>
-        	<el-table-column prop="type" label="type" width="80">
-        	</el-table-column>
-        	<el-table-column show-overflow-tooltip prop="key" label="key" min-width="180">
-        	</el-table-column>
-        	<el-table-column prop="ttl" label="ttl">
-        	</el-table-column>
-        </el-table>
-       <el-pagination @current-change="handlePageChange" style="text-align: center;margin-top: 20px;" background layout="prev, pager, next, total"
-        :total="dbsize" :current-page.sync="scanParam.pageNum" :page-size="scanParam.count">
-       </el-pagination>
-			</el-aside>
-			<el-main>
-				<div class="value">
-       
-				</div>
-			</el-main>
-		</el-container>
-	</div>
+      </el-main>
+    </el-container> -->
+    <ToolBar>
+      <div style="float: left">
+        <el-input placeholder="请输入key" style="width: 180px" v-model="scanParam.match" size="small" @clear="clear()"
+          clearable>
+        </el-input>
+        <el-button @click="search()" type="success" icon="el-icon-search" size="small" plain>搜索</el-button>
+        <el-button type="primary" icon="el-icon-plus" size="small" @click="save(false)" plain>添加</el-button>
+      </div>
+      <div style="float: right;">
+        <!-- <el-button @click="scan()" icon="el-icon-refresh" size="small" plain>刷新</el-button> -->
+        <span>keys:{{dbsize}}</span>
+      </div>
+    </ToolBar>
+    <el-table v-loading="loading" :data="keys" border stripe :highlight-current-row="true" style="cursor: pointer;" height="750">
+      <el-table-column type="selection" width="55">
+      </el-table-column>
+      <el-table-column show-overflow-tooltip prop="key" label="key"></el-table-column>
+      <el-table-column prop="type" label="type" width="80"></el-table-column>
+      <el-table-column prop="ttl" label="ttl(过期时间)" width="120">
+        <template slot-scope="scope">
+          {{ttlConveter(scope.row.ttl)}}
+        </template>
+      </el-table-column>
+      <el-table-column label="操作">
+        <template slot-scope="scope">
+          <el-button @click="" type="success" icon="el-icon-search" size="small" plain>查看</el-button>
+          <el-button @click="" type="primary" icon="el-icon-edit" size="small" plain>修改</el-button>
+          <el-button @click="" type="danger" size="small" icon="el-icon-delete" plain>删除</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+    <!-- <el-pagination @current-change="handlePageChange" style="text-align: center;margin-top: 20px;" background layout="prev, pager, next, total"
+      :total="dbsize" :current-page.sync="scanParam.pageNum" :page-size="scanParam.count">
+    </el-pagination> -->
+    <div style="text-align: center; margin-top: 10px;">
+      <el-button @click="scan()" icon="el-icon-refresh" size="small" plain>换一批</el-button>
+      
+    </div>
+  </div>
 </template>
 
 <script>
-	// import Api from "../../../api/index.js"
-  import Req from "~/common/request"  
-	export default {
-		data() {
-			return {
-				span: {
-					title: 8,
-					content: 16
-				},
-				redis: {
-					id: '',
-					info: "",
-					conf: ""
-				},
+  // import Api from "../../../api/index.js"
+  import ToolBar from '~/components/ToolBar/ToolBar.vue';
+  import Req from "~/common/request"
+  export default {
+    data() {
+      return {
+        loading: true,
+        span: {
+          title: 8,
+          content: 16
+        },
+        redis: {
+          id: '',
+          info: "",
+          conf: ""
+        },
         scanParam: {
           match: null,
-          count: 10,
+          count: 12,
           cursor: null,
+          prevCursor: null,
           pageNum: 1
         },
-				keys: [],
-				dbsize: 0
-			};
-		},
-		methods: {
+        keys: [],
+        dbsize: 0
+      };
+    },
+    methods: {
       scan() {
+        this.loading = true;
         Req.get(`/open/redis/${this.redis.id}/scan`, this.scanParam, res => {
-        	// console.log(res)
-        	this.keys = res.keys;
-        	this.dbsize = res.dbsize;
+          // console.log(res)
+          this.keys = res.keys;
+          this.dbsize = res.dbsize;
+          this.scanParam.cursor = res.cursor;
+          this.loading = false;
+        })
+      },
+      search() {
+        // this.scanParam.match = null;
+        this.scanParam.cursor = null;
+        Req.get(`/open/redis/${this.redis.id}/scan`, this.scanParam, res => {
+          // console.log(res)
+          this.keys = res.keys;
+          this.dbsize = this.keys.length;
           this.scanParam.cursor = res.cursor;
         })
       },
       handlePageChange(curPage) {
         this.scanParam.pageNum = curPage;
         this.scan();
+      },
+      clear() {
+        this.scanParam.match = null;
+        this.scanParam.cursor = null;
+        this.scan();
+      },
+      ttlConveter(ttl) {
+        if (ttl === -1) {
+          return "永久";
+        }
+        if (!ttl) {
+          ttl = 0;
+        }
+        let second = parseInt(ttl); // 秒
+        let min = 0; // 分
+        let hour = 0; // 小时
+        if (second > 60) {
+          min = parseInt(second / 60);
+          second = parseInt(second % 60);
+          if (min > 60) {
+            hour = parseInt(min / 60);
+            min = parseInt(min % 60);
+          }
+        }
+        let result = "" + parseInt(second) + "s";
+        if (min > 0) {
+          result = "" + parseInt(min) + "m:" + result;
+        }
+        if (hour > 0) {
+          result = "" + parseInt(hour) + "h:" + result;
+        }
+        return result;
       }
-		},
-		mounted() {
-			this.redis.id = this.$route.params.id;
-			Req.post(`/open/redis/${this.redis.id}/connect`, null, res => {
-				// console.log(res)
-				this.redis.info = res;
-
-				Req.get(`/open/redis/${this.redis.id}/conf`, null, res => {
-					// console.log(res)
-					this.redis.conf = res;
-				})
-			})
-
+    },
+    mounted() {
+      this.redis.id = this.$route.params.id;
       this.scan();
-		}
-	}
+    },
+    components: {
+      ToolBar
+    }
+  }
 </script>
 
 <style>
-	.el-header,
-	.el-footer {
-		background-color: #B3C0D1;
-		color: #333;
-		text-align: center;
-		line-height: 60px;
-	}
 
-	/* .el-aside {
-		background-color: #D3DCE6;
-		color: #333;
-
-	} */
-
-	.el-main {
-		background-color: #E9EEF3;
-		color: #333;
-		/* text-align: center; */
-		/* line-height: 160px; */
-	}
-
-	body>.el-container {
-		margin-bottom: 40px;
-	}
-
-	.el-container:nth-child(5) .el-aside,
-	.el-container:nth-child(6) .el-aside {
-		line-height: 260px;
-	}
-
-	.el-container:nth-child(7) .el-aside {
-		line-height: 320px;
-	}
-
-
-	.el-row {
-		&:last-child {
-			margin-bottom: 0;
-		}
-	}
-
-	.el-col {
-		border-radius: 4px;
-	}
-
-	.grid-title {
-		border-radius: 4px;
-		min-height: 36px;
-		font-size: 14px;
-		background: #e5e9f2;
-		/* float: right; */
-	}
-
-	.grid-content {
-		border-radius: 4px;
-		min-height: 36px;
-		font-size: 14px;
-		background: #e5e9f2;
-	}
-
-
-	.key-info {
-		float: left;
-		white-space: nowrap;
-		height: 600px;
-	}
-
-	.key-info .dbsize {
-		margin-left: 10px;
-	}
-
-	.key a {
-		display: block;
-		margin-top: 2px;
-		cursor: pointer;
-		color: #000000;
-	}
-
-	.key a:hover {
-		color: #367FA9
-	}
-
-	.value {
-		float: left;
-	}
 </style>

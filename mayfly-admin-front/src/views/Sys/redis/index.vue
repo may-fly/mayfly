@@ -25,7 +25,7 @@
 			</el-table-column>
 			<el-table-column label="操作" width="">
 				<template slot-scope="scope">
-					<el-button type="success" @click="show(scope.row)" :ref="scope.row" size="small">查看</el-button>
+					<el-button type="success" @click="show(scope.row)" :ref="scope.row" size="small">数据管理</el-button>
 				</template>
 			</el-table-column>
 		</el-table>

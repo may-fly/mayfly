@@ -67,7 +67,6 @@ public class RedisConnectionRegistry {
 
     public synchronized void registerCluster(Set<RedisInfo> redisCluster) {
         Assert.notEmpty(redisCluster, "集群节点uri不能为空！");
-
         int clusterId = redisCluster.stream().findFirst().get().getClusterId();
         Assert.assertState(clusterId != RedisInfo.STANDALONE, "集群id不存在！");
 
@@ -265,10 +264,10 @@ public class RedisConnectionRegistry {
                 try {
                     connection = ((RedisClusterClient) redisClient).connect(byteCodec);
                 } catch (RedisConnectionException e) {
-                    throw new BusinessRuntimeException("无法连接redis实例！");
+                    throw new BusinessRuntimeException("无法连接redis集群！");
                 } catch (Exception ce) {
-                    LOG.error("连接redis失败！");
-                    throw new BusinessRuntimeException("连接redis实例失败！");
+                    LOG.error("连接redis集群失败！");
+                    throw new BusinessRuntimeException("连接redis集群失败！");
                 }
             }
 

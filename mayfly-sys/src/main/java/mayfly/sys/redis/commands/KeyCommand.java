@@ -22,18 +22,13 @@ public class KeyCommand {
             match = "*";
         }
         ScanArgs args = ScanArgs.Builder.limit(count).match(match);
-        ScanCursor c;
-        if (StringUtils.isEmpty(cursor)) {
-            c = ScanCursor.INITIAL;
-        } else {
-            c = ScanCursor.of(cursor);
-        }
+        ScanCursor c = StringUtils.isEmpty(cursor) ? ScanCursor.INITIAL : ScanCursor.of(cursor);
         KeyScanCursor<String> result = commands.scan(c, args);
         return KeyScanVO.builder().keys(result.getKeys().stream()
                 .map(k -> KeyInfo.builder().key(k)
                         .ttl(commands.ttl(k))
-                        .type(commands.type(k)).build())
-                .collect(Collectors.toList())).cursor(result.getCursor()).build();
+                        .type(commands.type(k)).build()).collect(Collectors.toList()))
+                .cursor(result.getCursor()).build();
     }
 
 

@@ -28,7 +28,6 @@ public class ClusterController {
 
     @PostMapping("/{id}/connect")
     public Result connect(@PathVariable Integer id) {
-        redisService.connect(true, id);
         return Result.success();
     }
 

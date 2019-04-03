@@ -73,7 +73,7 @@ public class PermissionServiceImpl extends BaseServiceImpl<PermissionMapper, Per
                 .map(p -> p.getStatus().equals(StatusEnum.DISABLE.getValue()) ? PermissionCacheHandler.getDisablePermissionCode(p.getCode()) : p.getCode())
                 .collect(Collectors.toList());
         //缓存用户id
-        redisTemplate.opsForValue().set(resolver.resolveByObject(UserCacheKey.USER_ID_KEY, token), id, UserCacheKey.EXPIRE_TIME, TimeUnit.HOURS);
+        redisTemplate.opsForValue().set(resolver.resolveByObject(UserCacheKey.USER_ID_KEY, token), id, UserCacheKey.EXPIRE_TIME, TimeUnit.MINUTES);
         //保存用户权限code
         permissionCacheHandler.savePermission(id, permissionCodes, UserCacheKey.EXPIRE_TIME, TimeUnit.MINUTES);
         return LoginSuccessVO.builder().token(token).menus(menus).permissions(permissionCodes).build();
