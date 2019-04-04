@@ -22,7 +22,7 @@ public class EnumValueValidator implements Validator {
         EnumValue enumValue = field.getAnnotation(EnumValue.class);
         if (enumValue != null && fieldValue != null) {
             if (fieldValue instanceof Integer) {
-                Class<? extends Enum> enumClass = enumValue.clazz();
+                Class<? extends Enum> enumClass = enumValue.value();
                 if (!BaseEnum.class.isAssignableFrom(enumClass)) {
                     throw new IllegalArgumentException("@EnumValue注解中的枚举类必须继承BaseEnum接口！");
                 }

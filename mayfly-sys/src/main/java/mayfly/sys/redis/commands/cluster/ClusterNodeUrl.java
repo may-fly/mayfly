@@ -18,7 +18,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ClusterNodeUri {
+public class ClusterNodeUrl {
     private String host;
 
     private int port;
@@ -31,9 +31,9 @@ public class ClusterNodeUri {
     /**
      * 从节点列表
      */
-    private List<ClusterNodeUri> slaves;
+    private List<ClusterNodeUrl> slaves;
 
-    public ClusterNodeUri(String host, int port, String password) {
+    public ClusterNodeUrl(String host, int port, String password) {
         this.host = host;
         this.port = port;
         this.password = password;
@@ -44,7 +44,7 @@ public class ClusterNodeUri {
      * @param slaveUri
      * @return
      */
-    public ClusterNodeUri addSlave(ClusterNodeUri slaveUri) {
+    public ClusterNodeUrl addSlave(ClusterNodeUrl slaveUri) {
         if (this.slaves == null) {
             this.slaves = new ArrayList<>(4);
         }

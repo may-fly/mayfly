@@ -1,8 +1,8 @@
 <template>
 	<div>
 		<ToolBar>
-			<el-button type="primary" icon="el-icon-plus" size="small" @click="save(false)">添加</el-button>
-			<el-input placeholder="host" size="small" style="width: 140px" v-model="params.host" @clear="search"
+			<el-button type="primary" icon="el-icon-plus" size="small" @click="save(false)" plain>添加</el-button>
+			<el-input placeholder="host" size="small" style="width: 140px" v-model="params.host" @clear="search" plain
 			 clearable>
 			</el-input>
       <!-- <el-input placeholder="请输入api功能！" size="small" style="width: 140px" v-model="params.name" @clear="search"
@@ -25,7 +25,8 @@
 			</el-table-column>
 			<el-table-column label="操作" width="">
 				<template slot-scope="scope">
-					<el-button type="success" @click="show(scope.row)" :ref="scope.row" size="small">数据管理</el-button>
+          <el-button type="primary" @click="show(scope.row)" :ref="scope.row" icom="el-icon-tickets" size="small" plain>info</el-button>
+					<el-button type="success" @click="show(scope.row)" :ref="scope.row" size="small" plain>数据管理</el-button>
 				</template>
 			</el-table-column>
 		</el-table>
@@ -39,12 +40,7 @@
 	export default {
 		data() {
 			return {
-				redisTable: [{
-					id: 1,
-					ip: "127.0.0.1",
-					port: 6379,
-					desc: "测试"
-				}],
+				redisTable: [],
 				form: {
 					host: "",
 					port: 6379,
@@ -69,7 +65,7 @@
 				})
 			},
 			show(row) {
-				this.$router.push(`/redis_operation/${row.id}`);
+				this.$router.push(`/redis_operation/${row.clusterId}/${row.id}`);
 			},
       search() {
         Req.get("/open/redis", this.params, res => {

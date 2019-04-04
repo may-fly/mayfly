@@ -68,7 +68,7 @@ let RouteList = [{
 					component: resolve => require(['~/views/Sys/redis/index.vue'], resolve),
 			},
 			{
-					path: '/redis_operation/:id',
+					path: '/redis_operation/:cluster/:id',
 					name: 'redis_operation',
 					meta: {
 						title: 'redis管理',

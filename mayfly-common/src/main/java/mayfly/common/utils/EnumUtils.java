@@ -44,4 +44,16 @@ public final class EnumUtils {
         }
         return "";
     }
+
+    public static Integer getValueByName(BaseEnum[] enums, String name) {
+        if (StringUtils.isEmpty(name)) {
+            return null;
+        }
+        for (BaseEnum e : enums) {
+            if (name.equals(e.getName())) {
+                return e.getValue();
+            }
+        }
+        return  null;
+    }
 }

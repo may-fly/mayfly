@@ -39,14 +39,14 @@
 			</el-table-column>
 			<el-table-column prop="updateTime" label="更新时间">
 			</el-table-column>
-			<el-table-column label="操作" width="250">
+			<el-table-column label="操作" width="270">
 				<template slot-scope="scope">
 					<el-button v-permission="permission.changeStatus.code" v-if="scope.row.status == 0" @click="changeStatus(scope.row, 1)" type="success"
 					 :ref="scope.row.id" size="small">启用</el-button>
 					<el-button v-permission="permission.changeStatus.code" v-if="scope.row.status == 1" @click="changeStatus(scope.row, 0)" type="danger"
 					 size="small">禁用</el-button>
-					<el-button v-permission="permission.del.code" v-if="scope.row.status != 3" @click="deleteApi(scope.row.id)" type="danger" size="small">删除</el-button>
-					<el-button  v-permission="permission.update.code" @click="save(scope.row)" type="primary" size="small">修改</el-button>
+					<el-button v-permission="permission.del.code" v-if="scope.row.status != 3" @click="deleteApi(scope.row.id)" type="danger" size="small" icon="el-icon-delete">删除</el-button>
+					<el-button  v-permission="permission.update.code" @click="save(scope.row)" type="primary" size="small" icon="el-icon-edit">修改</el-button>
 				</template>
 			</el-table-column>
 		</el-table>

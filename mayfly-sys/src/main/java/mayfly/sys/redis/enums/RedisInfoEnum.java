@@ -1,4 +1,4 @@
-package mayfly.sys.redis.enumration;
+package mayfly.sys.redis.enums;
 
 /**
  * @author meilin.huang

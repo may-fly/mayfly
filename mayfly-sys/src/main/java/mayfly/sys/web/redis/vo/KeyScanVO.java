@@ -2,6 +2,7 @@ package mayfly.sys.web.redis.vo;
 
 import lombok.Builder;
 import lombok.Data;
+import mayfly.sys.redis.commands.KeyInfo;
 
 import java.util.List;
 

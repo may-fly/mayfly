@@ -32,11 +32,12 @@ public class RedisInfo implements Comparable<RedisInfo>{
      */
     private RedisURI uri;
 
+
     /**
      * 是否为单机模式
      * @return
      */
-    public boolean isStandalone() {
+    public static boolean isStandlone(Integer clusterId) {
         return clusterId == STANDALONE;
     }
 

@@ -1,15 +1,14 @@
 package mayfly.sys.web.redis;
 
-import io.lettuce.core.cluster.api.sync.RedisClusterCommands;
 import mayfly.common.result.Result;
-import mayfly.sys.redis.commands.KeyCommand;
-import mayfly.sys.redis.commands.ServerCommand;
 import mayfly.sys.redis.commands.cluster.ClusterCommand;
 import mayfly.sys.service.redis.RedisService;
-import mayfly.sys.web.redis.vo.KeyScanVO;
 import mayfly.sys.web.redis.vo.RedisClusterNodeVO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,14 +25,9 @@ public class ClusterController {
     @Autowired
     private RedisService redisService;
 
-    @PostMapping("/{id}/connect")
-    public Result connect(@PathVariable Integer id) {
-        return Result.success();
-    }
-
     @GetMapping("/{id}/info")
     public Result info(@PathVariable Integer id) {
-        return Result.success().withData(ClusterCommand.clusterInfo(id));
+        return Result.success().withData(ClusterCommand.clusterInfo(redisService.getClusterCmds(id)));
     }
 
     @GetMapping("/{id}/nodes")
@@ -55,16 +49,25 @@ public class ClusterController {
         return Result.success().withData(result);
     }
 
-    @GetMapping("/{id}/scan")
-    public Result scan(@PathVariable Integer id, String cursor, Integer count, String match) {
-        RedisClusterCommands<String, byte[]> clusterCmds = redisService.getClusterCmds(id);
-        KeyScanVO scan = KeyCommand.scan(clusterCmds, cursor, count,  match);
-        scan.setDbsize(ServerCommand.dbsize(clusterCmds));
-        return Result.success().withData(scan);
-    }
-
-//    @GetMapping("/{id}/keys")
-//    public Result keys(@PathVariable Integer id) {
-//        return Result.success().withData(KeyCommand.keys(redisService.getClusterCmds(id)));
+//    @MethodLog("获取集群redis key")
+//    @GetMapping("/{id}/scan")
+//    public Result scan(@PathVariable Integer id, Integer count, String match) {
+//        RedisClusterCommands<String, byte[]> clusterCmds = redisService.getClusterCmds(id);
+//        KeyScanVO scan = KeyValueCommand.clusterScan(clusterCmds, count,  match);
+//        scan.setDbsize(ServerCommand.dbsize(clusterCmds));
+//        return Result.success().withData(scan);
+//    }
+//
+//    @MethodLog(value = "查询redis value")
+//    @GetMapping("/{id}/value")
+//    public Result value(@PathVariable Integer id, String key) {
+//        return Result.success().withData(KeyValueCommand.value(redisService.getClusterCmds(id), key));
+//    }
+//
+//    @MethodLog(value = "新增集群key value")
+//    @PostMapping("/{id}/value")
+//    public Result addKeyValue(@PathVariable Integer id, @Valid KeyValueForm keyValue) {
+//        KeyValueCommand.addKeyValue(redisService.getClusterCmds(id), BeanUtils.copyProperties(keyValue, KeyInfo.class));
+//        return Result.success();
 //    }
 }

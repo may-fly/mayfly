@@ -6,8 +6,8 @@ import mayfly.common.exception.BusinessRuntimeException;
 import mayfly.common.utils.Assert;
 import mayfly.common.utils.StringUtils;
 import mayfly.sys.redis.connection.RedisConnectionRegistry;
-import mayfly.sys.redis.enumration.RedisConfEnum;
-import mayfly.sys.redis.enumration.RedisInfoEnum;
+import mayfly.sys.redis.enums.RedisConfEnum;
+import mayfly.sys.redis.enums.RedisInfoEnum;
 import mayfly.sys.redis.parser.RedisInfoParser;
 
 import java.util.HashMap;
@@ -49,14 +49,13 @@ public class ServerCommand {
      * @param redisId
      * @return
      */
-    public static Map<String, String> getConf(int redisId) {
-        RedisCommands cmds = getCmds(redisId);
+    public static Map<String, String> getConf(RedisServerCommands<String, byte[]> commands) {
         Map<String, String> result = new HashMap<>();
 //        for (RedisConfEnum confParam : RedisConfEnum.values()) {
 //            result.putAll(cmds.configGet(confParam.parameter));
 //        }
 
-        return cmds.configGet("*");
+        return commands.configGet("*");
     }
 
     /**

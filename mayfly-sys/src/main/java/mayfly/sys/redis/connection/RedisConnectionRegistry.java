@@ -123,7 +123,7 @@ public class RedisConnectionRegistry {
         RedisInfo ri = getRedisInfo(redisId);
         Assert.notNull(ri, "不存在该redis实例连接");
         //如果是单机则返回单机连接
-        if (ri.isStandalone()) {
+        if (RedisInfo.isStandlone(ri.getClusterId())) {
             return (StatefulRedisConnection<String, byte[]>) connectionCache.get(getStandaloneKey(redisId)).getRequireConnection();
         }
         //如果是集群，则从集群中获取具体节点连接
@@ -266,7 +266,7 @@ public class RedisConnectionRegistry {
                 } catch (RedisConnectionException e) {
                     throw new BusinessRuntimeException("无法连接redis集群！");
                 } catch (Exception ce) {
-                    LOG.error("连接redis集群失败！");
+                    LOG.error("连接redis集群失败！", ce);
                     throw new BusinessRuntimeException("连接redis集群失败！");
                 }
             }

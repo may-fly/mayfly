@@ -23,5 +23,5 @@ public @interface EnumValue {
      * @see mayfly.common.enums.BaseEnum
      * @return
      */
-    Class<? extends Enum<? extends BaseEnum>> clazz();
+    Class<? extends Enum<? extends BaseEnum>> value();
 }

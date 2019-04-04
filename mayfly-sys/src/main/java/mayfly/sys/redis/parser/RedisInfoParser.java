@@ -1,6 +1,6 @@
 package mayfly.sys.redis.parser;
 
-import mayfly.sys.redis.enumration.RedisInfoEnum;
+import mayfly.sys.redis.enums.RedisInfoEnum;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;

@@ -35,6 +35,9 @@ public class RedisServiceImpl extends BaseServiceImpl<RedisMapper, Redis> implem
         //如果不存在该redis信息，则先连接对应的单机or集群连接
         if (registry.getRedisInfo(redisId) == null) {
             Redis redis = getById(redisId);
+            if (redis == null) {
+                throw new BusinessRuntimeException("redis实例不存在！");
+            }
             if (redis.getClusterId() == RedisInfo.STANDALONE) {
                 registry.registerStandalone(toRedisInfo(redis));
             } else {

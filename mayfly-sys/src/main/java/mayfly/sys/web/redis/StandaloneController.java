@@ -1,15 +1,9 @@
 package mayfly.sys.web.redis;
 
-import io.lettuce.core.api.sync.RedisCommands;
-import mayfly.common.result.Result;
-import mayfly.common.validation.annotation.Valid;
-import mayfly.sys.redis.commands.KeyCommand;
-import mayfly.sys.redis.commands.ServerCommand;
 import mayfly.sys.service.redis.RedisService;
-import mayfly.sys.web.redis.form.ScanForm;
-import mayfly.sys.web.redis.vo.KeyScanVO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @author meilin.huang
@@ -23,11 +17,24 @@ public class StandaloneController {
     @Autowired
     private RedisService redisService;
 
-    @GetMapping("/{id}/scan")
-    public Result scan(@PathVariable Integer id, @Valid ScanForm scanForm) {
-        RedisCommands<String, byte[]> cmds = redisService.getCmds(id);
-        KeyScanVO scan = KeyCommand.scan(cmds, scanForm.getCursor(), scanForm.getCount(),  scanForm.getMatch());
-        scan.setDbsize(ServerCommand.dbsize(cmds));
-        return Result.success().withData(scan);
-    }
+//    @MethodLog(value = "查询redis key")
+//    @GetMapping("/{id}/scan")
+//    public Result scan(@PathVariable Integer id, @Valid ScanForm scanForm) {
+//        RedisCommands<String, byte[]> cmds = redisService.getCmds(id);
+//        KeyScanVO scan = KeyValueCommand.scan(cmds, scanForm.getCursor(), scanForm.getCount(),  scanForm.getMatch());
+//        return Result.success().withData(scan);
+//    }
+//
+//    @MethodLog(value = "查询redis value")
+//    @GetMapping("/{id}/value")
+//    public Result value(@PathVariable Integer id, String key) {
+//        return Result.success().withData(KeyValueCommand.value(redisService.getCmds(id), key));
+//    }
+//
+//    @MethodLog(value = "新增key value")
+//    @PostMapping("/{id}/value")
+//    public Result addKeyValue(@PathVariable Integer id, @Valid KeyValueForm keyValue) {
+//        KeyValueCommand.addKeyValue(redisService.getCmds(id), BeanUtils.copyProperties(keyValue, KeyInfo.class));
+//        return Result.success();
+//    }
 }

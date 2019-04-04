@@ -29,13 +29,13 @@ public class PermissionForm {
     /**
      * method不能为空且只能是MethodEnum中对应的枚举值value
      */
-    @EnumValue(clazz = MethodEnum.class)
+    @EnumValue(MethodEnum.class)
     @NotNull
     private Integer method;
 
     @NotBlank
     private String description;
 
-    @EnumValue(clazz = StatusEnum.class)
+    @EnumValue(StatusEnum.class)
     private Integer status;
 }

@@ -1,4 +1,4 @@
-package mayfly.sys.web.redis.vo;
+package mayfly.sys.redis.commands;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,11 +16,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class KeyInfo<T> {
 
-    private long ttl;
+    private Long ttl;
 
-    private String type;
+    /**
+     * @see mayfly.sys.redis.enums.RedisValueTypeEnum
+     */
+    private Integer type;
 
     private String key;
 
-    private T value;
+    private String value;
 }

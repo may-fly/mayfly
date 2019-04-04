@@ -135,7 +135,11 @@
       <el-table-column type="selection" width="55">
       </el-table-column>
       <el-table-column show-overflow-tooltip prop="key" label="key"></el-table-column>
-      <el-table-column prop="type" label="type" width="80"></el-table-column>
+      <el-table-column prop="type" label="type" width="80">
+        <template slot-scope="scope">
+          {{enums.ValueTypeEnum.getLabelByValue(scope.row.type)}}
+        </template>
+      </el-table-column>
       <el-table-column prop="ttl" label="ttl(过期时间)" width="120">
         <template slot-scope="scope">
           {{ttlConveter(scope.row.ttl)}}
@@ -161,16 +165,15 @@
 
 <script>
   // import Api from "../../../api/index.js"
-  import ToolBar from '~/components/ToolBar/ToolBar.vue';
+  import ToolBar from '~/components/ToolBar/ToolBar.vue'
   import Req from "~/common/request"
+  import enums from './enums'
   export default {
     data() {
       return {
         loading: true,
-        span: {
-          title: 8,
-          content: 16
-        },
+        enums: enums,
+        cluster: this.$route.params.cluster,
         redis: {
           id: '',
           info: "",
@@ -190,7 +193,9 @@
     methods: {
       scan() {
         this.loading = true;
-        Req.get(`/open/redis/${this.redis.id}/scan`, this.scanParam, res => {
+        let id = this.cluster == 0 ? this.redis.id : this.cluster;
+        let isCluster = this.cluster == 0 ? 0 : 1;
+        Req.get(`/open/redis/${isCluster}/${id}/scan`, this.scanParam, res => {
           // console.log(res)
           this.keys = res.keys;
           this.dbsize = res.dbsize;
@@ -201,7 +206,9 @@
       search() {
         // this.scanParam.match = null;
         this.scanParam.cursor = null;
-        Req.get(`/open/redis/${this.redis.id}/scan`, this.scanParam, res => {
+        let id = this.cluster == 0 ? this.redis.id : this.cluster;
+        let isCluster = this.cluster == 0 ? 0 : 1;
+        Req.get(`/open/redis/${isCluster}/${id}/scan`, this.scanParam, res => {
           // console.log(res)
           this.keys = res.keys;
           this.dbsize = this.keys.length;

@@ -5,7 +5,7 @@ import mayfly.common.validation.annotation.Valid;
 import mayfly.entity.Redis;
 import mayfly.sys.common.utils.BeanUtils;
 import mayfly.sys.redis.commands.ServerCommand;
-import mayfly.sys.redis.enumration.RedisConfEnum;
+import mayfly.sys.redis.enums.RedisConfEnum;
 import mayfly.sys.service.redis.RedisService;
 import mayfly.sys.web.redis.form.RedisForm;
 import mayfly.sys.web.redis.vo.RedisConfParamVO;
@@ -65,7 +65,7 @@ public class ServerController {
 
     @GetMapping("/redis/{id}/conf")
     public Result getConf(@PathVariable Integer id) {
-        return Result.success().withData(ServerCommand.getConf(id));
+        return Result.success().withData(ServerCommand.getConf(redisService.getCmds(id)));
     }
 
     @PutMapping("/redis/{id}/conf")

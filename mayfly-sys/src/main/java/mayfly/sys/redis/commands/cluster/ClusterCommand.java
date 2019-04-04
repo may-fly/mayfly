@@ -35,6 +35,22 @@ public class ClusterCommand {
 //    private ClusterCommand(){}
 
 
+    public static void main(String[] args) throws Exception{
+        String host = "94.191.96.31";
+        int port = 6379;
+        ClusterNodeUrl c1 = new ClusterNodeUrl(host, port++, null);
+        ClusterNodeUrl c2 = new ClusterNodeUrl(host, port++, null);
+        ClusterNodeUrl c3 = new ClusterNodeUrl(host, port++, null);
+        ClusterNodeUrl c4 = new ClusterNodeUrl(host, port++, null);
+        ClusterNodeUrl c5 = new ClusterNodeUrl(host, port++, null);
+        ClusterNodeUrl c6 = new ClusterNodeUrl(host, port, null);
+        c1.addSlave(c2);
+        c3.addSlave(c4);
+        c4.addSlave(c5);
+        createCluster(Arrays.asList(c1, c3, c5));
+    }
+
+
     public static StatefulRedisClusterConnection getConnection(int clusterId) {
         return register.getClusterConnection(clusterId);
     }
@@ -52,8 +68,8 @@ public class ClusterCommand {
     }
 
 
-    public static Map<String, Object> clusterInfo(int clusterId) {
-        String info = getCmds(clusterId).clusterInfo();
+    public static Map<String, Object> clusterInfo(RedisClusterCommands<String, byte[]> commands) {
+        String info = commands.clusterInfo();
         Map<String, Object> result = new HashMap<>();
         String[] infos = info.split("\r\n");
         for (String i : infos) {
@@ -104,25 +120,25 @@ public class ClusterCommand {
 
     /**
      * 创建redis集群
-     * @param clusterUris
+     * @param clusterMasterUrls
      * @throws InterruptedException
      */
-    public static void createCluster(Collection<ClusterNodeUri> clusterUris) throws InterruptedException {
+    public static void createCluster(Collection<ClusterNodeUrl> clusterMasterUrls) throws InterruptedException {
         // 所有cluster节点
         List<ClusterNode> clusterNodeList = new ArrayList<>();
         // master节点
-        List<ClusterNode> masterNodeList = new ArrayList<>(clusterUris.size());
+        List<ClusterNode> masterNodeList = new ArrayList<>(clusterMasterUrls.size());
 
         //创建并连接所有master节点以及master对应slave节点
-        clusterUris.forEach(m -> {
-            final ClusterNode master = ClusterNode.connect(m);
+        clusterMasterUrls.forEach(m -> {
+            final ClusterNode master = ClusterCommand.ClusterNode.connect(m);
             clusterNodeList.add(master);
             masterNodeList.add(master);
 
             //添加并连接slave节点
             Optional.ofNullable(m.getSlaves()).ifPresent(slaves -> {
                 slaves.forEach(s -> {
-                    ClusterNode slave = ClusterNode.connect(s);
+                    ClusterNode slave = ClusterCommand.ClusterNode.connect(s);
                     master.addSlave(slave);
                     clusterNodeList.add(slave);
                 });
@@ -174,7 +190,6 @@ public class ClusterCommand {
         ClusterNode first = clusterNodes.get(0);
         String firstHost = first.getNodeUri().getHost();
         int firstPort = first.getNodeUri().getPort();
-
         for (int i = 1, size = clusterNodes.size(); i < size; i++) {
             clusterNodes.get(i).getCmds().clusterMeet(firstHost, firstPort);
         }
@@ -192,8 +207,8 @@ public class ClusterCommand {
     /**
      * 添加节点
      */
-    public static void addNode(int clusterId, ClusterNodeUri uri) {
-        ClusterNode node = ClusterNode.connect(uri);
+    public static void addNode(int clusterId, ClusterNodeUrl uri) {
+        ClusterNode node = ClusterCommand.ClusterNode.connect(uri);
         getCmds(clusterId).clusterMeet(uri.getHost(), uri.getPort());
         node.close();
     }
@@ -204,7 +219,7 @@ public class ClusterCommand {
      * @param nodeId  主节点nodeId
      * @param nodeUri 从节点uri
      */
-    public static void addReplicate(int clusterId, String nodeId, ClusterNodeUri nodeUri) {
+    public static void addReplicate(int clusterId, String nodeId, ClusterNodeUrl nodeUri) {
         //添加节点到集群中
         addNode(clusterId, nodeUri);
         getNodeCmds(clusterId, nodeId).clusterReplicate(getNode(clusterId, nodeUri.getHost(), nodeUri.getPort()).getNodeId());
@@ -216,7 +231,7 @@ public class ClusterCommand {
      * @param masterUri 主节点uri
      * @param nodeUri   从节点uri
      */
-    public static void addReplicate(int clusterId, ClusterNodeUri masterUri, ClusterNodeUri nodeUri) {
+    public static void addReplicate(int clusterId, ClusterNodeUrl masterUri, ClusterNodeUrl nodeUri) {
         //添加节点到集群中
         addNode(clusterId, nodeUri);
         getNodeCmds(clusterId, masterUri.getHost(), masterUri.getPort())
@@ -276,7 +291,7 @@ public class ClusterCommand {
      * 用于创建并连接要新建的集群节点
      */
     private static class ClusterNode{
-        private ClusterNodeUri nodeUri;
+        private ClusterNodeUrl nodeUri;
         private String myId;
         private StatefulRedisConnection<String, String> connection;
         private RedisClient redisClient;
@@ -285,7 +300,7 @@ public class ClusterCommand {
          */
         private List<ClusterNode> slaves;
 
-        public ClusterNode(ClusterNodeUri nodeUri) {
+        public ClusterNode(ClusterNodeUrl nodeUri) {
             this.nodeUri = nodeUri;
         }
 
@@ -294,7 +309,7 @@ public class ClusterCommand {
          * @param uri
          * @return
          */
-        public static ClusterNode connect(ClusterNodeUri uri) {
+        public static ClusterNode connect(ClusterNodeUrl uri) {
             ClusterNode master =  new ClusterNode(uri);
             master.connect();
             return master;
@@ -318,10 +333,10 @@ public class ClusterCommand {
                 myId = getCmds().clusterMyId();
             } catch (RedisConnectionException e) {
                 LOG.error("redis连接失败， {}:{}", host, port, e);
-                throw new BusinessRuntimeException("redis连接失败！ url: " + host + ":" + String.valueOf(port));
+                throw new BusinessRuntimeException("redis连接失败！ url: " + host + ":" + port);
             } catch (RedisCommandExecutionException e) {
                 LOG.error("该节点不支持集群， {}:{}", host, port, e);
-                throw new BusinessRuntimeException("该节点不支持集群，请在redis.conf中启用'cluster-enabled yes！' 节点: " + host + ":" + String.valueOf(port));
+                throw new BusinessRuntimeException("该节点不支持集群，请在redis.conf中启用'cluster-enabled yes！' 节点: " + host + ":" + port);
             }
         }
 
@@ -348,7 +363,7 @@ public class ClusterCommand {
             connection = null;
         }
 
-        public ClusterNodeUri getNodeUri() {
+        public ClusterNodeUrl getNodeUri() {
             return nodeUri;
         }
 

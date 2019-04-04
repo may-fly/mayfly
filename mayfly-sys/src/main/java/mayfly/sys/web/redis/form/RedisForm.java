@@ -16,7 +16,7 @@ public class RedisForm {
     private String host;
 
     @NotNull
-    private int port = 6379;
+    private Integer port;
 
     private String pwd;
 
