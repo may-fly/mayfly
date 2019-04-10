@@ -1,7 +1,7 @@
 # mayfly
 
 ## 介绍
-mayfly前后端分离的后台系统(包含按钮级别的权限管理，以及权限禁用，触发按钮置灰禁用状态等)。后续计划补上Redis单机以及集群管理
+mayfly前后端分离的后台系统(包含按钮级别的权限管理，以及权限禁用，触发按钮置灰禁用状态等)。后续计划补上Redis单机以及集群管理（已完成部分接口以及界面）
 
 
 ## 系统环境
@@ -41,7 +41,7 @@ public Result list(PermissionForm condition, @Valid PageForm pageForm)
 
 
 - ### 自定义参数校验器(支持入参枚举值自动校验等)
-参数校验才用AOP拦截所有Controller中的方法带有mayfly.common.validation.annotation.Valid注解的参数，并校验对应的参数字段注解以及值。
+参数校验采用AOP拦截所有Controller中的方法带有mayfly.common.validation.annotation.Valid注解的参数，并校验对应的参数字段注解以及值。
 
 给需要校验的参数字段添加相应的校验规则：
 ```
