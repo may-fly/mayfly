@@ -25,5 +25,5 @@ public class KeyInfo<T> {
 
     private String key;
 
-    private String value;
+    private T value;
 }

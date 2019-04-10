@@ -8,11 +8,21 @@ import java.util.*;
  */
 public class CollectionUtils {
 
+
     /**
-     * 根据比较器比较两个list中新增的对象以及删除的对象和没有改变的对象
+     * 判断集合是否为空
+     * @param collection 集合对象
+     * @return  为空 true 否则false
+     */
+    public static boolean isEmpty(Collection<?> collection) {
+        return collection == null || collection.isEmpty();
+    }
+
+    /**
+     * 根据比较器比较两个collection中哪些是新增的对象以及删除的对象和没有改变的对象
      * @param newList  新list
      * @param oldList  旧list
-     * @param comparator
+     * @param comparator  集合对象比较器
      * @param <T>
      * @return
      */

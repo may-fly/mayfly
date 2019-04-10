@@ -3,7 +3,6 @@ package mayfly.common.utils;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author meilin.huang
@@ -76,36 +75,4 @@ public class ScheduleUtils {
         schedule.shutdownNow();
         scheduledFutureMap.clear();
     }
-
-
-    public static void main(String[] args) throws Exception {
-        AtomicInteger index = new AtomicInteger(1);
-        String id = "1";
-        for (int i = 0; i < 100; i++) {
-            schedule(String.valueOf(index.getAndIncrement()), ()-> {
-
-                System.out.println("哈哈1...");
-//                cancelAndRemove("1");
-            },5, TimeUnit.SECONDS);
-        }
-//        cancelAndRemove(id);
-//        scheduleAtFixedRate("2", ()-> {
-//            System.out.println("哈哈2...");
-//        }, 1,1, TimeUnit.SECONDS);
-//        scheduleAtFixedRate("3", ()-> {
-//            System.out.println("哈哈3...");
-//        }, 1,1, TimeUnit.SECONDS);
-//        scheduleAtFixedRate("4", ()-> {
-//            System.out.println("哈哈4...");
-//        }, 1,1, TimeUnit.SECONDS);
-//        scheduleAtFixedRate("5", ()-> {
-//            System.out.println("哈哈5...");
-//        }, 1,1, TimeUnit.SECONDS);
-//        scheduleAtFixedRate("6", ()-> {
-//            System.out.println("哈哈6...");
-//        }, 1,1, TimeUnit.SECONDS);
-
-//        System.out.println(scheduledFutureMap.get("1").isCancelled());
-    }
-
 }

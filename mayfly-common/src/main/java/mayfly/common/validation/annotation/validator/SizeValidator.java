@@ -1,6 +1,7 @@
 package mayfly.common.validation.annotation.validator;
 
 
+import mayfly.common.utils.AnnotationUtils;
 import mayfly.common.validation.annotation.Size;
 
 import java.lang.reflect.Field;
@@ -14,7 +15,7 @@ import java.lang.reflect.Field;
 public class SizeValidator implements Validator {
     @Override
     public ValidResult validation(Field field, Object fieldValue) {
-        Size size = field.getAnnotation(Size.class);
+        Size size = AnnotationUtils.getAnnotation(field, Size.class);
         if (size != null && fieldValue != null) {
             int min = size.min();
             int max = size.max();

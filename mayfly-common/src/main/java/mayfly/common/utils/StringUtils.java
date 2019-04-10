@@ -34,7 +34,7 @@ public class StringUtils {
         }
         StringBuilder out = new StringBuilder();
         char[] strChar = camelStr.toCharArray();
-        for (int i = 0; i < strChar.length; i++) {
+        for (int i = 0, len = strChar.length; i < len; i++) {
             char c = strChar[i];
             if (!Character.isLowerCase(c)) {
                 //如果是首字符，则不需要添加分隔符
@@ -49,9 +49,4 @@ public class StringUtils {
         }
         return out.toString();
     }
-
-//    public static void main(String[] argsa) {
-//        String str = "UserInfoDtoServiceAction";
-//        System.out.println(camel2Underscore(str));
-//    }
 }

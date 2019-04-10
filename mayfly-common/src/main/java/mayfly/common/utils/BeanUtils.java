@@ -96,7 +96,8 @@ public final class BeanUtils {
                     returnMap.putAll(doBean2Map(propertyName, result));
                     continue;
                 }
-                Bean2MapFieldConverter converterAnnotation = ReflectionUtils.getFieldAnnotation(type, propertyName, Bean2MapFieldConverter.class);
+                Bean2MapFieldConverter converterAnnotation = AnnotationUtils
+                        .getAnnotation(ReflectionUtils.getField(type, propertyName), Bean2MapFieldConverter.class);
                 if (converterAnnotation != null) {
                     Class<? extends FieldValueConverter> converterClazz = converterAnnotation.converter();
                     // 转换器缓存中获取

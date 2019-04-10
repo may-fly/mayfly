@@ -1,6 +1,7 @@
 package mayfly.common.validation.annotation.validator;
 
 import mayfly.common.enums.BaseEnum;
+import mayfly.common.utils.AnnotationUtils;
 import mayfly.common.utils.EnumUtils;
 import mayfly.common.validation.annotation.EnumValue;
 
@@ -19,7 +20,7 @@ public class EnumValueValidator implements Validator {
 
     @Override
     public ValidResult validation(Field field, Object fieldValue) {
-        EnumValue enumValue = field.getAnnotation(EnumValue.class);
+        EnumValue enumValue = AnnotationUtils.getAnnotation(field, EnumValue.class);
         if (enumValue != null && fieldValue != null) {
             if (fieldValue instanceof Integer) {
                 Class<? extends Enum> enumClass = enumValue.value();

@@ -234,20 +234,28 @@
         let second = parseInt(ttl); // 秒
         let min = 0; // 分
         let hour = 0; // 小时
+        let day = 0;
         if (second > 60) {
           min = parseInt(second / 60);
           second = parseInt(second % 60);
           if (min > 60) {
             hour = parseInt(min / 60);
             min = parseInt(min % 60);
+            if (hour > 24) {
+              day = parseInt(hour / 24);
+              hour = parseInt(hour % 24);
+            }
           }
         }
-        let result = "" + parseInt(second) + "s";
+        let result = "" + second + "s";
         if (min > 0) {
-          result = "" + parseInt(min) + "m:" + result;
+          result = "" + min + "m:" + result;
         }
         if (hour > 0) {
-          result = "" + parseInt(hour) + "h:" + result;
+          result = "" + hour + "h:" + result;
+        }
+        if (day > 0) {
+          result = "" + day + "d:" + result;
         }
         return result;
       }

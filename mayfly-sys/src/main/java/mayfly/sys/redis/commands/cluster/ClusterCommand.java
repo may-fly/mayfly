@@ -12,6 +12,7 @@ import mayfly.common.utils.StringUtils;
 import mayfly.sys.redis.connection.RedisConnectionRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
 
 import java.util.*;
 
@@ -36,18 +37,19 @@ public class ClusterCommand {
 
 
     public static void main(String[] args) throws Exception{
-        String host = "94.191.96.31";
-        int port = 6379;
-        ClusterNodeUrl c1 = new ClusterNodeUrl(host, port++, null);
-        ClusterNodeUrl c2 = new ClusterNodeUrl(host, port++, null);
-        ClusterNodeUrl c3 = new ClusterNodeUrl(host, port++, null);
-        ClusterNodeUrl c4 = new ClusterNodeUrl(host, port++, null);
-        ClusterNodeUrl c5 = new ClusterNodeUrl(host, port++, null);
-        ClusterNodeUrl c6 = new ClusterNodeUrl(host, port, null);
-        c1.addSlave(c2);
-        c3.addSlave(c4);
-        c4.addSlave(c5);
-        createCluster(Arrays.asList(c1, c3, c5));
+//        String host = "94.191.96.31";
+//        ClusterNodeUrl c1 = new ClusterNodeUrl(host, 6379, null);
+//        ClusterNodeUrl c2 = new ClusterNodeUrl(host, 6380, null);
+//        ClusterNodeUrl c3 = new ClusterNodeUrl(host, 6381, null);
+//        ClusterNodeUrl c4 = new ClusterNodeUrl(host, 6382, null);
+//        ClusterNodeUrl c5 = new ClusterNodeUrl(host, 6383, null);
+//        ClusterNodeUrl c6 = new ClusterNodeUrl(host, 6384, null);
+//        c1.addSlave(c2);
+//        c3.addSlave(c4);
+//        c5.addSlave(c6);
+//        createCluster(Arrays.asList(c1, c3, c5));
+        ClassPathScanningCandidateComponentProvider scan = new ClassPathScanningCandidateComponentProvider(false);
+        scan.findCandidateComponents("mayfly");
     }
 
 

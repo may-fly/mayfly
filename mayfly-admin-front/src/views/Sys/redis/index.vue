@@ -25,16 +25,19 @@
 			</el-table-column>
 			<el-table-column label="操作" width="">
 				<template slot-scope="scope">
-          <el-button type="primary" @click="show(scope.row)" :ref="scope.row" icom="el-icon-tickets" size="small" plain>info</el-button>
+          <el-button type="primary" @click="info(scope.row.id)" :ref="scope.row" icom="el-icon-tickets" size="small" plain>info</el-button>
 					<el-button type="success" @click="show(scope.row)" :ref="scope.row" size="small" plain>数据管理</el-button>
 				</template>
 			</el-table-column>
 		</el-table>
+    
+    <Info :visible="infoDialog.visible" :id="infoDialog.id" @close="infoDialog.visible = false"></Info>
 	</div>
 </template>
 
 <script>
 	import ToolBar from '~/components/ToolBar/ToolBar.vue';
+  import Info from './info.vue';
 	import Req from "~/common/request"
 // 
 	export default {
@@ -55,7 +58,11 @@
 				},
         clusters: [
           {id:0, name:'单机'}
-        ]
+        ],
+        infoDialog: {
+          id: null,
+          visible: false
+        }
 			};
 		},
 		methods: {
@@ -67,6 +74,10 @@
 			show(row) {
 				this.$router.push(`/redis_operation/${row.clusterId}/${row.id}`);
 			},
+      info(id) {
+        this.infoDialog.id = id;
+        this.infoDialog.visible = true;
+      },
       search() {
         Req.get("/open/redis", this.params, res => {
         	this.redisTable = res;
@@ -77,7 +88,8 @@
 			this.search();
 		},
 		components: {
-			ToolBar
+			ToolBar,
+      Info
 		}
 	}
 </script>

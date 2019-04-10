@@ -4,6 +4,7 @@ import mayfly.common.permission.Permission;
 import mayfly.common.permission.registry.PermissionCacheHandler;
 import mayfly.common.permission.PermissionDisabledException;
 import mayfly.common.permission.PermissionInfo;
+import mayfly.common.utils.AnnotationUtils;
 
 import java.lang.reflect.Method;
 import java.util.Collection;
@@ -92,9 +93,9 @@ public class PermissionCheckHandler {
      * @return
      */
     public PermissionInfo getPermissionInfo(Method method) {
-        Permission permission = method.getDeclaringClass().getAnnotation(Permission.class);
+        Permission permission = AnnotationUtils.getAnnotation(method.getDeclaringClass(), Permission.class);
         if (permission == null) {
-            permission = method.getAnnotation(Permission.class);
+            permission = AnnotationUtils.getAnnotation(method, Permission.class);
             if (permission == null) {
                 return null;
             }
@@ -103,7 +104,7 @@ public class PermissionCheckHandler {
         }
 
         String classCode = permission.code();
-        return Optional.ofNullable(method.getAnnotation(Permission.class))
+        return Optional.ofNullable(AnnotationUtils.getAnnotation(method, Permission.class))
                 .map(p -> new PermissionInfo(classCode + p.code()))
                 .orElse(new PermissionInfo(classCode + method.getName()));
     }

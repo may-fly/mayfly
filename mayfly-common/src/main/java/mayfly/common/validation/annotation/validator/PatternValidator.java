@@ -1,5 +1,6 @@
 package mayfly.common.validation.annotation.validator;
 
+import mayfly.common.utils.AnnotationUtils;
 import mayfly.common.validation.annotation.Pattern;
 
 import java.lang.reflect.Field;
@@ -13,7 +14,7 @@ import java.lang.reflect.Field;
 public class PatternValidator implements Validator {
     @Override
     public ValidResult validation(Field field, Object fieldValue) {
-        Pattern pattern = field.getAnnotation(Pattern.class);
+        Pattern pattern = AnnotationUtils.getAnnotation(field, Pattern.class);
         if (pattern != null && fieldValue != null) {
             if (fieldValue instanceof String) {
                 String value = (String)fieldValue;

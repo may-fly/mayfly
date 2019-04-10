@@ -1,5 +1,6 @@
 package mayfly.common.validation.annotation.validator;
 
+import mayfly.common.utils.AnnotationUtils;
 import mayfly.common.validation.annotation.ValueIn;
 
 import java.lang.reflect.Field;
@@ -14,7 +15,7 @@ import java.util.Arrays;
 public class ValueInValidator implements Validator {
     @Override
     public ValidResult validation(Field field, Object fieldValue) {
-        ValueIn valueIn = field.getAnnotation(ValueIn.class);
+        ValueIn valueIn = AnnotationUtils.getAnnotation(field, ValueIn.class);
         if (valueIn != null && fieldValue != null) {
             String[] values = valueIn.values();
             //校验字符串

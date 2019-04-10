@@ -1,5 +1,6 @@
 package mayfly.common.log;
 
+import mayfly.common.utils.AnnotationUtils;
 import mayfly.common.utils.StringUtils;
 
 import java.lang.reflect.Method;
@@ -51,7 +52,7 @@ public class LogHandler {
      */
     private LogInfo parseLogMsg(String invoke, Method method) {
         int argsCount = method.getParameterCount();
-        MethodLog log = method.getAnnotation(MethodLog.class);
+        MethodLog log = AnnotationUtils.getAnnotation(method, MethodLog.class);
         if (log == null) {
             throw new IllegalArgumentException(invoke + "方法必须添加@MethodLog注解！");
         }
@@ -60,7 +61,7 @@ public class LogHandler {
         List<Integer> noNeedLogParamIndex = new ArrayList<>(8);
         Parameter[] params = method.getParameters();
         for (int i = 0; i < params.length; i++) {
-            if (params[i].isAnnotationPresent(NoNeedLogParam.class)) {
+            if (AnnotationUtils.isAnnotationPresent(params[i], NoNeedLogParam.class)) {
                 noNeedLogParamIndex.add(i);
             }
         }

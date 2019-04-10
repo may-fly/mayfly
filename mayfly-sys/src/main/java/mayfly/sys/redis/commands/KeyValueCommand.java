@@ -58,33 +58,25 @@ public class KeyValueCommand {
      * @param match
      * @return
      */
-    public static KeyScanVO clusterScan(RedisKeyCommands<String, byte[]> commands, int count, String cursor, String match) {
+    public static KeyScanVO clusterScan(RedisKeyCommands<String, byte[]> commands, int count, String match) {
         if (StringUtils.isEmpty(match)) {
             match = "*";
         }
         ScanArgs args = ScanArgs.Builder.limit(count).match(match);
-        ScanCursor c = clusterScan.get(commands);
-        if (c == null || c.isFinished() || cursor == null) {
-            c = ScanCursor.INITIAL;
+        Long dbsize = castServerCommands(commands).dbsize();
+        Set<String> keys = getClusterKeys(commands, args);
+        int i = 0;
+        while (keys.size() < dbsize && keys.size() < count) {
+            keys.addAll(getClusterKeys(commands, args));
+            if (++i == 3) {
+                break;
+            }
         }
-        KeyScanCursor<String> result = commands.scan(c, args);
-        Set<String> keys = new HashSet<>(result.getKeys());
-        Long dbsize = ((RedisServerCommands) commands).dbsize();
-//        int i = 0;
-//        while (dbsize > count && keys.size() < count) {
-//            keys.addAll(getClusterKeys(commands, args));
-//            if (++i == 8) {
-//                break;
-//            }
-//        }
-        // 缓存上一次的结果
-        clusterScan.put(commands, result);
         return KeyScanVO.builder().keys(keys.stream()
                 .map(k -> KeyInfo.builder().key(k)
                         .ttl(commands.ttl(k))
                         .type(EnumUtils.getValueByName(RedisValueTypeEnum.values(), commands.type(k)))
-                        .build()).collect(Collectors.toList()))
-                .dbsize(dbsize).build();
+                        .build()).collect(Collectors.toList())).dbsize(dbsize).build();
     }
 
     private static Set<String> getClusterKeys(RedisKeyCommands<String, byte[]> commands, ScanArgs args) {
@@ -98,9 +90,24 @@ public class KeyValueCommand {
         return new HashSet<>(result.getKeys());
     }
 
-
+    /**
+     * key剩余有效期  单位：秒
+     * @param commands
+     * @param key
+     * @return
+     */
     public static long ttl(RedisKeyCommands<String, byte[]> commands, String key) {
         return commands.ttl(key);
+    }
+
+    /**
+     * 设置key的过期时间
+     * @param commands
+     * @param key
+     * @param time
+     */
+    public static void expire(RedisKeyCommands<String, byte[]> commands, String key, long time) {
+        commands.expire(key, time);
     }
 
     public static String type(RedisKeyCommands<String, byte[]> commands, String key) {
@@ -131,7 +138,7 @@ public class KeyValueCommand {
             return ki;
         }
         if (RedisValueTypeEnum.SET.getValue().equals(type)) {
-            Set<String> members = ((RedisSetCommands<String, byte[]>) commands).smembers(key).stream().map(m -> new String(m)).collect(Collectors.toSet());
+            Set<String> members = castSetCommands(commands).smembers(key).stream().map(m -> new String(m)).collect(Collectors.toSet());
             ki.setValue(JSON.toJSONString(members));
             return ki;
         }
@@ -158,16 +165,35 @@ public class KeyValueCommand {
      * @param commands
      * @param keyValue
      */
-    public static void setValue(RedisStringCommands<String, byte[]> commands, KeyInfo keyValue) {
+    public static void setValue(RedisStringCommands<String, byte[]> commands, KeyInfo<String> keyValue) {
         if (!RedisValueTypeEnum.STRING.getValue().equals(keyValue.getType())) {
             throw new BusinessRuntimeException("value类型不为string类型!");
         }
         commands.set(keyValue.getKey(), keyValue.getValue().getBytes());
-        Long ttl = keyValue.getTtl();
-        if (ttl != null && !ttl.equals(-1L)) {
-            castKeyCommands(commands).expire(keyValue.getKey(), ttl);
+        checkAndSetExpire(castKeyCommands(commands), keyValue);
+    }
+
+    public static void sadd(RedisSetCommands<String, byte[]> commands, KeyInfo<Set<String>> keyInfo) {
+        if (!RedisValueTypeEnum.SET.getValue().equals(keyInfo.getType())) {
+            throw new BusinessRuntimeException("value类型不为set类型!");
+        }
+
+//        commands.sadd(keyInfo.getKey(), keyInfo.getValue().toArray());
+    }
+
+    /**
+     * 检查并且设置过期时间
+     * @param commands
+     * @param keyInfo
+     */
+    private static void checkAndSetExpire(RedisKeyCommands<String, byte[]> commands, KeyInfo keyInfo) {
+        Long expire = keyInfo.getTtl();
+        if (expire != null && !expire.equals(-1L)) {
+            expire(commands, keyInfo.getKey(), expire);
         }
     }
+
+
 
     @SuppressWarnings("unchecked")
     private static RedisKeyCommands<String, byte[]> castKeyCommands(Object commands) {
@@ -175,7 +201,17 @@ public class KeyValueCommand {
     }
 
     @SuppressWarnings("unchecked")
+    private static RedisServerCommands<String, byte[]> castServerCommands(Object commands) {
+        return RedisServerCommands.class.cast(commands);
+    }
+
+    @SuppressWarnings("unchecked")
     private static RedisStringCommands<String, byte[]> castStringCommands(Object commands) {
         return RedisStringCommands.class.cast(commands);
+    }
+
+    @SuppressWarnings("unchecked")
+    private static RedisSetCommands<String, byte[]> castSetCommands(Object commands) {
+        return RedisSetCommands.class.cast(commands);
     }
 }

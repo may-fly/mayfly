@@ -38,8 +38,8 @@ public class RedisController {
     @MethodLog(value = "查询redis key")
     @GetMapping("/{cluster}/{id}/scan")
     public Result scan(@PathVariable Boolean cluster, @PathVariable Integer id, @Valid ScanForm scanForm) {
-        RedisKeyCommands<String, byte[]> cmds = cluster ? redisService.getClusterCmds(id) : redisService.getCmds(id);
-        KeyScanVO scan = cluster ? KeyValueCommand.clusterScan(cmds, scanForm.getCount(), scanForm.getCursor(), scanForm.getMatch())
+        RedisKeyCommands<String, byte[]> cmds = getKeyCmd(cluster, id);
+        KeyScanVO scan = cluster ? KeyValueCommand.clusterScan(cmds, scanForm.getCount(), scanForm.getMatch())
                 : KeyValueCommand.scan(cmds, scanForm.getCursor(), scanForm.getCount(),  scanForm.getMatch());
         return Result.success().withData(scan);
     }
@@ -50,8 +50,7 @@ public class RedisController {
         if (StringUtils.isEmpty(key)) {
             return Result.paramError("key不能为空!");
         }
-        RedisKeyCommands<String, byte[]> cmds = cluster ? redisService.getClusterCmds(id) : redisService.getCmds(id);
-        return Result.success().withData(KeyValueCommand.value(cmds, key));
+        return Result.success().withData(KeyValueCommand.value(getKeyCmd(cluster, id), key));
     }
 
     @MethodLog(value = "新增redis key value")
@@ -60,5 +59,19 @@ public class RedisController {
         BaseRedisCommands<String, byte[]> cmds = cluster ? redisService.getClusterCmds(id) : redisService.getCmds(id);
         KeyValueCommand.addKeyValue(cmds, BeanUtils.copyProperties(keyValue, KeyInfo.class));
         return Result.success();
+    }
+
+    @MethodLog("删除key")
+    @DeleteMapping("/{cluster}/{id}")
+    public Result delKey(@PathVariable Boolean cluster, @PathVariable Integer id, String key) {
+        if (StringUtils.isEmpty(key)) {
+            return Result.paramError("key不能为空！");
+        }
+        KeyValueCommand.del(getKeyCmd(cluster, id), key);
+        return Result.success();
+    }
+
+    private RedisKeyCommands<String, byte[]> getKeyCmd(Boolean cluster, Integer id) {
+        return cluster ? redisService.getClusterCmds(id) : redisService.getCmds(id);
     }
 }

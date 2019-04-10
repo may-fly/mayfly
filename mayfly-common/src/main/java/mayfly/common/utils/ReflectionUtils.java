@@ -1,6 +1,5 @@
 package mayfly.common.utils;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -133,35 +132,6 @@ public final class ReflectionUtils {
     public static <T> T doWithField(Field field, FieldCallback<T> callback) {
         Assert.notNull(field, "field不能为空！");
         return callback.doWith(field);
-    }
-
-    /**
-     * 获取指定名字字段的指定注解
-     *
-     * @param clazz          字段所属class
-     * @param fieldName      字段名
-     * @param annotationType 注解类型
-     * @param <T>
-     * @return
-     */
-    public static <T extends Annotation> T getFieldAnnotation(Class<?> clazz, String fieldName, Class<T> annotationType) {
-        Field field;
-        if ((field = getField(clazz, fieldName)) != null) {
-            return getFieldAnnotation(field, annotationType);
-        }
-        return null;
-    }
-
-    /**
-     * 获取字段上的指定注解
-     *
-     * @param field          字段对象
-     * @param annotationType 注解类型
-     * @param <T>
-     * @return
-     */
-    public static <T extends Annotation> T getFieldAnnotation(Field field, Class<T> annotationType) {
-        return doWithField(field, f -> f.getAnnotation(annotationType));
     }
 
     /**

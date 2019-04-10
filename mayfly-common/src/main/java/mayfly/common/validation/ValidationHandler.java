@@ -1,6 +1,7 @@
 package mayfly.common.validation;
 
 
+import mayfly.common.utils.AnnotationUtils;
 import mayfly.common.utils.ReflectionUtils;
 import mayfly.common.validation.annotation.*;
 import mayfly.common.validation.annotation.validator.*;
@@ -66,6 +67,7 @@ public class ValidationHandler {
         }
     }
 
+
     /**
      * 获取指定对象中所有字段基本信息（含有哪些校验器）
      * @param obj
@@ -97,16 +99,12 @@ public class ValidationHandler {
         List<Validator> validators = new ArrayList<>(8);
         //获取所有注册过的注解校验类
         for(Map.Entry<Class<? extends Annotation>, Validator> entry : validatorRegister.entrySet()){
-            if (field.isAnnotationPresent(entry.getKey())) {
+            if (AnnotationUtils.isAnnotationPresent(field, entry.getKey())) {
                 validators.add(entry.getValue());
             }
         }
         //如果校验器为空，则说明该字段无需任何校验
-        if (validators.isEmpty()) {
-            return null;
-        }
-
-        return new FieldInfo(field, validators);
+        return validators.isEmpty() ? null : new FieldInfo(field, validators);
     }
 
 
