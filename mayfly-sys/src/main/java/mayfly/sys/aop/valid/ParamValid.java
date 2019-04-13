@@ -25,6 +25,12 @@ public class ParamValid {
     @Pointcut(value = "execution(* mayfly.sys.web..*Controller.*(..))")
     private void controller() {}
 
+    /**
+     * 拦截参数带有@Valid注解的方法
+     */
+    @Pointcut("@args(mayfly.common.validation.annotation.Valid)")
+    private void validArgs() {}
+
     @Around("controller()")
     public Object validateAround(ProceedingJoinPoint joinPoint) throws Throwable {
         MethodSignature ms = (MethodSignature) joinPoint.getSignature();

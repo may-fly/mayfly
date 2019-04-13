@@ -1,5 +1,6 @@
 package mayfly.sys.web.redis;
 
+import mayfly.common.log.MethodLog;
 import mayfly.common.result.Result;
 import mayfly.common.validation.annotation.Valid;
 import mayfly.entity.Redis;
@@ -20,6 +21,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @version 1.0
  * @date 2018-12-19 2:27 PM
  */
+@MethodLog
 @RestController
 @RequestMapping("/open")
 public class ServerController {

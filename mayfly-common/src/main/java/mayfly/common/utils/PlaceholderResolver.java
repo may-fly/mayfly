@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.function.Function;
+import java.util.stream.Stream;
 
 /**
  * 占位符解析器
@@ -85,6 +86,20 @@ public class PlaceholderResolver {
             start = result.indexOf(this.placeholderPrefix, start + replaceContent.length());
         }
         return result.toString();
+    }
+
+    /**
+     * 解析带有指定占位符的模板字符串，默认占位符为前缀：${  后缀：}<br/><br/>
+     * 如：template = category:${}:product:${}<br/>
+     * values = {"1", "2"}<br/>
+     * 返回 category:1:product:2<br/>
+     *
+     * @param content 要解析的带有占位符的模板字符串
+     * @param values   按照模板占位符索引位置设置对应的值
+     * @return
+     */
+    public String resolve(String content, Object[] values) {
+        return resolve(content, Stream.of(values).map(String::valueOf).toArray(String[]::new));
     }
 
     /**

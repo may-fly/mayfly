@@ -2,9 +2,7 @@ package mayfly.common.log;
 
 import com.alibaba.fastjson.JSON;
 import mayfly.common.utils.PlaceholderResolver;
-import mayfly.common.utils.StringUtils;
 
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,6 +41,8 @@ public class LogInfo {
      */
     private String descAndInvoke;
 
+    private MethodLog.LogLevel level;
+
     /**
      * 方法中无需记录日志的参数索引位置
      */
@@ -59,7 +59,7 @@ public class LogInfo {
      */
     public Object[] removeNoNeedLogArgs(Object[] allArgs) {
         //如果不需要记录日志的参数为空，则直接返回
-        if (noNeedLogParamIndex.isEmpty()) {
+        if (noNeedLogParamIndex == null || noNeedLogParamIndex.isEmpty()) {
             return allArgs;
         }
         Object[] needLogArgs = new Object[allArgs.length - noNeedLogParamIndex.size()];
@@ -79,9 +79,9 @@ public class LogInfo {
      * @return
      */
     public String fillLogMsg(LogResult result) {
-        StringBuilder logMsg = new StringBuilder(this.descAndInvoke);
-
-        Map value = new HashMap(8);
+        StringBuilder logMsg = new StringBuilder("\n -----------------------------------------------------------");
+        logMsg.append(this.descAndInvoke);
+        Map<String, Object> value = new HashMap<>(8);
         if (this.result) {
             logMsg.append(RESULT_MSG_TEMP);
             value.put("result", JSON.toJSONString(result.getResult()));
@@ -110,8 +110,9 @@ public class LogInfo {
             throw new RuntimeException("LogResult中异常对象字段不能为空");
         }
 
-        StringBuilder logMsg =  new StringBuilder(this.descAndInvoke).append(EXCEPTION_MSG_TEMP);
-        Map value = new HashMap(4);
+        StringBuilder logMsg =  new StringBuilder("\n -----------------------------------------------------------");
+        logMsg.append(this.descAndInvoke).append(EXCEPTION_MSG_TEMP);
+        Map<String, Object> value = new HashMap<>(4);
         value.put("e", result.getE().getMessage());
 
         Object[] args = this.removeNoNeedLogArgs(result.getArgs());
@@ -126,6 +127,12 @@ public class LogInfo {
     public String getDescAndInvoke() {
         return this.descAndInvoke;
     }
+
+    public MethodLog.LogLevel getLevel() {
+        return this.level;
+    }
+
+
 
     public static Builder builder(String descAndInvoke) {
         return new Builder(descAndInvoke);
@@ -150,6 +157,11 @@ public class LogInfo {
 
         public Builder time(boolean time) {
             logInfo.time = time;
+            return this;
+        }
+
+        public Builder level(MethodLog.LogLevel level) {
+            logInfo.level = level;
             return this;
         }
 

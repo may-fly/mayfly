@@ -30,7 +30,10 @@ public class LogAspect {
 
     private LogHandler handler = LogHandler.getInstance();
 
-    @Pointcut(value = "@annotation(mayfly.common.log.MethodLog)")
+    /**
+     * 拦截带有@MethodLog的方法或带有该注解的类
+     */
+    @Pointcut("@annotation(mayfly.common.log.MethodLog) || @within(mayfly.common.log.MethodLog)")
     private void logPointcut() {}
 
     @AfterThrowing(pointcut = "logPointcut()", throwing="e")
@@ -51,7 +54,25 @@ public class LogAspect {
         Object result = pjp.proceed();
         long endTime = System.currentTimeMillis();
 
-        LOG.info(logInfo.fillLogMsg(new LogResult(args, result, endTime - startTime)));
+        String logMsg = logInfo.fillLogMsg(new LogResult(args, result, endTime - startTime));
+        switch (logInfo.getLevel()) {
+            case DEBUG:
+                LOG.debug(logMsg);
+                break;
+            case WARN:
+                LOG.warn(logMsg);
+                break;
+            case INFO:
+                LOG.info(logMsg);
+                break;
+            case ERROR:
+                LOG.error(logMsg);
+                break;
+            default:
+                LOG.info(logMsg);
+                break;
+        }
+
         return result;
     }
 }
