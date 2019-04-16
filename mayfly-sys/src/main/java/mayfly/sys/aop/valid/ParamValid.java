@@ -26,7 +26,7 @@ public class ParamValid {
     private void controller() {}
 
     /**
-     * 拦截参数带有@Valid注解的方法
+     *
      */
     @Pointcut("@args(mayfly.common.validation.annotation.Valid)")
     private void validArgs() {}

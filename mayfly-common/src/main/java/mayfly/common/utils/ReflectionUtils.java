@@ -3,6 +3,7 @@ package mayfly.common.utils;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -64,6 +65,7 @@ public final class ReflectionUtils {
      * @return
      */
     public static Field getField(Class<?> clazz, String name, Class<?> type) {
+        Assert.notNull(clazz, "clazz不能为空！");
         while (clazz != Object.class && clazz != null) {
             for (Field field : clazz.getDeclaredFields()) {
                 if ((name == null || name.equals(field.getName())) &&
@@ -73,7 +75,7 @@ public final class ReflectionUtils {
             }
             clazz = clazz.getSuperclass();
         }
-        return null;
+        throw new IllegalStateException(clazz.getName() + "." + name + "字段不存在！");
     }
 
     /**
@@ -92,6 +94,42 @@ public final class ReflectionUtils {
     }
 
     /**
+     * 获取对象中指定field值
+     * @param obj  对象
+     * @param fieldName  字段名
+     * @return
+     */
+    public static Object getFieldValue(Object obj, String fieldName) {
+        Class<?> type = obj.getClass();
+        if (isSimpleValueType(type)) {
+            return obj;
+        }
+        return getFieldValue(getField(type, fieldName), obj);
+    }
+
+    /**
+     * 获取指定对象中指定字段路径的值(类似js访问对象属性) <br/>
+     *  如：Product p = new Product(new User())  <br/>
+     *  可使用ReflectionUtils.getValueByFieldPath(p, "user.name")获取到用户的name属性
+     *
+     * @param obj   取值对象
+     * @param fieldPath  字段路径(形如 user.name)
+     * @return  字段value
+     */
+    public static Object getValueByFieldPath(Object obj, String fieldPath) {
+        String[] fieldNames = fieldPath.split("\\.");
+        Object result = null;
+        for (String fieldName : fieldNames) {
+            result = getFieldValue(obj, fieldName);
+            if (result == null) {
+                return null;
+            }
+            obj = result;
+        }
+        return result;
+    }
+
+    /**
      * 设置字段值
      * @param field  字段
      * @param target  字段所属对象实例
@@ -104,6 +142,24 @@ public final class ReflectionUtils {
         } catch (Exception e) {
             throw new IllegalStateException("设置field值错误！");
         }
+    }
+
+    /**
+     * 判断class是否为简单值类型
+     * @param clazz
+     * @return
+     */
+    public static boolean isSimpleValueType(Class<?> clazz) {
+        return Enum.class.isAssignableFrom(clazz) || CharSequence.class.isAssignableFrom(clazz) || Number.class.isAssignableFrom(clazz) || Date.class.isAssignableFrom(clazz);
+    }
+
+    /**
+     * 判断指定对象是否为简单值类型
+     * @param obj
+     * @return
+     */
+    public static boolean isSimpleValue(Object obj) {
+        return isSimpleValueType(obj.getClass());
     }
 
     /**

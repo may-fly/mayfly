@@ -1,6 +1,7 @@
 package mayfly.common.log;
 
 import mayfly.common.utils.AnnotationUtils;
+import mayfly.common.utils.CollectionUtils;
 import mayfly.common.utils.StringUtils;
 
 import java.lang.reflect.Method;
@@ -81,16 +82,17 @@ public class LogHandler {
 
         //参数占位符
         StringBuilder paramPlaceholder = new StringBuilder();
-        int needLogIndex = 0;
+        boolean first = true;
         //遍历所有参数，如果参数对应的所有存在于不需要记录的参数索引列表中，则跳过该参数，不生成对应的占位符
         for (int i = 0; i < argsCount; i++) {
-            if (noNeedLogParamIndex != null && noNeedLogParamIndex.contains(i)) {
+            if (CollectionUtils.contains(noNeedLogParamIndex, i)) {
                 continue;
             }
-            if (needLogIndex == 0) {
-                paramPlaceholder.append("[" + i + "]:${param").append(needLogIndex++).append("}");
+            if (first) {
+                paramPlaceholder.append("[" + i + "]:${param").append(i).append("}");
+                first = false;
             } else {
-                paramPlaceholder.append(", [" + i + "]:${param").append(needLogIndex++).append("}");
+                paramPlaceholder.append(", [" + i + "]:${param").append(i).append("}");
             }
         }
 
@@ -99,12 +101,11 @@ public class LogHandler {
             descAndInvoke.append("\n| description: ").append(desc);
         }
         //构建日志信息,方法参数前[]中的数字表示为参数的索引，即0：第一个参数；1：第二个参数
-        descAndInvoke.append("\n| invoke: ").append(method.getDeclaringClass().getName() + "." + method.getName())
+        descAndInvoke.append("\n| invoke: ").append(method.getDeclaringClass().getName() + "#" + method.getName())
                 .append("(").append(paramPlaceholder).append(")");
 
-        LogInfo logInfo = LogInfo.builder(descAndInvoke.toString()).noNeedLogParamIndex(noNeedLogParamIndex)
+        return LogInfo.builder(descAndInvoke.toString()).noNeedLogParamIndex(noNeedLogParamIndex)
                 .time(log.time()).result(log.result()).level(log.level()).build();
-        return logInfo;
     }
 
 }

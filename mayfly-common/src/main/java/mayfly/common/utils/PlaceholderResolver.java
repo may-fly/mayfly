@@ -1,8 +1,5 @@
 package mayfly.common.utils;
 
-import java.lang.reflect.Field;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.function.Function;
@@ -164,64 +161,6 @@ public class PlaceholderResolver {
         if (obj instanceof Map) {
             return resolveByMap(content, (Map)obj);
         }
-        return resolveByRule(content, placeholderValue -> String.valueOf(getValueByFieldPath(obj, placeholderValue)));
-    }
-
-    /**
-     * 获取指定对象中指定字段路径的值(类似js访问对象属性)
-     *
-     * @param obj   取值对象
-     * @param fieldPath  字段路径(形如 detail.name.XXX)
-     * @return
-     */
-    private Object getValueByFieldPath(Object obj, String fieldPath) {
-        String[] fieldNames = fieldPath.split("\\.");
-        Object result = null;
-        int length = fieldNames.length;
-        for (int i = 0; i < length; i++) {
-            String fieldName = fieldNames[i];
-            result = getFieldValue(obj, fieldName);
-            if (result == null) {
-                String errorMsg = new StringBuffer().append(obj.getClass().getName()).append(".").append(fieldPath)
-                        .append("中的'").append(fieldName).append("'值为空！").toString();
-                throw new RuntimeException(errorMsg);
-            }
-            obj = result;
-        }
-        return result;
-    }
-
-    private Object getFieldValue(Object obj, String fieldName) {
-        Class clazz = obj.getClass();
-        if (isSimpleValueType(clazz)) {
-            return obj;
-        }
-        try {
-            Field field = clazz.getDeclaredField(fieldName);
-            field.setAccessible(true);
-            return field.get(obj);
-        } catch (NoSuchFieldException e) {
-            throw new RuntimeException(clazz.getName() + "." + fieldName + " 字段不存在");
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException("无法访问 " + fieldName);
-        }
-    }
-
-    /**
-     * 判断class是否为简单值类型
-     * @param clazz
-     * @return
-     */
-    private boolean isSimpleValueType(Class clazz) {
-        return Enum.class.isAssignableFrom(clazz) || CharSequence.class.isAssignableFrom(clazz) || Number.class.isAssignableFrom(clazz) || Date.class.isAssignableFrom(clazz);
-    }
-
-
-    public static void main(String[] args) {
-        String tem = "${id}:${userId}";
-        Map<String, Object> map = new HashMap<>();
-        map.put("id", "1");
-        map.put("userId", "2323");
-        System.out.print(getDefaultResolver().resolveByMap(tem, map));
+        return resolveByRule(content, placeholderValue -> String.valueOf(ReflectionUtils.getValueByFieldPath(obj, placeholderValue)));
     }
 }

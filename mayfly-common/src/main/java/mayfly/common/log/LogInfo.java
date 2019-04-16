@@ -1,6 +1,7 @@
 package mayfly.common.log;
 
 import com.alibaba.fastjson.JSON;
+import mayfly.common.utils.CollectionUtils;
 import mayfly.common.utils.PlaceholderResolver;
 
 import java.util.HashMap;
@@ -53,27 +54,6 @@ public class LogInfo {
     }
 
     /**
-     * 移除不需要记录日志的参数索引位置
-     * @param allArgs
-     * @return
-     */
-    public Object[] removeNoNeedLogArgs(Object[] allArgs) {
-        //如果不需要记录日志的参数为空，则直接返回
-        if (noNeedLogParamIndex == null || noNeedLogParamIndex.isEmpty()) {
-            return allArgs;
-        }
-        Object[] needLogArgs = new Object[allArgs.length - noNeedLogParamIndex.size()];
-        int needLogArgsIndex = 0;
-        for (int i = 0; i < allArgs.length; i++) {
-            if (noNeedLogParamIndex.contains(i)) {
-                continue;
-            }
-            needLogArgs[needLogArgsIndex++] = allArgs[i];
-        }
-        return needLogArgs;
-    }
-
-    /**
      * 填充日志占位符
      * @param result  要记录的具体日志信息
      * @return
@@ -91,8 +71,11 @@ public class LogInfo {
             value.put("time", result.getTime());
         }
 
-        Object[] args = this.removeNoNeedLogArgs(result.getArgs());
+        Object[] args = result.getArgs();
         for (int i = 0; i < args.length; i++) {
+            if (CollectionUtils.contains(noNeedLogParamIndex, i)) {
+                continue;
+            }
             value.put("param" + i, JSON.toJSONString(args[i]));
         }
 
@@ -115,8 +98,11 @@ public class LogInfo {
         Map<String, Object> value = new HashMap<>(4);
         value.put("e", result.getE().getMessage());
 
-        Object[] args = this.removeNoNeedLogArgs(result.getArgs());
+        Object[] args = result.getArgs();
         for (int i = 0; i < args.length; i++) {
+            if (CollectionUtils.contains(noNeedLogParamIndex, i))  {
+                continue;
+            }
             value.put("param" + i, JSON.toJSONString(args[i]));
         }
 

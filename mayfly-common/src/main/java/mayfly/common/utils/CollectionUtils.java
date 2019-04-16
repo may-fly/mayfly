@@ -19,6 +19,17 @@ public class CollectionUtils {
     }
 
     /**
+     * 判断一个集合中是否存在指定元素
+     * @param collection  集合对象
+     * @param value   集合元素
+     * @param <T>
+     * @return  true:存在 否则不存在
+     */
+    public static <T> boolean contains(Collection<T> collection, T value) {
+        return !isEmpty(collection) && collection.contains(value);
+    }
+
+    /**
      * 根据比较器比较两个collection中哪些是新增的对象以及删除的对象和没有改变的对象
      * @param newList  新list
      * @param oldList  旧list

@@ -25,9 +25,9 @@ public class PermissionController {
     @Autowired
     private PermissionService permissionService;
 
-    @MethodLog(value = "获取权限列表", time = true)
+    @MethodLog(value = "获取权限列表")
     @GetMapping("/v1/permissions")
-    public Result list(@NoNeedLogParam PermissionForm condition, @Valid PageForm pageForm) {
+    public Result list(PermissionForm condition, @NoNeedLogParam @Valid PageForm pageForm) {
 //        if (status != null) {
 //            Permission condition = Permission.builder().status(status).build();
 //            return Result.success().withData(permissionService.listByCondition(condition));
@@ -93,14 +93,14 @@ public class PermissionController {
     }
 
     @PutMapping("/v1/permissions/{id}")
-    @MethodLog(value = "修改权限", result = true, time = true)
+    @MethodLog(value = "修改权限")
     public Result update(@RequestBody @Valid PermissionForm permissionForm, @PathVariable Integer id) {
         Permission permission = BeanUtils.copyProperties(permissionForm, Permission.class);
         permission.setId(id);
         return Result.success().withData(permissionService.updatePermission(permission));
     }
 
-    @MethodLog(value = "启用禁用权限", time = true)
+    @MethodLog(value = "启用禁用权限")
     @PutMapping("/v1/permissions/{id}/{status}")
     public Result changeStatus(@PathVariable Integer id, @PathVariable Integer status) {
         return Result.success().withData(permissionService.changeStatus(id, status));
