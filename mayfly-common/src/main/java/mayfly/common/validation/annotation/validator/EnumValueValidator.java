@@ -3,12 +3,12 @@ package mayfly.common.validation.annotation.validator;
 import mayfly.common.enums.BaseEnum;
 import mayfly.common.utils.AnnotationUtils;
 import mayfly.common.utils.EnumUtils;
+import mayfly.common.utils.ObjectUtils;
 import mayfly.common.validation.annotation.EnumValue;
 
 import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.EnumSet;
-import java.util.Iterator;
 
 /**
  * EnumValue注解校验器
@@ -28,12 +28,7 @@ public class EnumValueValidator implements Validator {
                     throw new IllegalArgumentException("@EnumValue注解中的枚举类必须继承BaseEnum接口！");
                 }
                 Collection<? extends Enum> es = EnumSet.allOf(enumClass);
-                BaseEnum[] enums = new BaseEnum[es.size()];
-                int idx = 0;
-                for (Iterator it = es.iterator(); it.hasNext();) {
-                    enums[idx++] = (BaseEnum) it.next();
-                }
-                if (EnumUtils.isExist(enums, (Integer)fieldValue)) {
+                if (EnumUtils.isExist(ObjectUtils.castArray(es.toArray(), BaseEnum.class), (Integer)fieldValue)) {
                     return ValidResult.right();
                 }
                 return ValidResult.error(field.getName() + "字段值错误！");

@@ -1,6 +1,7 @@
 package mayfly.common.utils;
 
-import java.beans.BeanInfo;
+import mayfly.common.enums.BaseEnum;
+
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
@@ -24,21 +25,21 @@ public final class BeanUtils {
     /**
      * 转换器缓存
      */
-    private static Map<Class<? extends FieldValueConverter>, FieldValueConverter> converterCache = Collections.synchronizedMap(new WeakHashMap<>(32));
+    private static Map<Class<? extends FieldValueConverter>, FieldValueConverter> converterCache = Collections.synchronizedMap(new WeakHashMap<>(8));
 
     /**
-     * 将list中的bean转为map, key:fieldName, value:fieldValue  <br/> </br/>
-     * 如果bean的属性中还有bean，则key为以前一个beanName.fieldName
-     * @param beans
+     * 获取bean的属性描述器
+     * @param clazz  bean类型
      * @return
      */
-    public static List<Map<String, Object>> beans2Maps(Collection beans) {
-        List result = new ArrayList(beans.size());
-        for (Object obj : beans) {
-            result.add(bean2Map(obj));
+    public static PropertyDescriptor[] getPropertyDescriptors(Class<?> clazz) {
+        try {
+            return Introspector.getBeanInfo(clazz).getPropertyDescriptors();
+        } catch (IntrospectionException e) {
+            throw new IllegalArgumentException("获取BeanInfo异常!", e);
         }
-        return result;
     }
+
 
     /**
      * 将的bean转为map, key:fieldName, value:fieldValue  <br/> <br/>
@@ -48,6 +49,44 @@ public final class BeanUtils {
      */
     public static Map<String, Object> bean2Map(Object bean) {
         return doBean2Map(null, bean);
+    }
+
+    /**
+     * 将list中的bean转为map, key:fieldName, value:fieldValue  <br/> </br/>
+     * 如果bean的属性中还有bean，则key为以前一个beanName.fieldName
+     * @param beans
+     * @return
+     */
+    public static List<Map<String, Object>> beans2Maps(Collection<?> beans) {
+        List result = new ArrayList(beans.size());
+        for (Object obj : beans) {
+            result.add(bean2Map(obj));
+        }
+        return result;
+    }
+
+    public static <T> T map2Bean(Map sourceMap, Class<T> clazz) {
+        T target;
+        try {
+            target = clazz.newInstance();
+        } catch (Exception e) {
+            throw new IllegalArgumentException("实例化对象失败！", e);
+        }
+        for (PropertyDescriptor pd : getPropertyDescriptors(clazz)) {
+            Object fieldValue = sourceMap.get(pd.getName());
+            if (fieldValue != null) {
+                Method writeMethod = pd.getWriteMethod();
+                if (fieldValue.getClass() != writeMethod.getParameterTypes()[0]) {
+                    throw new IllegalStateException("参数类型不匹配！");
+                }
+                try {
+                    writeMethod.invoke(target, fieldValue);
+                } catch (IllegalAccessException | InvocationTargetException e) {
+                    throw new IllegalArgumentException("无法设置Bean属性值", e);
+                }
+            }
+        }
+        return target;
     }
 
     /**
@@ -61,15 +100,9 @@ public final class BeanUtils {
             return null;
         }
         Class type = bean.getClass();
-        Map<String ,Object> returnMap = new HashMap(32);
-        // 获取对象beanInfo
-        BeanInfo beanInfo;
-        try {
-            beanInfo = Introspector.getBeanInfo(type);
-        } catch (IntrospectionException e) {
-            throw new IllegalArgumentException("无法获取其BeanInfo", e);
-        }
-        for (PropertyDescriptor descriptor : beanInfo.getPropertyDescriptors()) {
+        Map<String ,Object> returnMap = new HashMap<>(32);
+        // 遍历属性描述器
+        for (PropertyDescriptor descriptor : getPropertyDescriptors(type)) {
             String propertyName = descriptor.getName();
             if (!"class".equals(propertyName)) {
                 Method readMethod = descriptor.getReadMethod();
@@ -84,11 +117,11 @@ public final class BeanUtils {
                 }
                 // 如果非基本类型
                 if (!isSimpleValue(result)) {
-                    if (isCollection(result)) {
+                    if (ObjectUtils.isCollection(result)) {
                         returnMap.put(parsePropertyName(prefix, propertyName), beans2Maps((Collection)result));
                         continue;
                     }
-                    if (isMap(result)) {
+                    if (ObjectUtils.isMap(result)) {
                         returnMap.put(parsePropertyName(prefix, propertyName), result);
                         continue;
                     }
@@ -99,19 +132,8 @@ public final class BeanUtils {
                 Bean2MapFieldConverter converterAnnotation = AnnotationUtils
                         .getAnnotation(ReflectionUtils.getField(type, propertyName), Bean2MapFieldConverter.class);
                 if (converterAnnotation != null) {
-                    Class<? extends FieldValueConverter> converterClazz = converterAnnotation.converter();
-                    // 转换器缓存中获取
-                    FieldValueConverter fc = converterCache.get(converterClazz);
-                    if (fc == null) {
-                        try {
-                            fc = converterClazz.newInstance();
-                        } catch (InstantiationException | IllegalAccessException e) {
-                            throw new IllegalArgumentException("实例化field value转换器失败", e);
-                        }
-                        converterCache.put(converterClazz, fc);
-                    }
                     // 转换值
-                    result = fc.convert(result);
+                    result = convertValue(converterAnnotation, result);
                     // 判断是否需要重命名key
                     String rename = converterAnnotation.rename();
                     if (!"".equals(rename.trim())) {
@@ -128,28 +150,46 @@ public final class BeanUtils {
         return prefix != null ? prefix + "." + propertyName : propertyName;
     }
 
+    private static Object convertValue(Bean2MapFieldConverter converter, Object value) {
+        Class<? extends FieldValueConverter> converterClazz = converter.converter();
+        // 如果FieldValueConverter不是默认的转换器，就使用该转换器
+        if (converterClazz != FieldValueConverter.class) {
+            // 转换器缓存中获取
+            FieldValueConverter fc = converterCache.get(converterClazz);
+            if (fc == null) {
+                try {
+                    fc = converterClazz.newInstance();
+                } catch (InstantiationException | IllegalAccessException e) {
+                    throw new IllegalArgumentException("实例化field value转换器失败", e);
+                }
+                converterCache.put(converterClazz, fc);
+            }
+            // 转换值
+            return fc.convert(value);
+        }
+
+        Class<? extends Enum> enumClass = converter.enumConverter();
+        if (enumClass != DefaultEnum.class && value instanceof Integer) {
+            Collection<? extends Enum> es = EnumSet.allOf(enumClass);
+            BaseEnum[] enums = new BaseEnum[es.size()];
+            int idx = 0;
+            for (Object e : es) {
+                enums[idx++] = (BaseEnum) e;
+            }
+            return EnumUtils.getNameByValue(enums, (Integer)value);
+        }
+
+        return value;
+    }
+
     /**
      * 判断对象是否为简单基本类型
      * @param res
      * @return
      */
     public static boolean isSimpleValue(Object res) {
-        Class clazz = res.getClass();
-        return Enum.class.isAssignableFrom(clazz)
-                || CharSequence.class.isAssignableFrom(clazz)
-                || Number.class.isAssignableFrom(clazz)
-                || Date.class.isAssignableFrom(clazz);
+        return ObjectUtils.isWrapperOrPrimitive(res) || ObjectUtils.isEnum(res) || ObjectUtils.isDate(res);
     }
-
-    private static boolean isCollection(Object res) {
-        return Collection.class.isAssignableFrom(res.getClass());
-    }
-
-    private static boolean isMap(Object res) {
-        return Map.class.isAssignableFrom(res.getClass());
-    }
-
-
 
     /**
      * Bean字段值转换 </br>
@@ -189,5 +229,23 @@ public final class BeanUtils {
          * @return
          */
         Class<? extends BeanUtils.FieldValueConverter> converter();
+
+        /**
+         * 枚举值转换,枚举类必须继承EnumValue接口
+         * @return
+         */
+        Class<? extends Enum<? extends BaseEnum>> enumConverter() default DefaultEnum.class;
+    }
+
+    private enum DefaultEnum implements BaseEnum {
+        ;
+        @Override
+        public Integer getValue() {
+            return 0;
+        }
+        @Override
+        public String getName() {
+            return null;
+        }
     }
 }

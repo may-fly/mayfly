@@ -64,8 +64,7 @@ public class LogHandler {
         } else {
             MethodLog typeLog = method.getDeclaringClass().getAnnotation(MethodLog.class);
             String typeMsg = typeLog != null ? typeLog.value() : "";
-            String methodMsg = log.value();
-            desc = typeMsg + methodMsg;
+            desc = typeMsg + log.value();
         }
 
         //获取调用方法中不需要记录日志的参数索引位置

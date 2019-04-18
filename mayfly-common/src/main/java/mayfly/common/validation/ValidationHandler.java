@@ -20,9 +20,9 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ValidationHandler {
 
     /**
-     * 字段校验缓存，key:class   value: fieldInfo对象
+     * 字段校验缓存，key:class   value: fieldInfo对象列表
      */
-    private static final Map<Class, List<FieldInfo>> CACHE = new ConcurrentHashMap<>(32);
+    private static final Map<Class<?>, List<FieldInfo>> CACHE = new ConcurrentHashMap<>(32);
 
     /**
      * 校验器注册
@@ -96,15 +96,18 @@ public class ValidationHandler {
      */
     private FieldInfo buildFieldInfo(Field field) {
         //该字段上需要校验的校验器类型列表
-        List<Validator> validators = new ArrayList<>(8);
+        List<Validator> validators = null;
         //获取所有注册过的注解校验类
         for(Map.Entry<Class<? extends Annotation>, Validator> entry : validatorRegister.entrySet()){
             if (AnnotationUtils.isAnnotationPresent(field, entry.getKey())) {
+                if (validators == null) {
+                    validators = new ArrayList<>(4);
+                }
                 validators.add(entry.getValue());
             }
         }
         //如果校验器为空，则说明该字段无需任何校验
-        return validators.isEmpty() ? null : new FieldInfo(field, validators);
+        return validators == null ? null : new FieldInfo(field, validators);
     }
 
 

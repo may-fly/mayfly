@@ -100,6 +100,7 @@ public final class ReflectionUtils {
      * @return
      */
     public static Object getFieldValue(Object obj, String fieldName) {
+        Assert.notNull(obj, "obj不能为空!");
         Class<?> type = obj.getClass();
         if (isSimpleValueType(type)) {
             return obj;
@@ -151,15 +152,6 @@ public final class ReflectionUtils {
      */
     public static boolean isSimpleValueType(Class<?> clazz) {
         return Enum.class.isAssignableFrom(clazz) || CharSequence.class.isAssignableFrom(clazz) || Number.class.isAssignableFrom(clazz) || Date.class.isAssignableFrom(clazz);
-    }
-
-    /**
-     * 判断指定对象是否为简单值类型
-     * @param obj
-     * @return
-     */
-    public static boolean isSimpleValue(Object obj) {
-        return isSimpleValueType(obj.getClass());
     }
 
     /**
@@ -224,6 +216,7 @@ public final class ReflectionUtils {
      *
      * @param <T>
      */
+    @FunctionalInterface
     public interface FieldCallback<T> {
         /**
          * 对字段进行操作，并返回操作结果
