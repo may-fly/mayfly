@@ -40,7 +40,7 @@ public class Assert {
 
     public static void assertState(boolean condition, String message) {
         if (!condition) {
-            throw new IllegalArgumentException(message);
+            throw new IllegalStateException(message);
         }
     }
 }

@@ -16,8 +16,8 @@ public class ObjectUtils {
 
     /**
      * 所有数组元素向上转型
-     * @param objs
-     * @param clazz
+     * @param objs  转换前对象数组
+     * @param clazz  转换后数组对象类型
      * @param <T>
      * @return
      */

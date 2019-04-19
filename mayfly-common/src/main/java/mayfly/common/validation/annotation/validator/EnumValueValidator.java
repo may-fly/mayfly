@@ -26,7 +26,9 @@ public class EnumValueValidator implements Validator {
             if (!BaseEnum.class.isAssignableFrom(enumClass)) {
                 throw new IllegalArgumentException("@EnumValue注解中的枚举类必须继承BaseEnum接口！");
             }
+            @SuppressWarnings("unchecked")
             Collection<? extends Enum> es = EnumSet.allOf(enumClass);
+            //判断字段值是否存在指定的枚举类中
             if (EnumUtils.isExist(ObjectUtils.castArray(es.toArray(), BaseEnum.class), (Integer)fieldValue)) {
                 return ValidResult.right();
             }

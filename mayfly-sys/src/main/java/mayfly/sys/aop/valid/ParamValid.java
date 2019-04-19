@@ -13,9 +13,9 @@ import org.springframework.stereotype.Component;
 import java.lang.reflect.Method;
 
 /**
+ * 参数校验切面
  * @author hml
  * @version 1.0
- * @description: 参数校验
  * @date 2018-10-28 1:17 PM
  */
 @Aspect

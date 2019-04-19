@@ -14,7 +14,6 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * @author meilin.huang
  * @version 1.0
- * @description:
  * @date 2018-10-27 4:57 PM
  */
 public class ValidationHandler {
@@ -42,7 +41,7 @@ public class ValidationHandler {
 
     /**
      * 单例入口
-     * @return
+     * @return 参数检验处理器
      */
     public static ValidationHandler getInstance() {
         return instance;
@@ -74,19 +73,16 @@ public class ValidationHandler {
      * @return
      */
     public List<FieldValidators> getAllFieldValidators(Object obj) {
-        Class clazz = obj.getClass();
-        List<FieldValidators> allFieldValidators = CACHE.get(clazz);
-        if (allFieldValidators == null) {
-            allFieldValidators = new ArrayList<>(8);
-            for (Field field : ReflectionUtils.getFields(clazz)) {
+        return CACHE.computeIfAbsent(obj.getClass(), key -> {
+            List<FieldValidators> allFieldValidators = new ArrayList<>(8);
+            for (Field field : ReflectionUtils.getFields(key)) {
                 FieldValidators fi = getFieldValidators(field);
                 if (fi != null) {
                     allFieldValidators.add(fi);
                 }
             }
-            CACHE.put(clazz, allFieldValidators);
-        }
-        return allFieldValidators;
+            return allFieldValidators;
+        });
     }
 
     /**

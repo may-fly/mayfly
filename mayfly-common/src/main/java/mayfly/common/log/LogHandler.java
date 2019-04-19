@@ -40,7 +40,7 @@ public class LogHandler {
      * @return 日志信息，含有需要记录的基本信息
      */
     public LogInfo getLogInfo(final Method method) {
-        return LOG_CACHE.computeIfAbsent(method, key -> parseLogMsg(method));
+        return LOG_CACHE.computeIfAbsent(method, this::parseLogMsg);
     }
 
 

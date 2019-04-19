@@ -19,9 +19,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Retention(RUNTIME)
 public @interface EnumValue {
     /**
-     * 枚举值类型，必须继承BaseEnum
-     * @see mayfly.common.enums.BaseEnum
-     * @return
+     * 枚举值类型，必须继承{@link BaseEnum}
      */
     Class<? extends Enum<? extends BaseEnum>> value();
 }

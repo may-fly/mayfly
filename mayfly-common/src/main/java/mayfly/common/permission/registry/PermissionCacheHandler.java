@@ -48,7 +48,7 @@ public final class PermissionCacheHandler {
     /**
      * 权限缓存工厂方法
      * @param userCodeRegistry 用户权限缓存器(null则使用默认注册器 {@link DefaultUserPermissionCodeRegistry})
-     * @param sysCodeRegistry  系统所有权限缓存器
+     * @param sysCodeRegistry  系统所有权限缓存器，可为空
      * @return
      */
     public static PermissionCacheHandler of(UserPermissionCodeRegistry userCodeRegistry, SysPermissionCodeRegistry sysCodeRegistry) {
@@ -95,6 +95,23 @@ public final class PermissionCacheHandler {
         }
     }
 
+    /**
+     * 删除指定权限
+     * @param code
+     */
+    public void deletePermission(String code) {
+        if (sysCodeRegistry != null) {
+            //如果存在正常使用的权限code，则删除返回，否则继续判断该权限是否为禁用状态
+            if (sysCodeRegistry.has(code)) {
+                sysCodeRegistry.delete(code);
+                return;
+            }
+            String disableCode = getDisablePermissionCode(code);
+            if (sysCodeRegistry.has(disableCode)) {
+                sysCodeRegistry.delete(disableCode);
+            }
+        }
+    }
 
     /**
      * 返回与requestUri匹配的uriPattern

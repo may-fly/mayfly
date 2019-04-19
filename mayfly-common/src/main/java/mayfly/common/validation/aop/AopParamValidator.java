@@ -33,8 +33,8 @@ public class AopParamValidator {
 
 
     public void validate(Method method, Object[] args) throws ParamValidErrorException {
-        List<Integer> index = indexCache.get(method);
-        if (index == null) {
+        List<Integer> idx = indexCache.computeIfAbsent(method, key -> {
+            List<Integer> index = null;
             Parameter[] params = method.getParameters();
             for (int i = 0; i < params.length; i++) {
                 if(AnnotationUtils.isAnnotationPresent(params[i], Valid.class)) {
@@ -47,13 +47,13 @@ public class AopParamValidator {
             if (index == null) {
                 index = Collections.emptyList();
             }
-            indexCache.put(method, index);
-        }
+            return index;
+        });
         //没有需要校验的参数索引，直接返回
-        if (index.isEmpty()) {
+        if (idx.isEmpty()) {
             return;
         }
-        for (Integer i : index) {
+        for (Integer i : idx) {
             ValidationHandler.getInstance().validate(args[i]);
         }
     }

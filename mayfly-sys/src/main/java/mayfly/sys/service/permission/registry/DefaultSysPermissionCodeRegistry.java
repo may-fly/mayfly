@@ -41,4 +41,9 @@ public class DefaultSysPermissionCodeRegistry implements SysPermissionCodeRegist
         permissions.remove(oldCode);
         permissions.add(newCode);
     }
+
+    @Override
+    public void delete(String code) {
+        permissions.remove(code);
+    }
 }

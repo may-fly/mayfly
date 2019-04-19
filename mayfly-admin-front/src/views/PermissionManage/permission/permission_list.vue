@@ -22,7 +22,7 @@
 					<el-tag v-if="scope.row.method == 1">GET</el-tag>
 					<el-tag type="success" v-if="scope.row.method == 2">POST</el-tag>
 					<el-tag type="warning" v-if="scope.row.method == 3">PUT</el-tag>
-					<el-tag type="warning" v-if="scope.row.method == 4">DELETE</el-tag>
+					<el-tag type="danger" v-if="scope.row.method == 4">DELETE</el-tag>
 				</div>
 			</el-table-column>
 			<el-table-column prop="uriPattern" label="uri">

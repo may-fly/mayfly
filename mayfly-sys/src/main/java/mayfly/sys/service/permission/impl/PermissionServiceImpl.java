@@ -2,7 +2,6 @@ package mayfly.sys.service.permission.impl;
 
 import mayfly.common.enums.StatusEnum;
 import mayfly.common.exception.BusinessRuntimeException;
-import mayfly.common.log.MethodLog;
 import mayfly.common.permission.registry.PermissionCacheHandler;
 import mayfly.common.permission.registry.SysPermissionCodeRegistry;
 import mayfly.common.permission.registry.UserPermissionCodeRegistry;
@@ -37,7 +36,6 @@ import java.util.stream.Collectors;
  * @author: hml
  * @date: 2018/6/26 上午9:49
  */
-@MethodLog("权限服务类  ==> ")
 @Service
 public class PermissionServiceImpl extends BaseServiceImpl<PermissionMapper, Permission> implements PermissionService, UserPermissionCodeRegistry, SysPermissionCodeRegistry {
     /**
@@ -142,9 +140,14 @@ public class PermissionServiceImpl extends BaseServiceImpl<PermissionMapper, Per
     @Transactional
     @Override
     public Boolean deletePermission(Integer id) {
+        Permission p = getById(id);
+        if (p == null) {
+            throw new BusinessRuntimeException("权限不存在！");
+        }
         if (deleteById(id)) {
             roleResourceMapper.deleteByCriteria(RoleResource.builder()
                     .resourceId(id).type(ResourceTypeEnum.PERMISSION.getValue()).build());
+            permissionCacheHandler.deletePermission(p.getCode());
             return true;
         }
         return false;
@@ -185,5 +188,10 @@ public class PermissionServiceImpl extends BaseServiceImpl<PermissionMapper, Per
     public void rename(String oldCode, String newCode) {
         redisTemplate.boundSetOps(UserCacheKey.ALL_PERMISSION_KEY).remove(oldCode);
         redisTemplate.boundSetOps(UserCacheKey.ALL_PERMISSION_KEY).add(newCode);
+    }
+
+    @Override
+    public void delete(String code) {
+        redisTemplate.boundSetOps(UserCacheKey.ALL_PERMISSION_KEY).remove(code);
     }
 }
