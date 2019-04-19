@@ -37,6 +37,7 @@ import java.util.stream.Collectors;
  * @author: hml
  * @date: 2018/6/26 上午9:49
  */
+@MethodLog("权限服务类  ==> ")
 @Service
 public class PermissionServiceImpl extends BaseServiceImpl<PermissionMapper, Permission> implements PermissionService, UserPermissionCodeRegistry, SysPermissionCodeRegistry {
     /**
@@ -53,17 +54,12 @@ public class PermissionServiceImpl extends BaseServiceImpl<PermissionMapper, Per
     @Autowired
     private MenuService menuService;
 
-    //权限处理器
-    private PermissionCacheHandler permissionCacheHandler = PermissionCacheHandler.getInstance()
-            .withUserCodeRegistry(this)
-            .withSysCodeRegistry(this);
+    /**
+     * 权限缓存处理器
+     */
+    private PermissionCacheHandler permissionCacheHandler = PermissionCacheHandler.of(this, this);
 
-    @Override
-    public PermissionCacheHandler getPermissionCacheHandler() {
-        return permissionCacheHandler;
-    }
 
-    @MethodLog(value = "保存id以及权限列表", time = true)
     @Override
     public LoginSuccessVO saveIdAndPermission(Integer id) {
         String token = UUIDUtils.generateUUID();

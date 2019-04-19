@@ -1,4 +1,4 @@
-package mayfly.common.permission.check;
+package mayfly.common.permission.checker;
 
 import mayfly.common.permission.Permission;
 import mayfly.common.permission.registry.PermissionCacheHandler;
@@ -20,17 +20,29 @@ public class PermissionCheckHandler {
     /**
      * 用户权限校验
      */
-    private UserPermissionCheck userPermissionCheck;
+    private UserPermissionChecker userPermissionChecker;
 
-    private SysPermissionCheck sysPermissionCheck;
+    /**
+     * 系统所有权限校验
+     */
+    private SysPermissionChecker sysPermissionChecker;
 
-    private PermissionCheckHandler(UserPermissionCheck userPermissionCheck, SysPermissionCheck sysPermissionCheck) {
-        this.userPermissionCheck = userPermissionCheck;
-        this.sysPermissionCheck = sysPermissionCheck;
+    private PermissionCheckHandler(UserPermissionChecker userPermissionChecker, SysPermissionChecker sysPermissionChecker) {
+        this.userPermissionChecker = userPermissionChecker;
+        this.sysPermissionChecker = sysPermissionChecker;
     }
 
-    public static PermissionCheckHandler of(UserPermissionCheck userPermissionCheck, SysPermissionCheck sysPermissionCheck){
-        return new PermissionCheckHandler(userPermissionCheck, sysPermissionCheck);
+    /**
+     * 权限检查器工厂方法
+     * @param userPermissionChecker 用户权限检查（为null则使用默认检查器 {@link DefaultUserPermissionChecker}）
+     * @param sysPermissionChecker 系统所有权限校验，可为空
+     * @return
+     */
+    public static PermissionCheckHandler of(UserPermissionChecker userPermissionChecker, SysPermissionChecker sysPermissionChecker){
+        if (userPermissionChecker == null) {
+            userPermissionChecker = new DefaultUserPermissionChecker();
+        }
+        return new PermissionCheckHandler(userPermissionChecker, sysPermissionChecker);
     }
 
     /**
@@ -42,15 +54,15 @@ public class PermissionCheckHandler {
      */
     public boolean hasPermission(Integer userId, String permissionCode) throws PermissionDisabledException{
         //判断code注册器是否含有该用户的权限code
-        if (userPermissionCheck.has(userId, permissionCode)) {
+        if (userPermissionChecker.has(userId, permissionCode)) {
             // 判断该权限是否有被禁用,可用于判断实时禁用
-            if (sysPermissionCheck != null && sysPermissionCheck.has(PermissionCacheHandler.getDisablePermissionCode(permissionCode))) {
+            if (sysPermissionChecker != null && sysPermissionChecker.has(PermissionCacheHandler.getDisablePermissionCode(permissionCode))) {
                 throw new PermissionDisabledException();
             }
             return true;
         }
         // 判断该权限是否有被禁用
-        if (userPermissionCheck.has(userId, PermissionCacheHandler.getDisablePermissionCode(permissionCode))) {
+        if (userPermissionChecker.has(userId, PermissionCacheHandler.getDisablePermissionCode(permissionCode))) {
             throw new PermissionDisabledException();
         }
         return false;

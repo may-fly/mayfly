@@ -101,7 +101,7 @@ public class SSHClient {
                 session = jsch.getSession(this.username, this.host, this.port);
                 session.setPassword(this.password);
                 session.setUserInfo(new MyUserInfo());
-                // It must not be recommended, but if you want to skip host-key check,
+                // It must not be recommended, but if you want to skip host-key checker,
                 // invoke following,
                 session.setConfig("StrictHostKeyChecking", "no");
             }

@@ -171,12 +171,7 @@ public final class BeanUtils {
         Class<? extends Enum> enumClass = converter.enumConverter();
         if (enumClass != DefaultEnum.class && value instanceof Integer) {
             Collection<? extends Enum> es = EnumSet.allOf(enumClass);
-            BaseEnum[] enums = new BaseEnum[es.size()];
-            int idx = 0;
-            for (Object e : es) {
-                enums[idx++] = (BaseEnum) e;
-            }
-            return EnumUtils.getNameByValue(enums, (Integer)value);
+            return EnumUtils.getNameByValue(ObjectUtils.castArray(es.toArray(), BaseEnum.class), (Integer)value);
         }
 
         return value;

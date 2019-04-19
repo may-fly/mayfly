@@ -22,7 +22,6 @@ public class NotBlankValidator implements Validator {
                 String message = "".equals(notBlank.message()) ? field.getName() + "值不能为空！" : notBlank.message();
                 return ValidResult.error(message);
             }
-
             if (!(fieldValue instanceof String)) {
                 throw new RuntimeException("@NotBlank注解必须作用于String类型");
             }

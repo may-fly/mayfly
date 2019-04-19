@@ -1,15 +1,13 @@
 package mayfly.common.validation.aop;
 
+import mayfly.common.utils.AnnotationUtils;
 import mayfly.common.validation.ParamValidErrorException;
 import mayfly.common.validation.ValidationHandler;
 import mayfly.common.validation.annotation.Valid;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -22,7 +20,7 @@ public class AopParamValidator {
     /**
      * 带有@Valid参数的索引位置, key:方法全路径  value:索引列表（即参数可以含有多个@Valid注解）
      */
-    private static Map<String, List<Integer>> indexCache = new ConcurrentHashMap<>(64);
+    private static Map<Method, List<Integer>> indexCache = new ConcurrentHashMap<>(64);
 
 
     private AopParamValidator(){}
@@ -35,12 +33,11 @@ public class AopParamValidator {
 
 
     public void validate(Method method, Object[] args) throws ParamValidErrorException {
-        String invoke = method.getDeclaringClass().getName() + "." + method.getName();
-        List<Integer> index = indexCache.get(invoke);
+        List<Integer> index = indexCache.get(method);
         if (index == null) {
             Parameter[] params = method.getParameters();
             for (int i = 0; i < params.length; i++) {
-                if(params[i].isAnnotationPresent(Valid.class)) {
+                if(AnnotationUtils.isAnnotationPresent(params[i], Valid.class)) {
                     if (index == null) {
                         index = new ArrayList<>();
                     }
@@ -50,9 +47,12 @@ public class AopParamValidator {
             if (index == null) {
                 index = Collections.emptyList();
             }
-            indexCache.put(invoke, index);
+            indexCache.put(method, index);
         }
-
+        //没有需要校验的参数索引，直接返回
+        if (index.isEmpty()) {
+            return;
+        }
         for (Integer i : index) {
             ValidationHandler.getInstance().validate(args[i]);
         }

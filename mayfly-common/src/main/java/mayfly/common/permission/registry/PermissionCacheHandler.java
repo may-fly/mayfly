@@ -20,8 +20,6 @@ public final class PermissionCacheHandler {
      */
     public static final String CODE_STATUS_SEPARATOR = ":";
 
-    private static PermissionCacheHandler permissionCacheHandler = new PermissionCacheHandler(DefaultUserPermissionCodeRegistry.getInstance(), null);
-
     /**
      * 用户权限码注册
      */
@@ -47,18 +45,17 @@ public final class PermissionCacheHandler {
         this.sysCodeRegistry = sysCodeRegistry;
     }
 
-    public static final PermissionCacheHandler getInstance() {
-        return permissionCacheHandler;
-    }
-
-    public PermissionCacheHandler withUserCodeRegistry(UserPermissionCodeRegistry registry) {
-        this.userCodeRegistry = registry;
-        return this;
-    }
-
-    public PermissionCacheHandler withSysCodeRegistry(SysPermissionCodeRegistry sysCodeRegistry) {
-        this.sysCodeRegistry = sysCodeRegistry;
-        return this;
+    /**
+     * 权限缓存工厂方法
+     * @param userCodeRegistry 用户权限缓存器(null则使用默认注册器 {@link DefaultUserPermissionCodeRegistry})
+     * @param sysCodeRegistry  系统所有权限缓存器
+     * @return
+     */
+    public static PermissionCacheHandler of(UserPermissionCodeRegistry userCodeRegistry, SysPermissionCodeRegistry sysCodeRegistry) {
+        if (userCodeRegistry == null) {
+            userCodeRegistry = DefaultUserPermissionCodeRegistry.getInstance();
+        }
+        return new PermissionCacheHandler(userCodeRegistry, sysCodeRegistry);
     }
 
     /**

@@ -1,6 +1,6 @@
 package mayfly.sys.interceptor;
 
-import mayfly.common.permission.check.PermissionCheckHandler;
+import mayfly.common.permission.checker.PermissionCheckHandler;
 import mayfly.common.permission.PermissionDisabledException;
 import mayfly.common.result.Result;
 import mayfly.common.utils.StringUtils;
@@ -45,16 +45,18 @@ public class PermissionInterceptor implements HandlerInterceptor {
         }
         // 判断该用户是否有执行该方法的权限
         try {
+            //如果校验通过，返回true
             if (handler instanceof HandlerMethod && checkHandler.hasPermission(userId, ((HandlerMethod)handler).getMethod())) {
                 return true;
             }
+            // 无权限
+            sendErrorMessage(response, Result.withoutPermission());
+            return false;
         } catch (PermissionDisabledException e) {
+            //权限禁用
             sendErrorMessage(response, Result.error(e.getMessage()));
             return false;
         }
-
-        sendErrorMessage(response, Result.withoutPermission());
-        return false;
     }
 
     /**

@@ -22,7 +22,7 @@ public class ValidationHandler {
     /**
      * 字段校验缓存，key:class   value: fieldInfo对象列表
      */
-    private static final Map<Class<?>, List<FieldInfo>> CACHE = new ConcurrentHashMap<>(32);
+    private static final Map<Class<?>, List<FieldValidators>> CACHE = new ConcurrentHashMap<>(32);
 
     /**
      * 校验器注册
@@ -54,11 +54,11 @@ public class ValidationHandler {
      * @throws ParamValidErrorException  若不符合指定注解的参数值则抛出该异常
      */
     public void validate(Object obj) throws ParamValidErrorException {
-        for (FieldInfo fieldInfo : getFieldInfoList(obj)) {
-            Field field = fieldInfo.field;
+        for (FieldValidators fieldValidators : getAllFieldValidators(obj)) {
+            Field field = fieldValidators.field;
             Object fieldValue = ReflectionUtils.getFieldValue(field, obj);
             //遍历field字段需要校验的校验器
-            for(Validator validator : fieldInfo.validators) {
+            for(Validator validator : fieldValidators.validators) {
                 ValidResult result = validator.validation(field, fieldValue);
                 if (!result.isRight()) {
                     throw new ParamValidErrorException(result.getMessage());
@@ -73,20 +73,20 @@ public class ValidationHandler {
      * @param obj
      * @return
      */
-    public List<FieldInfo> getFieldInfoList(Object obj) {
+    public List<FieldValidators> getAllFieldValidators(Object obj) {
         Class clazz = obj.getClass();
-        List<FieldInfo> fieldInfoList = CACHE.get(clazz);
-        if (fieldInfoList == null) {
-            fieldInfoList = new ArrayList<>(8);
+        List<FieldValidators> allFieldValidators = CACHE.get(clazz);
+        if (allFieldValidators == null) {
+            allFieldValidators = new ArrayList<>(8);
             for (Field field : ReflectionUtils.getFields(clazz)) {
-                FieldInfo fi = buildFieldInfo(field);
+                FieldValidators fi = getFieldValidators(field);
                 if (fi != null) {
-                    fieldInfoList.add(fi);
+                    allFieldValidators.add(fi);
                 }
             }
-            CACHE.put(clazz, fieldInfoList);
+            CACHE.put(clazz, allFieldValidators);
         }
-        return fieldInfoList;
+        return allFieldValidators;
     }
 
     /**
@@ -94,7 +94,7 @@ public class ValidationHandler {
      * @param field
      * @return 如果field字段不包含任何校验注解则返回null
      */
-    private FieldInfo buildFieldInfo(Field field) {
+    private FieldValidators getFieldValidators(Field field) {
         //该字段上需要校验的校验器类型列表
         List<Validator> validators = null;
         //获取所有注册过的注解校验类
@@ -107,21 +107,21 @@ public class ValidationHandler {
             }
         }
         //如果校验器为空，则说明该字段无需任何校验
-        return validators == null ? null : new FieldInfo(field, validators);
+        return validators == null ? null : new FieldValidators(field, validators);
     }
 
 
     /**
      * 字段包含的所有注解校验器
      */
-    private static class FieldInfo {
+    private static class FieldValidators {
         private Field field;
 
         private List<Validator> validators;
 
-        public FieldInfo(){}
+        public FieldValidators(){}
 
-        public FieldInfo(Field field, List<Validator> validators) {
+        public FieldValidators(Field field, List<Validator> validators) {
             this.field = field;
             this.validators = validators;
         }

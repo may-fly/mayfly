@@ -5,6 +5,7 @@ import mayfly.common.utils.AnnotationUtils;
 import mayfly.common.validation.annotation.Size;
 
 import java.lang.reflect.Field;
+import java.util.Collection;
 
 /**
  * @author hml
@@ -22,22 +23,36 @@ public class SizeValidator implements Validator {
 
             if (fieldValue instanceof String) {
                 String value = (String)fieldValue;
-                if (value.length() >= min && value.length() <= max) {
+                int len = value.length();
+                if (len >= min && len <= max) {
                     return ValidResult.right();
                 }
-                String message = "".equals(size.message()) ? field.getName() + "取值范围错误！" : size.message();
-                return ValidResult.error(message);
+                return errorResult(field, size);
             }
 
-            if (fieldValue instanceof Integer) {
-                Integer value = (Integer)fieldValue;
-                if (value >= min && value <= max) {
+            if (fieldValue instanceof Number) {
+                Number value = (Number) fieldValue;
+                int val = value.intValue();
+                if (val >= min && val <= max) {
                     return ValidResult.right();
                 }
-                String message = "".equals(size.message()) ? field.getName() + "取值范围错误！" : size.message();
-                return ValidResult.error(message);
+               return errorResult(field, size);
+            }
+
+            if (fieldValue instanceof Collection) {
+                Collection value = (Collection)fieldValue;
+                int len = value.size();
+                if (len >= min && len <= max) {
+                    return ValidResult.right();
+                }
+                return errorResult(field, size);
             }
         }
         return ValidResult.right();
+    }
+
+    private ValidResult errorResult(Field field, Size size) {
+        String message = "".equals(size.message()) ? field.getName() + "范围错误！" : size.message();
+        return ValidResult.error(message);
     }
 }

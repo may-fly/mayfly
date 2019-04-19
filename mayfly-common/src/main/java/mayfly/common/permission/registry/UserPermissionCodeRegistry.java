@@ -1,6 +1,6 @@
 package mayfly.common.permission.registry;
 
-import mayfly.common.permission.check.UserPermissionCheck;
+import mayfly.common.permission.checker.UserPermissionChecker;
 
 import java.util.Collection;
 import java.util.concurrent.TimeUnit;
@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit;
  * @version 1.0
  * @date 2019-03-23 8:17 PM
  */
-public interface UserPermissionCodeRegistry extends UserPermissionCheck {
+public interface UserPermissionCodeRegistry extends UserPermissionChecker {
 
     /**
      * 保存用户权限码列表

@@ -1,12 +1,13 @@
-package mayfly.common.permission.check;
+package mayfly.common.permission.checker;
 
 /**
+ * 用户权限校验检查
  * @author meilin.huang
  * @version 1.0
  * @date 2019-03-28 1:44 PM
  */
 @FunctionalInterface
-public interface UserPermissionCheck {
+public interface UserPermissionChecker {
 
     /**
      * 判断用户时候拥有该权限

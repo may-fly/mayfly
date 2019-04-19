@@ -21,18 +21,16 @@ public class EnumValueValidator implements Validator {
     @Override
     public ValidResult validation(Field field, Object fieldValue) {
         EnumValue enumValue = AnnotationUtils.getAnnotation(field, EnumValue.class);
-        if (enumValue != null && fieldValue != null) {
-            if (fieldValue instanceof Integer) {
-                Class<? extends Enum> enumClass = enumValue.value();
-                if (!BaseEnum.class.isAssignableFrom(enumClass)) {
-                    throw new IllegalArgumentException("@EnumValue注解中的枚举类必须继承BaseEnum接口！");
-                }
-                Collection<? extends Enum> es = EnumSet.allOf(enumClass);
-                if (EnumUtils.isExist(ObjectUtils.castArray(es.toArray(), BaseEnum.class), (Integer)fieldValue)) {
-                    return ValidResult.right();
-                }
-                return ValidResult.error(field.getName() + "字段值错误！");
+        if (enumValue != null && fieldValue instanceof Integer) {
+            Class<? extends Enum> enumClass = enumValue.value();
+            if (!BaseEnum.class.isAssignableFrom(enumClass)) {
+                throw new IllegalArgumentException("@EnumValue注解中的枚举类必须继承BaseEnum接口！");
             }
+            Collection<? extends Enum> es = EnumSet.allOf(enumClass);
+            if (EnumUtils.isExist(ObjectUtils.castArray(es.toArray(), BaseEnum.class), (Integer)fieldValue)) {
+                return ValidResult.right();
+            }
+            return ValidResult.error(field.getName() + "字段值错误！");
         }
         return ValidResult.right();
     }

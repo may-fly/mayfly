@@ -1,4 +1,4 @@
-package mayfly.common.permission.check;
+package mayfly.common.permission.checker;
 
 /**
  * @author meilin.huang
@@ -6,7 +6,7 @@ package mayfly.common.permission.check;
  * @date 2019-03-28 1:46 PM
  */
 @FunctionalInterface
-public interface SysPermissionCheck {
+public interface SysPermissionChecker {
 
     /**
      * 判断系统所有权限中是否含有该权限 (用于实时判断权限是否禁用删除等)

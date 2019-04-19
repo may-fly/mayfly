@@ -3,7 +3,6 @@ package mayfly.common.utils;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -101,11 +100,10 @@ public final class ReflectionUtils {
      */
     public static Object getFieldValue(Object obj, String fieldName) {
         Assert.notNull(obj, "obj不能为空!");
-        Class<?> type = obj.getClass();
-        if (isSimpleValueType(type)) {
+        if (ObjectUtils.isWrapperOrPrimitive(obj)) {
             return obj;
         }
-        return getFieldValue(getField(type, fieldName), obj);
+        return getFieldValue(getField(obj.getClass(), fieldName), obj);
     }
 
     /**
@@ -146,43 +144,6 @@ public final class ReflectionUtils {
     }
 
     /**
-     * 判断class是否为简单值类型
-     * @param clazz
-     * @return
-     */
-    public static boolean isSimpleValueType(Class<?> clazz) {
-        return Enum.class.isAssignableFrom(clazz) || CharSequence.class.isAssignableFrom(clazz) || Number.class.isAssignableFrom(clazz) || Date.class.isAssignableFrom(clazz);
-    }
-
-    /**
-     * 对指定类中的field进行操作，并返回操作结果
-     *
-     * @param clazz
-     * @param name     field name
-     * @param callback field回调
-     * @param <T>
-     * @return
-     */
-    public static <T> T doWithField(Class<?> clazz, String name, FieldCallback<T> callback) {
-        Assert.notNull(clazz, "clazz不能为空！");
-        Assert.notEmpty(name, "fieldName不能为空！");
-        return doWithField(getField(clazz, name), callback);
-    }
-
-    /**
-     * 对指定字段进行回调操作
-     *
-     * @param field
-     * @param callback
-     * @param <T>
-     * @return
-     */
-    public static <T> T doWithField(Field field, FieldCallback<T> callback) {
-        Assert.notNull(field, "field不能为空！");
-        return callback.doWith(field);
-    }
-
-    /**
      * 设置字段为可见
      * @param field
      */
@@ -193,7 +154,6 @@ public final class ReflectionUtils {
             field.setAccessible(true);
         }
     }
-
 
 
 
@@ -209,21 +169,5 @@ public final class ReflectionUtils {
          * @return
          */
         boolean matches(Field field);
-    }
-
-    /**
-     * 对指定字段进行回调
-     *
-     * @param <T>
-     */
-    @FunctionalInterface
-    public interface FieldCallback<T> {
-        /**
-         * 对字段进行操作，并返回操作结果
-         *
-         * @param field
-         * @return
-         */
-        T doWith(Field field);
     }
 }

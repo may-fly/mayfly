@@ -20,8 +20,8 @@ public final class AnnotationUtils {
     public static <A extends Annotation> A getAnnotation(AnnotatedElement annotatedElement, Class<A> annotationType) {
         A annotation = annotatedElement.getAnnotation(annotationType);
         if (annotation == null) {
-            for (Annotation metaAnn : annotatedElement.getAnnotations()) {
-                annotation = findMetaAnnotation(metaAnn, annotationType);
+            for (Annotation otherAnn : annotatedElement.getAnnotations()) {
+                annotation = findMetaAnnotation(otherAnn, annotationType);
                 if (annotation != null) {
                     break;
                 }

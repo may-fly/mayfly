@@ -1,6 +1,6 @@
 package mayfly.sys.interceptor;
 
-import mayfly.common.permission.check.PermissionCheckHandler;
+import mayfly.common.permission.checker.PermissionCheckHandler;
 import mayfly.common.utils.PlaceholderResolver;
 import mayfly.sys.common.cache.UserCacheKey;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +26,7 @@ public class PermissionCheckHandlerService {
     public Integer getIdByToken(String token) {
         return (Integer)redisTemplate.opsForValue().get(resolver.resolveByObject(UserCacheKey.USER_ID_KEY, token));
     }
+
 
     public PermissionCheckHandler getCheckHandler() {
         return PermissionCheckHandler.of(

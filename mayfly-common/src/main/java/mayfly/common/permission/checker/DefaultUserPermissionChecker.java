@@ -1,4 +1,4 @@
-package mayfly.common.permission.check;
+package mayfly.common.permission.checker;
 
 import mayfly.common.permission.registry.DefaultUserPermissionCodeRegistry;
 
@@ -7,7 +7,7 @@ import mayfly.common.permission.registry.DefaultUserPermissionCodeRegistry;
  * @version 1.0
  * @date 2019-03-28 3:32 PM
  */
-public class DefaultUserPermissionCheck implements UserPermissionCheck {
+public class DefaultUserPermissionChecker implements UserPermissionChecker {
     @Override
     public boolean has(Integer userId, String permissionCode) {
         return DefaultUserPermissionCodeRegistry.getInstance().has(userId, permissionCode);

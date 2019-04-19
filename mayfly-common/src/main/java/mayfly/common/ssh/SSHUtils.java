@@ -79,7 +79,7 @@ public class SSHUtils {
             session = jsch.getSession(username, ip, port);
             session.setPassword(password);
             session.setUserInfo(new MyUserInfo());
-            // It must not be recommended, but if you want to skip host-key check,
+            // It must not be recommended, but if you want to skip host-key checker,
             // invoke following,
             session.setConfig("StrictHostKeyChecking", "no");
             session.connect(SESSION_TIMEOUT);
