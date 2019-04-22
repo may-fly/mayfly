@@ -1,9 +1,9 @@
 package mayfly.common.utils;
 
 /**
- * @Description: String工具类
- * @author: hml
- * @date: 2018/6/14 下午3:01
+ * String工具类
+ * @author hml
+ * @date 2018/6/14 下午3:01
  */
 public class StringUtils {
 

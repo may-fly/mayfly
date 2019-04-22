@@ -76,10 +76,7 @@ public class ValidationHandler {
         return CACHE.computeIfAbsent(obj.getClass(), key -> {
             List<FieldValidators> allFieldValidators = new ArrayList<>(8);
             for (Field field : ReflectionUtils.getFields(key)) {
-                FieldValidators fi = getFieldValidators(field);
-                if (fi != null) {
-                    allFieldValidators.add(fi);
-                }
+                Optional.ofNullable(getFieldValidators(field)).ifPresent(allFieldValidators::add);
             }
             return allFieldValidators;
         });

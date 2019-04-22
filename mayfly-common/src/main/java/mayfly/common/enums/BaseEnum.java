@@ -6,13 +6,7 @@ package mayfly.common.enums;
  * @version 1.0
  * @date 2019-03-22 11:04 AM
  */
-public interface BaseEnum {
-    /**
-     * 获取枚举值
-     * @returnint
-     */
-    Integer getValue();
-
+public interface BaseEnum extends BaseSimpleEnum{
     /**
      * 获取枚举名称
      * @return

@@ -20,7 +20,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  * @description:
  * @date 2018-11-17 2:13 PM
  */
-public final class BeanUtils {
+public class BeanUtils {
 
     /**
      * 转换器缓存

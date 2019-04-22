@@ -5,7 +5,7 @@ package mayfly.sys.common.utils;
  * @version 1.0
  * @date 2018-11-23 6:17 PM
  */
-public class BeanUtils {
+public class BeanUtils extends mayfly.common.utils.BeanUtils {
 
 
     public static<T> T copyProperties(Object source, Class<T> targetClass) {

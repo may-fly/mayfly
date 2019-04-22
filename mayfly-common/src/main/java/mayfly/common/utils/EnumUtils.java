@@ -1,6 +1,7 @@
 package mayfly.common.utils;
 
 import mayfly.common.enums.BaseEnum;
+import mayfly.common.enums.BaseSimpleEnum;
 
 /**
  * @author meilin.huang
@@ -15,11 +16,11 @@ public final class EnumUtils {
      * @param value  枚举值
      * @return
      */
-    public static boolean isExist(BaseEnum[] enums, Integer value) {
+    public static boolean isExist(BaseSimpleEnum[] enums, Integer value) {
         if (value == null) {
             return false;
         }
-        for (BaseEnum e : enums) {
+        for (BaseSimpleEnum e : enums) {
             if (value.equals(e.getValue())) {
                 return true;
             }

@@ -32,6 +32,11 @@ public class DefaultSysPermissionCodeRegistry implements SysPermissionCodeRegist
     }
 
     @Override
+    public void add(String code) {
+        permissions.add(code);
+    }
+
+    @Override
     public boolean has(String permissionCode) {
         return permissions.contains(permissionCode);
     }

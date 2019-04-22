@@ -180,6 +180,11 @@ public class PermissionServiceImpl extends BaseServiceImpl<PermissionMapper, Per
     }
 
     @Override
+    public void add(String code) {
+        redisTemplate.boundSetOps(UserCacheKey.ALL_PERMISSION_KEY).add(code);
+    }
+
+    @Override
     public boolean has(String permissionCode) {
         return redisTemplate.boundSetOps(UserCacheKey.ALL_PERMISSION_KEY).isMember(permissionCode);
     }

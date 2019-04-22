@@ -7,9 +7,9 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAccessor;
 
 /**
+ * 日期工具类
  * @author hml
  * @version 1.0
- * @description: 日期工具类
  * @date 2018-11-07 10:56 AM
  */
 public final class DateUtils {

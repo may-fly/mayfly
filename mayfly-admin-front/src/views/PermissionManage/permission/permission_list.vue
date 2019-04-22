@@ -17,7 +17,7 @@
 			<el-table-column label="序号" type="index"> </el-table-column>
 			<el-table-column prop="code" label="code">
 			</el-table-column>
-			<el-table-column min-width="30" prop="method" label="调用方法">
+			<el-table-column min-width="45" prop="method" label="调用方法">
 				<div slot-scope="scope" style="width: 100%;">
 					<el-tag v-if="scope.row.method == 1">GET</el-tag>
 					<el-tag type="success" v-if="scope.row.method == 2">POST</el-tag>
@@ -29,7 +29,7 @@
 			</el-table-column>
 			<el-table-column prop="description" label="描述">
 			</el-table-column>
-			<el-table-column min-width="30" prop="status" label="状态">
+			<el-table-column min-width="35" prop="status" label="状态">
 				<div slot-scope="scope">
 					<el-tag type="danger" v-if="scope.row.status == 0">禁用</el-tag>
 					<el-tag type="success" v-if="scope.row.status == 1">启用</el-tag>
@@ -135,7 +135,6 @@
         	this.$message.error('您没有该权限!');
         } else {
         	searchPermission.request(this.query, res => {
-            console.log(res)
         		this.permissionList = res.list;
             this.total = res.total;
         	})

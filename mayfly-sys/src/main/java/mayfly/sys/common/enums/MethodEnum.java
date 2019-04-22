@@ -1,51 +1,43 @@
 package mayfly.sys.common.enums;
 
-import mayfly.common.enums.BaseEnum;
+import mayfly.common.enums.BaseSimpleEnum;
 
 /**
  * @author meilin.huang
  * @version 1.0
  * @date 2019-03-23 10:49 AM
  */
-public enum MethodEnum implements BaseEnum {
+public enum MethodEnum implements BaseSimpleEnum {
 
     /**
      * get请求方法
      */
-    GET(1, "GET"),
+    GET(1),
 
     /**
      * post请求方法
      */
-    POST(2, "POST"),
+    POST(2),
 
     /**
      * put请求方法
      */
-    PUT(3, "PUT"),
+    PUT(3),
 
     /**
      * delete请求方法
      */
-    DELETE(4, "DELETE");
+    DELETE(4);
 
 
     private Integer value;
 
-    private String name;
-
-    MethodEnum(Integer value, String name) {
+    MethodEnum(Integer value) {
         this.value = value;
-        this.name = name;
     }
 
     @Override
     public Integer getValue() {
         return this.value;
-    }
-
-    @Override
-    public String getName() {
-        return this.name;
     }
 }
