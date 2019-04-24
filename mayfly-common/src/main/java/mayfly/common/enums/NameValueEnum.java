@@ -6,7 +6,7 @@ package mayfly.common.enums;
  * @version 1.0
  * @date 2019-03-22 11:04 AM
  */
-public interface BaseEnum extends BaseSimpleEnum{
+public interface NameValueEnum extends ValueEnum {
     /**
      * 获取枚举名称
      * @return

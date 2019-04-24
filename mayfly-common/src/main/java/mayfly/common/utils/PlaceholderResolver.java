@@ -144,7 +144,7 @@ public class PlaceholderResolver {
      * @return
      */
     public String resolveByProperties(String content, final Properties properties) {
-        return resolveByRule(content, placeholderValue -> properties.getProperty(placeholderValue));
+        return resolveByRule(content, properties::getProperty);
     }
 
     /**

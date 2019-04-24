@@ -153,6 +153,7 @@ public class PermissionServiceImpl extends BaseServiceImpl<PermissionMapper, Per
         return false;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void save(Integer userId, Collection<String> permissionCodes, long time, TimeUnit timeUnit) {
         // 给权限code key添加用户id
@@ -161,16 +162,19 @@ public class PermissionServiceImpl extends BaseServiceImpl<PermissionMapper, Per
         redisTemplate.boundSetOps(permissionKey).expire(time, timeUnit);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void delete(Integer userId) {
         redisTemplate.delete(resolver.resolveByObject(UserCacheKey.USER_PERMISSION_KEY, userId));
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public boolean has(Integer userId, String permissionCode) {
         return redisTemplate.opsForSet().isMember(resolver.resolveByObject(UserCacheKey.USER_PERMISSION_KEY, userId), permissionCode);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void save() {
         String[] permissions = this.listAll().stream()
@@ -179,22 +183,26 @@ public class PermissionServiceImpl extends BaseServiceImpl<PermissionMapper, Per
         redisTemplate.boundSetOps(UserCacheKey.ALL_PERMISSION_KEY).add(permissions);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void add(String code) {
         redisTemplate.boundSetOps(UserCacheKey.ALL_PERMISSION_KEY).add(code);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public boolean has(String permissionCode) {
         return redisTemplate.boundSetOps(UserCacheKey.ALL_PERMISSION_KEY).isMember(permissionCode);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void rename(String oldCode, String newCode) {
         redisTemplate.boundSetOps(UserCacheKey.ALL_PERMISSION_KEY).remove(oldCode);
         redisTemplate.boundSetOps(UserCacheKey.ALL_PERMISSION_KEY).add(newCode);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void delete(String code) {
         redisTemplate.boundSetOps(UserCacheKey.ALL_PERMISSION_KEY).remove(code);

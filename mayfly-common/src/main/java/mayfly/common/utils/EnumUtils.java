@@ -1,7 +1,7 @@
 package mayfly.common.utils;
 
-import mayfly.common.enums.BaseEnum;
-import mayfly.common.enums.BaseSimpleEnum;
+import mayfly.common.enums.NameValueEnum;
+import mayfly.common.enums.ValueEnum;
 
 /**
  * @author meilin.huang
@@ -16,11 +16,11 @@ public final class EnumUtils {
      * @param value  枚举值
      * @return
      */
-    public static boolean isExist(BaseSimpleEnum[] enums, Integer value) {
+    public static boolean isExist(ValueEnum[] enums, Integer value) {
         if (value == null) {
             return false;
         }
-        for (BaseSimpleEnum e : enums) {
+        for (ValueEnum e : enums) {
             if (value.equals(e.getValue())) {
                 return true;
             }
@@ -34,11 +34,11 @@ public final class EnumUtils {
      * @param value
      * @return
      */
-    public static String getNameByValue(BaseEnum[] enums, Integer value) {
+    public static String getNameByValue(NameValueEnum[] enums, Integer value) {
         if (value == null) {
             return "";
         }
-        for (BaseEnum e : enums) {
+        for (NameValueEnum e : enums) {
             if (value.equals(e.getValue())) {
                 return e.getName();
             }
@@ -46,11 +46,11 @@ public final class EnumUtils {
         return "";
     }
 
-    public static Integer getValueByName(BaseEnum[] enums, String name) {
+    public static Integer getValueByName(NameValueEnum[] enums, String name) {
         if (StringUtils.isEmpty(name)) {
             return null;
         }
-        for (BaseEnum e : enums) {
+        for (NameValueEnum e : enums) {
             if (name.equals(e.getName())) {
                 return e.getValue();
             }

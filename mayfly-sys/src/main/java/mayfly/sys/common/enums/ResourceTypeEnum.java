@@ -1,6 +1,6 @@
 package mayfly.sys.common.enums;
 
-import mayfly.common.enums.BaseEnum;
+import mayfly.common.enums.NameValueEnum;
 
 /**
  * 资源类型枚举
@@ -8,7 +8,7 @@ import mayfly.common.enums.BaseEnum;
  * @version 1.0
  * @date 2019-03-25 5:10 PM
  */
-public enum ResourceTypeEnum implements BaseEnum {
+public enum ResourceTypeEnum implements NameValueEnum {
 
     /**
      * 菜单类型

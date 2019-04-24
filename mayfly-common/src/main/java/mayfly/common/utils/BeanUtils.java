@@ -1,6 +1,6 @@
 package mayfly.common.utils;
 
-import mayfly.common.enums.BaseEnum;
+import mayfly.common.enums.NameValueEnum;
 
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
@@ -171,7 +171,7 @@ public class BeanUtils {
         Class<? extends Enum> enumClass = converter.enumConverter();
         if (enumClass != DefaultEnum.class && value instanceof Integer) {
             Collection<? extends Enum> es = EnumSet.allOf(enumClass);
-            return EnumUtils.getNameByValue(ObjectUtils.castArray(es.toArray(), BaseEnum.class), (Integer)value);
+            return EnumUtils.getNameByValue(ObjectUtils.castArray(es.toArray(), NameValueEnum.class), (Integer)value);
         }
 
         return value;
@@ -229,10 +229,10 @@ public class BeanUtils {
          * 枚举值转换,枚举类必须继承EnumValue接口
          * @return
          */
-        Class<? extends Enum<? extends BaseEnum>> enumConverter() default DefaultEnum.class;
+        Class<? extends Enum<? extends NameValueEnum>> enumConverter() default DefaultEnum.class;
     }
 
-    private enum DefaultEnum implements BaseEnum {
+    private enum DefaultEnum implements NameValueEnum {
         ;
         @Override
         public Integer getValue() {

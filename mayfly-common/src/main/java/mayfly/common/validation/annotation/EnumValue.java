@@ -1,6 +1,6 @@
 package mayfly.common.validation.annotation;
 
-import mayfly.common.enums.BaseSimpleEnum;
+import mayfly.common.enums.ValueEnum;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
@@ -19,7 +19,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Retention(RUNTIME)
 public @interface EnumValue {
     /**
-     * 枚举值类型，枚举必须继承{@link BaseSimpleEnum}
+     * 枚举值类型，枚举必须继承{@link ValueEnum}
      */
-    Class<? extends Enum<? extends BaseSimpleEnum>> value();
+    Class<? extends Enum<? extends ValueEnum>> value();
 }

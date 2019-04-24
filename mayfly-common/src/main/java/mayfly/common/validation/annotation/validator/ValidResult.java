@@ -12,8 +12,8 @@ public class ValidResult {
 
     private boolean right;
 
-    public ValidResult(){}
-    public ValidResult(boolean right, String message) {
+    private ValidResult(){}
+    private ValidResult(boolean right, String message) {
         this.right = right;
         this.message = message;
     }

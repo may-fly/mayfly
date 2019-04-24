@@ -1,13 +1,13 @@
 package mayfly.sys.redis.enums;
 
-import mayfly.common.enums.BaseEnum;
+import mayfly.common.enums.NameValueEnum;
 
 /**
  * @author meilin.huang
  * @version 1.0
  * @date 2019-04-04 13:21
  */
-public enum RedisValueTypeEnum implements BaseEnum {
+public enum RedisValueTypeEnum implements NameValueEnum {
 
 
     /**

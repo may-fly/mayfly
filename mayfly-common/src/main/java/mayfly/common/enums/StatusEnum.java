@@ -1,31 +1,32 @@
 package mayfly.common.enums;
 
+import mayfly.common.validation.ParamValidErrorException;
+import mayfly.common.validation.ValidationHandler;
+import mayfly.common.validation.annotation.EnumValue;
+
 /**
  * @author meilin.huang
  * @version 1.0
  * @date 2018-12-07 1:43 PM
  */
-public enum StatusEnum implements BaseEnum{
+public enum StatusEnum implements ValueEnum {
     /**
      * 禁用状态
      */
-    DISABLE(0, "禁用"),
+    DISABLE(0),
 
     /**
      * 启用状态
      */
-    ENABLE(1, "启用");
+    ENABLE(1);
 
     /**
      * 状态值
      */
     private Integer value;
 
-    private String name;
-
-    StatusEnum(Integer value, String name) {
+    StatusEnum(Integer value) {
         this.value = value;
-        this.name = name;
     }
 
 
@@ -33,9 +34,19 @@ public enum StatusEnum implements BaseEnum{
     public Integer getValue() {
         return this.value;
     }
+}
 
-    @Override
-    public String getName() {
-        return this.name;
+class Test{
+
+    @EnumValue(StatusEnum.class)
+    private Integer status = 2;
+
+    public static void main(String[] args) {
+        try {
+            ValidationHandler.getInstance().validate(new Test());
+        } catch (ParamValidErrorException e) {
+            System.out.println(e.getMessage());
+        }
     }
 }
+

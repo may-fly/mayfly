@@ -1,6 +1,6 @@
 package mayfly.common.validation.annotation.validator;
 
-import mayfly.common.enums.BaseSimpleEnum;
+import mayfly.common.enums.ValueEnum;
 import mayfly.common.utils.AnnotationUtils;
 import mayfly.common.utils.EnumUtils;
 import mayfly.common.utils.ObjectUtils;
@@ -23,13 +23,13 @@ public class EnumValueValidator implements Validator {
         EnumValue enumValue = AnnotationUtils.getAnnotation(field, EnumValue.class);
         if (enumValue != null && fieldValue instanceof Integer) {
             Class<? extends Enum> enumClass = enumValue.value();
-            if (!BaseSimpleEnum.class.isAssignableFrom(enumClass)) {
+            if (!ValueEnum.class.isAssignableFrom(enumClass)) {
                 throw new IllegalArgumentException("@EnumValue注解中的枚举类必须继承BaseSimpleEnum接口！");
             }
             @SuppressWarnings("unchecked")
             Collection<? extends Enum> es = EnumSet.allOf(enumClass);
             //判断字段值是否存在指定的枚举类中
-            if (EnumUtils.isExist(ObjectUtils.castArray(es.toArray(), BaseSimpleEnum.class), (Integer)fieldValue)) {
+            if (EnumUtils.isExist(ObjectUtils.castArray(es.toArray(), ValueEnum.class), (Integer)fieldValue)) {
                 return ValidResult.right();
             }
             return ValidResult.error(field.getName() + "字段值错误！");
