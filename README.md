@@ -45,7 +45,7 @@ public Result list(PermissionForm condition, @Valid PageForm pageForm){}
 public class PermissionServiceImpl{}
 ```
 打印结果如图：
-![输出日志](https://images.gitee.com/uploads/images/2019/0329/125647_5fca5971_1240250.png "屏幕截图.png")
+![日志输出](https://gitee.com/uploads/images/2019/0425/094929_de188281_1240250.png "屏幕截图.png")
 
 
 - ### 自定义参数校验器(支持入参枚举值自动校验等)
