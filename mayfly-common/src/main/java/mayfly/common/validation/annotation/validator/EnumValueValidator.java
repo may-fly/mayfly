@@ -7,8 +7,6 @@ import mayfly.common.utils.ObjectUtils;
 import mayfly.common.validation.annotation.EnumValue;
 
 import java.lang.reflect.Field;
-import java.util.Collection;
-import java.util.EnumSet;
 
 /**
  * EnumValue注解校验器
@@ -26,10 +24,8 @@ public class EnumValueValidator implements Validator {
             if (!ValueEnum.class.isAssignableFrom(enumClass)) {
                 throw new IllegalArgumentException("@EnumValue注解中的枚举类必须继承BaseSimpleEnum接口！");
             }
-            @SuppressWarnings("unchecked")
-            Collection<? extends Enum> es = EnumSet.allOf(enumClass);
             //判断字段值是否存在指定的枚举类中
-            if (EnumUtils.isExist(ObjectUtils.castArray(es.toArray(), ValueEnum.class), (Integer)fieldValue)) {
+            if (EnumUtils.isExist(ObjectUtils.castArray(enumClass.getEnumConstants(), ValueEnum.class), (Integer)fieldValue)) {
                 return ValidResult.right();
             }
             return ValidResult.error(field.getName() + "字段值错误！");

@@ -88,10 +88,10 @@ public class LogHandler {
                 continue;
             }
             if (first) {
-                paramPlaceholder.append("[" + i + "]:${param").append(i).append("}");
+                paramPlaceholder.append(params[i].getName()).append(":${param").append(i).append("}");
                 first = false;
             } else {
-                paramPlaceholder.append(", [" + i + "]:${param").append(i).append("}");
+                paramPlaceholder.append(", ").append(params[i].getName()).append(":${param").append(i).append("}");
             }
         }
 

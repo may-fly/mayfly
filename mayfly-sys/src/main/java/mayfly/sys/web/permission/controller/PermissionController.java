@@ -1,7 +1,6 @@
 package mayfly.sys.web.permission.controller;
 
 import mayfly.common.log.MethodLog;
-import mayfly.common.log.NoNeedLogParam;
 import mayfly.common.result.Result;
 import mayfly.common.validation.annotation.Valid;
 import mayfly.entity.Permission;
@@ -27,7 +26,7 @@ public class PermissionController {
 
     @MethodLog(value = "获取权限列表")
     @GetMapping("/v1/permissions")
-    public Result list(PermissionForm condition, @NoNeedLogParam @Valid PageForm pageForm) {
+    public Result list(PermissionForm condition, @Valid PageForm pageForm) {
         Permission p = BeanUtils.copyProperties(condition, Permission.class);
         return Result.success().withData(permissionService.listByCondition(p, pageForm));
     }

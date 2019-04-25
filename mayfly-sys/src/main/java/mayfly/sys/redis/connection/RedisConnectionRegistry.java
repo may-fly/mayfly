@@ -259,7 +259,7 @@ public class RedisConnectionRegistry {
                     throw new BusinessRuntimeException("无法连接redis实例！");
                 }
             } else {
-                Set<RedisURI> uris = redisInfos.stream().map(x -> x.getUri()).collect(Collectors.toSet());
+                Set<RedisURI> uris = redisInfos.stream().map(RedisInfo::getUri).collect(Collectors.toSet());
                 redisClient = RedisClusterClient.create(uris);
                 try {
                     connection = ((RedisClusterClient) redisClient).connect(byteCodec);
@@ -271,9 +271,7 @@ public class RedisConnectionRegistry {
                 }
             }
 
-            ScheduleUtils.schedule(getKey(), () -> {
-                close();
-            }, 10, TimeUnit.MINUTES);
+            ScheduleUtils.schedule(getKey(), this::close, 10, TimeUnit.MINUTES);
             return this;
         }
 

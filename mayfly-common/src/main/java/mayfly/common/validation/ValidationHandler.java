@@ -19,7 +19,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ValidationHandler {
 
     /**
-     * 字段校验缓存，key:class   value: fieldInfo对象列表
+     * 字段校验缓存，key:class   value: fieldValidators对象列表
      */
     private static final Map<Class<?>, List<FieldValidators>> CACHE = new ConcurrentHashMap<>(32);
 
