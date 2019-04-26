@@ -10,6 +10,7 @@ import java.lang.annotation.Target;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
@@ -58,11 +59,7 @@ public class BeanUtils {
      * @return
      */
     public static List<Map<String, Object>> beans2Maps(Collection<?> beans) {
-        List result = new ArrayList(beans.size());
-        for (Object obj : beans) {
-            result.add(bean2Map(obj));
-        }
-        return result;
+        return beans.stream().map(BeanUtils::bean2Map).collect(Collectors.toList());
     }
 
     public static <T> T map2Bean(Map sourceMap, Class<T> clazz) {
@@ -169,9 +166,8 @@ public class BeanUtils {
         }
 
         Class<? extends Enum> enumClass = converter.enumConverter();
-        if (enumClass != DefaultEnum.class && value instanceof Integer) {
-            Collection<? extends Enum> es = EnumSet.allOf(enumClass);
-            return EnumUtils.getNameByValue(ObjectUtils.castArray(es.toArray(), NameValueEnum.class), (Integer)value);
+        if (enumClass != Bean2MapFieldConverter.DefaultEnum.class && value instanceof Integer) {
+            return EnumUtils.getNameByValue(ObjectUtils.castArray(enumClass.getEnumConstants(), NameValueEnum.class), (Integer)value);
         }
 
         return value;
@@ -223,24 +219,24 @@ public class BeanUtils {
          * 值转换器
          * @return
          */
-        Class<? extends BeanUtils.FieldValueConverter> converter();
+        Class<? extends BeanUtils.FieldValueConverter> converter() default FieldValueConverter.class;
 
         /**
          * 枚举值转换,枚举类必须继承EnumValue接口
          * @return
          */
         Class<? extends Enum<? extends NameValueEnum>> enumConverter() default DefaultEnum.class;
-    }
 
-    private enum DefaultEnum implements NameValueEnum {
-        ;
-        @Override
-        public Integer getValue() {
-            return 0;
-        }
-        @Override
-        public String getName() {
-            return null;
+        enum DefaultEnum implements NameValueEnum {
+            ;
+            @Override
+            public Integer getValue() {
+                return 0;
+            }
+            @Override
+            public String getName() {
+                return null;
+            }
         }
     }
 }

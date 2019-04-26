@@ -1,9 +1,5 @@
 package mayfly.common.enums;
 
-import mayfly.common.validation.ParamValidErrorException;
-import mayfly.common.validation.ValidationHandler;
-import mayfly.common.validation.annotation.EnumValue;
-
 /**
  * @author meilin.huang
  * @version 1.0
@@ -36,17 +32,4 @@ public enum StatusEnum implements ValueEnum {
     }
 }
 
-class Test{
-
-    @EnumValue(StatusEnum.class)
-    private Integer status = 2;
-
-    public static void main(String[] args) {
-        try {
-            ValidationHandler.getInstance().validate(new Test());
-        } catch (ParamValidErrorException e) {
-            System.out.println(e.getMessage());
-        }
-    }
-}
 
