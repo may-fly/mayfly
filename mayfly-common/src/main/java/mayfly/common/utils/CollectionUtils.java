@@ -3,8 +3,8 @@ package mayfly.common.utils;
 import java.util.*;
 
 /**
- * @author: meilin.huang
- * @date: 2018/7/9 下午1:55
+ * @author meilin.huang
+ * @date 2018/7/9 下午1:55
  */
 public class CollectionUtils {
 

@@ -70,4 +70,8 @@ public final class DateUtils {
     public static LocalDateTime defaultParse(String dateTime) {
         return LocalDateTime.parse(dateTime, defaultDateTimeFormatter);
     }
+
+    public static void main(String[] args) {
+        System.out.println(LocalDate.now().plusDays(6).getDayOfWeek().getValue());
+    }
 }

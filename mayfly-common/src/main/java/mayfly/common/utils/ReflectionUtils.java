@@ -1,6 +1,7 @@
 package mayfly.common.utils;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
@@ -153,6 +154,45 @@ public final class ReflectionUtils {
                 Modifier.isFinal(field.getModifiers())) && !field.isAccessible()) {
             field.setAccessible(true);
         }
+    }
+
+    /**
+     * 设置方法可见性
+     * @param method
+     */
+    public static void makeAccessible(Method method) {
+        if ((!Modifier.isPublic(method.getModifiers()) ||
+                !Modifier.isPublic(method.getDeclaringClass().getModifiers())) && !method.isAccessible()) {
+            method.setAccessible(true);
+        }
+    }
+
+    /**
+     * 是否为equals方法
+     * @see java.lang.Object#equals(Object)
+     */
+    public static boolean isEqualsMethod(Method method) {
+        if (method == null || !method.getName().equals("equals")) {
+            return false;
+        }
+        Class<?>[] paramTypes = method.getParameterTypes();
+        return (paramTypes.length == 1 && paramTypes[0] == Object.class);
+    }
+
+    /**
+     * 是否为hashCode方法
+     * @see java.lang.Object#hashCode()
+     */
+    public static boolean isHashCodeMethod( Method method) {
+        return (method != null && method.getName().equals("hashCode") && method.getParameterCount() == 0);
+    }
+
+    /**
+     * 是否为Object的toString方法
+     * @see java.lang.Object#toString()
+     */
+    public static boolean isToStringMethod(Method method) {
+        return (method != null && method.getName().equals("toString") && method.getParameterCount() == 0);
     }
 
 

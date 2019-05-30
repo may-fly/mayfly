@@ -10,6 +10,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Stream;
 
 /**
  * @author meilin.huang
@@ -19,21 +20,25 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ValidationHandler {
 
     /**
-     * 字段校验缓存，key:class   value: fieldValidators对象列表
+     * 字段校验缓存，key:class   value: FieldInfo对象列表
      */
-    private static final Map<Class<?>, List<FieldValidators>> CACHE = new ConcurrentHashMap<>(32);
+    private static Map<Class<?>, List<FieldInfo>> cache = new ConcurrentHashMap<>(32);
 
     /**
-     * 校验器注册
+     * 校验注解对应的校验器
      */
-    private static Map<Class<? extends Annotation>, Validator> validatorRegister = new LinkedHashMap<>(8);
+    private static Map<Class<? extends Annotation>, Validator[]> validatorCache = new ConcurrentHashMap<>(32);
+
+    /**
+     * 校验注解注册
+     */
+    private static Set<Class<? extends Annotation>> validAnnotationRegister = new HashSet<>(8);
     static {
-        validatorRegister.put(NotNull.class, new NotNullValidator());
-        validatorRegister.put(NotBlank.class, new NotBlankValidator());
-        validatorRegister.put(ValueIn.class, new ValueInValidator());
-        validatorRegister.put(Size.class, new SizeValidator());
-        validatorRegister.put(Pattern.class, new PatternValidator());
-        validatorRegister.put(EnumValue.class, new EnumValueValidator());
+        validAnnotationRegister.add(NotNull.class);
+        validAnnotationRegister.add(NotBlank.class);
+        validAnnotationRegister.add(Size.class);
+        validAnnotationRegister.add(Pattern.class);
+        validAnnotationRegister.add(EnumValue.class);
     }
 
     private static ValidationHandler instance = new ValidationHandler();
@@ -53,14 +58,32 @@ public class ValidationHandler {
      * @throws ParamValidErrorException  若不符合指定注解的参数值则抛出该异常
      */
     public void validate(Object obj) throws ParamValidErrorException {
-        for (FieldValidators fieldValidators : getAllFieldValidators(obj)) {
+        for (FieldInfo fieldValidators : getAllFieldInfo(obj)) {
             Field field = fieldValidators.field;
             Object fieldValue = ReflectionUtils.getFieldValue(field, obj);
             //遍历field字段需要校验的校验器
-            for(Validator validator : fieldValidators.validators) {
-                ValidResult result = validator.validation(field, fieldValue);
-                if (!result.isRight()) {
-                    throw new ParamValidErrorException(result.getMessage());
+            for(Class<? extends Annotation> anno : fieldValidators.validAnnotations) {
+                Validator[] validators = validatorCache.computeIfAbsent(anno, key -> {
+                    ValidateBy vb = AnnotationUtils.getAnnotation(anno, ValidateBy.class);
+                    if (vb == null) {
+                        throw new IllegalArgumentException(String.format("@%s注解上没有@ValidateBy注解", anno.getSimpleName()));
+                    }
+                    return Stream.of(vb.value()).map(clazz -> {
+                        try {
+                            return clazz.newInstance();
+                        } catch (Exception e) {
+                            throw new IllegalArgumentException("实例化Validator失败", e);
+                        }
+                    }).toArray(Validator[]::new);
+                });
+
+                for (Validator validator : validators) {
+                    @SuppressWarnings("unchecked")
+                    ValidResult result = validator.validation(AnnotationUtils.getAnnotation(field, anno)
+                            , Value.of(field.getName(), fieldValue));
+                    if (!result.isRight()) {
+                        throw new ParamValidErrorException(result.getMessage());
+                    }
                 }
             }
         }
@@ -72,11 +95,11 @@ public class ValidationHandler {
      * @param obj
      * @return
      */
-    public List<FieldValidators> getAllFieldValidators(Object obj) {
-        return CACHE.computeIfAbsent(obj.getClass(), key -> {
-            List<FieldValidators> allFieldValidators = new ArrayList<>(8);
+    public List<FieldInfo> getAllFieldInfo(Object obj) {
+        return cache.computeIfAbsent(obj.getClass(), key -> {
+            List<FieldInfo> allFieldValidators = new ArrayList<>(8);
             for (Field field : ReflectionUtils.getFields(key)) {
-                Optional.ofNullable(getFieldValidators(field)).ifPresent(allFieldValidators::add);
+                Optional.ofNullable(getFieldInfo(field)).ifPresent(allFieldValidators::add);
             }
             return allFieldValidators;
         });
@@ -87,36 +110,39 @@ public class ValidationHandler {
      * @param field
      * @return 如果field字段不包含任何校验注解则返回null
      */
-    private FieldValidators getFieldValidators(Field field) {
-        //该字段上需要校验的校验器类型列表
-        List<Validator> validators = null;
-        //获取所有注册过的注解校验类
-        for(Map.Entry<Class<? extends Annotation>, Validator> entry : validatorRegister.entrySet()){
-            if (AnnotationUtils.isAnnotationPresent(field, entry.getKey())) {
-                if (validators == null) {
-                    validators = new ArrayList<>(4);
+    private FieldInfo getFieldInfo(Field field) {
+        // 该字段上所包含的校验注解
+        List<Class<? extends Annotation>> validAnnotations = null;
+        // 获取所有注册过的注解校验类
+        for(Class<? extends Annotation> anno : validAnnotationRegister){
+            if (AnnotationUtils.isAnnotationPresent(field, anno)) {
+                if (validAnnotations == null) {
+                    validAnnotations = new ArrayList<>(4);
                 }
-                validators.add(entry.getValue());
+                validAnnotations.add(anno);
             }
         }
-        //如果校验器为空，则说明该字段无需任何校验
-        return validators == null ? null : new FieldValidators(field, validators);
+        //如果校验注解为空，则说明该字段无需任何校验
+        return validAnnotations == null ? null : new FieldInfo(field, validAnnotations);
     }
 
 
     /**
      * 字段包含的所有注解校验器
      */
-    private static class FieldValidators {
+    private static class FieldInfo {
         private Field field;
 
-        private List<Validator> validators;
+        /**
+         * 字段包含的校验注解列表
+         */
+        private List<Class<? extends Annotation>> validAnnotations;
 
-        public FieldValidators(){}
+        public FieldInfo(){}
 
-        public FieldValidators(Field field, List<Validator> validators) {
+        public FieldInfo(Field field, List<Class<? extends Annotation>> validAnnotations) {
             this.field = field;
-            this.validators = validators;
+            this.validAnnotations = validAnnotations;
         }
     }
 }
