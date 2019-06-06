@@ -1,9 +1,9 @@
 package mayfly.common.validation.annotation.validator;;
 
 /**
+ * 校验结果
  * @author hml
  * @version 1.0
- * @description: 校验结果
  * @date 2018-10-31 8:42 AM
  */
 public class ValidResult {

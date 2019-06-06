@@ -1,5 +1,6 @@
 package mayfly.common.utils;
 
+import mayfly.common.utils.annotation.AnnotationUtils;
 import mayfly.common.enums.NameValueEnum;
 
 import java.beans.IntrospectionException;
@@ -167,7 +168,7 @@ public class BeanUtils {
 
         Class<? extends Enum> enumClass = converter.enumConverter();
         if (enumClass != Bean2MapFieldConverter.DefaultEnum.class && value instanceof Integer) {
-            return EnumUtils.getNameByValue(ObjectUtils.castArray(enumClass.getEnumConstants(), NameValueEnum.class), (Integer)value);
+            return EnumUtils.getNameByValue(ObjectUtils.cast(enumClass.getEnumConstants(), NameValueEnum.class), (Integer)value);
         }
 
         return value;

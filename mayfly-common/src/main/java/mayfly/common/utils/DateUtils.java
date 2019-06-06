@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAccessor;
 
 /**
@@ -72,6 +73,6 @@ public final class DateUtils {
     }
 
     public static void main(String[] args) {
-        System.out.println(LocalDate.now().plusDays(6).getDayOfWeek().getValue());
+        System.out.println(ChronoUnit.DAYS.between(LocalDate.now(), LocalDate.now().plusWeeks(1)));
     }
 }

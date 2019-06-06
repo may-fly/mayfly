@@ -1,6 +1,6 @@
 package mayfly.common.validation.aop;
 
-import mayfly.common.utils.AnnotationUtils;
+import mayfly.common.utils.annotation.AnnotationUtils;
 import mayfly.common.validation.ParamValidErrorException;
 import mayfly.common.validation.annotation.Valid;
 import mayfly.common.validation.ValidationHandler;

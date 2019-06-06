@@ -31,6 +31,7 @@ public @interface EnumValue {
      */
     Class<? extends Enum<? extends ValueEnum>> value();
 
+
     class EnumValueValidator implements Validator<EnumValue, Integer> {
         @Override
         public ValidResult validation(EnumValue enumValue, Value<Integer> value) {
@@ -42,7 +43,7 @@ public @interface EnumValue {
                 throw new IllegalArgumentException("@EnumValue注解中的枚举类必须继承ValueEnum接口！");
             }
             //判断字段值是否存在指定的枚举类中
-            if (EnumUtils.isExist(ObjectUtils.castArray(enumClass.getEnumConstants(), ValueEnum.class), value.getValue())) {
+            if (EnumUtils.isExist(ObjectUtils.cast(enumClass.getEnumConstants(), ValueEnum.class), value.getValue())) {
                 return ValidResult.right();
             }
             return ValidResult.error(value.getName() + "字段值错误！");

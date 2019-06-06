@@ -1,7 +1,7 @@
 package mayfly.common.validation;
 
 
-import mayfly.common.utils.AnnotationUtils;
+import mayfly.common.utils.annotation.AnnotationUtils;
 import mayfly.common.utils.ReflectionUtils;
 import mayfly.common.validation.annotation.*;
 import mayfly.common.validation.annotation.validator.*;
@@ -66,7 +66,7 @@ public class ValidationHandler {
                 Validator[] validators = validatorCache.computeIfAbsent(anno, key -> {
                     ValidateBy vb = AnnotationUtils.getAnnotation(anno, ValidateBy.class);
                     if (vb == null) {
-                        throw new IllegalArgumentException(String.format("@%s注解上没有@ValidateBy注解", anno.getSimpleName()));
+                        throw new IllegalArgumentException(String.format("@%s注解上没有对应@ValidateBy注解", anno.getSimpleName()));
                     }
                     return Stream.of(vb.value()).map(clazz -> {
                         try {

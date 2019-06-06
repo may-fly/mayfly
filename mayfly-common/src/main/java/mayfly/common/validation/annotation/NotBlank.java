@@ -1,5 +1,6 @@
 package mayfly.common.validation.annotation;
 
+import mayfly.common.utils.StringUtils;
 import mayfly.common.validation.annotation.validator.ValidResult;
 import mayfly.common.validation.annotation.validator.Validator;
 import mayfly.common.validation.annotation.validator.Value;
@@ -27,17 +28,13 @@ public @interface NotBlank {
     String message() default "";
 
 
+
     class NotBlankValidator implements Validator<NotBlank, String> {
         @Override
         public ValidResult validation(NotBlank annotation, Value<String> value) {
-            if (value.getValue() == null) {
-                String message = "".equals(annotation.message()) ? value.getName() + "值不能为空！" : annotation.message();
-                return ValidResult.error(message);
-            }
-            if (!"".equals(value.getValue().trim())) {
+            if (!StringUtils.isEmpty(value.getValue())) {
                 return ValidResult.right();
             }
-
             String message = "".equals(annotation.message()) ? value.getName() + "值不能为空！" : annotation.message();
             return ValidResult.error(message);
         }

@@ -22,7 +22,7 @@ public class ObjectUtils {
      * @return
      */
     @SuppressWarnings("unchecked")
-    public static <T> T[] castArray(Object[] objs, Class<T> clazz) {
+    public static <T> T[] cast(Object[] objs, Class<T> clazz) {
         int length = objs.length;
         if (length == 0) {
             return (T[]) new Object[0];

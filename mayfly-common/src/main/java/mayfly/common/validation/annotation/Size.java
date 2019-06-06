@@ -14,7 +14,8 @@ import static java.lang.annotation.ElementType.PARAMETER;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * 如果字段为字符串和Collection类型，则比较其长度，如果为Integer则比较范围
+ * 如果校验字段类型为{@link String}和{@link Collection}类型则比较其长度和size<br/>
+ * 如果为{@link Integer}则比较范围
  * @author hml
  * @version 1.0
  * @date 2018-10-28 3:49 PM

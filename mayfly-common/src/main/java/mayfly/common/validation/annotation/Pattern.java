@@ -8,8 +8,7 @@ import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import static java.lang.annotation.ElementType.FIELD;
-import static java.lang.annotation.ElementType.PARAMETER;
+import static java.lang.annotation.ElementType.*;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
@@ -18,14 +17,16 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  * @version 1.0
  * @date 2018-10-28 5:21 PM
  */
-@Target({ FIELD, PARAMETER })
+@Target({ FIELD, PARAMETER, ANNOTATION_TYPE })
 @Retention(RUNTIME)
 @Documented
 @ValidateBy(Pattern.PatternValidator.class)
 public @interface Pattern {
+
     String message() default "";
 
     String regexp();
+
 
     class PatternValidator implements Validator<Pattern, String> {
         @Override

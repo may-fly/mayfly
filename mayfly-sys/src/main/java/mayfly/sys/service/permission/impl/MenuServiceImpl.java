@@ -46,8 +46,9 @@ public class MenuServiceImpl extends BaseServiceImpl<MenuMapper, Menu> implement
         }
         //默认启用
         menu.setStatus(StatusEnum.ENABLE.getValue());
-        menu.setCreateTime(LocalDateTime.now());
-        menu.setUpdateTime(LocalDateTime.now());
+        LocalDateTime now = LocalDateTime.now();
+        menu.setCreateTime(now);
+        menu.setUpdateTime(now);
         return save(menu);
     }
 
@@ -93,18 +94,18 @@ public class MenuServiceImpl extends BaseServiceImpl<MenuMapper, Menu> implement
      */
     private List<Menu> genTreeByMenus(List<Menu> menus) {
         //获取所有父节点
-        List<Menu> rootParent = new ArrayList<>();
+        List<Menu> roots = new ArrayList<>();
         for (Iterator<Menu> ite = menus.iterator(); ite.hasNext();) {
             Menu menu = ite.next();
             if (menu.getPid().equals(0)) {
-                rootParent.add(menu);
+                roots.add(menu);
                 ite.remove();
             }
         }
-        rootParent.forEach(r -> {
+        roots.forEach(r -> {
             setChildren(r, menus);
         });
-        return rootParent;
+        return roots;
     }
 
     private void setChildren(Menu parent, List<Menu> menus) {

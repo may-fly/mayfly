@@ -1,6 +1,6 @@
 package mayfly.common.log;
 
-import mayfly.common.utils.AnnotationUtils;
+import mayfly.common.utils.annotation.AnnotationUtils;
 import mayfly.common.utils.CollectionUtils;
 import mayfly.common.utils.StringUtils;
 

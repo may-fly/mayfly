@@ -157,6 +157,31 @@ public final class ReflectionUtils {
     }
 
     /**
+     * 调用无参数方法
+     * @param method
+     * @param target
+     * @return
+     */
+    public static Object invokeMethod(Method method, Object target) {
+        return invokeMethod(method, target, new Object[0]);
+    }
+
+    /**
+     * 调用指定对象的方法
+     * @param method
+     * @param target
+     * @param args
+     * @return
+     */
+    public static Object invokeMethod(Method method, Object target, Object... args) {
+        try {
+            return method.invoke(target, args);
+        } catch (Exception ex) {
+            throw new IllegalStateException("执行方法失败！", ex);
+        }
+    }
+
+    /**
      * 设置方法可见性
      * @param method
      */

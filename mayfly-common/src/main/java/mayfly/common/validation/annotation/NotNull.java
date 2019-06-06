@@ -26,6 +26,7 @@ public @interface NotNull {
 
     String message() default "";
 
+
     class NotNullValidator implements Validator<NotNull, Object> {
         @Override
         public ValidResult validation(NotNull annotation, Value<Object> value) {
