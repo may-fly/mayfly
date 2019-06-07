@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @date 2019-03-26 2:55 PM
  */
 @Permission(code = "permission:group:")
+@MethodLog("权限组管理：")
 @RestController
 @RequestMapping("/sys/v1/permissionGroups")
 public class PermissionGroupController {
@@ -25,14 +26,14 @@ public class PermissionGroupController {
     @Autowired
     private PermissionGroupService permissionGroupService;
 
-    @MethodLog(value = "获取分页权限组列表")
+    @MethodLog(value = "获取分页权限组列表", resultLevel = MethodLog.LogLevel.DEBUG)
     @GetMapping
     public Result list(PageForm pageForm) {
         PermissionGroup condition = PermissionGroup.builder().status(StatusEnum.ENABLE.getValue()).build();
         return Result.success().withData(permissionGroupService.listByCondition(condition, pageForm));
     }
 
-    @MethodLog(value = "获取所有权限组列表")
+    @MethodLog(value = "获取所有权限组列表", resultLevel = MethodLog.LogLevel.DEBUG)
     @GetMapping("/all")
     public Result all() {
         return Result.success().withData(permissionGroupService.listAll());

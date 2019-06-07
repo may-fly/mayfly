@@ -3,6 +3,7 @@ package mayfly.sys.aop.log;
 import mayfly.common.log.LogHandler;
 import mayfly.common.log.LogInfo;
 import mayfly.common.log.LogResult;
+import mayfly.common.log.MethodLog;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.AfterThrowing;
@@ -54,7 +55,12 @@ public class LogAspect {
         Object result = pjp.proceed();
         long endTime = System.currentTimeMillis();
 
-        String logMsg = logInfo.fillLogMsg(new LogResult(args, result, endTime - startTime));
+        MethodLog.LogLevel sysLogLevel = getSysLogLevel();
+        String logMsg = logInfo.fillLogMsg(sysLogLevel, new LogResult(args, result, endTime - startTime));
+        if (logMsg == null) {
+            return result;
+        }
+
         switch (logInfo.getLevel()) {
             case DEBUG:
                 LOG.debug(logMsg);
@@ -74,5 +80,25 @@ public class LogAspect {
         }
 
         return result;
+    }
+
+    /**
+     * 获取系统的日志级别
+     * @return
+     */
+    private MethodLog.LogLevel getSysLogLevel() {
+        if (LOG.isDebugEnabled()) {
+            return MethodLog.LogLevel.DEBUG;
+        }
+        if (LOG.isInfoEnabled()) {
+            return MethodLog.LogLevel.INFO;
+        }
+        if (LOG.isWarnEnabled()) {
+            return MethodLog.LogLevel.WARN;
+        }
+        if (LOG.isErrorEnabled()) {
+            return MethodLog.LogLevel.ERROR;
+        }
+        return MethodLog.LogLevel.NONE;
     }
 }

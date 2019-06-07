@@ -104,7 +104,7 @@ public class LogHandler {
                 .append("(").append(paramPlaceholder).append(")");
 
         return LogInfo.builder(descAndInvoke.toString()).noNeedLogParamIndex(noNeedLogParamIndex)
-                .time(log.time()).result(log.result()).level(log.level()).build();
+                .time(log.time()).result(log.result()).resultLevel(log.resultLevel()).level(log.level()).build();
     }
 
 }

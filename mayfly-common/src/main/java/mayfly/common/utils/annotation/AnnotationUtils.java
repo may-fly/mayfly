@@ -19,14 +19,15 @@ import java.util.concurrent.ConcurrentHashMap;
 public final class AnnotationUtils {
 
     /**
-     * 组合注解缓存
+     * 组合注解属性值提取器缓存
      */
-    private static Map<SynthesizedAnnotationCacheKey, SynthesizedAnnotationInfo> synthesizedCache = new ConcurrentHashMap<>(256);
+    private static Map<SynthesizedAnnotationCacheKey, AttributeValueExtractor> synthesizedCache = new ConcurrentHashMap<>(256);
 
     /**
-     * 没有注解作用的元素, synthesizedCache的value都指向该对象
+     * 没有目标注解作用的元素, synthesizedCache的value都指向该对象
      */
-    private static final SynthesizedAnnotationInfo NO_PRESENT = new SynthesizedAnnotationInfo();
+    private static final DefaultAttributeExtractor NO_PRESENT = new DefaultAttributeExtractor();
+
 
     /**
      * 获取指定元素的注解类型（若没有直接注解，则从元素其他注解的元注解上查找）
@@ -43,12 +44,12 @@ public final class AnnotationUtils {
         }
 
         SynthesizedAnnotationCacheKey key = SynthesizedAnnotationCacheKey.of(annotatedElement, annotationType);
-        SynthesizedAnnotationInfo sai = synthesizedCache.get(key);
-        if (sai == NO_PRESENT) {
+        AttributeValueExtractor valueExtractor = synthesizedCache.get(key);
+        if (valueExtractor == NO_PRESENT) {
             return null;
         }
         // 如果为空，则遍历递归查找该元素其他注解的元注解
-        if (sai == null) {
+        if (valueExtractor == null) {
             // 元注解访问链
             List<Annotation> visited = new ArrayList<>();
             // 遍历查找该元素的其他注解上的元注解
@@ -67,11 +68,11 @@ public final class AnnotationUtils {
                 return null;
             }
             // 生成对应的组合注解信息，并缓存
-            sai = SynthesizedAnnotationInfo.from(annotation, visited);
-            synthesizedCache.put(key, sai);
+            valueExtractor = DefaultAttributeExtractor.from(annotation, visited);
+            synthesizedCache.put(key, valueExtractor);
         }
 
-        return sai.needUseProxy ? synthesizeAnnotation(annotatedElement, sai) : annotation;
+        return annotation != null ? synthesizeAnnotation(annotatedElement, annotation, valueExtractor) : null;
     }
 
     /**
@@ -83,26 +84,6 @@ public final class AnnotationUtils {
      */
     public static <A extends Annotation> boolean isAnnotationPresent(AnnotatedElement annotatedElement, Class<A> annotationType) {
         return getAnnotation(annotatedElement, annotationType) != null;
-    }
-
-    /**
-     * 获取注解的属性值
-     * @param annotation  注解对象
-     * @param attributeName  属性值（即方法名）
-     * @return
-     */
-    public static Object getValue(Annotation annotation, String attributeName) {
-        if (annotation == null || StringUtils.isEmpty(attributeName)) {
-            return null;
-        }
-        try {
-            Method method = annotation.annotationType().getDeclaredMethod(attributeName);
-            ReflectionUtils.makeAccessible(method);
-            return method.invoke(annotation);
-        } catch (Exception ex) {
-            String msg = String.format("%s注解无法获取%s属性值！", annotation.annotationType().getName(), attributeName);
-            throw new IllegalArgumentException(msg, ex);
-        }
     }
 
     /**
@@ -143,16 +124,15 @@ public final class AnnotationUtils {
     /**
      * 将注解使用动态代理包装，以实现组合注解功能
      * @param annotatedElement  注解作用的元素
-     * @param synthesizedAnnotationInfo 组合注解信息
+     * @param valueExtractor 属性值提取器
      * @param <A>
      * @return
      */
     @SuppressWarnings("unchecked")
-    private static <A extends Annotation> A synthesizeAnnotation(AnnotatedElement annotatedElement, SynthesizedAnnotationInfo synthesizedAnnotationInfo) {
-        Annotation annotation = synthesizedAnnotationInfo.annotation;
+    private static <A extends Annotation> A synthesizeAnnotation(AnnotatedElement annotatedElement, Annotation annotation, AttributeValueExtractor valueExtractor) {
         Class<? extends Annotation> annotationType = annotation.annotationType();
         // 组合注解代理处理器
-        InvocationHandler handler = new SynthesizedAnnotationInvocationHandler(synthesizedAnnotationInfo);
+        InvocationHandler handler = new SynthesizedAnnotationInvocationHandler(valueExtractor);
 
         Class<?>[] exposedInterfaces = new Class<?>[] {annotationType};
         return (A) Proxy.newProxyInstance(annotation.getClass().getClassLoader(), exposedInterfaces, handler);
@@ -202,38 +182,75 @@ public final class AnnotationUtils {
         return (method != null && method.getParameterCount() == 0 && method.getReturnType() != void.class);
     }
 
+    /**
+     * 获取注解的属性值
+     * @param annotation  注解对象
+     * @param attributeName  属性值（即方法名）
+     * @return
+     */
+    public static Object getValue(Annotation annotation, String attributeName) {
+        if (annotation == null || StringUtils.isEmpty(attributeName)) {
+            return null;
+        }
+        try {
+            Method method = annotation.annotationType().getDeclaredMethod(attributeName);
+            ReflectionUtils.makeAccessible(method);
+            return method.invoke(annotation);
+        } catch (Exception ex) {
+            String msg = String.format("%s注解无法获取%s属性值！", annotation.annotationType().getName(), attributeName);
+            throw new IllegalArgumentException(msg, ex);
+        }
+    }
+
 
 
     /**
-     * 组合注解信息，主要包含注解类型，以及注解属性值
+     * 属性值获取器
      */
-    private static class SynthesizedAnnotationInfo {
+    interface AttributeValueExtractor {
+        /**
+         * 根据属性名获取对应的属性值
+         * @param attribute  属性名（注解方法名）
+         * @return  属性值
+         */
+        Object getAttributeValue(String attribute);
+
+        /**
+         * 获取注解
+         * @return  目标注解
+         */
+       Annotation getAnnotation();
+    }
+
+    /**
+     * 默认属性值提取器（将属性值和属性名存于map，并从中获取对应的属性值）
+     */
+    private static class DefaultAttributeExtractor implements AttributeValueExtractor{
         /**
          * 目标注解
          */
         private Annotation annotation;
-
-        private Class<? extends Annotation> annotationType;
-
-        private boolean needUseProxy;
 
         /**
          * 注解属性 key:属性名（即注解中的方法名） value:属性值
          */
         private Map<String, Object> attributes;
 
-        private SynthesizedAnnotationInfo() {}
+        private DefaultAttributeExtractor() {}
 
-        private SynthesizedAnnotationInfo(Annotation annotation, Class<? extends Annotation> annotationType, Map<String, Object> attributes, boolean needUseProxy) {
+        private DefaultAttributeExtractor(Annotation annotation, Map<String, Object> attributes) {
             this.annotation = annotation;
-            this.annotationType = annotationType;
             this.attributes = attributes;
-            this.needUseProxy = needUseProxy;
         }
 
-        private static SynthesizedAnnotationInfo from(Annotation target, List<Annotation> visited) {
+        /**
+         * 生成默认的属性值提取器
+         * @param target 目标注解
+         * @param visited 目标注解的访问路径
+         * @return 默认属性值提取器
+         */
+        private static DefaultAttributeExtractor from(Annotation target, List<Annotation> visited) {
             Class<? extends Annotation> targetType = target.annotationType();
-            boolean needUseProxy = false;
             Map<String, Object> attributes = new LinkedHashMap<>(8);
             for (Annotation a : visited) {
                 List<AliasDescriptor> aliasDescriptors = getAliasDescriptors(a);
@@ -243,7 +260,6 @@ public final class AnnotationUtils {
                 // 遍历该注解上的所有别名描述器，并判断目标注解的属性是否有被其他注解当做别名属性使用
                 for (AliasDescriptor descriptor : aliasDescriptors) {
                     if (descriptor.aliasedAnnotationType == targetType) {
-                        needUseProxy = true;
                         String targetAttributeName = descriptor.aliasedAttributeName;
                         if (!attributes.containsKey(targetAttributeName)) {
                             attributes.put(targetAttributeName, ReflectionUtils.invokeMethod(descriptor.sourceAttribute, a));
@@ -258,7 +274,17 @@ public final class AnnotationUtils {
                     attributes.put(attributeName, ReflectionUtils.invokeMethod(targetAttribute, target));
                 }
             }
-            return new SynthesizedAnnotationInfo(target, targetType, attributes, needUseProxy);
+            return new DefaultAttributeExtractor(target, attributes);
+        }
+
+        @Override
+        public Object getAttributeValue(String attribute) {
+            return this.attributes.get(attribute);
+        }
+
+        @Override
+        public Annotation getAnnotation() {
+            return this.annotation;
         }
     }
 
@@ -356,7 +382,7 @@ public final class AnnotationUtils {
          * 获取属性方法上的别名
          * @param alias  别名注解
          * @param sourceAttribute  注解属性方法
-         * @return 如果@Alias注解的attribute和value属性值都为空，则放回sourceAttribute的方法名
+         * @return 如果@Alias注解的attribute和value属性值都为空，则反回sourceAttribute的方法名
          */
         private String getAliasedAttributeName(Alias alias, Method sourceAttribute) {
             String attribute = alias.attribute();
@@ -379,10 +405,13 @@ public final class AnnotationUtils {
      */
     static public class SynthesizedAnnotationInvocationHandler implements InvocationHandler {
 
-        private final SynthesizedAnnotationInfo synthesizedAnnotationInfo;
+        /**
+         * 属性值提取器
+         */
+        private final AttributeValueExtractor attributeValueExtractor;
 
-        SynthesizedAnnotationInvocationHandler(SynthesizedAnnotationInfo ai) {
-            this.synthesizedAnnotationInfo = ai;
+        SynthesizedAnnotationInvocationHandler(AttributeValueExtractor valueExtractor) {
+            this.attributeValueExtractor = valueExtractor;
         }
 
         @Override
@@ -399,13 +428,11 @@ public final class AnnotationUtils {
             if (method != null && method.getName().equals("annotationType") && method.getParameterCount() == 0) {
                 return annotationType();
             }
-            return getAttributeValue(method);
+            return attributeValueExtractor.getAttributeValue(method.getName());
         }
 
-
         private Object getAttributeValue(Method attributeMethod) {
-            String attributeName = attributeMethod.getName();
-            return synthesizedAnnotationInfo.attributes.get(attributeName);
+            return attributeValueExtractor.getAttributeValue(attributeMethod.getName());
         }
 
         private Object cloneArray(Object array) {
@@ -439,7 +466,7 @@ public final class AnnotationUtils {
         }
 
         private Class<? extends Annotation> annotationType() {
-            return synthesizedAnnotationInfo.annotationType;
+            return attributeValueExtractor.getAnnotation().annotationType();
         }
 
         /**

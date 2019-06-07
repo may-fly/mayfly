@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
  * @version 1.0
  * @date 2018-12-14 5:09 PM
  */
+@MethodLog("权限管理：")
 @mayfly.common.permission.Permission(code = "permission:")
 @RestController
 @RequestMapping("/sys")
@@ -24,7 +25,7 @@ public class PermissionController {
     @Autowired
     private PermissionService permissionService;
 
-    @MethodLog(value = "获取权限列表")
+    @MethodLog(value = "获取权限列表", resultLevel = MethodLog.LogLevel.DEBUG)
     @GetMapping("/v1/permissions")
     public Result list(PermissionForm condition, @Valid PageForm pageForm) {
         Permission p = BeanUtils.copyProperties(condition, Permission.class);
@@ -32,27 +33,23 @@ public class PermissionController {
     }
 
     @PostMapping("/v1/permissions")
-    @MethodLog("新增权限")
     public Result save(@RequestBody @Valid PermissionForm permissionForm) {
         return Result.success().withData(permissionService.savePermission(BeanUtils.copyProperties(permissionForm, Permission.class)));
     }
 
     @PutMapping("/v1/permissions/{id}")
-    @MethodLog(value = "修改权限")
     public Result update(@RequestBody @Valid PermissionForm permissionForm, @PathVariable Integer id) {
         Permission permission = BeanUtils.copyProperties(permissionForm, Permission.class);
         permission.setId(id);
         return Result.success().withData(permissionService.updatePermission(permission));
     }
 
-    @MethodLog(value = "启用禁用权限")
     @PutMapping("/v1/permissions/{id}/{status}")
     public Result changeStatus(@PathVariable Integer id, @PathVariable Integer status) {
         return Result.success().withData(permissionService.changeStatus(id, status));
     }
 
     @DeleteMapping("/v1/permissions/{id}")
-    @MethodLog("删除权限")
     public Result del(@PathVariable Integer id) {
         return permissionService.deletePermission(id) ? Result.success() : Result.serverError();
     }

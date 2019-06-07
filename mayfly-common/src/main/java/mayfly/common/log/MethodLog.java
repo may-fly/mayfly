@@ -7,7 +7,6 @@ import java.lang.annotation.*;
  * 如果方法和类都有该注解，result和time属性则使用方法级的注解属性描述，而value信息则为两则相加
  * @author meilin.huang
  * @version 1.0
- * @description:
  * @date 2018-11-06 10:41 AM
  */
 @Target({ElementType.TYPE, ElementType.PARAMETER, ElementType.METHOD})
@@ -30,21 +29,40 @@ public @interface MethodLog {
     boolean time() default true;
 
     /**
-     * 日志级别，默认info级别
+     * 打印日志的级别，默认info级别
      */
     LogLevel level() default LogLevel.INFO;
 
+    /**
+     * 只有日志级别为该级别时，才会打印方法返回结果（用于灵活控制避免打印很大的结果列表等）
+     */
+    LogLevel resultLevel() default LogLevel.INFO;
+
+    /**
+     * 打印日志的级别
+     */
     enum LogLevel{
         /**
-         * debug级别
+         * 不打印日志
          */
-        DEBUG,
+        NONE(0),
 
-        WARN,
+        DEBUG(1),
 
-        INFO,
+        INFO(2),
 
-        ERROR
+        WARN(3),
+
+        ERROR(4);
+
+        private int order;
+        LogLevel(int order) {
+            this.order = order;
+        }
+
+        public int order() {
+            return this.order;
+        }
     }
 }
 

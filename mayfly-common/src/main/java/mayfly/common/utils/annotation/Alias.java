@@ -15,12 +15,13 @@ public @interface Alias {
     String value() default "";
 
     /**
-     * 别名的属性名称。(即别名的方法名)
+     * 别名的属性名称(即别名的方法名)
+     * 为空则为作用的注解方法元素的方法名
      */
     String attribute() default "";
 
     /**
-     * 声明别名属性的注解类型。默认为Annotation，表示别名属性与此属性是在相同的注解中声明。<br/>
+     * 声明要覆盖的目标注解的别名属性的注解类型<br/>
      */
-    Class<? extends Annotation> annotation() default Annotation.class;
+    Class<? extends Annotation> annotation();
 }

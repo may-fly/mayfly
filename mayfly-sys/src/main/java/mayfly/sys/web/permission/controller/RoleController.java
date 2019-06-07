@@ -23,6 +23,7 @@ import java.util.stream.Stream;
  * @version 1.0
  * @date 2018-12-20 9:31 AM
  */
+@MethodLog("角色管理：")
 @Permission(code = "role:")
 @RestController
 @RequestMapping("/sys")
@@ -31,13 +32,11 @@ public class RoleController {
     @Autowired
     private RoleService roleService;
 
-    @MethodLog(value = "获取角色列表")
     @GetMapping("/v1/roles")
     public Result list() {
         return Result.success().withData(roleService.listAll("create_time DESC"));
     }
 
-    @MethodLog("新增角色")
     @PostMapping("/v1/roles")
     public Result save(@Valid @RequestBody RoleForm roleForm) {
         Role role = BeanUtils.copyProperties(roleForm, Role.class);
@@ -53,7 +52,6 @@ public class RoleController {
         return Result.success().withData(roleService.listResourceId(id, ResourceTypeEnum.PERMISSION));
     }
 
-    @MethodLog("保存角色权限")
     @PostMapping("/v1/roles/{id}/permissions")
     public Result savePermission(@PathVariable Integer id, @RequestBody RoleForm roleForm) throws BusinessException {
         List<Integer> ids;
@@ -67,13 +65,11 @@ public class RoleController {
         return Result.success().withData(roleService.saveResource(id, ids, ResourceTypeEnum.PERMISSION));
     }
 
-    @MethodLog("获取角色拥有的菜单")
     @GetMapping("/v1/roles/{id}/menus")
     public  Result roleMenus(@PathVariable Integer id) {
         return Result.success().withData(roleService.listResourceId(id, ResourceTypeEnum.MENU));
     }
 
-    @MethodLog("保存角色菜单")
     @PostMapping("/v1/roles/{id}/menus")
     public  Result saveMenu(@PathVariable Integer id, @RequestBody RoleForm roleForm) throws BusinessException {
         List<Integer> ids;

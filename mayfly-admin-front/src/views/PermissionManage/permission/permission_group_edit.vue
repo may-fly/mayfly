@@ -1,7 +1,7 @@
 <template>
 	<div class="api-dialog">
 		<el-dialog :title="title" :visible="visible" :show-close="false" width="25%">
-			<el-form :model="form">
+			<el-form ref="form" :model="form">
 				<el-form-item label="名称">
 					<el-input v-model="form.name" auto-complete="off"></el-input>
 				</el-form-item>
@@ -10,7 +10,7 @@
 				</el-form-item>
 			</el-form>
 			<div slot="footer" class="dialog-footer">
-				<el-button @click="$emit('cancel');">取 消</el-button>
+				<el-button @click="cancel">取 消</el-button>
 				<el-button type="primary" :loading="btnLoading" @click="btnOk">确 定</el-button>
 			</div>
 		</el-dialog>
@@ -58,8 +58,12 @@
 						this.$emit('val-change', res);
 					});
 				}
-			}
-
+			},
+      cancel() {
+        // 重置表单
+        this.$refs.form.resetFields();
+        this.$emit('cancel');
+      }
 		},
 		components: {
 

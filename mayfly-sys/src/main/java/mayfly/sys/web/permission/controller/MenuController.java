@@ -20,6 +20,7 @@ import java.time.LocalDateTime;
  * @version 1.0
  * @date 2018-12-10 2:49 PM
  */
+@MethodLog("菜单管理：")
 @Permission(code = "menu:")
 @RestController
 @RequestMapping("/sys")
@@ -29,19 +30,17 @@ public class MenuController {
     private MenuService menuService;
 
     @Permission(code = "list")
-    @MethodLog(value = "获取菜单列表", result = false)
+    @MethodLog(value = "获取菜单列表", resultLevel = MethodLog.LogLevel.DEBUG)
     @GetMapping("/v1/menus")
     public Result getAllMenus(MenuQueryForm queryForm) {
         return Result.success().withData(menuService.listMenus(BeanUtils.copyProperties(queryForm, Menu.class)));
     }
 
-    @MethodLog(value = "新增菜单")
     @PostMapping("/v1/menus")
     public Result save(@RequestBody @Valid MenuForm menuForm) throws BusinessException{
         return Result.success().withData(menuService.saveMenu(BeanUtils.copyProperties(menuForm, Menu.class)));
     }
 
-    @MethodLog("更新菜单")
     @PutMapping("/v1/menus/{id}")
     public Result update(@PathVariable Integer id, @RequestBody @Valid MenuForm menuForm) {
         Menu menu = BeanUtils.copyProperties(menuForm, Menu.class);
@@ -50,7 +49,6 @@ public class MenuController {
         return Result.success().withData(menuService.updateById(menu));
     }
 
-    @MethodLog("删除菜单")
     @DeleteMapping("/v1/menus/{id}")
     public Result delete(@PathVariable Integer id) {
         return Result.success().withData(menuService.deleteMenu(id));

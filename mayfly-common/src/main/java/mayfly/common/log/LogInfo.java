@@ -9,9 +9,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * 日志基本信息
  * @author meilin.huang
  * @version 1.0
- * @description: 日志基本信息
  * @date 2018-11-12 9:18 AM
  */
 public class LogInfo {
@@ -45,6 +45,11 @@ public class LogInfo {
     private MethodLog.LogLevel level;
 
     /**
+     * 结果记录级别
+     */
+    private MethodLog.LogLevel resultLevel;
+
+    /**
      * 方法中无需记录日志的参数索引位置
      */
     private List<Integer> noNeedLogParamIndex;
@@ -56,13 +61,18 @@ public class LogInfo {
     /**
      * 填充日志占位符
      * @param result  要记录的具体日志信息
-     * @return
+     * @return 如果打印日志的级别小于系统日志级别，则返回null,即无需记录该日志
      */
-    public String fillLogMsg(LogResult result) {
+    public String fillLogMsg(MethodLog.LogLevel sysLogLevel, LogResult result) {
+        // 方法的日志级别<系统日志级别直接返回
+        if (level.order() < sysLogLevel.order()) {
+            return null;
+        }
         StringBuilder logMsg = new StringBuilder("\n -----------------------------------------------------------");
         logMsg.append(this.descAndInvoke);
         Map<String, Object> value = new HashMap<>(8);
-        if (this.result) {
+        // 当记录日志结果属性为true并且记录结果的级别大于系统级别时填充结果属性
+        if (this.result && this.resultLevel.order() >= sysLogLevel.order()) {
             logMsg.append(RESULT_MSG_TEMP);
             value.put("result", JSON.toJSONString(result.getResult()));
         }
@@ -119,7 +129,6 @@ public class LogInfo {
     }
 
 
-
     public static Builder builder(String descAndInvoke) {
         return new Builder(descAndInvoke);
     }
@@ -148,6 +157,11 @@ public class LogInfo {
 
         public Builder level(MethodLog.LogLevel level) {
             logInfo.level = level;
+            return this;
+        }
+
+        public Builder resultLevel(MethodLog.LogLevel resultLevel) {
+            logInfo.resultLevel = resultLevel;
             return this;
         }
 

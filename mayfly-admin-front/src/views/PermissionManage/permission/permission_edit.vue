@@ -1,24 +1,24 @@
 <template>
   <div class="api-dialog">
     <el-dialog :title="title" :visible="visible" :show-close="false" width="25%">
-      <el-form :model="form">
+      <el-form ref="form" :model="data">
          <el-form-item label="">
-          <el-select style="width: 99%" v-model="form.groupId" clearable placeholder="请选择权限组">
+          <el-select style="width: 99%" v-model="data.groupId" clearable placeholder="请选择权限组">
             <el-option v-for="item in groups" :key="item.id" :value="item.id" :label="item.name">
             </el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="">
-          <el-input v-model="form.uriPattern" placeholder="请输入权限uri模式(支持RESTful风格)" autocomplete="off"></el-input>
+          <el-input v-model="data.uriPattern" placeholder="请输入权限uri模式(支持RESTful风格)" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="">
-          <el-select style="width: 99%" v-model="form.method" clearable placeholder="请选择请求方法">
+          <el-select style="width: 99%" v-model="data.method" clearable placeholder="请选择请求方法">
             <el-option v-for="item in commonEnums.requestMethod" :key="item.value" :value="item.value" :label="item.label">
             </el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="">
-          <el-input v-model="form.code" placeholder="请输入权限code(用于前后端控制权限)"></el-input>
+          <el-input v-model="data.code" placeholder="请输入权限code(用于前后端控制权限)"></el-input>
         </el-form-item>
         <!-- <el-form-item label="">
 					<el-select v-model="form.groupId" placeholder="请选择API组">
@@ -27,11 +27,11 @@
 					</el-select>
 				</el-form-item> -->
         <el-form-item label="">
-          <el-input v-model="form.description" type="textarea" :rows="2" placeholder="请输入API功能描述"></el-input>
+          <el-input v-model="data.description" type="textarea" :rows="2" placeholder="请输入API功能描述"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="$emit('cancel');">取 消</el-button>
+        <el-button @click="cancel">取 消</el-button>
         <el-button type="primary" :loading="btnLoading" @click="btnOk">确 定</el-button>
       </div>
     </el-dialog>
@@ -81,17 +81,20 @@
     methods: {
       handleChange() {},
       btnOk() {
-        if (this.form.id) {
-          permission.permission.update.request(this.form, res => {
+        if (this.data.id) {
+          permission.permission.update.request(this.data, res => {
             this.$emit('val-change', res);
           });
         } else {
-          permission.permission.save.request(this.form, res => {
+          permission.permission.save.request(this.data, res => {
             this.$emit('val-change', res);
           });
         }
+      },
+      cancel() {
+        this.$emit('cancel');
+        this.$refs.form.resetFields();
       }
-
     }
   }
 </script>
