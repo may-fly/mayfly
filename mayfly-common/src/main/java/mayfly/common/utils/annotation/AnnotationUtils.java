@@ -19,9 +19,14 @@ import java.util.concurrent.ConcurrentHashMap;
 public final class AnnotationUtils {
 
     /**
-     * 注解别名缓存，key:注解类 value:该注解含有的别名表述器
+     * 组合注解缓存
      */
-    private static Map<Class<? extends Annotation>, List<AliasDescriptor>> aliasCache = new ConcurrentHashMap<>(64);
+    private static Map<SynthesizedAnnotationCacheKey, SynthesizedAnnotationInfo> synthesizedCache = new ConcurrentHashMap<>(256);
+
+    /**
+     * 没有注解作用的元素, synthesizedCache的value都指向该对象
+     */
+    private static final SynthesizedAnnotationInfo NO_PRESENT = new SynthesizedAnnotationInfo();
 
     /**
      * 获取指定元素的注解类型（若没有直接注解，则从元素其他注解的元注解上查找）
@@ -36,23 +41,37 @@ public final class AnnotationUtils {
         if (annotation != null) {
             return annotation;
         }
-        // 元注解访问链
-        List<Annotation> visited = new ArrayList<>();
-        // 遍历查找该元素的其他注解上的元注解
-        for (Annotation otherAnn : annotatedElement.getAnnotations()) {
-            annotation = findMetaAnnotation(otherAnn, annotationType, visited);
-            // 如果从该元注解没有找到指定注解，则清空该访问链，继续该元素其他注解上查找
-            if (annotation == null) {
-                visited.clear();
-                continue;
+
+        SynthesizedAnnotationCacheKey key = SynthesizedAnnotationCacheKey.of(annotatedElement, annotationType);
+        SynthesizedAnnotationInfo sai = synthesizedCache.get(key);
+        if (sai == NO_PRESENT) {
+            return null;
+        }
+        // 如果为空，则遍历递归查找该元素其他注解的元注解
+        if (sai == null) {
+            // 元注解访问链
+            List<Annotation> visited = new ArrayList<>();
+            // 遍历查找该元素的其他注解上的元注解
+            for (Annotation otherAnn : annotatedElement.getAnnotations()) {
+                annotation = findMetaAnnotation(otherAnn, annotationType, visited);
+                // 如果从该元注解没有找到指定注解，则清空该访问链，继续该元素其他注解上查找
+                if (annotation == null) {
+                    visited.clear();
+                    continue;
+                }
+                break;
             }
-            break;
+            // 如果注解不存在，则将该组合key的value置为不存在标识
+            if (annotation == null) {
+                synthesizedCache.put(key, NO_PRESENT);
+                return null;
+            }
+            // 生成对应的组合注解信息，并缓存
+            sai = SynthesizedAnnotationInfo.from(annotation, visited);
+            synthesizedCache.put(key, sai);
         }
-        if (annotation != null && !visited.isEmpty()) {
-            SynthesizedAnnotationInfo ai = SynthesizedAnnotationInfo.from(annotation, visited);
-            return ai.needUseProxy ? synthesizeAnnotation(annotatedElement, annotation, ai) : annotation;
-        }
-        return null;
+
+        return sai.needUseProxy ? synthesizeAnnotation(annotatedElement, sai) : annotation;
     }
 
     /**
@@ -123,81 +142,39 @@ public final class AnnotationUtils {
 
     /**
      * 将注解使用动态代理包装，以实现组合注解功能
-     * @param annotation  注解
      * @param annotatedElement  注解作用的元素
      * @param synthesizedAnnotationInfo 组合注解信息
      * @param <A>
      * @return
      */
     @SuppressWarnings("unchecked")
-    private static <A extends Annotation> A synthesizeAnnotation(AnnotatedElement annotatedElement, A annotation, SynthesizedAnnotationInfo synthesizedAnnotationInfo) {
+    private static <A extends Annotation> A synthesizeAnnotation(AnnotatedElement annotatedElement, SynthesizedAnnotationInfo synthesizedAnnotationInfo) {
+        Annotation annotation = synthesizedAnnotationInfo.annotation;
         Class<? extends Annotation> annotationType = annotation.annotationType();
-
+        // 组合注解代理处理器
         InvocationHandler handler = new SynthesizedAnnotationInvocationHandler(synthesizedAnnotationInfo);
 
-        Class<?>[] exposedInterfaces = new Class<?>[] {annotationType, SynthesizedAnnotation.class};
+        Class<?>[] exposedInterfaces = new Class<?>[] {annotationType};
         return (A) Proxy.newProxyInstance(annotation.getClass().getClassLoader(), exposedInterfaces, handler);
     }
 
     /**
-     * 判断注解是否为组合注解，即是否属性方法有使用{@link mayfly.common.utils.annotation.Alias}注解
-     * @param annotationType
+     * 获取指定注解上的所有属性方法含有的别名属性描述
+     * @param a
      * @return
      */
-    private static boolean isSynthesizable(Class<? extends Annotation> annotationType) {
-        for (Method attribute : getAttributeMethods(annotationType)) {
-            if (!getAttributeAliasNames(attribute).isEmpty()) {
-                return true;
+    private static List<AliasDescriptor> getAliasDescriptors(Annotation a) {
+        List<AliasDescriptor> descriptors = null;
+        for (Method attribute : getAttributeMethods(a.annotationType())) {
+            AliasDescriptor des = AliasDescriptor.from(attribute);
+            if (des != null) {
+                if (descriptors == null) {
+                    descriptors = new ArrayList<>(8);
+                }
+                descriptors.add(des);
             }
         }
-        return false;
-    }
-
-//    private static SynthesizedAnnotationInfo getSynthesizeAnnotationInfo(Annotation target, List<Annotation> visited) {
-//        Class<? extends Annotation> targetType = target.annotationType();
-//        boolean needUseProxy = false;
-//        Map<String, Object> attributes = new LinkedHashMap<>(8);
-//        for (Annotation a : visited) {
-//            List<AliasDescriptor> aliasDescriptors = getAliasDescriptors(a);
-//            if (aliasDescriptors.isEmpty()) {
-//                continue;
-//            }
-//            // 遍历该注解上的所有别名描述器，并判断目标注解的属性是否有被其他注解当做别名属性使用
-//            for (AliasDescriptor descriptor : aliasDescriptors) {
-//                if (descriptor.aliasedAnnotationType == targetType) {
-//                    needUseProxy = true;
-//                    String targetAttributeName = descriptor.aliasedAttributeName;
-//                    if (!attributes.containsKey(targetAttributeName)) {
-//                        attributes.put(targetAttributeName, ReflectionUtils.invokeMethod(descriptor.sourceAttribute, a));
-//                    }
-//                }
-//            }
-//        }
-//
-//        for (Method targetAttribute : getAttributeMethods(targetType)) {
-//            String attributeName = targetAttribute.getName();
-//            if (!attributes.containsKey(attributeName)) {
-//                attributes.put(attributeName, ReflectionUtils.invokeMethod(targetAttribute, target));
-//            }
-//        }
-//
-//
-//    }
-
-    private static List<AliasDescriptor> getAliasDescriptors(Annotation a) {
-        return aliasCache.computeIfAbsent(a.annotationType(), key -> {
-            List<AliasDescriptor> descriptors = null;
-            for (Method attribute : getAttributeMethods(a.annotationType())) {
-                AliasDescriptor des = AliasDescriptor.from(attribute);
-                if (des != null) {
-                    if (descriptors == null) {
-                        descriptors = new ArrayList<>(8);
-                    }
-                    descriptors.add(des);
-                }
-            }
-            return Optional.ofNullable(descriptors).orElse(Collections.emptyList());
-        });
+        return Optional.ofNullable(descriptors).orElse(Collections.emptyList());
     }
 
     /**
@@ -226,18 +203,15 @@ public final class AnnotationUtils {
     }
 
 
-    private static List<String> getAttributeAliasNames(Method attribute) {
-        AliasDescriptor descriptor = AliasDescriptor.from(attribute);
-        return (descriptor != null ? descriptor.getAttributeAliasNames() : Collections.emptyList());
-    }
-
-
-
 
     /**
      * 组合注解信息，主要包含注解类型，以及注解属性值
      */
     private static class SynthesizedAnnotationInfo {
+        /**
+         * 目标注解
+         */
+        private Annotation annotation;
 
         private Class<? extends Annotation> annotationType;
 
@@ -248,7 +222,10 @@ public final class AnnotationUtils {
          */
         private Map<String, Object> attributes;
 
-        private SynthesizedAnnotationInfo(Class<? extends Annotation> annotationType, Map<String, Object> attributes, boolean needUseProxy) {
+        private SynthesizedAnnotationInfo() {}
+
+        private SynthesizedAnnotationInfo(Annotation annotation, Class<? extends Annotation> annotationType, Map<String, Object> attributes, boolean needUseProxy) {
+            this.annotation = annotation;
             this.annotationType = annotationType;
             this.attributes = attributes;
             this.needUseProxy = needUseProxy;
@@ -281,7 +258,7 @@ public final class AnnotationUtils {
                     attributes.put(attributeName, ReflectionUtils.invokeMethod(targetAttribute, target));
                 }
             }
-            return new SynthesizedAnnotationInfo(targetType, attributes, needUseProxy);
+            return new SynthesizedAnnotationInfo(target, targetType, attributes, needUseProxy);
         }
     }
 
@@ -394,14 +371,6 @@ public final class AnnotationUtils {
 
             attribute = hasAttribute ? attribute : value;
             return !StringUtils.isEmpty(attribute) ? attribute : sourceAttribute.getName();
-        }
-
-
-        public List<String> getAttributeAliasNames() {
-            if (this.isAliasPair) {
-                return Collections.singletonList(this.aliasedAttributeName);
-            }
-            return null;
         }
     }
 
@@ -566,6 +535,47 @@ public final class AnnotationUtils {
 
         private String attributeValueToString(Object value) {
             return String.valueOf(value);
+        }
+    }
+
+    /**
+     * 组合注解缓存key
+     */
+    private static class SynthesizedAnnotationCacheKey {
+        /**
+         * 注解作用元素
+         */
+        private AnnotatedElement element;
+
+        /**
+         * 目标注解类
+         */
+        private Class<? extends Annotation> targetAnnotation;
+
+        private SynthesizedAnnotationCacheKey(AnnotatedElement element, Class<? extends Annotation> targetAnnotation) {
+            this.element = element;
+            this.targetAnnotation = targetAnnotation;
+        }
+
+        private static SynthesizedAnnotationCacheKey of(AnnotatedElement element, Class<? extends Annotation> target) {
+            return new SynthesizedAnnotationCacheKey(element, target);
+        }
+
+        @Override
+        public boolean equals(Object other) {
+            if (this == other) {
+                return true;
+            }
+            if (!(other instanceof SynthesizedAnnotationCacheKey)) {
+                return false;
+            }
+            SynthesizedAnnotationCacheKey otherKey = (SynthesizedAnnotationCacheKey) other;
+            return (this.element.equals(otherKey.element) && this.targetAnnotation.equals(otherKey.targetAnnotation));
+        }
+
+        @Override
+        public int hashCode() {
+            return (this.element.hashCode() * 29 + this.targetAnnotation.hashCode());
         }
     }
 
