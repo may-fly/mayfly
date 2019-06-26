@@ -1,7 +1,7 @@
-package mayfly.common.utils.annotation;
+package mayfly.common.util.annotation;
 
-import mayfly.common.utils.ReflectionUtils;
-import mayfly.common.utils.StringUtils;
+import mayfly.common.util.ReflectionUtils;
+import mayfly.common.util.StringUtils;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
@@ -90,6 +90,7 @@ public final class AnnotationUtils {
      * 根据元注解类型递归查找指定注解的元注解
      * @param annotation  注解
      * @param targetType   元注解类型
+     * @param visited 访问链
      * @param <A>
      * @return
      */
@@ -289,7 +290,7 @@ public final class AnnotationUtils {
     }
 
     /**
-     * 别名描述器，用于描述{@link mayfly.common.utils.annotation.Alias}细节
+     * 别名描述器，用于描述{@link mayfly.common.util.annotation.Alias}细节
      */
     public static class AliasDescriptor {
         /**

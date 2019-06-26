@@ -1,119 +1,142 @@
 package mayfly.common.result;
 
 import com.alibaba.fastjson.JSON;
+import mayfly.common.enums.NameValueEnum;
+import mayfly.common.enums.ValueEnum;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
- * web 统一结果返回
+ * 统一结果返回
  * @author meilin.huang
  * @version 1.0
  * @date 2018-09-14 上午10:53
  */
 public final class Result implements Serializable {
-    /**
-     * 操作成功
-     */
-    private static final int SUCCESS = 200;
-    /**
-     * 操作失败
-     */
-    private static final int ERROR = 400;
-    /**
-     * 参数错误
-     */
-    private static final int PARAM_ERROR = 405;
-    /**
-     * 没有找到资源
-     */
-    private static final int NO_FOUND = 404;
-    /**
-     * 服务器异常
-     */
-    private static final int SERVER_ERROR = 500;
-    /**
-     * 没有权限
-     */
-    private static final int NO_PERMISSION = 501;
 
-    private Integer code;
-    private String msg;
+    private static final long serialVersionUID = 6992257459533918156L;
+
+    /**
+     * 操作结果码
+     */
+    final private Integer code;
+
+    /**
+     * 操作结果消息
+     */
+    final private String msg;
+
+    /**
+     * 操作结果数据对象
+     */
     private Object data;
 
-    private Result(int code, String msg) {
-        this.code = code;
+    private Result(NameValueEnum resultEnum) {
+        this.code = resultEnum.getValue();
+        this.msg = resultEnum.getName();
+    }
+
+    private Result(ValueEnum resultEnum, String msg) {
+        this.code = resultEnum.getValue();
         this.msg = msg;
     }
 
-    private Result(int code, String msg, Object data) {
-        this.code = code;
-        this.msg = msg;
-        this.data = data;
+    /**
+     * 操作结果对象工厂方法 <br/>
+     * 可扩展结果操作码(即实现{@link NameValueEnum}接口枚举类即可)
+     * @param resultEnum  结果枚举类
+     * @return  结果对象
+     */
+    public static Result of(NameValueEnum resultEnum) {
+        return new Result(resultEnum);
+    }
+
+    /**
+     * 操作结果对象工厂方法 <br/>
+     * 可扩展结果操作码(即实现{@link ValueEnum}接口枚举类即可)
+     * @param resultEnum  结果枚举类
+     * @param msg 覆盖结果对象消息
+     * @return  结果对象
+     */
+    public static Result of(ValueEnum resultEnum, String msg) {
+        return new Result(resultEnum, msg);
+    }
+
+    public static Result error() {
+        return of(ResultEnum.ERROR);
     }
 
     public static Result error(String msg) {
-        return new Result(ERROR, msg);
+        return of(ResultEnum.ERROR, msg);
     }
 
     public static Result success(String msg) {
-        return new Result(SUCCESS, msg);
+        return of(ResultEnum.SUCCESS, msg);
     }
 
     public static Result success() {
-        return new Result(SUCCESS, "success");
+        return of(ResultEnum.SUCCESS);
     }
 
     public static Result paramError() {
-        return new Result(PARAM_ERROR, "参数错误！");
+        return of(ResultEnum.PARAM_ERROR);
     }
 
     public static Result paramError(String msg) {
-        return new Result(PARAM_ERROR, msg);
+        return of(ResultEnum.PARAM_ERROR, msg);
     }
 
     public static Result serverError() {
-        return new Result(SERVER_ERROR, "服务器异常！");
+        return of(ResultEnum.SERVER_ERROR);
     }
 
     public static Result serverError(String msg) {
-        return new Result(SERVER_ERROR, msg);
+        return of(ResultEnum.SERVER_ERROR, msg);
     }
 
     public static Result noFound() {
-        return new Result(NO_FOUND, "未找到对应的资源");
+        return of(ResultEnum.NO_FOUND);
     }
 
     public static Result noFound(String msg) {
-        return new Result(NO_FOUND, msg);
+        return of(ResultEnum.NO_FOUND, msg);
     }
 
     public static Result withoutPermission() {
-        return new Result(NO_PERMISSION, "没有权限！");
+        return of(ResultEnum.NO_PERMISSION);
     }
+
+    /**
+     * 操作结果附上数据对象
+     * @param data  数据对象
+     * @return  Result对象
+     */
+    public Result withData(Object data) {
+        this.data = data;
+        return this;
+    }
+
+    /**
+     * 判断该结果是否为成功的操作
+     * @return true: success
+     */
+    public boolean isSuccess() {
+        return Objects.equals(this.code, ResultEnum.SUCCESS.getValue());
+    }
+
+
 
     public Integer getCode() {
         return code;
-    }
-
-    public void setCode(Integer code) {
-        this.code = code;
     }
 
     public String getMsg() {
         return msg;
     }
 
-    public void setMsg(String msg) {
-        this.msg = msg;
-    }
-
     public Object getData() {
         return data;
-    }
-
-    public Result withData(Object data) {
-        this.data = data;
-        return this;
     }
 
     @Override

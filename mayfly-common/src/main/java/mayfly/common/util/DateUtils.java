@@ -1,4 +1,4 @@
-package mayfly.common.utils;
+package mayfly.common.util;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

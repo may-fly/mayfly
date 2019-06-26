@@ -4,7 +4,7 @@ import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
 import com.jcraft.jsch.UserInfo;
-import mayfly.common.utils.Assert;
+import mayfly.common.util.Assert;
 
 import java.io.BufferedReader;
 import java.io.IOException;

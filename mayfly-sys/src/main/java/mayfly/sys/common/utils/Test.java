@@ -1,8 +1,8 @@
 package mayfly.sys.common.utils;
 
 import mayfly.common.log.MethodLog;
-import mayfly.common.utils.annotation.Alias;
-import mayfly.common.utils.annotation.AnnotationUtils;
+import mayfly.common.util.annotation.Alias;
+import mayfly.common.util.annotation.AnnotationUtils;
 import mayfly.common.validation.annotation.DateRange;
 import org.springframework.core.annotation.AliasFor;
 

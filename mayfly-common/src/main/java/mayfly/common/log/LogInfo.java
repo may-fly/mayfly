@@ -1,8 +1,8 @@
 package mayfly.common.log;
 
 import com.alibaba.fastjson.JSON;
-import mayfly.common.utils.CollectionUtils;
-import mayfly.common.utils.PlaceholderResolver;
+import mayfly.common.util.CollectionUtils;
+import mayfly.common.util.PlaceholderResolver;
 
 import java.util.HashMap;
 import java.util.List;

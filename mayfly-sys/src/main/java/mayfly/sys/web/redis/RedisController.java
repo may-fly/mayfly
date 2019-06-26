@@ -4,7 +4,7 @@ import io.lettuce.core.api.sync.BaseRedisCommands;
 import io.lettuce.core.api.sync.RedisKeyCommands;
 import mayfly.common.log.MethodLog;
 import mayfly.common.result.Result;
-import mayfly.common.utils.StringUtils;
+import mayfly.common.util.StringUtils;
 import mayfly.common.validation.annotation.Valid;
 import mayfly.entity.Redis;
 import mayfly.sys.common.utils.BeanUtils;

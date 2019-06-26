@@ -5,8 +5,8 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.AppenderBase;
 import ch.qos.logback.core.encoder.Encoder;
 import com.alibaba.fastjson.JSON;
-import mayfly.common.utils.DateUtils;
-import mayfly.common.utils.LocalUtils;
+import mayfly.common.util.DateUtils;
+import mayfly.common.util.LocalUtils;
 
 import java.time.LocalDateTime;
 

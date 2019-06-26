@@ -1,6 +1,6 @@
 package mayfly.common.validation.aop;
 
-import mayfly.common.utils.annotation.AnnotationUtils;
+import mayfly.common.util.annotation.AnnotationUtils;
 import mayfly.common.validation.ParamValidErrorException;
 import mayfly.common.validation.annotation.Valid;
 import mayfly.common.validation.ValidationHandler;
@@ -49,7 +49,7 @@ public class AopParamValidator {
             }
             return index;
         });
-        //没有需要校验的参数索引，直接返回
+        // 没有需要校验的参数索引，直接返回
         if (idx.isEmpty()) {
             return;
         }

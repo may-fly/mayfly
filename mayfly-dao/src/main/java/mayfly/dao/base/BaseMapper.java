@@ -1,8 +1,8 @@
 package mayfly.dao.base;
 
 
-import mayfly.common.utils.ReflectionUtils;
-import mayfly.common.utils.StringUtils;
+import mayfly.common.util.ReflectionUtils;
+import mayfly.common.util.StringUtils;
 import mayfly.dao.base.annotation.NoColumn;
 import mayfly.dao.base.annotation.Primary;
 import org.apache.ibatis.annotations.*;

@@ -1,4 +1,4 @@
-package mayfly.common.utils;
+package mayfly.common.util;
 
 import java.net.*;
 import java.util.ArrayList;

@@ -3,7 +3,7 @@ package mayfly.sys.service.redis.impl;
 import io.lettuce.core.api.sync.RedisCommands;
 import io.lettuce.core.cluster.api.sync.RedisClusterCommands;
 import mayfly.common.exception.BusinessRuntimeException;
-import mayfly.common.utils.Assert;
+import mayfly.common.util.Assert;
 import mayfly.dao.RedisMapper;
 import mayfly.entity.Redis;
 import mayfly.sys.redis.connection.RedisConnectionRegistry;

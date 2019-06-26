@@ -3,7 +3,7 @@ package mayfly.sys.interceptor;
 import mayfly.common.permission.checker.PermissionCheckHandler;
 import mayfly.common.permission.PermissionDisabledException;
 import mayfly.common.result.Result;
-import mayfly.common.utils.StringUtils;
+import mayfly.common.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;

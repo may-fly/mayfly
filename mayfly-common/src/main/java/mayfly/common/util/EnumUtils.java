@@ -1,4 +1,4 @@
-package mayfly.common.utils;
+package mayfly.common.util;
 
 import mayfly.common.enums.NameValueEnum;
 import mayfly.common.enums.ValueEnum;

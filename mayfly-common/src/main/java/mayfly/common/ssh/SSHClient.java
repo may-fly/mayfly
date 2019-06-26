@@ -2,7 +2,7 @@ package mayfly.common.ssh;
 
 
 import com.jcraft.jsch.*;
-import mayfly.common.utils.Assert;
+import mayfly.common.util.Assert;
 
 import java.io.IOException;
 import java.io.InputStream;

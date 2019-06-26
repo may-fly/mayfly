@@ -1,6 +1,6 @@
-package mayfly.common.utils;
+package mayfly.common.util;
 
-import mayfly.common.utils.annotation.AnnotationUtils;
+import mayfly.common.util.annotation.AnnotationUtils;
 import mayfly.common.enums.NameValueEnum;
 
 import java.beans.IntrospectionException;

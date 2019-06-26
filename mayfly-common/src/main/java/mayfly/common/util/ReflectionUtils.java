@@ -1,4 +1,4 @@
-package mayfly.common.utils;
+package mayfly.common.util;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -42,7 +42,7 @@ public final class ReflectionUtils {
             }
             clazz = clazz.getSuperclass();
         }
-        return fields.toArray(new Field[fields.size()]);
+        return fields.toArray(new Field[0]);
     }
 
     /**

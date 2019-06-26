@@ -1,6 +1,6 @@
 package mayfly.sys.redis.machine;
 
-import mayfly.common.utils.PlaceholderResolver;
+import mayfly.common.util.PlaceholderResolver;
 
 /**
  * @author meilin.huang

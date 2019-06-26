@@ -1,8 +1,9 @@
-package mayfly.common.utils.annotation;
+package mayfly.common.util.annotation;
 
 import java.lang.annotation.*;
 
 /**
+ * 用来覆盖指定元注解中的指定属性（即覆盖注解方法值）
  * @author meilin.huang
  * @version 1.0
  * @date 2019-05-09 14:36

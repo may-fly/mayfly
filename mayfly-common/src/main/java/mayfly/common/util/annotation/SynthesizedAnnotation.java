@@ -1,4 +1,4 @@
-package mayfly.common.utils.annotation;
+package mayfly.common.util.annotation;
 
 /**
  * 标记接口，标记注解是否为组合注解

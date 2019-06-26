@@ -1,8 +1,8 @@
 package mayfly.common.log;
 
-import mayfly.common.utils.annotation.AnnotationUtils;
-import mayfly.common.utils.CollectionUtils;
-import mayfly.common.utils.StringUtils;
+import mayfly.common.util.annotation.AnnotationUtils;
+import mayfly.common.util.CollectionUtils;
+import mayfly.common.util.StringUtils;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;

@@ -1,6 +1,6 @@
 package mayfly.sys.redis.enums;
 
-import mayfly.common.utils.StringUtils;
+import mayfly.common.util.StringUtils;
 
 /**
  * @author meilin.huang

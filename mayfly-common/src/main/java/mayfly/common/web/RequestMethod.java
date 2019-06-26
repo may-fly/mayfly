@@ -1,7 +1,7 @@
 package mayfly.common.web;
 
 
-import mayfly.common.utils.StringUtils;
+import mayfly.common.util.StringUtils;
 
 /**
  * @Description: 请求方法枚举

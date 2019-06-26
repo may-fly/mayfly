@@ -1,4 +1,4 @@
-package mayfly.common.utils.annotation;
+package mayfly.common.util.annotation;
 
 /**
  * 注解配置错误异常

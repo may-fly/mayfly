@@ -1,6 +1,6 @@
 package mayfly.common.validation.annotation;
 
-import mayfly.common.utils.StringUtils;
+import mayfly.common.util.StringUtils;
 import mayfly.common.validation.annotation.validator.ValidResult;
 import mayfly.common.validation.annotation.validator.Validator;
 import mayfly.common.validation.annotation.validator.Value;

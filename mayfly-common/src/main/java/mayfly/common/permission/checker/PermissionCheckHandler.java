@@ -4,7 +4,7 @@ import mayfly.common.permission.Permission;
 import mayfly.common.permission.registry.PermissionCacheHandler;
 import mayfly.common.permission.PermissionDisabledException;
 import mayfly.common.permission.PermissionInfo;
-import mayfly.common.utils.annotation.AnnotationUtils;
+import mayfly.common.util.annotation.AnnotationUtils;
 
 import java.lang.reflect.Method;
 import java.util.Collection;

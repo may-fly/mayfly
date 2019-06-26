@@ -1,8 +1,8 @@
 package mayfly.common.validation;
 
 
-import mayfly.common.utils.annotation.AnnotationUtils;
-import mayfly.common.utils.ReflectionUtils;
+import mayfly.common.util.annotation.AnnotationUtils;
+import mayfly.common.util.ReflectionUtils;
 import mayfly.common.validation.annotation.*;
 import mayfly.common.validation.annotation.validator.*;
 

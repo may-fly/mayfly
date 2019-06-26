@@ -23,7 +23,7 @@ public class GlobalExceptionHandler {
     public Result handleException(Exception e) {
         log.error("异常：", e);
         if (e instanceof BusinessException || e instanceof BusinessRuntimeException) {
-            return Result.paramError(e.getMessage());
+            return Result.error(e.getMessage());
         }
         if (e instanceof HttpRequestMethodNotSupportedException) {
             return Result.serverError("url请求方法错误！");

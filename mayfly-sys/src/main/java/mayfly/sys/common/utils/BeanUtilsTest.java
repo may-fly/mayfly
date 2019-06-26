@@ -1,8 +1,8 @@
 package mayfly.sys.common.utils;
 
 import lombok.Data;
-import mayfly.common.utils.BeanUtils;
-import mayfly.common.utils.DateUtils;
+import mayfly.common.util.BeanUtils;
+import mayfly.common.util.DateUtils;
 import mayfly.sys.common.enums.ResourceTypeEnum;
 import org.springframework.core.annotation.AliasFor;
 import org.springframework.core.annotation.AnnotatedElementUtils;
@@ -83,7 +83,7 @@ public class BeanUtilsTest {
 //
 //        long start = System.currentTimeMillis();
 //        for (int i = 0; i < size; i++) {
-//            mayfly.sys.common.utils.BeanUtils.beans2Maps(Arrays.asList(u, u));
+//            mayfly.sys.common.util.BeanUtils.beans2Maps(Arrays.asList(u, u));
 //        }
 //        long end = System.currentTimeMillis();
 //        System.out.println(end - start);
