@@ -32,6 +32,7 @@ public final class Result implements Serializable {
      */
     private Object data;
 
+
     private Result(NameValueEnum resultEnum) {
         this.code = resultEnum.getValue();
         this.msg = resultEnum.getName();
@@ -43,25 +44,30 @@ public final class Result implements Serializable {
     }
 
     /**
-     * 操作结果对象工厂方法 <br/>
-     * 可扩展结果操作码(即实现{@link NameValueEnum}接口枚举类即可)
+     * 操作结果对象简单工厂 <br/>
+     * 可扩展结果操作码和操作结果消息(即实现{@link NameValueEnum}接口的枚举类即可)
      * @param resultEnum  结果枚举类
      * @return  结果对象
      */
-    public static Result of(NameValueEnum resultEnum) {
+    public static <T extends Enum & NameValueEnum> Result of(T resultEnum) {
         return new Result(resultEnum);
     }
 
     /**
-     * 操作结果对象工厂方法 <br/>
-     * 可扩展结果操作码(即实现{@link ValueEnum}接口枚举类即可)
+     * 操作结果对象简单工厂 <br/>
+     * 可扩展结果操作码(即实现{@link ValueEnum}接口的枚举类即可)
      * @param resultEnum  结果枚举类
      * @param msg 覆盖结果对象消息
      * @return  结果对象
      */
-    public static Result of(ValueEnum resultEnum, String msg) {
+    public static <T extends Enum & ValueEnum> Result of(T resultEnum, String msg) {
         return new Result(resultEnum, msg);
     }
+
+
+    //---------------------------------------------------------------------
+    // 各种结果对象的简单工厂
+    //---------------------------------------------------------------------
 
     public static Result error() {
         return of(ResultEnum.ERROR);

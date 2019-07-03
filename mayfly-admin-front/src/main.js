@@ -5,7 +5,7 @@ import 'element-ui/lib/theme-chalk/index.css'
 import './assets/css/font-awesome.min.css'
 import './assets/css/style.css'
 import router from './router'
-import Config from './config'
+import Config from './common/config'
 import Permission from './common/Permission'
 
 
@@ -24,17 +24,16 @@ Vue.directive('permission', function (el, binding) {
 })
 
 router.beforeEach((to, from, next) => {
-  window.document.title = to.meta.title?to.meta.title+'-'+Config.siteName:Config.siteName;
+  window.document.title = to.meta.title ? to.meta.title + '-' + Config.name.siteName : Config.name.siteName;
 
-  if (!sessionStorage.getItem(Config.tokenKey) && to.path != '/login') {
+  if (!sessionStorage.getItem(Config.name.tokenKey) && to.path != '/login') {
     next({path: '/login'});
-
   } else {
     next();
   }
 });
 router.afterEach(transition => {
-
+  
 });
 
 

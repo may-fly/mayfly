@@ -1,9 +1,5 @@
 import request from './request'
-
-//存在sessionStorage里面的key
-const tokenKey = 'token';
-const	menusKey = 'menus';
-const	permissionsKey = 'permissions';
+import Config from './config'
 
 /**
  * show: 菜单按钮是否显示
@@ -31,58 +27,58 @@ class Permission{
 		this.uri = uri;
 		return this;
 	}
-	
+
   /**
-   * uri的请求方法
+   * uri的请求方法(方法枚举)
    */
 	method(method) {
 		this.method = method;
 		return this;
 	}
-  
+ 
   /**
    * 操作该权限，即请求对应的uri
    */
-  request(param, callback) {
-    request.send(this, param, callback);
+  request(param) {
+    return request.send(this, param);
   }
-  
+
   /**
    * 静态工厂，设置code，并返回Permission对象
    */
   static code(code) {
     return new Permission(code);
   }
-  
+
   /**
    * 登录成功保存对应的token以及菜单按钮列表
    */
   static savePermission(tokenMenuAndPermission) {
   	//保存token
-  	sessionStorage.setItem(tokenKey, tokenMenuAndPermission.token);
+  	sessionStorage.setItem(Config.name.tokenKey, tokenMenuAndPermission.token);
   	//保存menus
-  	sessionStorage.setItem(menusKey, JSON.stringify(tokenMenuAndPermission.menus));
+  	sessionStorage.setItem(Config.name.menusKey, JSON.stringify(tokenMenuAndPermission.menus));
   	//保存权限
-  	sessionStorage.setItem(permissionsKey, JSON.stringify(tokenMenuAndPermission.permissions))
+  	sessionStorage.setItem(Config.name.permissionsKey, JSON.stringify(tokenMenuAndPermission.permissions))
   }
-  
+
   /**
    * 从sessionStorage所有permissions获取指定permission对象的PermissionInfo
    */
   static getPermission(code) {
-  	let permissions = JSON.parse(sessionStorage.getItem(permissionsKey));
+  	let permissions = JSON.parse(sessionStorage.getItem(Config.name.permissionsKey));
   	for (let p of permissions) {
   		if (p == code) {
   			return new PermissionInfo(true, false);
   		} 
-  		//不可用状态权限code
+  		// 不可用状态权限code
   		let disableCode = code + ":" + 0;
-  		//如果是不可用状态，则标识disable为true
+  		// 如果是不可用状态，则标识disable为true
   		if (p == disableCode) {
   			return new PermissionInfo(true, true);
   		}
   	}
-  	
+
   	return new PermissionInfo(false, true);
   }
   

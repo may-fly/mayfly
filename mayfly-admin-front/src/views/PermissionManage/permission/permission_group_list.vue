@@ -28,7 +28,7 @@
       <el-table-column prop="updateTime" label="更新时间">
       </el-table-column>
       <el-table-column label="操作">
-       <!-- <template slot-scope="scope">
+        <!-- <template slot-scope="scope">
           <el-button @click="changeStatus(scope.row, 1)"
             type="success" :ref="scope.row.id" size="small">启用</el-button>
           <el-button @click="changeStatus(scope.row, 0)"
@@ -92,7 +92,7 @@
       },
       //修改成功后的回调
       valChange(api) {
-        this.btns.list.request(null, res => {
+        this.btns.list.request(null).then(res => {
           this.groupList = res;
           this.dialogForm.visible = false;
         })
@@ -102,7 +102,7 @@
         this.btns.del.request({
           id
         }, res => {
-          this.btns.search.request(null, res => {
+          this.btns.search.request(null).then(res => {
             this.apiList = res;
           })
         })
@@ -111,17 +111,17 @@
         this.btns.changeStatus.request({
           id: api.id,
           status
-        }, res => {
+        }).then(res => {
           api.status = res.status;
           api.updateTime = res.updateTime;
-        })
+        });
       }
     },
     mounted: function() {
-      this.permission.list.request(this.pageInfo, res => {
+      this.permission.list.request(this.pageInfo).then(res => {
         this.groupList = res.list;
         this.pageInfo.total = res.total;
-      })
+      });
     },
     components: {
       ToolBar,

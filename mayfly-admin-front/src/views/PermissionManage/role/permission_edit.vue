@@ -3,6 +3,10 @@
     <el-dialog :title="'编辑“'+role.name+'”的权限'" :visible="visible" :show-close="false">
       <ToolBar>
         <div style="float: left">
+          <el-select v-model="query.groupId" size="small" clearable placeholder="请选择权限组">
+            <el-option v-for="item in groups" :key="item.id" :value="item.id" :label="item.name">
+            </el-option>
+          </el-select>
           <el-input placeholder="请输入权限code" size="small" style="width: 150px" v-model="query.code" @clear="clear()"
             clearable>
           </el-input>
@@ -26,8 +30,8 @@
         :total="total" :current-page.sync="query.pageNum" :page-size="query.pageSize">
       </el-pagination>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="cancel()">取 消</el-button>
-        <el-button type="primary" :loading="btnLoading" @click="btnOk">确 定</el-button>
+        <el-button @click="cancel()" size="small">取 消</el-button>
+        <el-button type="primary" :loading="btnLoading" @click="btnOk" size="small">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -55,16 +59,18 @@
           status: 1,
           pageNum: 1,
           pageSize: 8,
-          code: null
+          code: null,
+          groupId: null
         },
         total: 0,
-        rolePermissions: []
+        rolePermissions: [],
+        groups: []
       }
     },
     watch: {
       'role': {
         handler: function() {
-          if (!this.role) 
+          if (!this.role)
             return;
           let rolePermissions = this.permission.role.rolePermissions;
           let permission = this.$Permission.getPermission(rolePermissions.code);
@@ -73,7 +79,7 @@
           } else {
             rolePermissions.request({
               id: this.role.id
-            }, res => {
+            }).then(res => {
               this.rolePermissions = res;
               this.search();
             })
@@ -125,12 +131,12 @@
           savePermission.request({
             id: this.role.id,
             resourceIds: permissionIds
-          }, res => {
+          }).then(res => {
             if (res) {
               this.$message.success('保存成功!');
               this.cancel();
             }
-          })
+          });
         }
       },
       /**
@@ -155,13 +161,18 @@
         if (!permission.show) {
           this.$message.error('您没有该权限!');
         } else {
-          listPermission.request(this.query, res => {
+          listPermission.request(this.query).then(res => {
             this.allPermissions = res.list;
             this.total = res.total;
             this.checkSelected();
           })
         }
       }
+    },
+    mounted() {
+      permission.permissionGroup.all.request(null).then(res => {
+        this.groups = res;
+      })
     },
     components: {
       ToolBar

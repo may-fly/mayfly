@@ -51,6 +51,7 @@ public class MenuController {
 
     @DeleteMapping("/v1/menus/{id}")
     public Result delete(@PathVariable Integer id) {
-        return Result.success().withData(menuService.deleteMenu(id));
+        menuService.deleteMenu(id);
+        return Result.success();
     }
 }

@@ -79,7 +79,7 @@
         this.infoDialog.visible = true;
       },
       search() {
-        Req.get("/open/redis", this.params, res => {
+        Req.request('get', "/open/redis", this.params).then(res => {
         	this.redisTable = res;
         })
       }

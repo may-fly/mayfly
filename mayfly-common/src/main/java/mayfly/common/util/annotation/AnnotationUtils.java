@@ -144,10 +144,10 @@ public final class AnnotationUtils {
      * @param a
      * @return
      */
-    private static List<AliasDescriptor> getAliasDescriptors(Annotation a) {
-        List<AliasDescriptor> descriptors = null;
+    private static List<OverrideDescriptor> getOverrideDescriptors(Annotation a) {
+        List<OverrideDescriptor> descriptors = null;
         for (Method attribute : getAttributeMethods(a.annotationType())) {
-            AliasDescriptor des = AliasDescriptor.from(attribute);
+            OverrideDescriptor des = OverrideDescriptor.from(attribute);
             if (des != null) {
                 if (descriptors == null) {
                     descriptors = new ArrayList<>(8);
@@ -189,7 +189,7 @@ public final class AnnotationUtils {
      * @param attributeName  属性值（即方法名）
      * @return
      */
-    public static Object getValue(Annotation annotation, String attributeName) {
+    public static Object getAttributeValue(Annotation annotation, String attributeName) {
         if (annotation == null || StringUtils.isEmpty(attributeName)) {
             return null;
         }
@@ -254,14 +254,14 @@ public final class AnnotationUtils {
             Class<? extends Annotation> targetType = target.annotationType();
             Map<String, Object> attributes = new LinkedHashMap<>(8);
             for (Annotation a : visited) {
-                List<AliasDescriptor> aliasDescriptors = getAliasDescriptors(a);
-                if (aliasDescriptors.isEmpty()) {
+                List<OverrideDescriptor> overrideDescriptors = getOverrideDescriptors(a);
+                if (overrideDescriptors.isEmpty()) {
                     continue;
                 }
                 // 遍历该注解上的所有别名描述器，并判断目标注解的属性是否有被其他注解当做别名属性使用
-                for (AliasDescriptor descriptor : aliasDescriptors) {
-                    if (descriptor.aliasedAnnotationType == targetType) {
-                        String targetAttributeName = descriptor.aliasedAttributeName;
+                for (OverrideDescriptor descriptor : overrideDescriptors) {
+                    if (descriptor.overrideAnnotationType == targetType) {
+                        String targetAttributeName = descriptor.overrideAttributeName;
                         if (!attributes.containsKey(targetAttributeName)) {
                             attributes.put(targetAttributeName, ReflectionUtils.invokeMethod(descriptor.sourceAttribute, a));
                         }
@@ -290,9 +290,9 @@ public final class AnnotationUtils {
     }
 
     /**
-     * 别名描述器，用于描述{@link mayfly.common.util.annotation.Alias}细节
+     * 别名描述器，用于描述{@link OverrideFor}细节
      */
-    public static class AliasDescriptor {
+    public static class OverrideDescriptor {
         /**
          * 源注解属性方法
          */
@@ -311,87 +311,78 @@ public final class AnnotationUtils {
         /**
          * 别名的注解属性方法
          */
-        private final Method aliasedAttribute;
+        private final Method overrideAttribute;
 
         /**
          * 别名的注解类型
          */
-        private final Class<? extends Annotation> aliasedAnnotationType;
+        private final Class<? extends Annotation> overrideAnnotationType;
 
         /**
          * 别名的属性名
          */
-        private final String aliasedAttributeName;
+        private final String overrideAttributeName;
 
-        /**
-         * 别名是否为本身其他属性方法
-         */
-        private final boolean isAliasPair;
-
-        public static AliasDescriptor from(Method attribute) {
-            Alias alias = attribute.getAnnotation(Alias.class);
-            if (alias == null) {
+        public static OverrideDescriptor from(Method attribute) {
+            OverrideFor overrideFor = attribute.getAnnotation(OverrideFor.class);
+            if (overrideFor == null) {
                 return null;
             }
 
-            AliasDescriptor descriptor = new AliasDescriptor(attribute, alias);
-            return descriptor;
+            return new OverrideDescriptor(attribute, overrideFor);
         }
 
         @SuppressWarnings("unchecked")
-        private AliasDescriptor(Method sourceAttribute, Alias alias) {
+        private OverrideDescriptor(Method sourceAttribute, OverrideFor overrideFor) {
             Class<?> declaringClass = sourceAttribute.getDeclaringClass();
 
             this.sourceAttribute = sourceAttribute;
             this.sourceAnnotationType = (Class<? extends Annotation>) declaringClass;
             this.sourceAttributeName = sourceAttribute.getName();
+            this.overrideAnnotationType = overrideFor.annotation();
+            this.overrideAttributeName = getOverrideAttributeName(overrideFor, sourceAttribute);
 
-            this.aliasedAnnotationType = (Annotation.class == alias.annotation() ?
-                    this.sourceAnnotationType : alias.annotation());
-            this.aliasedAttributeName = getAliasedAttributeName(alias, sourceAttribute);
-            if (this.aliasedAnnotationType == this.sourceAnnotationType &&
-                    this.aliasedAttributeName.equals(this.sourceAttributeName)) {
-                String msg = String.format("@%s注解的%s属性方法上的@Alias的别名注解类型和属性名不能与该方法一致!",
+            if (this.overrideAnnotationType == this.sourceAnnotationType) {
+                String msg = String.format("@%s注解的%s属性方法上的@OverrideFor注解中申明的覆盖注解类型不能与该方法声明类一致!",
                         declaringClass.getName(), sourceAttribute.getName());
                 throw new AnnotationConfigurationException(msg);
             }
             try {
-                this.aliasedAttribute = this.aliasedAnnotationType.getDeclaredMethod(this.aliasedAttributeName);
+                this.overrideAttribute = this.overrideAnnotationType.getDeclaredMethod(this.overrideAttributeName);
             } catch (NoSuchMethodException ex) {
                 String msg = String.format(
-                        "@%s注解中%s属性方法上@Alias注解对应的%s别名属性不存在于%s别名注解类中！",
-                        this.sourceAnnotationType.getName(), this.sourceAttributeName, this.aliasedAttributeName,
-                        this.aliasedAnnotationType.getName());
+                        "@%s注解中%s属性方法上@OverrideFor注解对应的%s别名属性不存在于%s别名注解类中！",
+                        this.sourceAnnotationType.getName(), this.sourceAttributeName, this.overrideAttributeName,
+                        this.overrideAnnotationType.getName());
                 throw new AnnotationConfigurationException(msg, ex);
             }
             // 别名注解类型必修是源注解的元注解
-            if (!sourceAnnotationType.isAnnotationPresent(aliasedAnnotationType)) {
-                String msg = String.format("'@%s'注解的'%s'属性方法上的@Alias所声明的annotation别名注解类型不是该注解的元注解!",
+            if (!sourceAnnotationType.isAnnotationPresent(overrideAnnotationType)) {
+                String msg = String.format("'@%s'注解的'%s'属性方法上的@OverrideFor所声明的annotation别名注解类型不是该注解的元注解!",
                         sourceAnnotationType.getName(), sourceAttributeName);
                 throw new IllegalArgumentException(msg);
             }
             // 判断别名属性方法与源属性方法返回值是否一致
-            if (sourceAttribute.getReturnType() != aliasedAttribute.getReturnType()) {
-                String msg = String.format("'@%s'注解的'%s'属性方法类型与该方法上@Alias所声明的'@%s'注解类型中的'%s'属性方法类型不匹配!",
-                        sourceAnnotationType.getName(), sourceAttributeName, aliasedAnnotationType.getName(), aliasedAttributeName);
+            if (sourceAttribute.getReturnType() != overrideAttribute.getReturnType()) {
+                String msg = String.format("'@%s'注解的'%s'属性方法类型与该方法上@OverrideFor所声明的'@%s'注解类型中的'%s'属性方法类型不匹配!",
+                        sourceAnnotationType.getName(), sourceAttributeName, overrideAnnotationType.getName(), overrideAttributeName);
                 throw new IllegalArgumentException(msg);
             }
-            this.isAliasPair = (this.sourceAnnotationType == this.aliasedAnnotationType);
         }
 
         /**
-         * 获取属性方法上的别名
-         * @param alias  别名注解
+         * 获取属性方法上的被覆盖的属性名
+         * @param overrideFor  别名注解
          * @param sourceAttribute  注解属性方法
-         * @return 如果@Alias注解的attribute和value属性值都为空，则反回sourceAttribute的方法名
+         * @return 如果 {@link OverrideFor} 注解的attribute和value属性值都为空，则反回sourceAttribute的方法名
          */
-        private String getAliasedAttributeName(Alias alias, Method sourceAttribute) {
-            String attribute = alias.attribute();
-            String value = alias.value();
+        private String getOverrideAttributeName(OverrideFor overrideFor, Method sourceAttribute) {
+            String attribute = overrideFor.attribute();
+            String value = overrideFor.value();
             boolean hasAttribute = !StringUtils.isEmpty(attribute);
             boolean hasValue = !StringUtils.isEmpty(value);
             if (hasAttribute && hasValue) {
-                String msg = String.format("%s注解中的%s属性方法上的@Alias注解的value属性和attribute不能同时存在！",
+                String msg = String.format("%s注解中的%s属性方法上的@OverrideFor注解的value属性和attribute不能同时存在！",
                         sourceAttribute.getDeclaringClass().getName(), sourceAttribute.getName());
                 throw new AnnotationConfigurationException(msg);
             }

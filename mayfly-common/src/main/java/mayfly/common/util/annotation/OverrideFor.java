@@ -11,7 +11,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 @Documented
-public @interface Alias {
+public @interface OverrideFor {
 
     String value() default "";
 
@@ -23,6 +23,7 @@ public @interface Alias {
 
     /**
      * 声明要覆盖的目标注解的别名属性的注解类型<br/>
+     * 即attribute属性的声明类
      */
     Class<? extends Annotation> annotation();
 }

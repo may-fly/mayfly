@@ -195,7 +195,7 @@
         this.loading = true;
         let id = this.cluster == 0 ? this.redis.id : this.cluster;
         let isCluster = this.cluster == 0 ? 0 : 1;
-        Req.get(`/open/redis/${isCluster}/${id}/scan`, this.scanParam, res => {
+        Req.request('get', `/open/redis/${isCluster}/${id}/scan`, this.scanParam).then(res => {
           // console.log(res)
           this.keys = res.keys;
           this.dbsize = res.dbsize;
@@ -208,7 +208,7 @@
         this.scanParam.cursor = null;
         let id = this.cluster == 0 ? this.redis.id : this.cluster;
         let isCluster = this.cluster == 0 ? 0 : 1;
-        Req.get(`/open/redis/${isCluster}/${id}/scan`, this.scanParam, res => {
+        Req.request('get', `/open/redis/${isCluster}/${id}/scan`, this.scanParam).then(res => {
           // console.log(res)
           this.keys = res.keys;
           this.dbsize = this.keys.length;

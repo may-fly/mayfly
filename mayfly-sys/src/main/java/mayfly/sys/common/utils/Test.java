@@ -1,7 +1,7 @@
 package mayfly.sys.common.utils;
 
 import mayfly.common.log.MethodLog;
-import mayfly.common.util.annotation.Alias;
+import mayfly.common.util.annotation.OverrideFor;
 import mayfly.common.util.annotation.AnnotationUtils;
 import mayfly.common.validation.annotation.DateRange;
 import org.springframework.core.annotation.AliasFor;
@@ -39,7 +39,7 @@ public class Test {
 //        System.out.println(AnnotationUtils.getValue(anno5, "test5"));
 //        System.out.println(pattern.regexp());
 //        System.out.println(AnnotatedElementUtils.getMergedAnnotation(Test.class, Test3Ann.class).test3());
-        System.out.println(AnnotationUtils.getAnnotation(Test.class, Test4Ann.class).test4());
+        System.out.println(AnnotationUtils.getAnnotation(Test.class, Test4Ann.class).test42());
     }
 }
 
@@ -83,12 +83,12 @@ public class Test {
 @Retention(RUNTIME)
 @Test3Ann
 @interface Test4Ann {
-    @Alias(attribute = "test3", annotation = Test3Ann.class)
+    @OverrideFor(attribute = "test3", annotation = Test3Ann.class)
     @AliasFor(attribute = "test3", annotation = Test3Ann.class)
     String test4() default "test4";
 
 
-    @Alias(annotation = Test3Ann.class, attribute = "test32")
+    @OverrideFor(annotation = Test3Ann.class, attribute = "test32")
     String test42() default "test42";
 }
 
@@ -99,6 +99,6 @@ public class Test {
 @Retention(RUNTIME)
 @Test4Ann(test42 = "hahahah42")
 @interface Test5Ann {
-    @Alias(annotation = Test4Ann.class)
+    @OverrideFor(annotation = Test4Ann.class, attribute = "test42")
     String test4() default "test5";
 }

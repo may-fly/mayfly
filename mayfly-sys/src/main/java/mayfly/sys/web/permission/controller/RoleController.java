@@ -8,6 +8,7 @@ import mayfly.common.validation.annotation.Valid;
 import mayfly.entity.Role;
 import mayfly.sys.common.enums.ResourceTypeEnum;
 import mayfly.sys.common.utils.BeanUtils;
+import mayfly.sys.service.permission.RoleResourceService;
 import mayfly.sys.service.permission.RoleService;
 import mayfly.sys.web.permission.form.RoleForm;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,8 @@ public class RoleController {
 
     @Autowired
     private RoleService roleService;
+    @Autowired
+    private RoleResourceService roleResourceService;
 
     @GetMapping("/v1/roles")
     public Result list() {
@@ -49,7 +52,7 @@ public class RoleController {
     @MethodLog("获取角色拥有的权限")
     @GetMapping("/v1/roles/{id}/permissions")
     public Result rolePermissions(@PathVariable Integer id) {
-        return Result.success().withData(roleService.listResourceId(id, ResourceTypeEnum.PERMISSION));
+        return Result.success().withData(roleResourceService.listResourceId(id, ResourceTypeEnum.PERMISSION));
     }
 
     @PostMapping("/v1/roles/{id}/permissions")
@@ -62,24 +65,23 @@ public class RoleController {
             return Result.paramError("permissionIds参数错误！");
         }
 
-        return Result.success().withData(roleService.saveResource(id, ids, ResourceTypeEnum.PERMISSION));
+        return Result.success().withData(roleResourceService.saveResource(id, ids, ResourceTypeEnum.PERMISSION));
     }
 
     @GetMapping("/v1/roles/{id}/menus")
     public  Result roleMenus(@PathVariable Integer id) {
-        return Result.success().withData(roleService.listResourceId(id, ResourceTypeEnum.MENU));
+        return Result.success().withData(roleResourceService.listResourceId(id, ResourceTypeEnum.MENU));
     }
 
     @PostMapping("/v1/roles/{id}/menus")
     public  Result saveMenu(@PathVariable Integer id, @RequestBody RoleForm roleForm) throws BusinessException {
         List<Integer> ids;
         try {
-            ids = Stream.of(roleForm.getResourceIds().split(",")).map(sid -> Integer.valueOf(sid))
-                    .collect(Collectors.toList());
+            ids = Stream.of(roleForm.getResourceIds().split(",")).map(Integer::valueOf).collect(Collectors.toList());
         } catch (Exception e) {
             return Result.paramError("menuIds参数错误！");
         }
 
-        return Result.success().withData(roleService.saveResource(id, ids, ResourceTypeEnum.MENU));
+        return Result.success().withData(roleResourceService.saveResource(id, ids, ResourceTypeEnum.MENU));
     }
 }

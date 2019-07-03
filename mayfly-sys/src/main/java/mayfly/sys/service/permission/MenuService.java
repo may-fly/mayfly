@@ -31,7 +31,7 @@ public interface MenuService extends BaseService<Menu> {
      * @param id
      * @return
      */
-    Boolean deleteMenu(Integer id);
+    void deleteMenu(Integer id);
 
     /**
      * 保存菜单

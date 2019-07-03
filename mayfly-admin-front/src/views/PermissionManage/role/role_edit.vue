@@ -1,17 +1,17 @@
 <template>
   <div class="role-dialog">
     <el-dialog :title="title" :visible="visible" :show-close="false" width="45%">
-      <el-form :model="form">
-        <el-form-item label="角色名称">
+      <el-form :model="form" size="small" label-width="80px">
+        <el-form-item label="角色名称:">
           <el-input v-model="form.name" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="角色描述">
+        <el-form-item label="角色描述:">
           <el-input v-model="form.description" type="textarea" :rows="3" placeholder="请输入角色描述"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="$emit('cancel');">取 消</el-button>
-        <el-button type="primary" :loading="btnLoading" @click="btnOk">确 定</el-button>
+        <el-button @click="$emit('cancel');" size="small">取 消</el-button>
+        <el-button type="primary" :loading="btnLoading" @click="btnOk" size="small">确 定</el-button>
       </div>
     </el-dialog>
   </div>

@@ -2,6 +2,7 @@ package mayfly.sys.web.permission.form;
 
 import lombok.Data;
 import mayfly.common.validation.annotation.NotBlank;
+import mayfly.common.validation.annotation.NotNull;
 import mayfly.common.validation.annotation.Size;
 
 /**
@@ -21,5 +22,6 @@ public class MenuForm {
 
     private String icon;
 
+    @NotNull
     private Integer weight;
 }

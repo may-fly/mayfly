@@ -14,8 +14,8 @@ import java.io.PrintWriter;
 
 /**
  * 权限拦截器
- * @author: hml
- * @date: 2018/6/14 下午3:23
+ * @author hml
+ * @date 2018/6/14 下午3:23
  */
 public class PermissionInterceptor implements HandlerInterceptor {
 

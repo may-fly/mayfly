@@ -2,10 +2,13 @@ package mayfly.sys.service.permission.impl;
 
 import mayfly.common.enums.StatusEnum;
 import mayfly.common.exception.BusinessException;
+import mayfly.common.exception.BusinessRuntimeException;
 import mayfly.dao.MenuMapper;
 import mayfly.entity.Menu;
+import mayfly.sys.common.enums.ResourceTypeEnum;
 import mayfly.sys.service.base.impl.BaseServiceImpl;
 import mayfly.sys.service.permission.MenuService;
+import mayfly.sys.service.permission.RoleResourceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +18,7 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * @Description: 菜单实现类
+ * 菜单实现类
  * @author: hml
  * @date: 2018/6/27 下午4:09
  */
@@ -24,6 +27,8 @@ public class MenuServiceImpl extends BaseServiceImpl<MenuMapper, Menu> implement
 
     @Autowired
     private MenuMapper menuMapper;
+    @Autowired
+    private RoleResourceService roleResourceService;
 
     @Override
     public List<Menu> getByUserId(Integer userId) {
@@ -53,15 +58,15 @@ public class MenuServiceImpl extends BaseServiceImpl<MenuMapper, Menu> implement
     }
 
     @Override
-    public Boolean deleteMenu(Integer id) {
+    public void deleteMenu(Integer id) {
         List<Integer> deleteIds = getChildrenByPid(id);
-        Integer rootId;
         for (Integer i : deleteIds) {
            if (!deleteById(i)) {
-               return false;
+               throw new BusinessRuntimeException("删除菜单失败！");
            }
+           // 删除角色资源表中该菜单所关联的所有信息
+           roleResourceService.deleteByResourceIdAndType(id, ResourceTypeEnum.MENU);
         }
-        return true;
     }
 
     /**
@@ -69,7 +74,7 @@ public class MenuServiceImpl extends BaseServiceImpl<MenuMapper, Menu> implement
      * @param id
      * @return
      */
-    List<Integer> getChildrenByPid(Integer id) {
+    private List<Integer> getChildrenByPid(Integer id) {
         List<Integer> ids = new ArrayList<>();
         ids.add(id);
         Integer pid = id;

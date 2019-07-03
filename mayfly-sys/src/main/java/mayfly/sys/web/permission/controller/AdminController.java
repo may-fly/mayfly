@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * @Description: 管理员控制器
- * @author: hml
- * @date: 2018/6/27 下午4:44
+ * 管理员控制器
+ * @author hml
+ * @date 2018/6/27 下午4:44
  */
 @RestController
 @RequestMapping("/open")
