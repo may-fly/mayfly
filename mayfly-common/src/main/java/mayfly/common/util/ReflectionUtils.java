@@ -158,9 +158,9 @@ public final class ReflectionUtils {
 
     /**
      * 调用无参数方法
-     * @param method
-     * @param target
-     * @return
+     * @param method  方法对象
+     * @param target  调用对象
+     * @return        执行结果
      */
     public static Object invokeMethod(Method method, Object target) {
         return invokeMethod(method, target, new Object[0]);
@@ -168,13 +168,14 @@ public final class ReflectionUtils {
 
     /**
      * 调用指定对象的方法
-     * @param method
-     * @param target
-     * @param args
-     * @return
+     * @param method  方法对象
+     * @param target  调用对象
+     * @param args    方法参数
+     * @return        执行结果
      */
     public static Object invokeMethod(Method method, Object target, Object... args) {
         try {
+            makeAccessible(method);
             return method.invoke(target, args);
         } catch (Exception ex) {
             throw new IllegalStateException("执行方法失败！", ex);

@@ -10,6 +10,8 @@ import java.util.List;
  * @date 2018-11-23 5:35 PM
  */
 public class Page<T> implements Serializable {
+    private static final long serialVersionUID = 5390817850198908640L;
+
     private Long total;
 
     private List<T> list;

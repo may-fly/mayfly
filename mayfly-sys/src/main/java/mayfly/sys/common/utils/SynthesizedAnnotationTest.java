@@ -54,5 +54,7 @@ public class SynthesizedAnnotationTest {
         // 虽然调用了Test2注解的test2方法，但是实际显示的是Test3注解中的test3属性声明的值
         // 则说明Test2的test2属性被覆盖了
         System.out.println(test2.test2());// out '覆盖Test2属性中的test2方法'
+
+        System.out.println(SynthesizedAnnotationTest.class.getClassLoader().getResource("").getPath());
     }
 }

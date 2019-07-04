@@ -23,11 +23,6 @@ public final class AnnotationUtils {
      */
     private static Map<SynthesizedAnnotationCacheKey, AttributeValueExtractor> synthesizedCache = new ConcurrentHashMap<>(256);
 
-    /**
-     * 没有目标注解作用的元素, synthesizedCache的value都指向该对象
-     */
-    private static final DefaultAttributeExtractor NO_PRESENT = new DefaultAttributeExtractor();
-
 
     /**
      * 获取指定元素的注解类型（若没有直接注解，则从元素其他注解的元注解上查找）
@@ -43,36 +38,32 @@ public final class AnnotationUtils {
             return annotation;
         }
 
-        SynthesizedAnnotationCacheKey key = SynthesizedAnnotationCacheKey.of(annotatedElement, annotationType);
-        AttributeValueExtractor valueExtractor = synthesizedCache.get(key);
-        if (valueExtractor == NO_PRESENT) {
+        // 元注解访问链
+        List<Annotation> visited = new ArrayList<>();
+        // 遍历查找该元素的其他注解上的元注解
+        for (Annotation otherAnn : annotatedElement.getAnnotations()) {
+            // 如果从该元注解没有找到指定注解，则清空该访问链，继续该元素其他注解上查找
+            if ((annotation = findMetaAnnotation(otherAnn, annotationType, visited)) == null) {
+                visited.clear();
+                continue;
+            }
+            break;
+        }
+        // 如果注解不存在，直接return
+        if (annotation == null) {
             return null;
         }
-        // 如果为空，则遍历递归查找该元素其他注解的元注解
+
+        // 组合注解缓存key
+        SynthesizedAnnotationCacheKey key = SynthesizedAnnotationCacheKey.of(annotatedElement, annotationType);
+        AttributeValueExtractor valueExtractor = synthesizedCache.get(key);
+        // 生成对应的组合注解属性值提取器，并缓存
         if (valueExtractor == null) {
-            // 元注解访问链
-            List<Annotation> visited = new ArrayList<>();
-            // 遍历查找该元素的其他注解上的元注解
-            for (Annotation otherAnn : annotatedElement.getAnnotations()) {
-                annotation = findMetaAnnotation(otherAnn, annotationType, visited);
-                // 如果从该元注解没有找到指定注解，则清空该访问链，继续该元素其他注解上查找
-                if (annotation == null) {
-                    visited.clear();
-                    continue;
-                }
-                break;
-            }
-            // 如果注解不存在，则将该组合key的value置为不存在标识
-            if (annotation == null) {
-                synthesizedCache.put(key, NO_PRESENT);
-                return null;
-            }
-            // 生成对应的组合注解信息，并缓存
-            valueExtractor = DefaultAttributeExtractor.from(annotation, visited);
+            valueExtractor = DefaultAttributeExtractor.from(annotatedElement, annotation, visited);
             synthesizedCache.put(key, valueExtractor);
         }
-
-        return annotation != null ? synthesizeAnnotation(annotatedElement, annotation, valueExtractor) : null;
+        // 包装为动态代理对象，使其实现组合注解功能
+        return synthesizeAnnotation(annotatedElement, annotation, valueExtractor);
     }
 
     /**
@@ -250,20 +241,22 @@ public final class AnnotationUtils {
          * @param visited 目标注解的访问路径
          * @return 默认属性值提取器
          */
-        private static DefaultAttributeExtractor from(Annotation target, List<Annotation> visited) {
+        private static DefaultAttributeExtractor from(AnnotatedElement element, Annotation target, List<Annotation> visited) {
             Class<? extends Annotation> targetType = target.annotationType();
             Map<String, Object> attributes = new LinkedHashMap<>(8);
+            Map<String, Object> prevAttributes = new LinkedHashMap<>(8);
             for (Annotation a : visited) {
                 List<OverrideDescriptor> overrideDescriptors = getOverrideDescriptors(a);
                 if (overrideDescriptors.isEmpty()) {
                     continue;
                 }
-                // 遍历该注解上的所有别名描述器，并判断目标注解的属性是否有被其他注解当做别名属性使用
+                // 遍历该注解上的所有别名描述器，并判断目标注解的属性是否有被其他注解覆盖
                 for (OverrideDescriptor descriptor : overrideDescriptors) {
                     if (descriptor.overrideAnnotationType == targetType) {
                         String targetAttributeName = descriptor.overrideAttributeName;
                         if (!attributes.containsKey(targetAttributeName)) {
-                            attributes.put(targetAttributeName, ReflectionUtils.invokeMethod(descriptor.sourceAttribute, a));
+                            attributes.put(targetAttributeName, ReflectionUtils.invokeMethod(descriptor.sourceAttribute,
+                                    AnnotationUtils.getAnnotation(element, descriptor.sourceAnnotationType)));
                         }
                     }
                 }
