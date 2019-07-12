@@ -35,6 +35,10 @@ public class ObjectUtils {
         return newArr;
     }
 
+    //---------------------------------------------------------------------
+    // 对象类型判断
+    //---------------------------------------------------------------------
+
     public static boolean isCollection(Object obj) {
         return obj instanceof Collection;
     }
@@ -82,7 +86,21 @@ public class ObjectUtils {
         return isPrimitive(obj) || isNumber(obj) || isCharSequence(obj) || isBoolean(obj);
     }
 
+    /**
+     * 判断一个对象是否为数组
+     * @param obj
+     * @return
+     */
     public static boolean isArray(Object obj) {
         return obj != null && obj.getClass().isArray();
+    }
+
+    /**
+     * 判断一个对象是否为基本类型数组即(int[], long[], boolean[], double[]....)
+     * @param obj
+     * @return
+     */
+    public static boolean isPrimitiveArray(Object obj) {
+        return isArray(obj) && obj.getClass().getComponentType().isPrimitive();
     }
 }

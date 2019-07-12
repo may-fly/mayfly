@@ -14,7 +14,11 @@
       </div>
     </ToolBar>
     <el-table :data="permissionList" border ref="table" max-height="800" style="width: 100%">
-      <el-table-column label="序号" type="index"> </el-table-column>
+      <el-table-column label="序号" type="index">
+        <template scope="scope">
+          <span>{{(query.pageNum - 1) * query.pageSize + scope.$index + 1}}</span>
+        </template>
+      </el-table-column>
       <el-table-column prop="code" label="code">
       </el-table-column>
       <el-table-column min-width="45" prop="method" label="调用方法">

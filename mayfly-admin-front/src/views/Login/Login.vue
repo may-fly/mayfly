@@ -5,10 +5,10 @@
         <img src="../../assets/images/logo.svg" width="100" height="100" alt="">
         <p>{{ $Config.name.siteName }}</p>
       </div>
-      <el-input placeholder="请输入用户名" suffix-icon="fa fa-user" v-model="userNmae" style="margin-bottom: 18px">
+      <el-input placeholder="请输入用户名" suffix-icon="fa fa-user" v-model="loginForm.username" style="margin-bottom: 18px">
       </el-input>
 
-      <el-input placeholder="请输入密码" suffix-icon="fa fa-keyboard-o" v-model="password" type="password" style="margin-bottom: 18px"
+      <el-input placeholder="请输入密码" suffix-icon="fa fa-keyboard-o" v-model="loginForm.password" type="password" style="margin-bottom: 18px"
         @keyup.native.enter="login">
       </el-input>
 
@@ -28,8 +28,10 @@
   export default {
     data() {
       return {
-        userNmae: '',
-        password: '',
+        loginForm: {
+          username: '',
+          password: ''
+        },
         Remenber: true,
         loginLoading: false
       }
@@ -37,7 +39,7 @@
     methods: {
       login() {
         this.loginLoading = true;
-        openApi.login(null).then(data => {
+        openApi.login(this.loginForm).then(data => {
           setTimeout(() => {
             //保存用户token以及菜单按钮权限
             this.$Permission.savePermission(data);
@@ -52,7 +54,7 @@
             });
           }, 500);
         }).catch(e => {
-          this.$message.error(e);
+          // this.$message.error(e);
           this.loginLoading = false;
         })
       }

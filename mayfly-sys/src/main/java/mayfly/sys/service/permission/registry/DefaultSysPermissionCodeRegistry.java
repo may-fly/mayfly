@@ -1,6 +1,6 @@
 package mayfly.sys.service.permission.registry;
 
-import mayfly.common.enums.StatusEnum;
+import mayfly.common.enums.BoolEnum;
 import mayfly.common.permission.registry.PermissionCacheHandler;
 import mayfly.common.permission.registry.SysPermissionCodeRegistry;
 import mayfly.sys.service.permission.PermissionService;
@@ -27,7 +27,7 @@ public class DefaultSysPermissionCodeRegistry implements SysPermissionCodeRegist
     @Override
     public void save() {
         this.permissions = permissionService.listAll().stream()
-                .map(p -> p.getStatus().equals(StatusEnum.DISABLE.getValue()) ? PermissionCacheHandler.getDisablePermissionCode(p.getCode()) : p.getCode())
+                .map(p -> p.getStatus().equals(BoolEnum.FALSE.getValue()) ? PermissionCacheHandler.getDisablePermissionCode(p.getCode()) : p.getCode())
                 .collect(Collectors.toSet());
     }
 

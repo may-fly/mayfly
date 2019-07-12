@@ -30,5 +30,8 @@ public class MachineStats {
 
     private MachineInfo info;
 
-    private Map<String/**挂载点*/, String/**使用百分比*/> diskUsageMap;
+    /**
+     * 挂载点 --> 使用百分比
+     */
+    private Map<String, String> diskUsageMap;
 }

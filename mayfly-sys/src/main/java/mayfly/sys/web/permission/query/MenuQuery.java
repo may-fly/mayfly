@@ -1,4 +1,4 @@
-package mayfly.sys.web.permission.form;
+package mayfly.sys.web.permission.query;
 
 import lombok.Data;
 
@@ -8,7 +8,7 @@ import lombok.Data;
  * @date 2018-12-20 10:09 AM
  */
 @Data
-public class MenuQueryForm {
+public class MenuQuery {
 
-    private Byte status;
+    private Integer status;
 }

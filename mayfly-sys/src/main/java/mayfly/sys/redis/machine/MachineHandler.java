@@ -1,8 +1,8 @@
 package mayfly.sys.redis.machine;
 
 import mayfly.common.exception.BusinessRuntimeException;
-import mayfly.common.ssh.SSHException;
-import mayfly.common.ssh.SSHUtils;
+import mayfly.common.result.Result;
+import mayfly.common.ssh.SSHTemplate;
 
 /**
  * @author meilin.huang
@@ -17,12 +17,28 @@ public class MachineHandler {
     private final static String MEM_USAGE_STRING = "Mem:";
     private final static String SWAP_USAGE_STRING = "Swap:";
 
+    private static SSHTemplate template = SSHTemplate.getSshTemplate();
+
     public static String getMachineInfo(String ip, int port, String username, String password) {
         try {
-            String top = SSHUtils.execute(ip, port, username, password, COMMAND_TOP);
-            return top;
-        } catch (SSHException e) {
+//            String top = SSHUtils.execute(ip, port, username, password, COMMAND_TOP);
+            return "top";
+        } catch (Exception e) {
             throw new BusinessRuntimeException(e.getMessage());
+        }
+    }
+
+    public static void main(String[] args) throws Exception{
+        for (int i = 0; i < 50; i++) {
+            new Thread(() -> {
+                try {
+                    Result<String> res = template.execute("118.24.26.101", 22, "root", "", session -> session.executeCommand("top -b -n 1 | head -5"));
+                    System.out.println(res.getData());
+                    System.out.println();
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                }
+            }).start();
         }
     }
 

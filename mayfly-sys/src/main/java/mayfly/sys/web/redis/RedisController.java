@@ -31,7 +31,7 @@ public class RedisController {
 
     @GetMapping()
     public Result redisList(RedisForm query) {
-        return Result.success().withData(redisService.listByCondition(BeanUtils.copyProperties(query, Redis.class)));
+        return Result.success().with(redisService.listByCondition(BeanUtils.copyProperties(query, Redis.class)));
     }
 
 
@@ -41,7 +41,7 @@ public class RedisController {
         RedisKeyCommands<String, byte[]> cmds = getKeyCmd(cluster, id);
         KeyScanVO scan = cluster ? KeyValueCommand.clusterScan(cmds, scanForm.getCount(), scanForm.getMatch())
                 : KeyValueCommand.scan(cmds, scanForm.getCursor(), scanForm.getCount(),  scanForm.getMatch());
-        return Result.success().withData(scan);
+        return Result.success().with(scan);
     }
 
     @MethodLog(value = "查询redis value")
@@ -50,7 +50,7 @@ public class RedisController {
         if (StringUtils.isEmpty(key)) {
             return Result.paramError("key不能为空!");
         }
-        return Result.success().withData(KeyValueCommand.value(getKeyCmd(cluster, id), key));
+        return Result.success().with(KeyValueCommand.value(getKeyCmd(cluster, id), key));
     }
 
     @MethodLog(value = "新增redis key value")

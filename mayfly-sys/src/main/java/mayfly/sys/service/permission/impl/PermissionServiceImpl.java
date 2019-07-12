@@ -1,6 +1,6 @@
 package mayfly.sys.service.permission.impl;
 
-import mayfly.common.enums.StatusEnum;
+import mayfly.common.enums.BoolEnum;
 import mayfly.common.exception.BusinessRuntimeException;
 import mayfly.common.permission.registry.PermissionCacheHandler;
 import mayfly.common.permission.registry.SysPermissionCodeRegistry;
@@ -11,14 +11,17 @@ import mayfly.common.util.UUIDUtils;
 import mayfly.common.web.UriPattern;
 import mayfly.dao.PermissionMapper;
 import mayfly.dao.RoleResourceMapper;
+import mayfly.entity.Admin;
 import mayfly.entity.Menu;
 import mayfly.entity.Permission;
 import mayfly.entity.RoleResource;
 import mayfly.sys.common.cache.UserCacheKey;
 import mayfly.sys.common.enums.ResourceTypeEnum;
+import mayfly.sys.common.utils.BeanUtils;
 import mayfly.sys.service.base.impl.BaseServiceImpl;
 import mayfly.sys.service.permission.MenuService;
 import mayfly.sys.service.permission.PermissionService;
+import mayfly.sys.web.permission.vo.AdminVO;
 import mayfly.sys.web.permission.vo.LoginSuccessVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -59,18 +62,20 @@ public class PermissionServiceImpl extends BaseServiceImpl<PermissionMapper, Per
 
 
     @Override
-    public LoginSuccessVO saveIdAndPermission(Integer id) {
+    public LoginSuccessVO saveIdAndPermission(Admin admin) {
+        Integer id = admin.getId();
         String token = UUIDUtils.generateUUID();
         List<Menu> menus = menuService.getByUserId(id);
         //如果权限被禁用，将会在code后加上:0标志
         List<String> permissionCodes = permissionMapper.selectByUserId(id).stream()
-                .map(p -> p.getStatus().equals(StatusEnum.DISABLE.getValue()) ? PermissionCacheHandler.getDisablePermissionCode(p.getCode()) : p.getCode())
+                .map(p -> p.getStatus().equals(BoolEnum.FALSE.getValue()) ? PermissionCacheHandler.getDisablePermissionCode(p.getCode()) : p.getCode())
                 .collect(Collectors.toList());
         //缓存用户id
         redisTemplate.opsForValue().set(resolver.resolveByObject(UserCacheKey.USER_ID_KEY, token), id, UserCacheKey.EXPIRE_TIME, TimeUnit.MINUTES);
         //保存用户权限code
         permissionCacheHandler.savePermission(id, permissionCodes, UserCacheKey.EXPIRE_TIME, TimeUnit.MINUTES);
-        return LoginSuccessVO.builder().token(token).menus(menus).permissions(permissionCodes).build();
+        return LoginSuccessVO.builder().admin(BeanUtils.copyProperties(admin, AdminVO.class))
+                .token(token).menus(menus).permissions(permissionCodes).build();
     }
 
     @Override
@@ -89,7 +94,7 @@ public class PermissionServiceImpl extends BaseServiceImpl<PermissionMapper, Per
         if (p == null) {
             throw new BusinessRuntimeException("该权限不存在！");
         }
-        if (!EnumUtils.isExist(StatusEnum.values(), status)) {
+        if (!EnumUtils.isExist(BoolEnum.values(), status)) {
             throw new BusinessRuntimeException("权限status错误！");
         }
         if (p.getStatus().equals(status)) {
@@ -97,7 +102,7 @@ public class PermissionServiceImpl extends BaseServiceImpl<PermissionMapper, Per
         }
         // 重命名redis key,是禁用则将key改为 code:0形式，否则将code:0改为code
         String code = p.getCode();
-        if (StatusEnum.DISABLE.getValue().equals(status)) {
+        if (BoolEnum.FALSE.getValue().equals(status)) {
             permissionCacheHandler.disabledPermission(code);
         } else {
             permissionCacheHandler.enablePermission(code);
@@ -117,7 +122,7 @@ public class PermissionServiceImpl extends BaseServiceImpl<PermissionMapper, Per
         LocalDateTime now = LocalDateTime.now();
         permission.setCreateTime(now);
         permission.setUpdateTime(now);
-        permission.setStatus(StatusEnum.ENABLE.getValue());
+        permission.setStatus(BoolEnum.TRUE.getValue());
         return save(permission);
     }
 
@@ -178,7 +183,7 @@ public class PermissionServiceImpl extends BaseServiceImpl<PermissionMapper, Per
     @Override
     public void save() {
         String[] permissions = this.listAll().stream()
-                .map(p -> p.getStatus().equals(StatusEnum.DISABLE.getValue()) ? PermissionCacheHandler.getDisablePermissionCode(p.getCode()) : p.getCode())
+                .map(p -> p.getStatus().equals(BoolEnum.FALSE.getValue()) ? PermissionCacheHandler.getDisablePermissionCode(p.getCode()) : p.getCode())
                 .toArray(String[]::new);
         redisTemplate.boundSetOps(UserCacheKey.ALL_PERMISSION_KEY).add(permissions);
     }

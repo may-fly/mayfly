@@ -1,6 +1,6 @@
 package mayfly.sys.service.permission.impl;
 
-import mayfly.common.enums.StatusEnum;
+import mayfly.common.enums.BoolEnum;
 import mayfly.common.exception.BusinessException;
 import mayfly.common.exception.BusinessRuntimeException;
 import mayfly.dao.MenuMapper;
@@ -50,7 +50,7 @@ public class MenuServiceImpl extends BaseServiceImpl<MenuMapper, Menu> implement
             }
         }
         //默认启用
-        menu.setStatus(StatusEnum.ENABLE.getValue());
+        menu.setStatus(BoolEnum.TRUE.getValue());
         LocalDateTime now = LocalDateTime.now();
         menu.setCreateTime(now);
         menu.setUpdateTime(now);

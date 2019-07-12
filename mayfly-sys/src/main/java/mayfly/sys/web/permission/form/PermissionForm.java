@@ -1,7 +1,7 @@
 package mayfly.sys.web.permission.form;
 
 import lombok.Data;
-import mayfly.common.enums.StatusEnum;
+import mayfly.common.enums.BoolEnum;
 import mayfly.common.validation.annotation.EnumValue;
 import mayfly.common.validation.annotation.NotBlank;
 import mayfly.common.validation.annotation.NotNull;
@@ -36,6 +36,6 @@ public class PermissionForm {
     @NotBlank
     private String description;
 
-    @EnumValue(StatusEnum.class)
+    @EnumValue(BoolEnum.class)
     private Integer status;
 }

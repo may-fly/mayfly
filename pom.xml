@@ -19,7 +19,6 @@
         <module>mayfly-common</module>
         <module>mayfly-dao</module>
         <module>mayfly-sys</module>
-        <module>mayfly-portal</module>
     </modules>
 
     <properties>

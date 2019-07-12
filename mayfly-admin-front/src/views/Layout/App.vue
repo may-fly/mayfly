@@ -75,7 +75,7 @@
     <div class="app">
       <div class="aside">
         <div class="menu">
-          <el-menu background-color="#222d32" text-color="#fff" :default-active="$route.path" class="menu" @select="handleSelect"
+          <el-menu background-color="#222d32" text-color="#fff" :default-active="$route.path" class="menu"
             :collapse="isCollapse">
             <MenuTree @toPath="toPath" :menus="this.menus"></MenuTree>
           </el-menu>

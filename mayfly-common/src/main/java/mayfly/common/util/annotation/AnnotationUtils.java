@@ -32,6 +32,18 @@ public final class AnnotationUtils {
      * @return
      */
     public static <A extends Annotation> A getAnnotation(AnnotatedElement annotatedElement, Class<A> annotationType) {
+        return getAnnotation(annotatedElement, annotationType, true);
+    }
+
+    /**
+     * 获取指定元素的注解类型（若没有直接注解，则从元素其他注解的元注解上查找）
+     * @param annotatedElement   可以包含注解的元素，如Field, Method等
+     * @param annotationType  注解类型
+     * @param cacheExtractor  是否缓存属性值提取器
+     * @param <A>
+     * @return
+     */
+    private static <A extends Annotation> A getAnnotation(AnnotatedElement annotatedElement, Class<A> annotationType, boolean cacheExtractor) {
         A annotation = annotatedElement.getAnnotation(annotationType);
         // 如果元素上含有直接注解，则返回
         if (annotation != null) {
@@ -53,14 +65,19 @@ public final class AnnotationUtils {
         if (annotation == null) {
             return null;
         }
-
-        // 组合注解缓存key
-        SynthesizedAnnotationCacheKey key = SynthesizedAnnotationCacheKey.of(annotatedElement, annotationType);
-        AttributeValueExtractor valueExtractor = synthesizedCache.get(key);
-        // 生成对应的组合注解属性值提取器，并缓存
-        if (valueExtractor == null) {
+        // 属性值提取器
+        AttributeValueExtractor valueExtractor;
+        if (cacheExtractor) {
+            // 组合注解缓存key
+            SynthesizedAnnotationCacheKey key = SynthesizedAnnotationCacheKey.of(annotatedElement, annotationType);
+            valueExtractor = synthesizedCache.get(key);
+            // 生成对应的组合注解属性值提取器，并缓存
+            if (valueExtractor == null) {
+                valueExtractor = DefaultAttributeExtractor.from(annotatedElement, annotation, visited);
+                synthesizedCache.put(key, valueExtractor);
+            }
+        } else {
             valueExtractor = DefaultAttributeExtractor.from(annotatedElement, annotation, visited);
-            synthesizedCache.put(key, valueExtractor);
         }
         // 包装为动态代理对象，使其实现组合注解功能
         return synthesizeAnnotation(annotatedElement, annotation, valueExtractor);
@@ -186,8 +203,7 @@ public final class AnnotationUtils {
         }
         try {
             Method method = annotation.annotationType().getDeclaredMethod(attributeName);
-            ReflectionUtils.makeAccessible(method);
-            return method.invoke(annotation);
+            return ReflectionUtils.invokeMethod(method, annotation);
         } catch (Exception ex) {
             String msg = String.format("%s注解无法获取%s属性值！", annotation.annotationType().getName(), attributeName);
             throw new IllegalArgumentException(msg, ex);
@@ -256,7 +272,7 @@ public final class AnnotationUtils {
                         String targetAttributeName = descriptor.overrideAttributeName;
                         if (!attributes.containsKey(targetAttributeName)) {
                             attributes.put(targetAttributeName, ReflectionUtils.invokeMethod(descriptor.sourceAttribute,
-                                    AnnotationUtils.getAnnotation(element, descriptor.sourceAnnotationType)));
+                                    AnnotationUtils.getAnnotation(element, descriptor.sourceAnnotationType, false)));
                         }
                     }
                 }
@@ -349,7 +365,7 @@ public final class AnnotationUtils {
                         this.overrideAnnotationType.getName());
                 throw new AnnotationConfigurationException(msg, ex);
             }
-            // 别名注解类型必修是源注解的元注解
+            // 要覆盖的注解类型必修是源注解的元注解
             if (!sourceAnnotationType.isAnnotationPresent(overrideAnnotationType)) {
                 String msg = String.format("'@%s'注解的'%s'属性方法上的@OverrideFor所声明的annotation别名注解类型不是该注解的元注解!",
                         sourceAnnotationType.getName(), sourceAttributeName);

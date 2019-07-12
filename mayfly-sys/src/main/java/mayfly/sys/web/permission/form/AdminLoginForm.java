@@ -17,6 +17,6 @@ public class AdminLoginForm {
     @NotBlank
     private String password;
 
-    @NotBlank
+//    @NotBlank
     private String captcha;
 }

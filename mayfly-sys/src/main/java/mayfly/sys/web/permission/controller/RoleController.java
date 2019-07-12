@@ -37,7 +37,7 @@ public class RoleController {
 
     @GetMapping("/v1/roles")
     public Result list() {
-        return Result.success().withData(roleService.listAll("create_time DESC"));
+        return Result.success().with(roleService.listAll("create_time DESC"));
     }
 
     @PostMapping("/v1/roles")
@@ -46,13 +46,13 @@ public class RoleController {
         LocalDateTime now = LocalDateTime.now();
         role.setCreateTime(now);
         role.setUpdateTime(now);
-        return Result.success().withData(roleService.save(role));
+        return Result.success().with(roleService.save(role));
     }
 
     @MethodLog("获取角色拥有的权限")
     @GetMapping("/v1/roles/{id}/permissions")
     public Result rolePermissions(@PathVariable Integer id) {
-        return Result.success().withData(roleResourceService.listResourceId(id, ResourceTypeEnum.PERMISSION));
+        return Result.success().with(roleResourceService.listResourceId(id, ResourceTypeEnum.PERMISSION));
     }
 
     @PostMapping("/v1/roles/{id}/permissions")
@@ -65,12 +65,12 @@ public class RoleController {
             return Result.paramError("permissionIds参数错误！");
         }
 
-        return Result.success().withData(roleResourceService.saveResource(id, ids, ResourceTypeEnum.PERMISSION));
+        return Result.success().with(roleResourceService.saveResource(id, ids, ResourceTypeEnum.PERMISSION));
     }
 
     @GetMapping("/v1/roles/{id}/menus")
     public  Result roleMenus(@PathVariable Integer id) {
-        return Result.success().withData(roleResourceService.listResourceId(id, ResourceTypeEnum.MENU));
+        return Result.success().with(roleResourceService.listResourceId(id, ResourceTypeEnum.MENU));
     }
 
     @PostMapping("/v1/roles/{id}/menus")
@@ -82,6 +82,6 @@ public class RoleController {
             return Result.paramError("menuIds参数错误！");
         }
 
-        return Result.success().withData(roleResourceService.saveResource(id, ids, ResourceTypeEnum.MENU));
+        return Result.success().with(roleResourceService.saveResource(id, ids, ResourceTypeEnum.MENU));
     }
 }

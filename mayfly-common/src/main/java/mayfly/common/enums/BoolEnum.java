@@ -1,27 +1,28 @@
 package mayfly.common.enums;
 
 /**
+ * boolean枚举值
  * @author meilin.huang
  * @version 1.0
  * @date 2018-12-07 1:43 PM
  */
-public enum StatusEnum implements ValueEnum {
+public enum BoolEnum implements ValueEnum {
     /**
-     * 禁用状态
+     * false
      */
-    DISABLE(0),
+    FALSE(0),
 
     /**
-     * 启用状态
+     * true
      */
-    ENABLE(1);
+    TRUE(1);
 
     /**
      * 状态值
      */
     private Integer value;
 
-    StatusEnum(Integer value) {
+    BoolEnum(Integer value) {
         this.value = value;
     }
 

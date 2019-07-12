@@ -1,6 +1,6 @@
 package mayfly.sys.web.permission.controller;
 
-import mayfly.common.enums.StatusEnum;
+import mayfly.common.enums.BoolEnum;
 import mayfly.common.log.MethodLog;
 import mayfly.common.permission.Permission;
 import mayfly.common.result.Result;
@@ -29,13 +29,13 @@ public class PermissionGroupController {
     @MethodLog(value = "获取分页权限组列表", resultLevel = MethodLog.LogLevel.DEBUG)
     @GetMapping
     public Result list(PageForm pageForm) {
-        PermissionGroup condition = PermissionGroup.builder().status(StatusEnum.ENABLE.getValue()).build();
-        return Result.success().withData(permissionGroupService.listByCondition(condition, pageForm));
+        PermissionGroup condition = PermissionGroup.builder().status(BoolEnum.TRUE.getValue()).build();
+        return Result.success().with(permissionGroupService.listByCondition(condition, pageForm));
     }
 
     @MethodLog(value = "获取所有权限组列表", resultLevel = MethodLog.LogLevel.DEBUG)
     @GetMapping("/all")
     public Result all() {
-        return Result.success().withData(permissionGroupService.listAll());
+        return Result.success().with(permissionGroupService.listAll());
     }
 }

@@ -1,6 +1,6 @@
 package mayfly.common.permission.registry;
 
-import mayfly.common.enums.StatusEnum;
+import mayfly.common.enums.BoolEnum;
 import mayfly.common.web.RequestUri;
 import mayfly.common.web.UriMatchHandler;
 import mayfly.common.web.UriPattern;
@@ -129,6 +129,6 @@ public final class PermissionCacheHandler {
      * @return
      */
     public static String getDisablePermissionCode(String code) {
-        return code + CODE_STATUS_SEPARATOR + StatusEnum.DISABLE.getValue();
+        return code + CODE_STATUS_SEPARATOR + BoolEnum.FALSE.getValue();
     }
 }

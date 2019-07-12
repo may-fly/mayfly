@@ -22,13 +22,13 @@ public class StandaloneController {
 //    public Result scan(@PathVariable Integer id, @Valid ScanForm scanForm) {
 //        RedisCommands<String, byte[]> cmds = redisService.getCmds(id);
 //        KeyScanVO scan = KeyValueCommand.scan(cmds, scanForm.getCursor(), scanForm.getCount(),  scanForm.getMatch());
-//        return Result.success().withData(scan);
+//        return Result.success().with(scan);
 //    }
 //
 //    @MethodLog(value = "查询redis value")
 //    @GetMapping("/{id}/value")
 //    public Result value(@PathVariable Integer id, String key) {
-//        return Result.success().withData(KeyValueCommand.value(redisService.getCmds(id), key));
+//        return Result.success().with(KeyValueCommand.value(redisService.getCmds(id), key));
 //    }
 //
 //    @MethodLog(value = "新增key value")

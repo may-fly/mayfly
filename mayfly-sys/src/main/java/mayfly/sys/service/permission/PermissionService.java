@@ -1,6 +1,7 @@
 package mayfly.sys.service.permission;
 
 import mayfly.common.web.UriPattern;
+import mayfly.entity.Admin;
 import mayfly.entity.Permission;
 import mayfly.sys.service.base.BaseService;
 import mayfly.sys.web.permission.vo.LoginSuccessVO;
@@ -18,7 +19,7 @@ public interface PermissionService extends BaseService<Permission> {
      * @param id  userId
      * @return   token
      */
-    LoginSuccessVO saveIdAndPermission(Integer id);
+    LoginSuccessVO saveIdAndPermission(Admin admin);
 
     /**
      * 根据token获取用户id

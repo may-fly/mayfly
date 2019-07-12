@@ -4,7 +4,10 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 /**
  * @author meilin.huang
@@ -31,11 +34,11 @@ public final class ReflectionUtils {
      * @param fieldFilter 字段过滤器
      * @return  符合过滤器条件的字段数组
      */
-    public static Field[] getFields(Class<?> clazz, FieldFilter fieldFilter) {
+    public static Field[] getFields(Class<?> clazz, Predicate<Field> fieldFilter) {
         List<Field> fields = new ArrayList<>(32);
         while (Object.class != clazz && clazz != null) {
             for (Field field : clazz.getDeclaredFields()) {
-                if (fieldFilter != null && !fieldFilter.matches(field)) {
+                if (fieldFilter != null && !fieldFilter.test(field)) {
                     continue;
                 }
                 fields.add(field);
@@ -43,6 +46,15 @@ public final class ReflectionUtils {
             clazz = clazz.getSuperclass();
         }
         return fields.toArray(new Field[0]);
+    }
+
+    /**
+     * 对指定类的所有字段执行consumer操作
+     * @param clazz     目标对象
+     * @param consumer  对字段进行操作
+     */
+    public static void doWithFields(Class<?> clazz, Consumer<Field> consumer) {
+        Arrays.stream(getFields(clazz)).forEach(consumer);
     }
 
     /**
@@ -219,21 +231,5 @@ public final class ReflectionUtils {
      */
     public static boolean isToStringMethod(Method method) {
         return (method != null && method.getName().equals("toString") && method.getParameterCount() == 0);
-    }
-
-
-
-    /**
-     * 字段过滤
-     */
-    @FunctionalInterface
-    public interface FieldFilter {
-        /**
-         * 对指定字段进行过滤
-         *
-         * @param field
-         * @return
-         */
-        boolean matches(Field field);
     }
 }

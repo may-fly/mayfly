@@ -21,6 +21,8 @@ public class LoginSuccessVO {
 
     private String token;
 
+    private AdminVO admin;
+
     private List<String> permissions;
 
     private List<Menu> menus;

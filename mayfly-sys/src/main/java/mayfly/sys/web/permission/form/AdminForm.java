@@ -6,17 +6,13 @@ import mayfly.common.validation.annotation.NotBlank;
 /**
  * @author meilin.huang
  * @version 1.0
- * @date 2018-12-20 9:35 AM
+ * @date 2019-07-06 15:11
  */
 @Data
-public class RoleForm {
+public class AdminForm {
+    @NotBlank
+    private String username;
 
     @NotBlank
-    private String name;
-
-    @NotBlank
-    private String remark;
-
-    private String resourceIds;
-
+    private String password;
 }

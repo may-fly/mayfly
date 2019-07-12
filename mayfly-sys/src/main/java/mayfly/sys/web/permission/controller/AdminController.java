@@ -1,12 +1,16 @@
 package mayfly.sys.web.permission.controller;
 
-import mayfly.common.log.MethodLog;
+import mayfly.common.permission.Permission;
+import mayfly.common.result.Page;
 import mayfly.common.result.Result;
 import mayfly.common.validation.annotation.Valid;
-import mayfly.sys.service.permission.MenuService;
-import mayfly.sys.service.permission.PermissionService;
-import mayfly.sys.web.permission.form.AdminLoginForm;
-import mayfly.sys.web.permission.form.PermissionForm;
+import mayfly.entity.Admin;
+import mayfly.sys.common.utils.BeanUtils;
+import mayfly.sys.service.permission.AdminService;
+import mayfly.sys.web.form.PageForm;
+import mayfly.sys.web.permission.form.AdminForm;
+import mayfly.sys.web.permission.query.AdminQuery;
+import mayfly.sys.web.permission.vo.AdminVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,24 +22,25 @@ import org.springframework.web.bind.annotation.RestController;
  * @author hml
  * @date 2018/6/27 下午4:44
  */
+@Permission(code = "admin:")
 @RestController
-@RequestMapping("/open")
+@RequestMapping("/sys")
 public class AdminController {
 
     @Autowired
-    private PermissionService permissionService;
-    @Autowired
-    private MenuService menuService;
+    private AdminService adminService;
 
-    @MethodLog(value = "管理员登录", result = false, time = true)
-    @PostMapping("/v1/login")
-    public Result login(AdminLoginForm loginForm) {
-        return Result.success().withData(permissionService.saveIdAndPermission(1));
+    @GetMapping("/v1/admins")
+    public Result list(@Valid PageForm pageForm, AdminQuery adminQuery) {
+        Page<Admin> re = adminService.listByCondition(BeanUtils.copyProperties(adminQuery, Admin.class), pageForm);
+        return Result.success().with(Page.with(re.getTotal(), BeanUtils.copyProperties(re.getList(), AdminVO.class)));
     }
 
-    @GetMapping("/v1/test")
-    public Result test(@Valid PermissionForm permissionForm) {
-        return Result.success();
+    @PostMapping("/v1/admin")
+    public Result save(@Valid AdminForm adminForm) {
+        Admin admin = BeanUtils.copyProperties(adminForm, Admin.class);
+        adminService.save(admin);
+        return Result.success().with(adminForm);
     }
 
 }

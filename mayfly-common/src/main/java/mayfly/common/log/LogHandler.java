@@ -53,16 +53,16 @@ public class LogHandler {
         int argsCount = method.getParameterCount();
         // log描述
         String desc;
-        MethodLog log = method.getAnnotation(MethodLog.class);
+        MethodLog log = AnnotationUtils.getAnnotation(method, MethodLog.class);
         if (log == null) {
             //如果方法没有该注解，则判断方法声明类上的该注解
-            log = method.getDeclaringClass().getAnnotation(MethodLog.class);
+            log = AnnotationUtils.getAnnotation(method.getDeclaringClass(), MethodLog.class);
             if (log == null) {
                 throw new IllegalArgumentException(method + "方法或类必须添加@MethodLog注解！");
             }
             desc = StringUtils.isEmpty(log.value()) ? "" : log.value() + method.getName();
         } else {
-            MethodLog typeLog = method.getDeclaringClass().getAnnotation(MethodLog.class);
+            MethodLog typeLog = AnnotationUtils.getAnnotation(method.getDeclaringClass(), MethodLog.class);
             String typeMsg = typeLog != null ? typeLog.value() : "";
             desc = typeMsg + log.value();
         }

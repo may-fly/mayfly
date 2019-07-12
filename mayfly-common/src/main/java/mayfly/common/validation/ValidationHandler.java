@@ -1,6 +1,8 @@
 package mayfly.common.validation;
 
 
+import mayfly.common.util.Assert;
+import mayfly.common.util.ObjectUtils;
 import mayfly.common.util.annotation.AnnotationUtils;
 import mayfly.common.util.ReflectionUtils;
 import mayfly.common.validation.annotation.*;
@@ -39,6 +41,8 @@ public class ValidationHandler {
         validAnnotationRegister.add(Size.class);
         validAnnotationRegister.add(Pattern.class);
         validAnnotationRegister.add(EnumValue.class);
+        // 支持字段递归校验
+        validAnnotationRegister.add(Valid.class);
     }
 
     private static ValidationHandler instance = new ValidationHandler();
@@ -58,11 +62,20 @@ public class ValidationHandler {
      * @throws ParamValidErrorException  若不符合指定注解的参数值则抛出该异常
      */
     public void validate(Object obj) throws ParamValidErrorException {
+        Assert.notNull(obj, "校验对象不能为空！");
+        // 如果是包装类型或者是java原生基本类型，则直接返回
+        if (ObjectUtils.isWrapperOrPrimitive(obj)) {
+            return;
+        }
         for (FieldInfo fieldValidators : getAllFieldInfo(obj)) {
             Field field = fieldValidators.field;
             Object fieldValue = ReflectionUtils.getFieldValue(field, obj);
             //遍历field字段需要校验的校验器
             for(Class<? extends Annotation> anno : fieldValidators.validAnnotations) {
+                // 如果是Valid注解，则跳过
+                if (anno == Valid.class) {
+                    continue;
+                }
                 Validator[] validators = validatorCache.computeIfAbsent(anno, key -> {
                     ValidateBy vb = AnnotationUtils.getAnnotation(anno, ValidateBy.class);
                     if (vb == null) {
@@ -86,9 +99,29 @@ public class ValidationHandler {
                     }
                 }
             }
+            // 如果字段类型含有@Valid注解，则递归进行校验
+            if (AnnotationUtils.isAnnotationPresent(field, Valid.class)) {
+                // 如果是集合列表，则遍历列表每个对象，并校验
+                if (ObjectUtils.isCollection(fieldValue)) {
+                    for (Object o : (Collection) fieldValue) {
+                        validate(o);
+                    }
+                    continue;
+                }
+                // 如果是普通对象数组，也遍历每个数组元素
+                if (ObjectUtils.isArray(fieldValue) && !ObjectUtils.isPrimitiveArray(fieldValue)) {
+                    for (Object o : (Object[]) fieldValue) {
+                        validate(o);
+                    }
+                    continue;
+                }
+                // 是普通对象
+                if (fieldValue != null) {
+                    validate(fieldValue);
+                }
+            }
         }
     }
-
 
     /**
      * 获取指定对象中所有字段基本信息（含有哪些校验器）
@@ -98,9 +131,8 @@ public class ValidationHandler {
     public List<FieldInfo> getAllFieldInfo(Object obj) {
         return cache.computeIfAbsent(obj.getClass(), key -> {
             List<FieldInfo> allFieldValidators = new ArrayList<>(8);
-            for (Field field : ReflectionUtils.getFields(key)) {
-                Optional.ofNullable(getFieldInfo(field)).ifPresent(allFieldValidators::add);
-            }
+            // 将有包含需要校验注解的字段加入列表
+            ReflectionUtils.doWithFields(key, field -> Optional.ofNullable(getFieldInfo(field)).ifPresent(allFieldValidators::add));
             return allFieldValidators;
         });
     }

@@ -13,7 +13,7 @@ import java.util.Objects;
  * @version 1.0
  * @date 2018-09-14 上午10:53
  */
-public final class Result implements Serializable {
+public final class Result<T> implements Serializable {
 
     private static final long serialVersionUID = 6992257459533918156L;
 
@@ -30,16 +30,17 @@ public final class Result implements Serializable {
     /**
      * 操作结果数据对象
      */
-    private Object data;
+    private T data;
 
 
-    private Result(NameValueEnum resultEnum) {
-        this.code = resultEnum.getValue();
-        this.msg = resultEnum.getName();
+    private Result(Integer code, String msg, T data) {
+        this.code = code;
+        this.msg = msg;
+        this.data = data;
     }
 
-    private Result(ValueEnum resultEnum, String msg) {
-        this.code = resultEnum.getValue();
+    private Result(Integer code, String msg) {
+        this.code = code;
         this.msg = msg;
     }
 
@@ -49,8 +50,8 @@ public final class Result implements Serializable {
      * @param resultEnum  结果枚举类
      * @return  结果对象
      */
-    public static <T extends Enum & NameValueEnum> Result of(T resultEnum) {
-        return new Result(resultEnum);
+    public static <T, E extends Enum & NameValueEnum> Result<T> of(E resultEnum) {
+        return new Result<T>(resultEnum.getValue(), resultEnum.getName());
     }
 
     /**
@@ -60,8 +61,8 @@ public final class Result implements Serializable {
      * @param msg 覆盖结果对象消息
      * @return  结果对象
      */
-    public static <T extends Enum & ValueEnum> Result of(T resultEnum, String msg) {
-        return new Result(resultEnum, msg);
+    public static <T, E extends Enum & ValueEnum> Result<T> of(E resultEnum, String msg) {
+        return new Result<T>(resultEnum.getValue(), msg);
     }
 
 
@@ -69,56 +70,56 @@ public final class Result implements Serializable {
     // 各种结果对象的简单工厂
     //---------------------------------------------------------------------
 
-    public static Result error() {
+    public static <T> Result<T> error() {
         return of(ResultEnum.ERROR);
     }
 
-    public static Result error(String msg) {
+    public static <T> Result<T> error(String msg) {
         return of(ResultEnum.ERROR, msg);
     }
 
-    public static Result success(String msg) {
-        return of(ResultEnum.SUCCESS, msg);
-    }
-
-    public static Result success() {
+    public static <T> Result<T> success() {
         return of(ResultEnum.SUCCESS);
     }
 
-    public static Result paramError() {
+    public static <T> Result<T> success(String msg) {
+        return of(ResultEnum.SUCCESS, msg);
+    }
+
+    public static <T> Result<T> paramError() {
         return of(ResultEnum.PARAM_ERROR);
     }
 
-    public static Result paramError(String msg) {
+    public static <T> Result<T> paramError(String msg) {
         return of(ResultEnum.PARAM_ERROR, msg);
     }
 
-    public static Result serverError() {
+    public static <T> Result<T> serverError() {
         return of(ResultEnum.SERVER_ERROR);
     }
 
-    public static Result serverError(String msg) {
+    public static <T> Result<T> serverError(String msg) {
         return of(ResultEnum.SERVER_ERROR, msg);
     }
 
-    public static Result noFound() {
+    public static <T> Result<T> noFound() {
         return of(ResultEnum.NO_FOUND);
     }
 
-    public static Result noFound(String msg) {
+    public static <T> Result<T> noFound(String msg) {
         return of(ResultEnum.NO_FOUND, msg);
     }
 
-    public static Result withoutPermission() {
+    public static <T> Result<T> withoutPermission() {
         return of(ResultEnum.NO_PERMISSION);
     }
 
     /**
-     * 操作结果附上数据对象
+     * 将数据对象添加进操作结果{@link Result}对象里
      * @param data  数据对象
      * @return  Result对象
      */
-    public Result withData(Object data) {
+    public Result<T> with(T data) {
         this.data = data;
         return this;
     }
@@ -133,6 +134,10 @@ public final class Result implements Serializable {
 
 
 
+    //---------------------------------------------------------------------
+    // getter toString
+    //---------------------------------------------------------------------
+
     public Integer getCode() {
         return code;
     }
@@ -141,7 +146,7 @@ public final class Result implements Serializable {
         return msg;
     }
 
-    public Object getData() {
+    public T getData() {
         return data;
     }
 

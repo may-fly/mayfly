@@ -43,7 +43,11 @@ const code = {
 		roleMenus: Permission.code("role:roleMenus").uri("/sys/v1/roles/{id}/menus").method(method.GET),
 		savePermission: Permission.code("role:savePermission").uri("/sys/v1/roles/{id}/permissions").method(method.POST),
 		saveMenu: Permission.code("role:saveMenu").uri("/sys/v1/roles/{id}/menus").method(method.POST)
-	}
+	},
+  
+  account: {
+    list: Permission.code("admin:list").uri("/sys/v1/admins").method(method.GET)
+  }
 }
 
 

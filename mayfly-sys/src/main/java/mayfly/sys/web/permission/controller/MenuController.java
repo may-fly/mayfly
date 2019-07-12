@@ -9,7 +9,7 @@ import mayfly.entity.Menu;
 import mayfly.sys.common.utils.BeanUtils;
 import mayfly.sys.service.permission.MenuService;
 import mayfly.sys.web.permission.form.MenuForm;
-import mayfly.sys.web.permission.form.MenuQueryForm;
+import mayfly.sys.web.permission.query.MenuQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,13 +32,13 @@ public class MenuController {
     @Permission(code = "list")
     @MethodLog(value = "获取菜单列表", resultLevel = MethodLog.LogLevel.DEBUG)
     @GetMapping("/v1/menus")
-    public Result getAllMenus(MenuQueryForm queryForm) {
-        return Result.success().withData(menuService.listMenus(BeanUtils.copyProperties(queryForm, Menu.class)));
+    public Result getAllMenus(MenuQuery queryForm) {
+        return Result.success().with(menuService.listMenus(BeanUtils.copyProperties(queryForm, Menu.class)));
     }
 
     @PostMapping("/v1/menus")
     public Result save(@RequestBody @Valid MenuForm menuForm) throws BusinessException{
-        return Result.success().withData(menuService.saveMenu(BeanUtils.copyProperties(menuForm, Menu.class)));
+        return Result.success().with(menuService.saveMenu(BeanUtils.copyProperties(menuForm, Menu.class)));
     }
 
     @PutMapping("/v1/menus/{id}")
@@ -46,7 +46,7 @@ public class MenuController {
         Menu menu = BeanUtils.copyProperties(menuForm, Menu.class);
         menu.setId(id);
         menu.setUpdateTime(LocalDateTime.now());
-        return Result.success().withData(menuService.updateById(menu));
+        return Result.success().with(menuService.updateById(menu));
     }
 
     @DeleteMapping("/v1/menus/{id}")

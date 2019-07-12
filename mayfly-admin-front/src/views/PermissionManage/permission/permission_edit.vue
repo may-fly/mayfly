@@ -100,6 +100,9 @@
       close() {
         this.$refs['form'].resetFields();
       }
+    },
+    mounted() {
+      
     }
   }
 </script>

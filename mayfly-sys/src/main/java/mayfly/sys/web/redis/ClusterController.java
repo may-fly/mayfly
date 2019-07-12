@@ -27,7 +27,7 @@ public class ClusterController {
 
     @GetMapping("/{id}/info")
     public Result info(@PathVariable Integer id) {
-        return Result.success().withData(ClusterCommand.clusterInfo(redisService.getClusterCmds(id)));
+        return Result.success().with(ClusterCommand.clusterInfo(redisService.getClusterCmds(id)));
     }
 
     @GetMapping("/{id}/nodes")
@@ -46,7 +46,7 @@ public class ClusterController {
             return vo;
         }).collect(Collectors.toList());
 
-        return Result.success().withData(result);
+        return Result.success().with(result);
     }
 
 //    @MethodLog("获取集群redis key")
@@ -55,13 +55,13 @@ public class ClusterController {
 //        RedisClusterCommands<String, byte[]> clusterCmds = redisService.getClusterCmds(id);
 //        KeyScanVO scan = KeyValueCommand.clusterScan(clusterCmds, count,  match);
 //        scan.setDbsize(ServerCommand.dbsize(clusterCmds));
-//        return Result.success().withData(scan);
+//        return Result.success().with(scan);
 //    }
 //
 //    @MethodLog(value = "查询redis value")
 //    @GetMapping("/{id}/value")
 //    public Result value(@PathVariable Integer id, String key) {
-//        return Result.success().withData(KeyValueCommand.value(redisService.getClusterCmds(id), key));
+//        return Result.success().with(KeyValueCommand.value(redisService.getClusterCmds(id), key));
 //    }
 //
 //    @MethodLog(value = "新增集群key value")

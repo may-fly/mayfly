@@ -39,7 +39,7 @@ public class ServerController {
         redisService.save(redis);
         // 连接该redis
 //        redisService.connect(false, redis.getId());
-        return Result.success().withData(redis);
+        return Result.success().with(redis);
     }
 
     @DeleteMapping("/redis/{id}/remove")
@@ -62,11 +62,11 @@ public class ServerController {
 
     @GetMapping("/redis/{id}/info")
     public Result info(@PathVariable Integer id) {
-        return Result.success().withData(ServerCommand.info(redisService.getCmds(id)));
+        return Result.success().with(ServerCommand.info(redisService.getCmds(id)));
     }
     @GetMapping("/redis/{id}/conf")
     public Result getConf(@PathVariable Integer id) {
-        return Result.success().withData(ServerCommand.getConf(redisService.getCmds(id)));
+        return Result.success().with(ServerCommand.getConf(redisService.getCmds(id)));
     }
 
     @PutMapping("/redis/{id}/conf")
