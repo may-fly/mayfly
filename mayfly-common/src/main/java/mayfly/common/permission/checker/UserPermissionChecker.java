@@ -10,9 +10,9 @@ package mayfly.common.permission.checker;
 public interface UserPermissionChecker {
 
     /**
-     * 判断用户时候拥有该权限
-     * @param userId  用户id
-     * @param permissionCode
+     * 判断用户是否拥有该权限
+     * @param userId            用户id
+     * @param permissionCode    权限code
      * @return
      */
     boolean has(Integer userId, String permissionCode);

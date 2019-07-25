@@ -5,15 +5,23 @@ import java.util.Collections;
 import java.util.List;
 
 /**
+ * 分页数据
  * @author meilin.huang
  * @version 1.0
  * @date 2018-11-23 5:35 PM
  */
 public class Page<T> implements Serializable {
+
     private static final long serialVersionUID = 5390817850198908640L;
 
+    /**
+     * 数据总数
+     */
     private Long total;
 
+    /**
+     * 指定页数数据列表
+     */
     private List<T> list;
 
     private Page(Long total, List<T> list) {
@@ -29,19 +37,12 @@ public class Page<T> implements Serializable {
         return new Page<T>(0L, Collections.emptyList());
     }
 
+
     public List<T> getList() {
         return list;
     }
 
-    public void setList(List<T> data) {
-        this.list = data;
-    }
-
     public Long getTotal() {
         return total;
-    }
-
-    public void setTotal(Long total) {
-        this.total = total;
     }
 }

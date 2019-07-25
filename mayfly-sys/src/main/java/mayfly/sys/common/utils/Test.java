@@ -18,16 +18,16 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  * @version 1.0
  * @date 2019-05-09 11:19
  */
-@MethodLog
-@Test5Ann(test4 = "测试5蛤")
+//@MethodLog
+@Test5Ann(test4 = "测试5蛤", test3 = "测试53")
 public class Test {
 
     public static void main(String[] args) {
         long start = System.currentTimeMillis();
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 3; i++) {
 //            Test4Ann anno = AnnotationUtils.getAnnotation(Test.class, Test4Ann.class);
 //            TestAnn anno = AnnotatedElementUtils.getMergedAnnotation(Test.class, TestAnn.class);
-//            System.out.println(AnnotatedElementUtils.getMergedAnnotation(Test.class, Test2Ann.class).test2());
+//            System.out.println(AnnotatedElementUtils.getMergedAnnotation(Test.class, Test2Ann.class).test22());
             System.out.println(AnnotationUtils.getAnnotation(Test.class, Test2Ann.class).test2());
         }
         long end = System.currentTimeMillis();
@@ -47,9 +47,12 @@ public class Test {
 @Documented
 @Target({ ANNOTATION_TYPE, FIELD, TYPE })
 @Retention(RUNTIME)
+@Test2Ann
 @interface TestAnn {
     String test1() default "test1";
 
+    @AliasFor(annotation = Test2Ann.class, attribute = "test22")
+    @OverrideFor(annotation = Test2Ann.class, attribute = "test22")
     String test() default "test";
 }
 
@@ -77,6 +80,7 @@ public class Test {
     @OverrideFor(annotation = Test2Ann.class, attribute = "test2")
     String test32() default "test32";
 
+//    @OverrideFor(annotation = Test2Ann.class, attribute = "test22")
     String test33() default "test33";
 }
 
@@ -86,9 +90,10 @@ public class Test {
 @Target({ ANNOTATION_TYPE, FIELD, TYPE })
 @Retention(RUNTIME)
 @Test3Ann
+@TestAnn
 @interface Test4Ann {
-    @OverrideFor(attribute = "test3", annotation = Test3Ann.class)
-    @AliasFor(attribute = "test3", annotation = Test3Ann.class)
+    @OverrideFor(attribute = "test", annotation = TestAnn.class)
+    @AliasFor(attribute = "test", annotation = TestAnn.class)
     String test4() default "test4";
 
 
@@ -107,4 +112,8 @@ public class Test {
     @AliasFor(annotation = Test4Ann.class, attribute = "test42")
     @OverrideFor(annotation = Test4Ann.class, attribute = "test42")
     String test4() default "test5";
+
+    @OverrideFor(annotation = MethodLog.class, attribute = "value")
+    @AliasFor(annotation = Test4Ann.class, attribute = "test4")
+    String test3() default "test3";
 }

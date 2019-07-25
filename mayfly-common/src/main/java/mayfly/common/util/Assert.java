@@ -8,6 +8,8 @@ import java.util.Collection;
  * @date 2019-01-19 4:22 PM
  */
 public class Assert {
+    private Assert() {}
+
     public static void notEmpty(String string, String message) {
         if (StringUtils.isEmpty(string)) {
             throw new IllegalArgumentException(message);
@@ -27,7 +29,7 @@ public class Assert {
     }
 
     public static void notEmpty(Collection<?> collection, String message) {
-        if (collection == null || collection.isEmpty()) {
+        if (CollectionUtils.isEmpty(collection)) {
             throw new IllegalArgumentException(message);
         }
     }

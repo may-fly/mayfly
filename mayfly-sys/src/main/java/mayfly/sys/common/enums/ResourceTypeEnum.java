@@ -14,6 +14,7 @@ public enum ResourceTypeEnum implements NameValueEnum {
      * 菜单类型
      */
     MENU(1, "菜单"),
+
     /**
      * 权限类型
      */

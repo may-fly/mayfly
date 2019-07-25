@@ -114,6 +114,16 @@ public final class PermissionCacheHandler {
     }
 
     /**
+     * 保存新增的系统权限code
+     * @param code
+     */
+    public void addSysPermission(String code) {
+        if (sysCodeRegistry != null) {
+            sysCodeRegistry.add(code);
+        }
+    }
+
+    /**
      * 返回与requestUri匹配的uriPattern
      * @param requestUri
      * @param uriPatterns

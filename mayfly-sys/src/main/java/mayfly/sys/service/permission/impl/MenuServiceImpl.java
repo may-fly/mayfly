@@ -1,8 +1,7 @@
 package mayfly.sys.service.permission.impl;
 
 import mayfly.common.enums.BoolEnum;
-import mayfly.common.exception.BusinessException;
-import mayfly.common.exception.BusinessRuntimeException;
+import mayfly.common.util.BusinessAssert;
 import mayfly.dao.MenuMapper;
 import mayfly.entity.Menu;
 import mayfly.sys.common.enums.ResourceTypeEnum;
@@ -41,13 +40,11 @@ public class MenuServiceImpl extends BaseServiceImpl<MenuMapper, Menu> implement
     }
 
     @Override
-    public Menu saveMenu(Menu menu) throws BusinessException {
+    public Menu saveMenu(Menu menu) {
         if (menu.getPid() == null || menu.getPid().equals(0)) {
             menu.setPid(0);
         } else {
-            if (getById(menu.getPid()) == null) {
-                throw new BusinessException("pid不存在！");
-            }
+            BusinessAssert.notNull(getById(menu.getPid()), "pid不存在！");
         }
         //默认启用
         menu.setStatus(BoolEnum.TRUE.getValue());
@@ -61,9 +58,7 @@ public class MenuServiceImpl extends BaseServiceImpl<MenuMapper, Menu> implement
     public void deleteMenu(Integer id) {
         List<Integer> deleteIds = getChildrenByPid(id);
         for (Integer i : deleteIds) {
-           if (!deleteById(i)) {
-               throw new BusinessRuntimeException("删除菜单失败！");
-           }
+           BusinessAssert.state(deleteById(i), "删除菜单失败！");
            // 删除角色资源表中该菜单所关联的所有信息
            roleResourceService.deleteByResourceIdAndType(id, ResourceTypeEnum.MENU);
         }

@@ -1,4 +1,4 @@
-package mayfly.sys.web.permission.controller;
+package mayfly.sys.web.permission;
 
 import mayfly.common.exception.BusinessException;
 import mayfly.common.log.MethodLog;

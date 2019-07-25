@@ -1,14 +1,13 @@
 package mayfly.sys.service.permission.impl;
 
 import mayfly.common.enums.BoolEnum;
-import mayfly.common.exception.BusinessRuntimeException;
 import mayfly.common.permission.registry.PermissionCacheHandler;
 import mayfly.common.permission.registry.SysPermissionCodeRegistry;
 import mayfly.common.permission.registry.UserPermissionCodeRegistry;
+import mayfly.common.util.BracePlaceholder;
+import mayfly.common.util.BusinessAssert;
 import mayfly.common.util.EnumUtils;
-import mayfly.common.util.PlaceholderResolver;
 import mayfly.common.util.UUIDUtils;
-import mayfly.common.web.UriPattern;
 import mayfly.dao.PermissionMapper;
 import mayfly.dao.RoleResourceMapper;
 import mayfly.entity.Admin;
@@ -36,15 +35,11 @@ import java.util.stream.Collectors;
 
 /**
  * 权限服务实现类
- * @author: hml
- * @date: 2018/6/26 上午9:49
+ * @author hml
+ * @date 2018/6/26 上午9:49
  */
 @Service
 public class PermissionServiceImpl extends BaseServiceImpl<PermissionMapper, Permission> implements PermissionService, UserPermissionCodeRegistry, SysPermissionCodeRegistry {
-    /**
-     * 占位符解析器
-     */
-    private static PlaceholderResolver resolver = PlaceholderResolver.getDefaultResolver();
 
     @Autowired
     private RedisTemplate redisTemplate;
@@ -71,7 +66,7 @@ public class PermissionServiceImpl extends BaseServiceImpl<PermissionMapper, Per
                 .map(p -> p.getStatus().equals(BoolEnum.FALSE.getValue()) ? PermissionCacheHandler.getDisablePermissionCode(p.getCode()) : p.getCode())
                 .collect(Collectors.toList());
         //缓存用户id
-        redisTemplate.opsForValue().set(resolver.resolveByObject(UserCacheKey.USER_ID_KEY, token), id, UserCacheKey.EXPIRE_TIME, TimeUnit.MINUTES);
+        redisTemplate.opsForValue().set(BracePlaceholder.resolveByObject(UserCacheKey.USER_ID_KEY, token), id, UserCacheKey.EXPIRE_TIME, TimeUnit.MINUTES);
         //保存用户权限code
         permissionCacheHandler.savePermission(id, permissionCodes, UserCacheKey.EXPIRE_TIME, TimeUnit.MINUTES);
         return LoginSuccessVO.builder().admin(BeanUtils.copyProperties(admin, AdminVO.class))
@@ -80,23 +75,15 @@ public class PermissionServiceImpl extends BaseServiceImpl<PermissionMapper, Per
 
     @Override
     public Integer getIdByToken(String token) {
-        return (Integer)redisTemplate.opsForValue().get(resolver.resolveByObject(UserCacheKey.USER_ID_KEY, token));
+        return (Integer)redisTemplate.opsForValue().get(BracePlaceholder.resolveByObject(UserCacheKey.USER_ID_KEY, token));
     }
 
-    @Override
-    public List<UriPattern> getUriPermissionByToken(String token) {
-        return (List<UriPattern>)redisTemplate.opsForValue().get(resolver.resolveByObject(UserCacheKey.USER_PERMISSION_KEY, token));
-    }
 
     @Override
     public Permission changeStatus(Integer id, Integer status) {
         Permission p = getById(id);
-        if (p == null) {
-            throw new BusinessRuntimeException("该权限不存在！");
-        }
-        if (!EnumUtils.isExist(BoolEnum.values(), status)) {
-            throw new BusinessRuntimeException("权限status错误！");
-        }
+        BusinessAssert.notNull(p, "该权限不存在！");
+        BusinessAssert.state(EnumUtils.isExist(BoolEnum.values(), status), "权限status错误！");
         if (p.getStatus().equals(status)) {
             return p;
         }
@@ -110,33 +97,29 @@ public class PermissionServiceImpl extends BaseServiceImpl<PermissionMapper, Per
         //更新数据库
         p.setStatus(status);
         p.setUpdateTime(LocalDateTime.now());
-        updateById(p);
-        return p;
+        return updateById(p);
     }
 
     @Override
     public Permission savePermission(Permission permission) {
-        if (countByCondition(Permission.builder().code(permission.getCode()).build()) != 0) {
-            throw new BusinessRuntimeException("该权限code已经存在！");
-        }
+        BusinessAssert.state(countByCondition(Permission.builder().code(permission.getCode()).build()) == 0,
+                "该权限code已经存在！");
         LocalDateTime now = LocalDateTime.now();
         permission.setCreateTime(now);
         permission.setUpdateTime(now);
         permission.setStatus(BoolEnum.TRUE.getValue());
+        permissionCacheHandler.addSysPermission(permission.getCode());
         return save(permission);
     }
 
     @Override
     public Permission updatePermission(Permission permission) {
         Permission old = getById(permission.getId());
-        if (old == null) {
-            throw new BusinessRuntimeException("权限id不存在！");
-        }
+        BusinessAssert.notNull(old, "权限id不存在！");
         // 如果旧的权限code与新权限code不同，则需校验新的code
         if (!old.getCode().equals(permission.getCode())) {
-            if (countByCondition(Permission.builder().code(permission.getCode()).build()) != 0) {
-                throw new BusinessRuntimeException("该权限code已经存在！");
-            }
+            BusinessAssert.state(countByCondition(Permission.builder().code(permission.getCode()).build()) == 0,
+                    "该权限code已经存在！");
         }
         permission.setUpdateTime(LocalDateTime.now());
         return updateById(permission);
@@ -146,9 +129,7 @@ public class PermissionServiceImpl extends BaseServiceImpl<PermissionMapper, Per
     @Override
     public Boolean deletePermission(Integer id) {
         Permission p = getById(id);
-        if (p == null) {
-            throw new BusinessRuntimeException("权限不存在！");
-        }
+        BusinessAssert.notNull(p, "权限不存在！");
         if (deleteById(id)) {
             roleResourceMapper.deleteByCriteria(RoleResource.builder()
                     .resourceId(id).type(ResourceTypeEnum.PERMISSION.getValue()).build());
@@ -158,11 +139,18 @@ public class PermissionServiceImpl extends BaseServiceImpl<PermissionMapper, Per
         return false;
     }
 
+
+
+
+    //------------------------------------------------------------
+    //  UserPermissionCodeRegistry  SysPermissionCodeRegistry  接口实现类
+    //------------------------------------------------------------
+
     @SuppressWarnings("unchecked")
     @Override
     public void save(Integer userId, Collection<String> permissionCodes, long time, TimeUnit timeUnit) {
         // 给权限code key添加用户id
-        String permissionKey = resolver.resolveByObject(UserCacheKey.USER_PERMISSION_KEY, userId);
+        String permissionKey = BracePlaceholder.resolveByObject(UserCacheKey.USER_PERMISSION_KEY, userId);
         redisTemplate.boundSetOps(permissionKey).add(permissionCodes.toArray());
         redisTemplate.boundSetOps(permissionKey).expire(time, timeUnit);
     }
@@ -170,13 +158,13 @@ public class PermissionServiceImpl extends BaseServiceImpl<PermissionMapper, Per
     @SuppressWarnings("unchecked")
     @Override
     public void delete(Integer userId) {
-        redisTemplate.delete(resolver.resolveByObject(UserCacheKey.USER_PERMISSION_KEY, userId));
+        redisTemplate.delete(BracePlaceholder.resolveByObject(UserCacheKey.USER_PERMISSION_KEY, userId));
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public boolean has(Integer userId, String permissionCode) {
-        return redisTemplate.opsForSet().isMember(resolver.resolveByObject(UserCacheKey.USER_PERMISSION_KEY, userId), permissionCode);
+        return redisTemplate.opsForSet().isMember(BracePlaceholder.resolveByObject(UserCacheKey.USER_PERMISSION_KEY, userId), permissionCode);
     }
 
     @SuppressWarnings("unchecked")

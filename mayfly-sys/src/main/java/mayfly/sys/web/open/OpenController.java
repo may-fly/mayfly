@@ -1,4 +1,4 @@
-package mayfly.sys.web.permission.controller;
+package mayfly.sys.web.open;
 
 import mayfly.common.log.MethodLog;
 import mayfly.common.result.Result;
@@ -32,7 +32,7 @@ public class OpenController {
     public Result login(@RequestBody @Valid AdminLoginForm loginForm) {
         Admin result = adminService.login(loginForm);
         if (result == null) {
-            return Result.error("用户名或密码错误！");
+            return Result.noFound("用户名或密码错误！");
         }
         return Result.success().with(permissionService.saveIdAndPermission(result));
     }

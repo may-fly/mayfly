@@ -5,9 +5,9 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 /**
- * @Description:
- * @author: meilin.huang
- * @date: 2018/6/21 下午3:34
+ *
+ * @author meilin.huang
+ * @date 2018/6/21 下午3:34
  */
 @Component
 @ConfigurationProperties(prefix = "druid")

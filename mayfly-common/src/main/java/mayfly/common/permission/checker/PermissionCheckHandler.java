@@ -70,8 +70,8 @@ public class PermissionCheckHandler {
 
     /**
      * 判断指定方法是否需要权限校验，需要则校验用户是否具有该方法@Permisison注解对应的code
-     * @param userId
-     * @param method
+     * @param userId  用户id
+     * @param method  用户访问的方法
      * @return
      * @throws PermissionDisabledException
      */

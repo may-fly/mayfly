@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 public class BeanUtils extends mayfly.common.util.BeanUtils {
 
 
-    public static<T> T copyProperties(Object source, Class<T> targetClass) {
+    public static <T> T copyProperties(Object source, Class<T> targetClass) {
         if (source == null) {
             return null;
         }
@@ -28,7 +28,7 @@ public class BeanUtils extends mayfly.common.util.BeanUtils {
         return target;
     }
 
-    public static<T> List<T> copyProperties(List<?> source, Class<T> targetClass) {
+    public static <T> List<T> copyProperties(List<?> source, Class<T> targetClass) {
         if (CollectionUtils.isEmpty(source)) {
             return Collections.emptyList();
         }

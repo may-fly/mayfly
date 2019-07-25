@@ -1,0 +1,19 @@
+# 服务器配置
+server:
+  port: 8080
+  servlet:
+    context-path: /mayfly
+spring:
+  profiles:
+    # 环境 激活application-active配置文件
+    active: dev
+  http:
+    encoding:
+      charset: UTF-8
+      enabled: true
+#日志
+logging:
+#  level:
+#    root: INFO
+#    mayfly: DEBUG
+  config: classpath:logback-spring.xml

@@ -16,12 +16,12 @@ public class PlaceholderResolver {
     /**
      * 默认前缀占位符
      */
-    public static final String DEFAULT_PLACEHOLDER_PREFIX = "${";
+    private static final String DEFAULT_PLACEHOLDER_PREFIX = "${";
 
     /**
      * 默认后缀占位符
      */
-    public static final String DEFAULT_PLACEHOLDER_SUFFIX = "}";
+    private static final String DEFAULT_PLACEHOLDER_SUFFIX = "}";
 
     /**
      * 默认单例解析器

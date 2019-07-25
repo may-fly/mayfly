@@ -18,15 +18,12 @@ import java.util.List;
 
 /**
  * mvc配置
- * @author: hml
- * @date: 2018/6/27 下午3:52
+ * @author hml
+ * @date 2018/6/27 下午3:52
  */
 @Configuration
 public class MvcConfig implements WebMvcConfigurer {
-//    @Autowired
-//    private PermissionService permissionService;
 
-//    private PermissionCacheHandler permissionHandler = PermissionCacheHandler.getInstance();
     @Autowired
     private PermissionCheckHandlerService permissionCheckHandlerService;
 

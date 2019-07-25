@@ -1,4 +1,4 @@
-package mayfly.sys.web.permission.controller;
+package mayfly.sys.web.permission;
 
 import mayfly.common.log.MethodLog;
 import mayfly.common.result.Result;

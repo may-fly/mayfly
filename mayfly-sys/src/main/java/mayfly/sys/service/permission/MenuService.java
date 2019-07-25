@@ -1,6 +1,5 @@
 package mayfly.sys.service.permission;
 
-import mayfly.common.exception.BusinessException;
 import mayfly.entity.Menu;
 import mayfly.sys.service.base.BaseService;
 
@@ -36,8 +35,8 @@ public interface MenuService extends BaseService<Menu> {
     /**
      * 保存菜单
      * @param menu
-   @return
-     * @throws BusinessException
+     * @return
+     *
      */
-    Menu saveMenu(Menu menu) throws BusinessException;
+    Menu saveMenu(Menu menu);
 }

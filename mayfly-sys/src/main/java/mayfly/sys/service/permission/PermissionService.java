@@ -1,12 +1,9 @@
 package mayfly.sys.service.permission;
 
-import mayfly.common.web.UriPattern;
 import mayfly.entity.Admin;
 import mayfly.entity.Permission;
 import mayfly.sys.service.base.BaseService;
 import mayfly.sys.web.permission.vo.LoginSuccessVO;
-
-import java.util.List;
 
 /**
  * 权限服务
@@ -16,7 +13,7 @@ import java.util.List;
 public interface PermissionService extends BaseService<Permission> {
     /**
      * 保存id以及对应的权限
-     * @param id  userId
+     * @param admin  管理员信息
      * @return   token
      */
     LoginSuccessVO saveIdAndPermission(Admin admin);
@@ -29,19 +26,17 @@ public interface PermissionService extends BaseService<Permission> {
     Integer getIdByToken(String token);
 
     /**
-     * 根据token获取用户api路径权限
-     * @param token
-     * @return
-     */
-    List<UriPattern> getUriPermissionByToken(String token);
-
-    /**
      * 保存权限
      * @param permission
      * @return
      */
     Permission savePermission(Permission permission);
 
+    /**
+     * 更新权限
+     * @param permission
+     * @return
+     */
     Permission updatePermission(Permission permission);
 
     /**

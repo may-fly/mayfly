@@ -10,7 +10,7 @@
       </el-submenu>
       <el-menu-item @click="toPath(menu.path)" :key="menu.id" :index="menu.path === null ? menu.id + '' : menu.path"
         v-else>
-        <i :class="menu.icon"></i>
+        <i class="iconfont" :class="menu.icon"></i>
         <span slot="title">{{menu.name}}</span>
       </el-menu-item>
     </template>

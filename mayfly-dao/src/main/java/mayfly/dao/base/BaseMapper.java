@@ -3,6 +3,7 @@ package mayfly.dao.base;
 
 import mayfly.common.util.ReflectionUtils;
 import mayfly.common.util.StringUtils;
+import mayfly.common.util.annotation.AnnotationUtils;
 import mayfly.dao.base.annotation.NoColumn;
 import mayfly.dao.base.annotation.Primary;
 import org.apache.ibatis.annotations.*;
@@ -136,7 +137,7 @@ public interface BaseMapper<Entity> {
             return new SQL()
                     .UPDATE(table.getTableName())
                     .SET(Stream.of(table.getFields())
-                            .filter(field -> value(entity, field) != null && !table.getPrimaryKeyColumn().equals(columnName(field)))
+                            .filter(field -> ReflectionUtils.getFieldValue(field, entity) != null && !table.getPrimaryKeyColumn().equals(columnName(field)))
                             .map(field -> columnName(field) + " = " + bindParameter(field)).toArray(String[]::new))
                     .WHERE(table.getPrimaryKeyColumn() + " = #{id}")
                     .toString();
@@ -161,7 +162,7 @@ public interface BaseMapper<Entity> {
             return new SQL()
                     .DELETE_FROM(table.getTableName())
                     .WHERE(Stream.of(table.getFields())
-                            .filter(field -> value(criteria, field) != null)
+                            .filter(field -> ReflectionUtils.getFieldValue(field, criteria) != null)
                             .map(field -> columnName(field) + " = " + bindParameter(field))
                             .toArray(String[]::new))
                     .toString();
@@ -200,7 +201,7 @@ public interface BaseMapper<Entity> {
                     .SELECT(table.getSelectColumns())
                     .FROM(table.getTableName())
                     .WHERE(Stream.of(table.getFields())
-                            .filter(field -> value(criteria, field) != null)
+                            .filter(field -> ReflectionUtils.getFieldValue(field, criteria) != null)
                             .map(field -> columnName(field) + " = " + bindParameter(field))
                             .toArray(String[]::new)).ORDER_BY(table.getPrimaryKeyColumn() + " DESC").toString();
         }
@@ -213,7 +214,7 @@ public interface BaseMapper<Entity> {
                     .SELECT("COUNT(*)")
                     .FROM(table.getTableName())
                     .WHERE(Stream.of(table.getFields())
-                            .filter(field -> value(criteria, field) != null)
+                            .filter(field -> ReflectionUtils.getFieldValue(field, criteria) != null)
                             .map(field -> columnName(field) + " = " + bindParameter(field)).toArray(String[]::new))
                     .toString();
         }
@@ -303,7 +304,7 @@ public interface BaseMapper<Entity> {
         protected Field[] excludeNoColumnField(Field[] totalField) {
             return Stream.of(totalField)
                     //过滤含有@NoColumn注解的field
-                    .filter(field -> !field.isAnnotationPresent(NoColumn.class))
+                    .filter(field -> !AnnotationUtils.isAnnotationPresent(field, NoColumn.class))
                     .toArray(Field[]::new);
         }
         /**
@@ -361,17 +362,6 @@ public interface BaseMapper<Entity> {
 
         protected String bindParameter(Field field) {
             return "#{" + field.getName() + "}";
-        }
-
-        protected Object value(Object bean, Field field) {
-            try {
-                field.setAccessible(true);
-                return field.get(bean);
-            } catch (IllegalAccessException e) {
-                throw new IllegalStateException(e);
-            } finally {
-                field.setAccessible(false);
-            }
         }
     }
 }

@@ -7,6 +7,8 @@ package mayfly.common.exception;
  */
 public class BusinessRuntimeException extends RuntimeException {
 
+    private static final long serialVersionUID = -789021883759549647L;
+
     public BusinessRuntimeException(String msg) {
         super(msg);
     }

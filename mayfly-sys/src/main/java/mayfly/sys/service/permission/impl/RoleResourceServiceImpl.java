@@ -1,6 +1,7 @@
 package mayfly.sys.service.permission.impl;
 
 import mayfly.common.exception.BusinessException;
+import mayfly.common.util.BusinessAssert;
 import mayfly.common.util.CollectionUtils;
 import mayfly.dao.RoleResourceMapper;
 import mayfly.entity.RoleResource;
@@ -58,13 +59,9 @@ public class RoleResourceServiceImpl extends BaseServiceImpl<RoleResourceMapper,
         List<RoleResource> addValues = new ArrayList<>(addIds.size());
         for (Integer id : addIds) {
             if (type == ResourceTypeEnum.PERMISSION) {
-                if (permissionService.getById(id) == null) {
-                    throw new BusinessException("id : " + id + "的权限不存在！");
-                }
+                BusinessAssert.notNull(permissionService.getById(id), "id : " + id + "的权限不存在！");
             } else {
-                if (menuService.getById(id) == null) {
-                    throw new BusinessException("id : " + id + "的菜单不存在！");
-                }
+                BusinessAssert.notNull(menuService.getById(id), "id : " + id + "的菜单不存在！");
             }
             RoleResource rr = RoleResource.builder().roleId(roleId).resourceId(id).type(type.getValue()).createTime(now).build();
             save(rr);
