@@ -143,6 +143,7 @@
       search() {
         let searchPermission = this.permission.list;
         let permission = this.$Permission.getPermission(searchPermission.code);
+        console.log(permission);
         if (!permission.show) {
           this.$message.error('您没有该权限!');
         } else {

@@ -27,10 +27,11 @@ const code = {
 	
 	// 菜单列表页面相关
 	menu: {
-		list: Permission.code("menu:list").uri("/sys/v1/menus").method(method.GET),
-		save: Permission.code("menu:save").uri("/sys/v1/menus").method(method.POST),
-		update: Permission.code("menu:update").uri("/sys/v1/menus/{id}").method(method.PUT),
-		del: Permission.code("menu:delete").uri("/sys/v1/menus/{id}").method(method.DELETE)
+		list: Permission.code("menu:list").uri("/sys/v1/resources").method(method.GET),
+		save: Permission.code("menu:save").uri("/sys/v1/resources").method(method.POST),
+		update: Permission.code("menu:update").uri("/sys/v1/resources/{id}").method(method.PUT),
+		del: Permission.code("menu:delete").uri("/sys/v1/resources/{id}").method(method.DELETE),
+    changeStatus: Permission.code("menu:changeStatus").uri("/sys/v1/resources/{id}/{status}").method(method.PUT)
 	},
 	
 	// 角色页面相关
@@ -40,9 +41,9 @@ const code = {
 		// 获取指定角色拥有的权限
 		rolePermissions: Permission.code("role:rolePermissions").uri("/sys/v1/roles/{id}/permissions").method(method.GET),
 		// 获取指定角色拥有的菜单
-		roleMenus: Permission.code("role:roleMenus").uri("/sys/v1/roles/{id}/menus").method(method.GET),
+		roleMenus: Permission.code("role:roleMenus").uri("/sys/v1/roles/{id}/resources").method(method.GET),
 		savePermission: Permission.code("role:savePermission").uri("/sys/v1/roles/{id}/permissions").method(method.POST),
-		saveMenu: Permission.code("role:saveMenu").uri("/sys/v1/roles/{id}/menus").method(method.POST)
+		saveMenu: Permission.code("role:saveMenu").uri("/sys/v1/roles/{id}/resources").method(method.POST)
 	},
   
   account: {

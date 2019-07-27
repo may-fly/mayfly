@@ -17,7 +17,6 @@ function buildApiUrl(url) {
  * 解析服务端返回结果
  */
 function parseResponse(res) {
-  console.log(res)
   return new Promise((resolve, reject) => {
     if (res.status !== 200) {
       reject('请求异常');

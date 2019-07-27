@@ -1,8 +1,6 @@
 package mayfly.common.validation.annotation;
 
-import mayfly.common.validation.annotation.validator.ValidResult;
 import mayfly.common.validation.annotation.validator.Validator;
-import mayfly.common.validation.annotation.validator.Value;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
@@ -23,22 +21,18 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @ValidateBy(Pattern.PatternValidator.class)
 public @interface Pattern {
 
-    String message() default "";
+    String message() default "{fieldName}字段值不满足指定正则！";
 
     String regexp();
 
 
     class PatternValidator implements Validator<Pattern, String> {
         @Override
-        public ValidResult validation(Pattern pattern, Value<String> value) {
-            if (value.getValue() == null) {
-                return ValidResult.right();
+        public boolean validation(Pattern pattern, String value) {
+            if (value == null) {
+                return true;
             }
-            if (value.getValue().matches(pattern.regexp())) {
-                return ValidResult.right();
-            }
-            String message = !"".equals(pattern.message()) ? pattern.message() : value.getName() + "参数不符合指定正则！";
-            return ValidResult.error(message);
+            return value.matches(pattern.regexp());
         }
     }
 }

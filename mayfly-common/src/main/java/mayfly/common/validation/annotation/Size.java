@@ -1,8 +1,6 @@
 package mayfly.common.validation.annotation;
 
-import mayfly.common.validation.annotation.validator.ValidResult;
 import mayfly.common.validation.annotation.validator.Validator;
-import mayfly.common.validation.annotation.validator.Value;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
@@ -26,20 +24,17 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @ValidateBy(Size.SizeValidator.class)
 public @interface Size {
 
-    String message() default "";
+    String message() default "{fieldName}字段值不满足指定范围[{min}, {max}]";
 
     int min() default 0;
 
     int max() default Integer.MAX_VALUE;
 
-
-
     class SizeValidator implements Validator<Size, Object> {
         @Override
-        public ValidResult validation(Size size, Value<Object> value) {
-            Object fieldValue = value.getValue();
+        public boolean validation(Size size, Object fieldValue) {
             if (fieldValue == null) {
-                return ValidResult.right();
+                return true;
             }
 
             int min = size.min();
@@ -49,35 +44,30 @@ public @interface Size {
                 String v = (String)fieldValue;
                 int len = v.length();
                 if (len >= min && len <= max) {
-                    return ValidResult.right();
+                    return true;
                 }
-                return errorResult(value.getName(), size);
+                return false;
             }
 
             if (fieldValue instanceof Number) {
                 Number v = (Number) fieldValue;
                 int val = v.intValue();
                 if (val >= min && val <= max) {
-                    return ValidResult.right();
+                    return true;
                 }
-                return errorResult(value.getName(), size);
+                return false;
             }
 
             if (fieldValue instanceof Collection) {
                 Collection v = (Collection)fieldValue;
                 int len = v.size();
                 if (len >= min && len <= max) {
-                    return ValidResult.right();
+                    return true;
                 }
-                return errorResult(value.getName(), size);
+                return false;
             }
 
-            return ValidResult.right();
-        }
-
-        private ValidResult errorResult(String fieldName, Size size) {
-            String message = "".equals(size.message()) ? fieldName + "范围错误！" : size.message();
-            return ValidResult.error(message);
+            return true;
         }
     }
 }

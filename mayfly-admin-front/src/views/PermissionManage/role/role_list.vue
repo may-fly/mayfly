@@ -19,19 +19,19 @@
       </el-table-column>
       <el-table-column prop="updateTime" label="修改时间">
       </el-table-column>
-      <el-table-column label="操作" :render-header="tableAction" width="350px">
+      <el-table-column label="操作" width="350px">
         <template slot-scope="scope">
           <el-button @click="editRole(scope.row)" type="primary" icon="el-icon-edit" size="small">编辑</el-button>
-          <el-button @click="editMenu(scope.row)" type="primary" icon="el-icon-setting" size="small">分配菜单</el-button>
-          <el-button @click="editPermission(scope.row)" type="success" icon="el-icon-setting" size="small">分配权限</el-button>
+          <el-button @click="editMenu(scope.row)" type="primary" icon="el-icon-setting" size="small">分配菜单&权限</el-button>
+          <!-- <el-button @click="editPermission(scope.row)" type="success" icon="el-icon-setting" size="small">分配权限</el-button> -->
         </template>
       </el-table-column>
     </el-table>
     <RoleEdit :title="roleEdit.title" :visible="roleEdit.visible" :data="roleEdit.data" @val-change="roleEditChange"
       @cancel="roleEdit.visible = false">
     </RoleEdit>
-    <PermissionsEdit :visible="permissionDialog.visible" :role="permissionDialog.role" @success="permissionDialog.visible = false;"
-      @cancel="cancelEditPermisson"></PermissionsEdit>
+    <!-- <PermissionsEdit :visible="permissionDialog.visible" :role="permissionDialog.role" @success="permissionDialog.visible = false;"
+      @cancel="cancelEditPermisson"></PermissionsEdit> -->
     <MenuEdit :visible="menuDialog.visible" :role="menuDialog.role" @cancel="menuDialog.visible = false;"></MenuEdit>
   </div>
 </template>

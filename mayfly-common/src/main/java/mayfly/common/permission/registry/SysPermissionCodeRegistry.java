@@ -16,21 +16,13 @@ public interface SysPermissionCodeRegistry extends SysPermissionChecker {
     void save();
 
     /**
-     * 新增系统权限code
+     * 若有修改权限code以及状态，重新加载系统所有权限code，简单粗暴
+     */
+    void reload();
+
+    /**
+     * 新增系统权限code，因为新增的概率较大，故不使用reload方式
      * @param code
      */
     void add(String code);
-
-    /**
-     * 重命名 (用于实时重命名系统权限中的状态，以便用于判断权限是否可用）
-     * @param oldCode
-     * @param newCode
-     */
-    void rename(String oldCode, String newCode);
-
-    /**
-     * 删除指定系统权限
-     * @param code
-     */
-    void delete(String code);
 }

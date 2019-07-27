@@ -7,11 +7,13 @@ import './assets/css/style.css'
 import router from './router'
 import Config from './common/config'
 import Permission from './common/Permission'
+import Utils from './common/Utils'
 
 
 import App from './App.vue'
 Vue.prototype.$Permission = Permission
 Vue.prototype.$Config = Config
+Vue.prototype.$Utils = Utils
 
 
 Vue.use(ElementUI)

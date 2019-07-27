@@ -11,19 +11,21 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- * @Description: 菜单
- * @author: hml
- * @date: 2018/6/27 下午2:01
+ *  资源类
+ * @author hml
+ * @date 2018/6/27 下午2:01
  */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Menu implements Serializable {
+public class Resource implements Serializable {
 
     private Integer id;
 
     private Integer pid;
+
+    private Integer type;
 
     private Integer weight;
 
@@ -42,6 +44,6 @@ public class Menu implements Serializable {
     private LocalDateTime updateTime;
 
     @NoColumn
-    private List<Menu> children;
+    private List<Resource> children;
 
 }

@@ -6,7 +6,7 @@ package mayfly.common.validation.annotation.validator;;
  * @description: 校验器接口
  * @date 2018-10-30 8:08 PM
  */
-public interface Validator<A, R> {
+public interface Validator<A, V> {
 
     /**
      * 校验规则
@@ -14,5 +14,5 @@ public interface Validator<A, R> {
      * @param value  校验值对象
      * @return  是否符合校验规则
      */
-    ValidResult validation(A annotation, Value<R> value);
+    boolean validation(A annotation, V value);
 }

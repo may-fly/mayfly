@@ -322,7 +322,7 @@
       }
     },
     mounted: function() {
-      this.menus = JSON.parse(sessionStorage.getItem("menus"));
+      this.menus = JSON.parse(sessionStorage.getItem("resources"));
 
       this.switchTabBar = localStorage.getItem('switchTabBar') ? true : false;
       this.fixedTabBar = localStorage.getItem('fixedTabBar') ? true : false;

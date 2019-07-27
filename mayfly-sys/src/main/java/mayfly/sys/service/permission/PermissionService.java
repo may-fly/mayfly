@@ -26,32 +26,20 @@ public interface PermissionService extends BaseService<Permission> {
     Integer getIdByToken(String token);
 
     /**
-     * 保存权限
-     * @param permission
-     * @return
+     * 若有修改权限code以及状态，重新加载权限code，简单粗暴
      */
-    Permission savePermission(Permission permission);
+    void reloadPermission();
 
     /**
-     * 更新权限
-     * @param permission
-     * @return
+     * 添加新权限code
+     * @param permissionCode
      */
-    Permission updatePermission(Permission permission);
+    void addPermission(String permissionCode);
 
-    /**
-     * 改变redis中权限状态code
-     * @param id 权限code
-     * @param status
-     * @return
-     */
-    Permission changeStatus(Integer id, Integer status);
-
-    /**
-     * 删除权限，并且删除角色关联的该权限记录
-     * @param id
-     * @return
-     */
-    Boolean deletePermission(Integer id);
-
+//    void disablePermission(String code);
+//
+//    void enablePermission(String code);
+//
+//
+//    void delPermission(String permissionCode);
 }

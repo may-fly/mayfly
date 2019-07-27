@@ -1,9 +1,7 @@
 package mayfly.common.validation.annotation;
 
 import mayfly.common.util.StringUtils;
-import mayfly.common.validation.annotation.validator.ValidResult;
 import mayfly.common.validation.annotation.validator.Validator;
-import mayfly.common.validation.annotation.validator.Value;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
@@ -25,18 +23,13 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @ValidateBy({NotBlank.NotBlankValidator.class})
 public @interface NotBlank {
 
-    String message() default "";
-
+    String message() default "{fieldName}字段值不能为空！";
 
 
     class NotBlankValidator implements Validator<NotBlank, String> {
         @Override
-        public ValidResult validation(NotBlank annotation, Value<String> value) {
-            if (!StringUtils.isEmpty(value.getValue())) {
-                return ValidResult.right();
-            }
-            String message = "".equals(annotation.message()) ? value.getName() + "值不能为空！" : annotation.message();
-            return ValidResult.error(message);
+        public boolean validation(NotBlank annotation, String value) {
+            return !StringUtils.isEmpty(value);
         }
     }
 }

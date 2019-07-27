@@ -30,6 +30,21 @@ public class BeanUtils {
     private static Map<Class<? extends FieldValueConverter>, FieldValueConverter> converterCache = Collections.synchronizedMap(new WeakHashMap<>(8));
 
     /**
+     * 实例化对象
+     * @param clazz  对象类型
+     * @param <T>    对象泛型类
+     * @return       对象
+     */
+    public static <T> T instantiate(Class<T> clazz) {
+        Assert.assertState(!clazz.isInterface(), "无法实例化接口：" + clazz.getName());
+        try {
+            return clazz.newInstance();
+        } catch (InstantiationException | IllegalAccessException e) {
+            throw new IllegalStateException("实例化对象失败", e);
+        }
+    }
+
+    /**
      * 获取bean的属性描述器
      * @param clazz  bean类型
      * @return
@@ -63,13 +78,15 @@ public class BeanUtils {
         return beans.stream().map(BeanUtils::bean2Map).collect(Collectors.toList());
     }
 
+    /**
+     * 将map对象里的key(属性名)-value(属性值)转换为bean属性值
+     * @param sourceMap  map
+     * @param clazz     bean类型
+     * @param <T>       bean的具体类型
+     * @return          实例bean
+     */
     public static <T> T map2Bean(Map sourceMap, Class<T> clazz) {
-        T target;
-        try {
-            target = clazz.newInstance();
-        } catch (Exception e) {
-            throw new IllegalArgumentException("实例化对象失败！", e);
-        }
+        T target = BeanUtils.instantiate(clazz);
         for (PropertyDescriptor pd : getPropertyDescriptors(clazz)) {
             Object fieldValue = sourceMap.get(pd.getName());
             if (fieldValue != null) {
@@ -77,11 +94,7 @@ public class BeanUtils {
                 if (fieldValue.getClass() != writeMethod.getParameterTypes()[0]) {
                     throw new IllegalStateException("参数类型不匹配！");
                 }
-                try {
-                    writeMethod.invoke(target, fieldValue);
-                } catch (IllegalAccessException | InvocationTargetException e) {
-                    throw new IllegalArgumentException("无法设置Bean属性值", e);
-                }
+                ReflectionUtils.invokeMethod(writeMethod, target, fieldValue);
             }
         }
         return target;

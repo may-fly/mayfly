@@ -1,12 +1,12 @@
 <template>
   <div class="role-dialog">
     <el-dialog :title="title" :visible="visible" :show-close="false" width="45%">
-      <el-form :model="form" size="small" label-width="80px">
-        <el-form-item label="角色名称:">
+      <el-form :model="form" size="small" label-width="90px">
+        <el-form-item label="角色名称:" required>
           <el-input v-model="form.name" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="角色描述:">
-          <el-input v-model="form.description" type="textarea" :rows="3" placeholder="请输入角色描述"></el-input>
+          <el-input v-model="form.remark" type="textarea" :rows="3" placeholder="请输入角色描述"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -30,7 +30,7 @@
         form: {
           id: null,
           name: '',
-          description: '',
+          remark: '',
         },
         btnLoading: false,
       }

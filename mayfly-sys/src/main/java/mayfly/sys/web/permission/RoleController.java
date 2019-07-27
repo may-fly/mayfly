@@ -68,12 +68,12 @@ public class RoleController {
         return Result.success().with(roleResourceService.saveResource(id, ids, ResourceTypeEnum.PERMISSION));
     }
 
-    @GetMapping("/v1/roles/{id}/menus")
+    @GetMapping("/v1/roles/{id}/resources")
     public  Result roleMenus(@PathVariable Integer id) {
         return Result.success().with(roleResourceService.listResourceId(id, ResourceTypeEnum.MENU));
     }
 
-    @PostMapping("/v1/roles/{id}/menus")
+    @PostMapping("/v1/roles/{id}/resources")
     public  Result saveMenu(@PathVariable Integer id, @RequestBody RoleForm roleForm) throws BusinessException {
         List<Integer> ids;
         try {

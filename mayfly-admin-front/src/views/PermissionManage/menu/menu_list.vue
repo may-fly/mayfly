@@ -6,7 +6,7 @@
     <el-tree :indent="38" :props="props" :data="data" @node-click="handleNodeClick" :render-content="renderContent">
     </el-tree>
     <MenuEdit :title="dialogForm.title" :dialogFormVisible="dialogForm.visible" :data="dialogForm.data" :departTree="data"
-      @val-change="valChange" @cancel="dialogForm.visible = false">
+      @val-change="valChange" @cancel="editorCancel()">
     </MenuEdit>
   </div>
 </template>
@@ -66,7 +66,7 @@
         } else {
           this.dialogForm.data = {};
           this.dialogForm.data.pid = data.id; //添加子菜单，把当前菜单id作为新增菜单pid
-          this.dialogForm.title = '添加“' + data.name + '”的子菜单';
+          this.dialogForm.title = '添加“' + data.name + '”的子资源 ';
         }
 
       },
@@ -78,6 +78,18 @@
       valChange(data) {
         this.search();
         this.dialogForm.visible = false;
+      },
+      editorCancel() {
+        this.dialogForm.visible = false;
+        this.dialogForm.data = null;
+      },
+      changeStatus(data) {
+        this.permission.changeStatus.request({
+          id: data.id,
+          status: data.status
+        }).then(res => {
+          this.$message.success("操作成功！");
+        })
       },
       handleNodeClick(data, k) {
 
@@ -95,6 +107,7 @@
             'add-menu': this.addMenu,
             'edit-menu': this.editMenu,
             'delete-menu': this.deleteMenu,
+            'changeStatus': this.changeStatus
           }
         });
       },

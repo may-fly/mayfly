@@ -43,6 +43,9 @@ public class PermissionInterceptor implements HandlerInterceptor {
             sendErrorMessage(response, Result.withoutPermission());
             return false;
         }
+//        if (userId.equals(1)) {
+//            return true;
+//        }
         // 判断该用户是否有执行该方法的权限
         try {
             //如果校验通过，返回true

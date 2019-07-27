@@ -1,8 +1,12 @@
 <template>
-  <div style="width: 50px;">
-    <el-dialog :title="'编辑“'+role.name+'”菜单权限'" :visible="visible" :show-close="false" width="300px">
+  <div style="width: 120px;">
+    <el-dialog :title="'编辑“'+role.name+'”菜单&权限'" :visible="visible" :show-close="false" width="300px">
       <el-tree ref="menuTree" :data="menus" show-checkbox node-key="id" :default-checked-keys="defaultCheckedKeys"
         :props="defaultProps">
+        <span class="custom-tree-node" slot-scope="{ node, data }">
+          <span v-if="data.type == enums.ResourceTypeEnum.MENU.value">{{ node.label }}</span>
+          <span v-if="data.type == enums.ResourceTypeEnum.PERMISSION.value" style="color: green;">{{ node.label }}</span>
+        </span>
       </el-tree>
       <div slot="footer" class="dialog-footer">
         <el-button @click="$emit('cancel');" size="small">取 消</el-button>
@@ -14,7 +18,7 @@
 
 <script>
   import permission from '../permissions.js'
-
+  import enums from '../enums.js'
   export default {
     props: {
       visible: Boolean,
@@ -23,6 +27,7 @@
     },
     data() {
       return {
+        enums: enums,
         btns: {
           menuList: {}
         },
@@ -83,7 +88,6 @@
       btnOk() {
         let saveMenu = this.permission.saveMenu;
         let permission = this.$Permission.getPermission(saveMenu.code);
-
         if (!permission.show) {
           this.$message.error('您没有该权限!');
         } else {

@@ -7,10 +7,11 @@ import mayfly.entity.Permission;
 import mayfly.sys.common.utils.BeanUtils;
 import mayfly.sys.service.permission.PermissionService;
 import mayfly.sys.web.form.PageForm;
-import mayfly.sys.web.permission.form.PermissionForm;
 import mayfly.sys.web.permission.query.PermissionQuery;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @author meilin.huang
@@ -33,25 +34,25 @@ public class PermissionController {
         return Result.success().with(permissionService.listByCondition(p, pageForm));
     }
 
-    @PostMapping("/v1/permissions")
-    public Result save(@RequestBody @Valid PermissionForm permissionForm) {
-        return Result.success().with(permissionService.savePermission(BeanUtils.copyProperties(permissionForm, Permission.class)));
-    }
-
-    @PutMapping("/v1/permissions/{id}")
-    public Result update(@RequestBody @Valid PermissionForm permissionForm, @PathVariable Integer id) {
-        Permission permission = BeanUtils.copyProperties(permissionForm, Permission.class);
-        permission.setId(id);
-        return Result.success().with(permissionService.updatePermission(permission));
-    }
-
-    @PutMapping("/v1/permissions/{id}/{status}")
-    public Result changeStatus(@PathVariable Integer id, @PathVariable Integer status) {
-        return Result.success().with(permissionService.changeStatus(id, status));
-    }
-
-    @DeleteMapping("/v1/permissions/{id}")
-    public Result del(@PathVariable Integer id) {
-        return permissionService.deletePermission(id) ? Result.success() : Result.serverError();
-    }
+//    @PostMapping("/v1/permissions")
+//    public Result save(@RequestBody @Valid PermissionForm permissionForm) {
+//        return Result.success().with(permissionService.savePermission(BeanUtils.copyProperties(permissionForm, Permission.class)));
+//    }
+//
+//    @PutMapping("/v1/permissions/{id}")
+//    public Result update(@RequestBody @Valid PermissionForm permissionForm, @PathVariable Integer id) {
+//        Permission permission = BeanUtils.copyProperties(permissionForm, Permission.class);
+//        permission.setId(id);
+//        return Result.success().with(permissionService.updatePermission(permission));
+//    }
+//
+//    @PutMapping("/v1/permissions/{id}/{status}")
+//    public Result changeStatus(@PathVariable Integer id, @PathVariable Integer status) {
+//        return Result.success().with(permissionService.changeStatus(id, status));
+//    }
+//
+//    @DeleteMapping("/v1/permissions/{id}")
+//    public Result del(@PathVariable Integer id) {
+//        return permissionService.deletePermission(id) ? Result.success() : Result.serverError();
+//    }
 }

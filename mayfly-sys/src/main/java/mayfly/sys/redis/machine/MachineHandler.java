@@ -1,8 +1,12 @@
 package mayfly.sys.redis.machine;
 
 import mayfly.common.exception.BusinessRuntimeException;
-import mayfly.common.result.Result;
 import mayfly.common.ssh.SSHTemplate;
+import mayfly.common.validation.ParamValidErrorException;
+import mayfly.common.validation.ValidationHandler;
+import mayfly.common.validation.annotation.NotBlank;
+import mayfly.common.validation.annotation.NotNull;
+import mayfly.common.validation.annotation.Size;
 
 /**
  * @author meilin.huang
@@ -28,19 +32,75 @@ public class MachineHandler {
         }
     }
 
-    public static void main(String[] args) throws Exception{
-        for (int i = 0; i < 50; i++) {
-            new Thread(() -> {
-                try {
-                    Result<String> res = template.execute("118.24.26.101", 22, "root", "", session -> session.executeCommand("top -b -n 1 | head -5"));
-                    System.out.println(res.getData());
-                    System.out.println();
-                } catch (Exception e) {
-                    System.out.println(e.getMessage());
-                }
-            }).start();
+    static class User{
 
+        @NotBlank
+        private String name;
+
+        @NotNull(message = "性别不能为空")
+        @Size(max = 100, min = 1)
+        private Integer sex;
+
+        @NotBlank
+        private String name1;
+
+        @NotNull(message = "性别不能为空")
+        @Size(max = 100, min = 1)
+        private Integer sex1;
+
+        @NotBlank
+        private String name22;
+
+        @NotNull(message = "性别不能为空")
+        @Size(max = 100, min = 1)
+        private Integer sex2;
+
+        @NotBlank
+        private String name3;
+
+        @NotNull(message = "性别不能为空")
+        @Size(max = 100, min = 1)
+        private Integer sex4;
+
+        @NotBlank
+        private String name5;
+
+        @NotNull(message = "性别不能为空")
+        @Size(max = 100, min = 1)
+        private Integer sex6;
+
+
+        private Integer method;
+    }
+
+    public static void main(String[] args) throws Exception {
+//        for (int i = 0; i < 50; i++) {
+//            new Thread(() -> {
+//                try {
+//                    Result<String> res = template.execute("118.24.26.101", 22, "root", "", session -> session.executeCommand("top -b -n 1 | head -5"));
+//                    System.out.println(res.getData());
+//                    System.out.println();
+//                } catch (Exception e) {
+//                    System.out.println(e.getMessage());
+//                }
+//            }).start();
+//
+//        }
+
+        User user = new User();
+        user.name = "1";
+        user.sex = 100;
+        user.sex6 = 1001;
+        long start = System.currentTimeMillis();
+        for (int i = 0; i < 100000; i++) {
+            try {
+                ValidationHandler.getInstance().validate(user);
+            } catch (ParamValidErrorException e) {
+                System.out.println(e.getMessage());
+            }
         }
+        long end = System.currentTimeMillis();
+        System.out.println(end - start);
     }
 
 }

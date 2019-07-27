@@ -1,6 +1,7 @@
 package mayfly.common.util;
 
 import java.util.Map;
+import java.util.function.Function;
 
 /**
  * {}占位符解析工具
@@ -25,5 +26,9 @@ public class BracePlaceholder {
 
     public static String resolveByObject(String content, Object object) {
         return resolver.resolveByObject(content, object);
+    }
+
+    public static String resolveByRule(String content, Function<String, String> rule) {
+        return resolver.resolveByRule(content, rule);
     }
 }

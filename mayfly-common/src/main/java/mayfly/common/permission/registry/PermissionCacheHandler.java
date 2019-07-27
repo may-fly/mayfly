@@ -66,7 +66,7 @@ public final class PermissionCacheHandler {
      * @param timeUnit  时间单位
      */
     public void savePermission(Integer userId, Collection<String> permissionCodes, long time, TimeUnit timeUnit) {
-        //如果首次没有保存系统所有权限，则保存系统所有权限
+        // 如果首次没有保存系统所有权限，则保存系统所有权限
         if (!saveSysCode && sysCodeRegistry != null) {
             sysCodeRegistry.save();
             saveSysCode = true;
@@ -75,53 +75,62 @@ public final class PermissionCacheHandler {
     }
 
     /**
-     * 禁用指定权限code的权限
-     * @param permissionCode
+     * 若有修改权限code以及状态，重新加载系统所有权限code，简单粗暴
      */
-    public void disabledPermission(String permissionCode) {
-        if (sysCodeRegistry != null && sysCodeRegistry.has(permissionCode)) {
-            sysCodeRegistry.rename(permissionCode, getDisablePermissionCode(permissionCode));
-        }
-    }
-
-    /**
-     * 启用指定权限code的权限
-     * @param permissionCode
-     */
-    public void enablePermission(String permissionCode) {
-        String disableCode = getDisablePermissionCode(permissionCode);
-        if (sysCodeRegistry != null && sysCodeRegistry.has(disableCode)) {
-            sysCodeRegistry.rename(disableCode, permissionCode);
-        }
-    }
-
-    /**
-     * 删除指定权限
-     * @param code
-     */
-    public void deletePermission(String code) {
+    public void reloadSysPermission() {
         if (sysCodeRegistry != null) {
-            //如果存在正常使用的权限code，则删除返回，否则继续判断该权限是否为禁用状态
-            if (sysCodeRegistry.has(code)) {
-                sysCodeRegistry.delete(code);
-                return;
-            }
-            String disableCode = getDisablePermissionCode(code);
-            if (sysCodeRegistry.has(disableCode)) {
-                sysCodeRegistry.delete(disableCode);
-            }
+            sysCodeRegistry.reload();
         }
     }
 
     /**
-     * 保存新增的系统权限code
-     * @param code
+     * 保存新增的系统权限code，新增的概率较大，故不使用reload方式
+     * @param code  权限code
      */
     public void addSysPermission(String code) {
         if (sysCodeRegistry != null) {
             sysCodeRegistry.add(code);
         }
     }
+
+//    /**
+//     * 禁用指定权限code的权限
+//     * @param permissionCode
+//     */
+//    public void disabledPermission(String permissionCode) {
+//        if (sysCodeRegistry != null && sysCodeRegistry.has(permissionCode)) {
+//            sysCodeRegistry.rename(permissionCode, getDisablePermissionCode(permissionCode));
+//        }
+//    }
+//
+//    /**
+//     * 启用指定权限code的权限
+//     * @param permissionCode
+//     */
+//    public void enablePermission(String permissionCode) {
+//        String disableCode = getDisablePermissionCode(permissionCode);
+//        if (sysCodeRegistry != null && sysCodeRegistry.has(disableCode)) {
+//            sysCodeRegistry.rename(disableCode, permissionCode);
+//        }
+//    }
+//
+//    /**
+//     * 删除指定权限
+//     * @param code
+//     */
+//    public void deletePermission(String code) {
+//        if (sysCodeRegistry != null) {
+//            //如果存在正常使用的权限code，则删除返回，否则继续判断该权限是否为禁用状态
+//            if (sysCodeRegistry.has(code)) {
+//                sysCodeRegistry.delete(code);
+//                return;
+//            }
+//            String disableCode = getDisablePermissionCode(code);
+//            if (sysCodeRegistry.has(disableCode)) {
+//                sysCodeRegistry.delete(disableCode);
+//            }
+//        }
+//    }
 
     /**
      * 返回与requestUri匹配的uriPattern

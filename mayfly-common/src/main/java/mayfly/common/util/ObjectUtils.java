@@ -103,4 +103,9 @@ public class ObjectUtils {
     public static boolean isPrimitiveArray(Object obj) {
         return isArray(obj) && obj.getClass().getComponentType().isPrimitive();
     }
+
+
+    public static String toString(Object object, String defaultStr) {
+        return object == null ? defaultStr : String.valueOf(object);
+    }
 }

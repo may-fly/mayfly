@@ -175,7 +175,6 @@ public final class AnnotationUtils {
         List<Method> methods = new ArrayList<>();
         for (Method method : annotationType.getDeclaredMethods()) {
             if (isAttributeMethod(method)) {
-                ReflectionUtils.makeAccessible(method);
                 methods.add(method);
             }
         }
@@ -208,6 +207,19 @@ public final class AnnotationUtils {
             String msg = String.format("%s注解无法获取%s属性值！", annotation.annotationType().getName(), attributeName);
             throw new IllegalArgumentException(msg, ex);
         }
+    }
+
+    /**
+     * 获取注解的属性以及属性值；key->属性  value->属性值
+     * @param annotation  注解类
+     * @return  Map
+     */
+    public static Map<String, Object> getAttributeMap(Annotation annotation) {
+        Map<String, Object> attributeMap = new HashMap<>(8);
+        getAttributeMethods(annotation.getClass()).forEach(method -> {
+            attributeMap.put(method.getName(), ReflectionUtils.invokeMethod(method, annotation));
+        });
+        return attributeMap;
     }
 
 

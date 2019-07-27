@@ -5,31 +5,27 @@ import mayfly.common.permission.registry.PermissionCacheHandler;
 import mayfly.common.permission.registry.SysPermissionCodeRegistry;
 import mayfly.common.permission.registry.UserPermissionCodeRegistry;
 import mayfly.common.util.BracePlaceholder;
-import mayfly.common.util.BusinessAssert;
-import mayfly.common.util.EnumUtils;
 import mayfly.common.util.UUIDUtils;
 import mayfly.dao.PermissionMapper;
-import mayfly.dao.RoleResourceMapper;
 import mayfly.entity.Admin;
-import mayfly.entity.Menu;
 import mayfly.entity.Permission;
-import mayfly.entity.RoleResource;
+import mayfly.entity.Resource;
 import mayfly.sys.common.cache.UserCacheKey;
 import mayfly.sys.common.enums.ResourceTypeEnum;
 import mayfly.sys.common.utils.BeanUtils;
 import mayfly.sys.service.base.impl.BaseServiceImpl;
-import mayfly.sys.service.permission.MenuService;
 import mayfly.sys.service.permission.PermissionService;
+import mayfly.sys.service.permission.ResourceService;
 import mayfly.sys.web.permission.vo.AdminVO;
 import mayfly.sys.web.permission.vo.LoginSuccessVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -44,11 +40,7 @@ public class PermissionServiceImpl extends BaseServiceImpl<PermissionMapper, Per
     @Autowired
     private RedisTemplate redisTemplate;
     @Autowired
-    private PermissionMapper permissionMapper;
-    @Autowired
-    private RoleResourceMapper roleResourceMapper;
-    @Autowired
-    private MenuService menuService;
+    private ResourceService resourceService;
 
     /**
      * 权限缓存处理器
@@ -60,17 +52,22 @@ public class PermissionServiceImpl extends BaseServiceImpl<PermissionMapper, Per
     public LoginSuccessVO saveIdAndPermission(Admin admin) {
         Integer id = admin.getId();
         String token = UUIDUtils.generateUUID();
-        List<Menu> menus = menuService.getByUserId(id);
-        //如果权限被禁用，将会在code后加上:0标志
-        List<String> permissionCodes = permissionMapper.selectByUserId(id).stream()
+        List<Resource> resources = resourceService.listByUserId(id);
+        // 获取所有叶子节点
+        List<Resource> permissions = new ArrayList<>();
+        for (Resource root : resources) {
+            resourceService.fillLeaf(root, permissions);
+        }
+        // 如果权限被禁用，将会在code后加上:0标志
+        List<String> permissionCodes = permissions.stream().filter(p -> Objects.equals(p.getType(), ResourceTypeEnum.PERMISSION.getValue()))
                 .map(p -> p.getStatus().equals(BoolEnum.FALSE.getValue()) ? PermissionCacheHandler.getDisablePermissionCode(p.getCode()) : p.getCode())
                 .collect(Collectors.toList());
-        //缓存用户id
+        // 缓存用户id
         redisTemplate.opsForValue().set(BracePlaceholder.resolveByObject(UserCacheKey.USER_ID_KEY, token), id, UserCacheKey.EXPIRE_TIME, TimeUnit.MINUTES);
-        //保存用户权限code
+        // 保存用户权限code
         permissionCacheHandler.savePermission(id, permissionCodes, UserCacheKey.EXPIRE_TIME, TimeUnit.MINUTES);
         return LoginSuccessVO.builder().admin(BeanUtils.copyProperties(admin, AdminVO.class))
-                .token(token).menus(menus).permissions(permissionCodes).build();
+                .token(token).resources(resources).build();
     }
 
     @Override
@@ -78,66 +75,30 @@ public class PermissionServiceImpl extends BaseServiceImpl<PermissionMapper, Per
         return (Integer)redisTemplate.opsForValue().get(BracePlaceholder.resolveByObject(UserCacheKey.USER_ID_KEY, token));
     }
 
-
     @Override
-    public Permission changeStatus(Integer id, Integer status) {
-        Permission p = getById(id);
-        BusinessAssert.notNull(p, "该权限不存在！");
-        BusinessAssert.state(EnumUtils.isExist(BoolEnum.values(), status), "权限status错误！");
-        if (p.getStatus().equals(status)) {
-            return p;
-        }
-        // 重命名redis key,是禁用则将key改为 code:0形式，否则将code:0改为code
-        String code = p.getCode();
-        if (BoolEnum.FALSE.getValue().equals(status)) {
-            permissionCacheHandler.disabledPermission(code);
-        } else {
-            permissionCacheHandler.enablePermission(code);
-        }
-        //更新数据库
-        p.setStatus(status);
-        p.setUpdateTime(LocalDateTime.now());
-        return updateById(p);
+    public void reloadPermission() {
+        permissionCacheHandler.reloadSysPermission();
     }
 
     @Override
-    public Permission savePermission(Permission permission) {
-        BusinessAssert.state(countByCondition(Permission.builder().code(permission.getCode()).build()) == 0,
-                "该权限code已经存在！");
-        LocalDateTime now = LocalDateTime.now();
-        permission.setCreateTime(now);
-        permission.setUpdateTime(now);
-        permission.setStatus(BoolEnum.TRUE.getValue());
-        permissionCacheHandler.addSysPermission(permission.getCode());
-        return save(permission);
+    public void addPermission(String permissionCode) {
+        permissionCacheHandler.addSysPermission(permissionCode);
     }
 
-    @Override
-    public Permission updatePermission(Permission permission) {
-        Permission old = getById(permission.getId());
-        BusinessAssert.notNull(old, "权限id不存在！");
-        // 如果旧的权限code与新权限code不同，则需校验新的code
-        if (!old.getCode().equals(permission.getCode())) {
-            BusinessAssert.state(countByCondition(Permission.builder().code(permission.getCode()).build()) == 0,
-                    "该权限code已经存在！");
-        }
-        permission.setUpdateTime(LocalDateTime.now());
-        return updateById(permission);
-    }
-
-    @Transactional
-    @Override
-    public Boolean deletePermission(Integer id) {
-        Permission p = getById(id);
-        BusinessAssert.notNull(p, "权限不存在！");
-        if (deleteById(id)) {
-            roleResourceMapper.deleteByCriteria(RoleResource.builder()
-                    .resourceId(id).type(ResourceTypeEnum.PERMISSION.getValue()).build());
-            permissionCacheHandler.deletePermission(p.getCode());
-            return true;
-        }
-        return false;
-    }
+//    @Override
+//    public void disablePermission(String code) {
+//        permissionCacheHandler.disabledPermission(code);
+//    }
+//
+//    @Override
+//    public void enablePermission(String code) {
+//        permissionCacheHandler.enablePermission(code);
+//    }
+//
+//    @Override
+//    public void delPermission(String permissionCode) {
+//        permissionCacheHandler.deletePermission(permissionCode);
+//    }
 
 
 
@@ -170,10 +131,18 @@ public class PermissionServiceImpl extends BaseServiceImpl<PermissionMapper, Per
     @SuppressWarnings("unchecked")
     @Override
     public void save() {
-        String[] permissions = this.listAll().stream()
+        List<Resource> permissions = resourceService.listByCondition(Resource.builder().type(ResourceTypeEnum.PERMISSION.getValue()).build());
+        String[] permissionCodes = permissions.stream()
                 .map(p -> p.getStatus().equals(BoolEnum.FALSE.getValue()) ? PermissionCacheHandler.getDisablePermissionCode(p.getCode()) : p.getCode())
                 .toArray(String[]::new);
-        redisTemplate.boundSetOps(UserCacheKey.ALL_PERMISSION_KEY).add(permissions);
+        redisTemplate.boundSetOps(UserCacheKey.ALL_PERMISSION_KEY).add(permissionCodes);
+    }
+
+    @Override
+    public void reload() {
+        // 删除所有权限，并重新保存
+        redisTemplate.delete(UserCacheKey.ALL_PERMISSION_KEY);
+        this.save();
     }
 
     @SuppressWarnings("unchecked")
@@ -188,16 +157,16 @@ public class PermissionServiceImpl extends BaseServiceImpl<PermissionMapper, Per
         return redisTemplate.boundSetOps(UserCacheKey.ALL_PERMISSION_KEY).isMember(permissionCode);
     }
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public void rename(String oldCode, String newCode) {
-        redisTemplate.boundSetOps(UserCacheKey.ALL_PERMISSION_KEY).remove(oldCode);
-        redisTemplate.boundSetOps(UserCacheKey.ALL_PERMISSION_KEY).add(newCode);
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public void delete(String code) {
-        redisTemplate.boundSetOps(UserCacheKey.ALL_PERMISSION_KEY).remove(code);
-    }
+//    @SuppressWarnings("unchecked")
+//    @Override
+//    public void rename(String oldCode, String newCode) {
+//        redisTemplate.boundSetOps(UserCacheKey.ALL_PERMISSION_KEY).remove(oldCode);
+//        redisTemplate.boundSetOps(UserCacheKey.ALL_PERMISSION_KEY).add(newCode);
+//    }
+//
+//    @SuppressWarnings("unchecked")
+//    @Override
+//    public void delete(String code) {
+//        redisTemplate.boundSetOps(UserCacheKey.ALL_PERMISSION_KEY).remove(code);
+//    }
 }

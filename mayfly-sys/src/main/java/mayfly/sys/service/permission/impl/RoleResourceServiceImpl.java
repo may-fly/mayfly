@@ -7,7 +7,7 @@ import mayfly.dao.RoleResourceMapper;
 import mayfly.entity.RoleResource;
 import mayfly.sys.common.enums.ResourceTypeEnum;
 import mayfly.sys.service.base.impl.BaseServiceImpl;
-import mayfly.sys.service.permission.MenuService;
+import mayfly.sys.service.permission.ResourceService;
 import mayfly.sys.service.permission.PermissionService;
 import mayfly.sys.service.permission.RoleResourceService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +31,7 @@ public class RoleResourceServiceImpl extends BaseServiceImpl<RoleResourceMapper,
     @Autowired
     private PermissionService permissionService;
     @Autowired
-    private MenuService menuService;
+    private ResourceService resourceService;
 
     @Override
     public List<Integer> listResourceId(Integer roleId, ResourceTypeEnum type) {
@@ -61,7 +61,7 @@ public class RoleResourceServiceImpl extends BaseServiceImpl<RoleResourceMapper,
             if (type == ResourceTypeEnum.PERMISSION) {
                 BusinessAssert.notNull(permissionService.getById(id), "id : " + id + "的权限不存在！");
             } else {
-                BusinessAssert.notNull(menuService.getById(id), "id : " + id + "的菜单不存在！");
+                BusinessAssert.notNull(resourceService.getById(id), "id : " + id + "的菜单不存在！");
             }
             RoleResource rr = RoleResource.builder().roleId(roleId).resourceId(id).type(type.getValue()).createTime(now).build();
             save(rr);

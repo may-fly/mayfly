@@ -1,18 +1,24 @@
 <template>
   <div class="menu-dialog">
-    <el-dialog :title="title" :visible="dialogFormVisible" :show-close="false" width="25%">
+    <el-dialog :title="title" :visible="dialogFormVisible" :show-close="false" width="35%">
       <el-form :model="form" ref="menuForm" :rules="rules" label-width="85px" size="small">
         <el-form-item prop="name" label="名称:" required>
-          <el-input v-model.trim="form.name" placeholder="请输入菜单名" auto-complete="off"></el-input>
+          <el-input v-model.trim="form.name" placeholder="请输入资源名" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="样式:">
+        <el-form-item prop="type" label="类型:" required>
+          <el-radio v-for="item in enums.ResourceTypeEnum" :key="item.value" v-model="form.type" :label="item.value">{{item.label}}</el-radio>
+        </el-form-item>
+        <el-form-item v-if="form.type === enums.ResourceTypeEnum.MENU.value" label="样式:">
           <el-input v-model.trim="form.icon" placeholder="请输入菜单图标样式"></el-input>
         </el-form-item>
-        <el-form-item label="路由路径:">
+        <el-form-item v-if="form.type === enums.ResourceTypeEnum.MENU.value" prop="path" label="路由路径:" required>
           <el-input v-model.trim="form.path" placeholder="请输入路由路径"></el-input>
         </el-form-item>
+        <el-form-item v-if="form.type === enums.ResourceTypeEnum.PERMISSION.value" prop="code" label="权限code:" required>
+          <el-input v-model.trim="form.code" placeholder="请输入权限code"></el-input>
+        </el-form-item>
         <el-form-item label="权重:" required>
-          <el-input v-model.trim="form.weight" placeholder="请输入权重"></el-input>
+          <el-input v-model.trim="form.weight" type="number" placeholder="请输入权重"></el-input>
         </el-form-item>
       </el-form>
 
@@ -26,6 +32,7 @@
 
 <script>
   import permission from '../permissions.js'
+  import enums from '../enums.js'
   export default {
     name: 'MenuEdit',
     props: {
@@ -36,6 +43,7 @@
     data() {
       return {
         permission: permission.menu,
+        enums: enums,
         //弹出框对象
         dialogForm: {
           title: "",
@@ -49,34 +57,14 @@
         },
         form: {
           id: null,
-          name: '',
-          pid: '',
-          path: '',
-          icon: '',
-          weight: ''
+          name: null,
+          pid: null,
+          path: null,
+          code: null,
+          icon: null,
+          type: null,
+          weight: null
         },
-        operations: [{
-            name: "新增"
-          },
-          {
-            name: "删除"
-          },
-          {
-            name: "删除"
-          },
-          {
-            name: "删除"
-          },
-          {
-            name: "删除"
-          },
-          {
-            name: "删除"
-          },
-          {
-            name: "删除"
-          }
-        ],
         btnLoading: false,
         rules: {
           name: [{
@@ -91,13 +79,13 @@
       'data': {
         handler: function() {
           if (this.data) {
-            for (let k in this.form) {
-              this.form[k] = this.data[k];
-            }
-          } else {
-            for (let k in this.form) {
-              this.form[k] = '';
-            }
+            // for (let k in this.form) {
+            //   let value = this.data[k];
+            //   if (value) {
+            //     this.form[k] = value;
+            //   }
+            // }
+            this.$Utils.copyProperties(this.data, this.form);
           }
         },
         deep: true
@@ -129,6 +117,7 @@
                 }, 1000);
                 //重置表单域
                 this.$refs["menuForm"].resetFields();
+                this.$Utils.resetProperties(this.form);
               })
             } else {
               this.$message.error('表单填写有误');
@@ -138,8 +127,10 @@
         }
       },
       cancel() {
-        this.$emit('cancel');
         this.$refs["menuForm"].resetFields();
+        this.$emit('cancel');
+        //  重置对象属性为null
+        this.$Utils.resetProperties(this.form);
       }
     },
     mounted() {

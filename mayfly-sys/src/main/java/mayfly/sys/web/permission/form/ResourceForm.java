@@ -1,9 +1,11 @@
 package mayfly.sys.web.permission.form;
 
 import lombok.Data;
+import mayfly.common.validation.annotation.EnumValue;
 import mayfly.common.validation.annotation.NotBlank;
 import mayfly.common.validation.annotation.NotNull;
 import mayfly.common.validation.annotation.Size;
+import mayfly.sys.common.enums.ResourceTypeEnum;
 
 /**
  * @author meilin.huang
@@ -11,7 +13,7 @@ import mayfly.common.validation.annotation.Size;
  * @date 2018-12-11 11:18 AM
  */
 @Data
-public class MenuForm {
+public class ResourceForm {
     private Integer pid;
 
     @NotBlank
@@ -19,6 +21,12 @@ public class MenuForm {
     private String name;
 
     private String path;
+
+    private String code;
+
+    @NotNull
+    @EnumValue(ResourceTypeEnum.class)
+    private Integer type;
 
     private String icon;
 

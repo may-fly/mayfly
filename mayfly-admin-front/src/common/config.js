@@ -12,7 +12,8 @@ export default {
     siteName: 'Mayfly Admin',
     // 存在sessionStorage里面的key名称
     tokenKey: 'token',
-    menusKey: 'menus',
+    resourcesKey: 'resources',
+    adminKey: 'admin',
     permissionsKey: 'permissions',
   }
 }

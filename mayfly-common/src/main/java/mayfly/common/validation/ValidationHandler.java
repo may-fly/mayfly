@@ -1,10 +1,8 @@
 package mayfly.common.validation;
 
 
-import mayfly.common.util.Assert;
-import mayfly.common.util.ObjectUtils;
+import mayfly.common.util.*;
 import mayfly.common.util.annotation.AnnotationUtils;
-import mayfly.common.util.ReflectionUtils;
 import mayfly.common.validation.annotation.*;
 import mayfly.common.validation.annotation.validator.*;
 
@@ -70,7 +68,7 @@ public class ValidationHandler {
         for (FieldInfo fieldValidators : getAllFieldInfo(obj)) {
             Field field = fieldValidators.field;
             Object fieldValue = ReflectionUtils.getFieldValue(field, obj);
-            //遍历field字段需要校验的校验器
+            // 遍历field字段需要校验的校验器
             for(Class<? extends Annotation> anno : fieldValidators.validAnnotations) {
                 // 如果是Valid注解，则跳过
                 if (anno == Valid.class) {
@@ -81,21 +79,15 @@ public class ValidationHandler {
                     if (vb == null) {
                         throw new IllegalArgumentException(String.format("@%s注解上没有对应@ValidateBy注解", anno.getSimpleName()));
                     }
-                    return Stream.of(vb.value()).map(clazz -> {
-                        try {
-                            return clazz.newInstance();
-                        } catch (Exception e) {
-                            throw new IllegalArgumentException("实例化Validator失败", e);
-                        }
-                    }).toArray(Validator[]::new);
+                    return Stream.of(vb.value()).map(BeanUtils::instantiate).toArray(Validator[]::new);
                 });
 
                 for (Validator validator : validators) {
+                    Annotation validAnno = AnnotationUtils.getAnnotation(field, anno);
                     @SuppressWarnings("unchecked")
-                    ValidResult result = validator.validation(AnnotationUtils.getAnnotation(field, anno)
-                            , Value.of(field.getName(), fieldValue));
-                    if (!result.isRight()) {
-                        throw new ParamValidErrorException(result.getMessage());
+                    boolean result = validator.validation(validAnno, fieldValue);
+                    if (!result) {
+                        throw new ParamValidErrorException(getErrorMessage(field, validAnno));
                     }
                 }
             }
@@ -135,6 +127,24 @@ public class ValidationHandler {
             ReflectionUtils.doWithFields(key, field -> Optional.ofNullable(getFieldInfo(field)).ifPresent(allFieldValidators::add));
             return allFieldValidators;
         });
+    }
+
+    /**
+     * 获取不满足验证规则的错误消息
+     * @param annotation  校验注解
+     * @return
+     */
+    private String getErrorMessage(Field field, Annotation annotation) {
+        // 获取注解的message属性值
+        Object annoMessage = AnnotationUtils.getAttributeValue(annotation, "message");
+        if (annoMessage == null) {
+            throw new IllegalArgumentException(annotation.annotationType().getName() + "注解类必须含有message属性方法");
+        }
+        // 替换错误消息提示
+        String message = annoMessage.toString();
+        Map<String, Object> attributeMap = AnnotationUtils.getAttributeMap(annotation);
+        attributeMap.put("fieldName", field.getName());
+        return BracePlaceholder.resolveByMap(message, attributeMap);
     }
 
     /**

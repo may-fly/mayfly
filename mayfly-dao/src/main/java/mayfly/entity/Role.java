@@ -28,5 +28,5 @@ public class Role implements Serializable {
     private LocalDateTime updateTime;
 
     @NoColumn
-    private List<Menu> menus;
+    private List<Resource> resources;
 }
