@@ -100,18 +100,12 @@ public class PermissionController
 具体如何拦截以及实时启用禁用可见对应拦截器:mayfly.sys.interceptor.PermissionInterceptor
 
 - ### 前端枚举值统一管理维护
-具体细节可见前端模块：mayfly-admin-front 或者博客：https://blog.csdn.net/mayfly_hml/article/details/88558895
+具体细节可见前端模块：mayfly-admin-front 或者博客：https://www.jianshu.com/p/75516ec4f366
 
 ## 系统部分页面
 
-1.权限页面列表
-![权限列表](https://images.gitee.com/uploads/images/2019/0329/140632_8cf39721_1240250.png "屏幕截图.png")
+1.菜单&权限管理页
+![菜单&权限管理](https://images.gitee.com/uploads/images/2019/0727/160648_88d6bc70_1240250.png "屏幕截图.png")
 
-2.菜单管理页面
-![菜单管理](https://images.gitee.com/uploads/images/2019/0329/163134_e7ef9bba_1240250.png "屏幕截图.png")
-
-3.分配角色权限
-![分配角色权限](https://images.gitee.com/uploads/images/2019/0329/163315_36ed462b_1240250.png "屏幕截图.png")
-
-4.分配菜单
-![分配菜单](https://images.gitee.com/uploads/images/2019/0329/163414_b445068b_1240250.png "屏幕截图.png")
+2.角色分配菜单&权限页
+![分配角色权限](https://images.gitee.com/uploads/images/2019/0727/160803_36bf030d_1240250.png "屏幕截图.png")
