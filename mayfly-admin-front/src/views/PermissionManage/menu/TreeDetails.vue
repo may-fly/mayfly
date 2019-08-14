@@ -26,18 +26,22 @@
         </el-tooltip>
 
         <el-tooltip content="禁用" placement="top" effect="light">
-          <el-button v-permission="permission.changeStatus.code" v-if="data.data.status === 1 && data.data.type === enums.ResourceTypeEnum.PERMISSION.value" @click="changeStatus(data,$event)" type="warning" icon="el-icon-close"
+          <el-button v-permission="permission.changeStatus.code" 
+          v-if="data.data.status === 1 && data.data.type === enums.ResourceTypeEnum.PERMISSION.value" 
+          @click="changeStatus(data, $event, 0)" type="warning" icon="el-icon-close"
             size="mini" circle></el-button>
         </el-tooltip>
 
         <el-tooltip content="启用" placement="top" effect="light">
-          <el-button v-permission="permission.changeStatus.code" v-if="data.data.status === 0 && data.data.type === enums.ResourceTypeEnum.PERMISSION.value" @click="changeStatus(data,$event)" type="success" icon="el-icon-check"
+          <el-button v-permission="permission.changeStatus.code" 
+          v-if="data.data.status === 0 && data.data.type === enums.ResourceTypeEnum.PERMISSION.value" 
+          @click="changeStatus(data, $event, 1)" type="success" icon="el-icon-check"
             size="mini" circle></el-button>
         </el-tooltip>
         
         <el-tooltip content="删除" placement="top" effect="light">
-          <el-button v-permission="permission.del.code" @click="deleteDepart(data, $event)" type="danger" icon="el-icon-delete"
-            size="mini" circle></el-button>
+          <el-button v-permission="permission.del.code" @click="deleteDepart(data, $event)" 
+          type="danger" icon="el-icon-delete" size="mini" circle></el-button>
             </el-button>
         </el-tooltip>
 
@@ -75,14 +79,8 @@
         this.$emit('edit-menu', node.data);
         e.cancelBubble = true;
       },
-      changeStatus(node, e) {
-        let data = node.data;
-        if (data.status == 1) {
-          data.status = 0;
-        } else {
-          data.status = 1;
-        }
-        this.$emit('changeStatus', data);
+      changeStatus(node, e, changeStatus) {
+        this.$emit('changeStatus', node.data, changeStatus);
         e.cancelBubble = true;
       },
       info(node, e) {

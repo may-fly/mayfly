@@ -1,9 +1,6 @@
 package mayfly.common.permission.registry;
 
 import mayfly.common.enums.BoolEnum;
-import mayfly.common.web.RequestUri;
-import mayfly.common.web.UriMatchHandler;
-import mayfly.common.web.UriPattern;
 
 import java.util.Collection;
 import java.util.concurrent.TimeUnit;
@@ -35,10 +32,6 @@ public final class PermissionCacheHandler {
      */
     private boolean saveSysCode = false;
 
-    /**
-     * uri匹配处理器
-     */
-    private UriMatchHandler uriMatchHandler = UriMatchHandler.getInstance();
 
     private PermissionCacheHandler(UserPermissionCodeRegistry userCodeRegistry, SysPermissionCodeRegistry sysCodeRegistry){
         this.userCodeRegistry = userCodeRegistry;
@@ -91,55 +84,6 @@ public final class PermissionCacheHandler {
         if (sysCodeRegistry != null) {
             sysCodeRegistry.add(code);
         }
-    }
-
-//    /**
-//     * 禁用指定权限code的权限
-//     * @param permissionCode
-//     */
-//    public void disabledPermission(String permissionCode) {
-//        if (sysCodeRegistry != null && sysCodeRegistry.has(permissionCode)) {
-//            sysCodeRegistry.rename(permissionCode, getDisablePermissionCode(permissionCode));
-//        }
-//    }
-//
-//    /**
-//     * 启用指定权限code的权限
-//     * @param permissionCode
-//     */
-//    public void enablePermission(String permissionCode) {
-//        String disableCode = getDisablePermissionCode(permissionCode);
-//        if (sysCodeRegistry != null && sysCodeRegistry.has(disableCode)) {
-//            sysCodeRegistry.rename(disableCode, permissionCode);
-//        }
-//    }
-//
-//    /**
-//     * 删除指定权限
-//     * @param code
-//     */
-//    public void deletePermission(String code) {
-//        if (sysCodeRegistry != null) {
-//            //如果存在正常使用的权限code，则删除返回，否则继续判断该权限是否为禁用状态
-//            if (sysCodeRegistry.has(code)) {
-//                sysCodeRegistry.delete(code);
-//                return;
-//            }
-//            String disableCode = getDisablePermissionCode(code);
-//            if (sysCodeRegistry.has(disableCode)) {
-//                sysCodeRegistry.delete(disableCode);
-//            }
-//        }
-//    }
-
-    /**
-     * 返回与requestUri匹配的uriPattern
-     * @param requestUri
-     * @param uriPatterns
-     * @return
-     */
-    public UriPattern matchAndReturnPattern(RequestUri requestUri, Collection<UriPattern>uriPatterns) {
-        return this.uriMatchHandler.matchAndReturnPattern(requestUri, uriPatterns);
     }
 
     /**

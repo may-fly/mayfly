@@ -2,6 +2,7 @@ package mayfly.sys.service.permission.impl;
 
 import mayfly.common.enums.BoolEnum;
 import mayfly.common.util.BusinessAssert;
+import mayfly.common.util.CollectionUtils;
 import mayfly.common.util.EnumUtils;
 import mayfly.dao.ResourceMapper;
 import mayfly.entity.Resource;
@@ -18,8 +19,8 @@ import java.util.*;
 
 /**
  * 菜单实现类
- * @author: hml
- * @date: 2018/6/27 下午4:09
+ * @author hml
+ * @date 2018/6/27 下午4:09
  */
 @Service
 public class ResourceServiceImpl extends BaseServiceImpl<ResourceMapper, Resource> implements ResourceService {
@@ -76,7 +77,10 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourceMapper, Resourc
     public Resource updateResource(Resource resource) {
         Resource old = getById(resource.getId());
         BusinessAssert.notNull(old, "资源不存在");
+        BusinessAssert.state(Objects.equals(resource.getType(), old.getType()), "资源类型不可变更");
+
         resource.setUpdateTime(LocalDateTime.now());
+
         if (Objects.equals(old.getType(), ResourceTypeEnum.MENU.getValue())) {
             BusinessAssert.notEmpty(resource.getPath(), "菜单路径不能为空");
             return updateById(resource);
@@ -84,7 +88,11 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourceMapper, Resourc
 
         BusinessAssert.notEmpty(resource.getCode(), "权限code不能为空");
         updateById(resource);
-        permissionService.reloadPermission();
+
+        if (!Objects.equals(resource.getCode(), old.getCode())) {
+            // 重新加载权限code
+            permissionService.reloadPermission();
+        }
         return resource;
     }
 
@@ -111,12 +119,11 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourceMapper, Resourc
 
     @Override
     public void deleteResource(Integer id) {
-        List<Integer> deleteIds = getChildrenIdByPid(id);
-        for (Integer i : deleteIds) {
-           BusinessAssert.state(deleteById(i), "删除菜单失败！");
-           // 删除角色资源表中该菜单所关联的所有信息
-           roleResourceService.deleteByResourceIdAndType(id, ResourceTypeEnum.MENU);
-        }
+        BusinessAssert.state(CollectionUtils.isEmpty(listByCondition(Resource.builder().pid(id).build())),
+                "请先删除该资源的子资源");
+        BusinessAssert.state(deleteById(id), "删除菜单失败！");
+        // 删除角色资源表中该菜单所关联的所有信息
+        roleResourceService.deleteByResourceIdAndType(id, ResourceTypeEnum.MENU);
         // 重新加载权限code
         permissionService.reloadPermission();
     }
@@ -126,23 +133,23 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourceMapper, Resourc
      * @param id
      * @return
      */
-    private List<Integer> getChildrenIdByPid(Integer id) {
-        List<Integer> ids = new ArrayList<>();
-        ids.add(id);
-        Integer pid = id;
-        a: for (Iterator<Resource> ite = listAll().iterator(); ite.hasNext(); ) {
-            Resource resource = ite.next();
-            if (resource.getPid().equals(pid)) {
-                Integer menuId = resource.getId();
-                ids.add(menuId);
-                pid = menuId;
-                ite.remove();
-                break a;
-            }
-        }
-
-        return ids;
-    }
+//    private List<Integer> getChildrenIdByPid(Integer id) {
+//        List<Integer> ids = new ArrayList<>();
+//        ids.add(id);
+//        Integer pid = id;
+//        a: for (Iterator<Resource> ite = listAll().iterator(); ite.hasNext(); ) {
+//            Resource resource = ite.next();
+//            if (resource.getPid().equals(pid)) {
+//                Integer menuId = resource.getId();
+//                ids.add(menuId);
+//                pid = menuId;
+//                ite.remove();
+//                break a;
+//            }
+//        }
+//
+//        return ids;
+//    }
 
     /**
      * 生成菜单树

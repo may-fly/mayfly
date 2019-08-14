@@ -3,6 +3,7 @@ package mayfly.common.util;
 import mayfly.common.exception.BusinessRuntimeException;
 
 import java.util.Collection;
+import java.util.function.Supplier;
 
 /**
  * 业务断言
@@ -19,6 +20,10 @@ public class BusinessAssert {
      */
     public static void notNull(Object object, String msg) {
         state(object != null, msg);
+    }
+
+    public static void notNull(Object object, Supplier<String> supplier) {
+        state(object != null, supplier);
     }
 
     /**
@@ -47,6 +52,17 @@ public class BusinessAssert {
     public static void state(boolean expression, String message) {
         if (!expression) {
             throw new BusinessRuntimeException(message);
+        }
+    }
+
+    /**
+     * 断言一个boolean表达式，用于需要大量拼接字符串以及一些其他操作等
+     * @param expression  boolean表达式
+     * @param supplier    msg生产者
+     */
+    public static void state(boolean expression, Supplier<String> supplier) {
+        if (!expression) {
+            throw new BusinessRuntimeException(supplier.get());
         }
     }
 }

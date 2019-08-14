@@ -22,6 +22,7 @@ class Permission {
 
   /**
    * 权限对应的uri
+   * @param {String} uri 请求uri
    */
   uri(uri) {
     this.uri = uri;
@@ -30,6 +31,7 @@ class Permission {
 
   /**
    * uri的请求方法(方法枚举)
+   * @param {Number} method 请求方法
    */
   method(method) {
     this.method = method;
@@ -38,6 +40,7 @@ class Permission {
 
   /**
    * 操作该权限，即请求对应的uri
+   * @param {Object} param 请求该权限的参数
    */
   request(param) {
     return request.send(this, param);
@@ -45,6 +48,7 @@ class Permission {
 
   /**
    * 静态工厂，设置code，并返回Permission对象
+   * @param {String} code 权限code（权限标识符）Permission对象必有的属性
    */
   static code(code) {
     return new Permission(code);
@@ -87,12 +91,6 @@ class Permission {
           }
           return new PermissionInfo(true, false);
         }
-        // // 不可用状态权限code
-        // let disableCode = code + ":" + 0;
-        // // 如果是不可用状态，则标识disable为true
-        // if (p.code === disableCode) {
-        //   return new PermissionInfo(true, true);
-        // }
       }
     }
 

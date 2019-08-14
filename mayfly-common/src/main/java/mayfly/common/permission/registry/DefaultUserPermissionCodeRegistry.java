@@ -1,5 +1,6 @@
 package mayfly.common.permission.registry;
 
+import mayfly.common.util.CollectionUtils;
 import mayfly.common.util.ScheduleUtils;
 
 import java.util.Collection;
@@ -46,7 +47,6 @@ public class DefaultUserPermissionCodeRegistry implements UserPermissionCodeRegi
 
     @Override
     public boolean has(Integer userId, String permissionCode) {
-        Collection<String> codes;
-        return (codes = permissionCache.get(userId)) != null && codes.contains(permissionCode);
+        return CollectionUtils.contains(permissionCache.get(userId), permissionCode);
     }
 }

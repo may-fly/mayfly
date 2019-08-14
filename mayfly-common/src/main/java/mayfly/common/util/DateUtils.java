@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAccessor;
 
 /**
@@ -62,7 +61,6 @@ public final class DateUtils {
         return formatDate(temporal, DateTimeFormatter.ofPattern(pattern));
     }
 
-
     /**
      * 默认解析字符串日期时间
      * @param dateTime
@@ -70,9 +68,5 @@ public final class DateUtils {
      */
     public static LocalDateTime defaultParse(String dateTime) {
         return LocalDateTime.parse(dateTime, defaultDateTimeFormatter);
-    }
-
-    public static void main(String[] args) {
-        System.out.println(ChronoUnit.DAYS.between(LocalDate.now(), LocalDate.now().plusWeeks(1)));
     }
 }

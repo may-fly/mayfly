@@ -42,13 +42,18 @@ public class DefaultSysPermissionCodeRegistry implements SysPermissionCodeRegist
     }
 
     @Override
-    public void rename(String oldCode, String newCode) {
-        permissions.remove(oldCode);
-        permissions.add(newCode);
+    public void reload() {
+
     }
 
-    @Override
-    public void delete(String code) {
-        permissions.remove(code);
-    }
+    //    @Override
+//    public void rename(String oldCode, String newCode) {
+//        permissions.remove(oldCode);
+//        permissions.add(newCode);
+//    }
+//
+//    @Override
+//    public void delete(String code) {
+//        permissions.remove(code);
+//    }
 }

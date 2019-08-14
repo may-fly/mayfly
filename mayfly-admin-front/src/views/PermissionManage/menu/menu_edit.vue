@@ -6,7 +6,7 @@
           <el-input v-model.trim="form.name" placeholder="请输入资源名" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item prop="type" label="类型:" required>
-          <el-radio v-for="item in enums.ResourceTypeEnum" :key="item.value" v-model="form.type" :label="item.value">{{item.label}}</el-radio>
+          <el-radio :disabled="typeDisabled" v-for="item in enums.ResourceTypeEnum" :key="item.value" v-model="form.type" :label="item.value">{{item.label}}</el-radio>
         </el-form-item>
         <el-form-item v-if="form.type === enums.ResourceTypeEnum.MENU.value" label="样式:">
           <el-input v-model.trim="form.icon" placeholder="请输入菜单图标样式"></el-input>
@@ -38,7 +38,8 @@
     props: {
       dialogFormVisible: Boolean,
       data: [Object, Boolean],
-      title: String
+      title: String,
+      type: Number
     },
     data() {
       return {
@@ -65,6 +66,8 @@
           type: null,
           weight: null
         },
+        // 资源类型选择是否禁用
+        typeDisabled: false,
         btnLoading: false,
         rules: {
           name: [{
@@ -78,14 +81,15 @@
     watch: {
       'data': {
         handler: function() {
-          if (this.data) {
-            // for (let k in this.form) {
-            //   let value = this.data[k];
-            //   if (value) {
-            //     this.form[k] = value;
-            //   }
-            // }
+          if (this.data && this.type == 3) {
+            // 编辑修改状态不可修改资源类型
+            this.typeDisabled = true;
             this.$Utils.copyProperties(this.data, this.form);
+          } else {
+            this.typeDisabled = false;
+            if (this.data && this.type == 2) {
+              this.form.pid = this.data.pid;
+            }
           }
         },
         deep: true

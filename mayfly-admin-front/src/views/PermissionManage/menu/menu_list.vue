@@ -5,7 +5,7 @@
     </ToolBar>
     <el-tree :indent="38" :props="props" :data="data" @node-click="handleNodeClick" :render-content="renderContent">
     </el-tree>
-    <MenuEdit :title="dialogForm.title" :dialogFormVisible="dialogForm.visible" :data="dialogForm.data" :departTree="data"
+    <MenuEdit :title="dialogForm.title" :dialogFormVisible="dialogForm.visible" :data="dialogForm.data" :departTree="data" :type="dialogForm.type"
       @val-change="valChange" @cancel="editorCancel()">
     </MenuEdit>
   </div>
@@ -24,7 +24,9 @@
         dialogForm: {
           title: "",
           visible: false,
-          data: {}
+          data: {},
+          // 1.新增顶级节点；2.新增子节点；3.编辑节点
+          type: 1
         },
         currentEditCategory: null,
         data: [],
@@ -59,12 +61,13 @@
       },
       addMenu(data) {
         this.dialogForm.visible = true;
-        self.currentEditCategory = null;
         if (!data) {
-          this.dialogForm.data = {};
+          this.dialogForm.data = false;
+          this.dialogForm.type = 1;
           this.dialogForm.title = '添加顶级菜单';
         } else {
           this.dialogForm.data = {};
+          this.dialogForm.type = 2;
           this.dialogForm.data.pid = data.id; //添加子菜单，把当前菜单id作为新增菜单pid
           this.dialogForm.title = '添加“' + data.name + '”的子资源 ';
         }
@@ -73,6 +76,7 @@
       editMenu(data) {
         this.dialogForm.visible = true;
         this.dialogForm.data = data;
+        this.dialogForm.type = 3;
         this.dialogForm.title = '修改“' + data.name + '”菜单';
       },
       valChange(data) {
@@ -83,11 +87,12 @@
         this.dialogForm.visible = false;
         this.dialogForm.data = null;
       },
-      changeStatus(data) {
+      changeStatus(data, status) {
         this.permission.changeStatus.request({
           id: data.id,
-          status: data.status
+          status: status
         }).then(res => {
+          data.status = status;
           this.$message.success("操作成功！");
         })
       },
