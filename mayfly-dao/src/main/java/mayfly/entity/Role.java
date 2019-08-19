@@ -21,7 +21,7 @@ public class Role implements Serializable {
 
     private String remark;
 
-    private Byte status;
+    private Integer status;
 
     private LocalDateTime createTime;
 

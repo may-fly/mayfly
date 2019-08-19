@@ -1,7 +1,7 @@
 <template>
   <div style="width: 120px;">
     <el-dialog :title="'编辑“'+role.name+'”菜单&权限'" :visible="visible" :show-close="false" width="300px">
-      <el-tree ref="menuTree" :data="menus" show-checkbox node-key="id" :default-checked-keys="defaultCheckedKeys"
+      <el-tree ref="menuTree" :data="resources" show-checkbox node-key="id" :default-checked-keys="defaultCheckedKeys"
         :props="defaultProps">
         <span class="custom-tree-node" slot-scope="{ node, data }">
           <span v-if="data.type == enums.ResourceTypeEnum.MENU.value">{{ node.label }}</span>
@@ -23,6 +23,10 @@
     props: {
       visible: Boolean,
       role: [Object, Boolean],
+      // 默认勾选的节点
+      defaultCheckedKeys: Array,
+      // 所有资源树
+      resources: Array,
       title: String
     },
     data() {
@@ -37,32 +41,7 @@
           children: 'children',
           label: 'name'
         },
-        defaultCheckedKeys: []
       };
-    },
-    watch: {
-      role() {
-        permission.menu.list.request(null).then(res => {
-          // 获取所有菜单列表
-          this.menus = res;
-          // 获取该角色拥有的菜单id
-          this.permission.roleMenus.request({
-            id: this.role.id
-          }).then(res => {
-            let hasIds = res;
-            let hasLeafIds = [];
-            // 获取菜单的所有叶子节点
-            let leafIds = this.getAllLeafIds(this.menus);
-            for (let id of leafIds) {
-              // 判断角色拥有的菜单id中，是否含有该叶子节点，有则添加进入用户拥有的叶子节点
-              if (hasIds.includes(id)) {
-                hasLeafIds.push(id);
-              }
-            }
-            this.defaultCheckedKeys = hasLeafIds;
-          });
-        })
-      }
     },
     methods: {
       /**
@@ -86,24 +65,25 @@
         }
       },
       btnOk() {
-        let saveMenu = this.permission.saveMenu;
+        let saveMenu = this.permission.saveResources;
         let permission = this.$Permission.getPermission(saveMenu.code);
         if (!permission.show) {
           this.$message.error('您没有该权限!');
-        } else {
-          let menuIds = this.$refs.menuTree.getCheckedKeys();
-          let halfMenuIds = this.$refs.menuTree.getHalfCheckedKeys()
-          let menus = [].concat(menuIds, halfMenuIds).join(",");
-          saveMenu.request({
-            id: this.role.id,
-            resourceIds: menus
-          }).then(res => {
-            if (res) {
-              this.$message.success('保存成功!');
-              this.$emit('cancel')
-            }
-          });
+          return;
         }
+        let menuIds = this.$refs.menuTree.getCheckedKeys();
+        let halfMenuIds = this.$refs.menuTree.getHalfCheckedKeys()
+        let resources = [].concat(menuIds, halfMenuIds).join(",");
+        saveMenu.request({
+          id: this.role.id,
+          resourceIds: resources
+        }).then(res => {
+          if (res) {
+            this.defaultCheckedKeys = []
+            this.$message.success('保存成功!');
+            this.$emit('cancel')
+          }
+        });
       }
     },
     mounted() {

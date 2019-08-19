@@ -4,6 +4,7 @@ import mayfly.common.exception.BusinessException;
 import mayfly.common.util.BusinessAssert;
 import mayfly.common.util.CollectionUtils;
 import mayfly.dao.RoleResourceMapper;
+import mayfly.entity.Resource;
 import mayfly.entity.RoleResource;
 import mayfly.sys.common.enums.ResourceTypeEnum;
 import mayfly.sys.service.base.impl.BaseServiceImpl;
@@ -34,15 +35,15 @@ public class RoleResourceServiceImpl extends BaseServiceImpl<RoleResourceMapper,
     private ResourceService resourceService;
 
     @Override
-    public List<Integer> listResourceId(Integer roleId, ResourceTypeEnum type) {
-        RoleResource condition = RoleResource.builder().roleId(roleId).type(type.getValue()).build();
+    public List<Integer> listResourceId(Integer roleId) {
+        RoleResource condition = RoleResource.builder().roleId(roleId).build();
         return listByCondition(condition).stream().map(RoleResource::getResourceId).collect(Collectors.toList());
     }
 
     @Transactional
     @Override
-    public Boolean saveResource(Integer roleId, List<Integer> resourceIds, ResourceTypeEnum type) throws BusinessException {
-        List<Integer> oldIds = listResourceId(roleId, type);
+    public Boolean saveResource(Integer roleId, List<Integer> resourceIds) throws BusinessException {
+        List<Integer> oldIds = listResourceId(roleId);
         //和之前存的权限列表id比较，哪些是新增已经哪些是修改以及不变的
         CollectionUtils.CompareResult<Integer> compareResult = CollectionUtils
                 .compare(resourceIds, oldIds, (Integer i1, Integer i2) -> i1.equals(i2) ? 0 : 1);
@@ -52,18 +53,15 @@ public class RoleResourceServiceImpl extends BaseServiceImpl<RoleResourceMapper,
 
         delIds.forEach(id -> {
             deleteByCondition(RoleResource.builder()
-                    .roleId(roleId).resourceId(id).type(type.getValue()).build());
+                    .roleId(roleId).resourceId(id).build());
         });
 
         LocalDateTime now = LocalDateTime.now();
         List<RoleResource> addValues = new ArrayList<>(addIds.size());
         for (Integer id : addIds) {
-            if (type == ResourceTypeEnum.PERMISSION) {
-                BusinessAssert.notNull(permissionService.getById(id), "id : " + id + "的权限不存在！");
-            } else {
-                BusinessAssert.notNull(resourceService.getById(id), "id : " + id + "的菜单不存在！");
-            }
-            RoleResource rr = RoleResource.builder().roleId(roleId).resourceId(id).type(type.getValue()).createTime(now).build();
+            Resource r = resourceService.getById(id);
+            BusinessAssert.notNull(r, "id : " + id + "的资源不存在！");
+            RoleResource rr = RoleResource.builder().roleId(roleId).resourceId(id).type(r.getType()).createTime(now).build();
             save(rr);
         }
 

@@ -1,12 +1,12 @@
 package mayfly.sys.web.permission;
 
+import mayfly.common.enums.BoolEnum;
 import mayfly.common.exception.BusinessException;
 import mayfly.common.log.MethodLog;
 import mayfly.common.permission.Permission;
 import mayfly.common.result.Result;
 import mayfly.common.validation.annotation.Valid;
 import mayfly.entity.Role;
-import mayfly.sys.common.enums.ResourceTypeEnum;
 import mayfly.sys.common.utils.BeanUtils;
 import mayfly.sys.service.permission.RoleResourceService;
 import mayfly.sys.service.permission.RoleService;
@@ -46,35 +46,17 @@ public class RoleController {
         LocalDateTime now = LocalDateTime.now();
         role.setCreateTime(now);
         role.setUpdateTime(now);
+        role.setStatus(BoolEnum.TRUE.getValue());
         return Result.success().with(roleService.save(role));
     }
 
-    @MethodLog("获取角色拥有的权限")
-    @GetMapping("/v1/roles/{id}/permissions")
-    public Result rolePermissions(@PathVariable Integer id) {
-        return Result.success().with(roleResourceService.listResourceId(id, ResourceTypeEnum.PERMISSION));
-    }
-
-    @PostMapping("/v1/roles/{id}/permissions")
-    public Result savePermission(@PathVariable Integer id, @RequestBody RoleForm roleForm) throws BusinessException {
-        List<Integer> ids;
-        try {
-            ids = Stream.of(roleForm.getResourceIds().split(",")).map(sid -> Integer.valueOf(sid))
-                    .collect(Collectors.toList());
-        } catch (Exception e) {
-            return Result.paramError("permissionIds参数错误！");
-        }
-
-        return Result.success().with(roleResourceService.saveResource(id, ids, ResourceTypeEnum.PERMISSION));
-    }
-
     @GetMapping("/v1/roles/{id}/resources")
-    public  Result roleMenus(@PathVariable Integer id) {
-        return Result.success().with(roleResourceService.listResourceId(id, ResourceTypeEnum.MENU));
+    public  Result roleResources(@PathVariable Integer id) {
+        return Result.success().with(roleResourceService.listResourceId(id));
     }
 
     @PostMapping("/v1/roles/{id}/resources")
-    public  Result saveMenu(@PathVariable Integer id, @RequestBody RoleForm roleForm) throws BusinessException {
+    public  Result saveResources(@PathVariable Integer id, @RequestBody RoleForm roleForm) throws BusinessException {
         List<Integer> ids;
         try {
             ids = Stream.of(roleForm.getResourceIds().split(",")).map(Integer::valueOf).collect(Collectors.toList());
@@ -82,6 +64,6 @@ public class RoleController {
             return Result.paramError("menuIds参数错误！");
         }
 
-        return Result.success().with(roleResourceService.saveResource(id, ids, ResourceTypeEnum.MENU));
+        return Result.success().with(roleResourceService.saveResource(id, ids));
     }
 }

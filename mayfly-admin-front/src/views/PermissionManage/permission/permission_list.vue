@@ -2,7 +2,7 @@
   <div class="user-list">
     <ToolBar>
       <div style="float: left">
-        <el-button v-permission="permission.save.code" type="primary" icon="el-icon-plus" size="small" @click="save({})">添加</el-button>
+        <el-button v-permission="permission.save.code" type="primary" icon="el-icon-plus" size="mini" @click="save({})">添加</el-button>
         <el-input placeholder="请输入api功能！" size="small" style="width: 140px" v-model="params.name" @clear="searchApi"
           clearable>
         </el-input>
@@ -10,7 +10,7 @@
           <el-option v-for="item in groups" :key="item.id" :value="item.id" :label="item.name">
           </el-option>
         </el-select>
-        <el-button v-permission="permission.list.code" @click="searchApi" type="success" icon="el-icon-search" size="small"></el-button>
+        <el-button v-permission="permission.list.code" @click="searchApi" type="success" icon="el-icon-search" size="mini"></el-button>
       </div>
     </ToolBar>
     <el-table :data="permissionList" border ref="table" max-height="800" style="width: 100%">

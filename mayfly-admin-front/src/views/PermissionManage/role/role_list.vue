@@ -1,12 +1,12 @@
 <template>
   <div class="role-list">
     <ToolBar>
-      <el-button type="primary" icon="el-icon-plus" size="small" @click="editRole(false)">添加</el-button>
+      <el-button type="primary" icon="el-icon-plus" size="mini" @click="editRole(false)">添加</el-button>
       <div style="float: right">
         <el-input placeholder="请输入角色名称！" size="small" style="width: 140px" v-model="params.name" @clear="searchRole"
           clearable>
         </el-input>
-        <el-button @click="searchRole" type="success" icon="el-icon-search" size="small"></el-button>
+        <el-button @click="searchRole" type="success" icon="el-icon-search" size="mini"></el-button>
       </div>
     </ToolBar>
     <el-table :data="roles" border ref="table" style="width: 100%">
@@ -21,18 +21,16 @@
       </el-table-column>
       <el-table-column label="操作" width="350px">
         <template slot-scope="scope">
-          <el-button @click="editRole(scope.row)" type="primary" icon="el-icon-edit" size="small">编辑</el-button>
-          <el-button @click="editMenu(scope.row)" type="primary" icon="el-icon-setting" size="small">分配菜单&权限</el-button>
-          <!-- <el-button @click="editPermission(scope.row)" type="success" icon="el-icon-setting" size="small">分配权限</el-button> -->
+          <el-button @click="editRole(scope.row)" type="primary" icon="el-icon-edit" size="mini">编辑</el-button>
+          <el-button @click="editResource(scope.row)" type="primary" icon="el-icon-setting" size="mini">分配菜单&权限</el-button>
         </template>
       </el-table-column>
     </el-table>
     <RoleEdit :title="roleEdit.title" :visible="roleEdit.visible" :data="roleEdit.data" @val-change="roleEditChange"
       @cancel="roleEdit.visible = false">
     </RoleEdit>
-    <!-- <PermissionsEdit :visible="permissionDialog.visible" :role="permissionDialog.role" @success="permissionDialog.visible = false;"
-      @cancel="cancelEditPermisson"></PermissionsEdit> -->
-    <MenuEdit :visible="menuDialog.visible" :role="menuDialog.role" @cancel="menuDialog.visible = false;"></MenuEdit>
+    <ResourceEdit :visible="resourceDialog.visible" :role="resourceDialog.role" :resources="resourceDialog.resources"
+      :defaultCheckedKeys="resourceDialog.defaultCheckedKeys" @cancel="cancelEditResources()"></ResourceEdit>
   </div>
 </template>
 
@@ -40,19 +38,12 @@
   import ToolBar from '~/components/ToolBar/ToolBar.vue';
   import HelpHint from '~/components/HelpHint/HelpHint.vue';
   import RoleEdit from './role_edit.vue'
-  import PermissionsEdit from './permission_edit.vue'
   import permission from '../permissions.js';
-  import MenuEdit from './menu_edit.vue';
+  import ResourceEdit from './resource_edit.vue';
 
   export default {
     data() {
       return {
-        btns: {
-          search: {},
-          editRole: {},
-          editRole: {},
-          editMenu: {}
-        },
         permission: permission.role,
         dialogFormVisible: false,
         currentEditPermissions: false,
@@ -60,13 +51,11 @@
           name: '',
         },
         roles: [],
-        menuDialog: {
+        resourceDialog: {
           visible: false,
-          role: {}
-        },
-        permissionDialog: {
           role: {},
-          visible: false
+          resources: [],
+          defaultCheckedKeys: []
         },
         roleEdit: {
           title: "角色编辑",
@@ -92,28 +81,9 @@
           }
         }
       },
-      tableAction() {
-        return this.$createElement('HelpHint', {
-          props: {
-            content: '编辑角色 / 编辑角色权限'
-          }
-        }, '操作');
-      },
       roleEditChange(data) {
-        console.log(data);
         let self = this;
-
-        self.$notify({
-          title: self.roleEditTitle + '成功！',
-          message: '自己对接Api,并调用你的初始化列表函数！',
-          type: 'success'
-        });
         self.roleEdit.visible = false;
-        // self.$Api.editRole(data,r=>{
-        //   self.$message.success(self.roleEditTitle+'成功！');
-        //   self.init();
-        //   self.dialogFormVisible = false;
-        // });
       },
       editRole(data) {
         if (data) {
@@ -123,30 +93,60 @@
         }
 
         this.roleEdit.visible = true;
-
       },
-      editMenu(row) {
-        console.log(row)
-        this.menuDialog.visible = true;
-        this.menuDialog.role = row;
+      editResource(row) {
+        permission.menu.list.request(null).then(res => {
+          // 获取所有菜单列表
+          this.resourceDialog.resources = res;
+          // 获取该角色拥有的菜单id
+          this.permission.rolePermissions.request({
+            id: row.id
+          }).then(res => {
+            let hasIds = res;
+            let hasLeafIds = [];
+            // 获取菜单的所有叶子节点
+            let leafIds = this.getAllLeafIds(this.resourceDialog.resources);
+            for (let id of leafIds) {
+              // 判断角色拥有的菜单id中，是否含有该叶子节点，有则添加进入用户拥有的叶子节点
+              if (hasIds.includes(id)) {
+                hasLeafIds.push(id);
+              }
+            }
+            this.resourceDialog.defaultCheckedKeys = hasLeafIds;
+          });
+        });
+        this.resourceDialog.visible = true;
+        this.resourceDialog.role = row;
       },
       /**
-       * 编辑(分配)权限
+       * 获取所有菜单树的叶子节点
+       * @param {Object} trees  菜单树列表
        */
-      editPermission(row) {
-        this.permissionDialog.visible = true;
-        this.permissionDialog.role = row;
+      getAllLeafIds(trees) {
+        let leafIds = [];
+        for (let tree of trees) {
+          this.setLeafIds(tree, leafIds)
+        }
+        return leafIds;
       },
-      // 取消编辑权限列表
-      cancelEditPermisson() {
-        this.permissionDialog.visible = false;
-        this.permissionDialog.role = false;
+      setLeafIds(tree, ids) {
+        if (tree.children !== null) {
+          for (let t of tree.children) {
+            this.setLeafIds(t, ids);
+          }
+        } else {
+          ids.push(tree.id);
+        }
       },
-      UploadRole(data) {
-
+      /**
+       * 取消编辑资源权限树
+       */
+      cancelEditResources() {
+        this.resourceDialog.visible = false;
+        this.resourceDialog.role = false;
+        this.resourceDialog.defaultCheckedKeys = [];
       },
       deleteRole(id) {
-
         this.$message({
           message: '这里请求api删除或者恢复用户之后刷新分页组件，列表自动更新',
           type: 'success'
@@ -178,8 +178,7 @@
       ToolBar,
       HelpHint,
       RoleEdit,
-      PermissionsEdit,
-      MenuEdit
+      ResourceEdit
     }
   }
 </script>

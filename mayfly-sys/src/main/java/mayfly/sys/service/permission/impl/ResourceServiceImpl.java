@@ -6,6 +6,7 @@ import mayfly.common.util.CollectionUtils;
 import mayfly.common.util.EnumUtils;
 import mayfly.dao.ResourceMapper;
 import mayfly.entity.Resource;
+import mayfly.entity.RoleResource;
 import mayfly.sys.common.enums.ResourceTypeEnum;
 import mayfly.sys.service.base.impl.BaseServiceImpl;
 import mayfly.sys.service.permission.PermissionService;
@@ -13,6 +14,7 @@ import mayfly.sys.service.permission.ResourceService;
 import mayfly.sys.service.permission.RoleResourceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -82,7 +84,7 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourceMapper, Resourc
         resource.setUpdateTime(LocalDateTime.now());
 
         if (Objects.equals(old.getType(), ResourceTypeEnum.MENU.getValue())) {
-            BusinessAssert.notEmpty(resource.getPath(), "菜单路径不能为空");
+//            BusinessAssert.notEmpty(resource.getPath(), "菜单路径不能为空");
             return updateById(resource);
         }
 
@@ -117,13 +119,14 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourceMapper, Resourc
         return resource;
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public void deleteResource(Integer id) {
         BusinessAssert.state(CollectionUtils.isEmpty(listByCondition(Resource.builder().pid(id).build())),
                 "请先删除该资源的子资源");
         BusinessAssert.state(deleteById(id), "删除菜单失败！");
         // 删除角色资源表中该菜单所关联的所有信息
-        roleResourceService.deleteByResourceIdAndType(id, ResourceTypeEnum.MENU);
+        roleResourceService.deleteByCondition(RoleResource.builder().resourceId(id).build());
         // 重新加载权限code
         permissionService.reloadPermission();
     }

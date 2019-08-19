@@ -1,7 +1,7 @@
 <template>
   <div class="menu">
     <ToolBar>
-      <el-button v-permission="permission.save.code" type="primary" icon="el-icon-plus" size="small" @click="addMenu(false)">添加</el-button>
+      <el-button v-permission="permission.save.code" type="primary" icon="el-icon-plus" size="mini" @click="addMenu(false)">添加</el-button>
     </ToolBar>
     <el-tree :indent="38" :props="props" :data="data" @node-click="handleNodeClick" :render-content="renderContent">
     </el-tree>

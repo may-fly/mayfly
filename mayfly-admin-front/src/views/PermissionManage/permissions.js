@@ -38,12 +38,12 @@ const code = {
 	role: {
 		list: Permission.code("role:list").uri("/sys/v1/roles").method(method.GET),
 		save: Permission.code("role:save").uri("/sys/v1/roles").method(method.POST),
-		// 获取指定角色拥有的权限
-		rolePermissions: Permission.code("role:rolePermissions").uri("/sys/v1/roles/{id}/permissions").method(method.GET),
+		// 获取指定角色拥有的资源
+		rolePermissions: Permission.code("role:rolePermissions").uri("/sys/v1/roles/{id}/resources").method(method.GET),
 		// 获取指定角色拥有的菜单
-		roleMenus: Permission.code("role:roleMenus").uri("/sys/v1/roles/{id}/resources").method(method.GET),
-		savePermission: Permission.code("role:savePermission").uri("/sys/v1/roles/{id}/permissions").method(method.POST),
-		saveMenu: Permission.code("role:saveMenu").uri("/sys/v1/roles/{id}/resources").method(method.POST)
+		// roleMenus: Permission.code("role:roleMenus").uri("/sys/v1/roles/{id}/resources").method(method.GET),
+		// savePermission: Permission.code("role:savePermission").uri("/sys/v1/roles/{id}/permissions").method(method.POST),
+		saveResources: Permission.code("role:saveResources").uri("/sys/v1/roles/{id}/resources").method(method.POST)
 	},
   
   account: {

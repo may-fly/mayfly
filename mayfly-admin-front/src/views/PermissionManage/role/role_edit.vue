@@ -18,6 +18,7 @@
 </template>
 
 <script>
+  import permission from '../permissions.js'
   export default {
     name: 'RoleEdit',
     props: {
@@ -27,6 +28,7 @@
     },
     data() {
       return {
+        permission: permission.role,
         form: {
           id: null,
           name: '',
@@ -64,11 +66,13 @@
           this.$message.error(errorMsg);
           return;
         }
-        this.$emit('val-change', this.form);
-        this.btnLoading = true;
-        setTimeout(() => {
-          this.btnLoading = false
-        }, 1000)
+        this.permission.save.request(this.form).then(res => {
+          this.$emit('val-change', this.form);
+          this.btnLoading = true;
+          setTimeout(() => {
+            this.btnLoading = false
+          }, 1000)
+        }).catch(e => this.$message.error(e))
       },
     },
     components: {}

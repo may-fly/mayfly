@@ -15,13 +15,13 @@ import java.util.List;
 public interface RoleResourceService extends BaseService<RoleResource> {
 
     /**
-     * 获取角色拥有的资源列表id
-     * @param roleId
-     * @return
+     * 获取角色拥有的资源id列表
+     * @param roleId 角色id
+     * @return       资源id列表
      */
-    List<Integer> listResourceId(Integer roleId, ResourceTypeEnum type);
+    List<Integer> listResourceId(Integer roleId);
 
-    Boolean saveResource(Integer roleId, List<Integer> resourceIds, ResourceTypeEnum type) throws BusinessException;
+    Boolean saveResource(Integer roleId, List<Integer> resourceIds) throws BusinessException;
 
     /**
      * 删除角色资源

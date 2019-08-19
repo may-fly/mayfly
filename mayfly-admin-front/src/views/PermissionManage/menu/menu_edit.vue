@@ -11,7 +11,7 @@
         <el-form-item v-if="form.type === enums.ResourceTypeEnum.MENU.value" label="样式:">
           <el-input v-model.trim="form.icon" placeholder="请输入菜单图标样式"></el-input>
         </el-form-item>
-        <el-form-item v-if="form.type === enums.ResourceTypeEnum.MENU.value" prop="path" label="路由路径:" required>
+        <el-form-item v-if="form.type === enums.ResourceTypeEnum.MENU.value" prop="path" label="路由路径:">
           <el-input v-model.trim="form.path" placeholder="请输入路由路径"></el-input>
         </el-form-item>
         <el-form-item v-if="form.type === enums.ResourceTypeEnum.PERMISSION.value" prop="code" label="权限code:" required>

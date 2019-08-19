@@ -24,6 +24,18 @@ function parseResponse(res) {
     }
     // 获取请求返回结果
     let data = res.data;
+    // 如果提示没有权限，则移除token，使其重新登录
+    if (data.code === enums.ResultEnum.NO_PERMISSION.value) {
+      sessionStorage.removeItem(Config.name.tokenKey);
+      ElementUI.Notification.error({
+        title: '请求错误',
+        message: '登录超时'
+      });
+      setTimeout(() => {
+        location.href = '/login';
+      }, 1000)
+      return;
+    }
     if (data.code === enums.ResultEnum.SUCCESS.value) {
       resolve(data.data);
     } else {

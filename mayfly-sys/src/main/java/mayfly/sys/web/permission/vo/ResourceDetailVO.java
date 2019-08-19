@@ -10,6 +10,6 @@ import java.util.List;
  * @date 2019-07-27 10:52
  */
 @Data
-public class MenuVO {
-    private List<MenuVO> children;
+public class ResourceDetailVO {
+    private List<ResourceDetailVO> children;
 }

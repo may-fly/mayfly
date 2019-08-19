@@ -18,5 +18,4 @@ public class RoleForm {
     private String remark;
 
     private String resourceIds;
-
 }
