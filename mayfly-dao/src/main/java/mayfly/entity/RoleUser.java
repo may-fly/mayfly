@@ -1,6 +1,10 @@
 package mayfly.entity;
 
-import java.io.Serializable;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.time.LocalDateTime;
 
 /**
@@ -8,7 +12,11 @@ import java.time.LocalDateTime;
  * @author: hml
  * @date: 2018/6/27 下午2:35
  */
-public class RoleUser implements Serializable {
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class RoleUser {
 
     private Integer id;
 

@@ -1,6 +1,6 @@
 <template>
   <div style="width: 120px;">
-    <el-dialog :title="'编辑“'+role.name+'”菜单&权限'" :visible="visible" :show-close="false" width="300px">
+    <el-dialog :title="'编辑“'+role.name+'”菜单&权限'" :visible="visible" :show-close="false" width="400px">
       <el-tree ref="menuTree" :data="resources" show-checkbox node-key="id" :default-checked-keys="defaultCheckedKeys"
         :props="defaultProps">
         <span class="custom-tree-node" slot-scope="{ node, data }">

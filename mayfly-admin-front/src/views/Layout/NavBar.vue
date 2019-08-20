@@ -1,8 +1,7 @@
 <template>
   <nav class="nav-bar">
     <ScrollPane class="nav-bar-scroll">
-      <router-link :to="v.path" class="nav-bar-tag" v-for="(v,i) in nav"
-                   :key="i.path" :class="$route.path == v.path ? ' active':''">
+      <router-link :to="v.path" class="nav-bar-tag" v-for="(v,i) in nav" :key="i.path" :class="$route.path == v.path ? ' active':''">
         <i class="point"></i>
         {{ v.title }}
         <div v-show="nav.length != 1" class="close-box">
@@ -27,11 +26,15 @@
     },
     watch: {
       '$route': {
-        handler: function () {
-          let index = this.$Func.hasValInArrayObj(this.nav, 'path', this.$route.path);
-          if (index != -1) return;
+        handler: function() {
+          let path = this.$route.path;
+          for (let n of this.nav) {
+            if (n.path === path) {
+              return;
+            }
+          }
           this.nav.push({
-            path: this.$route.path,
+            path: path,
             title: this.$route.meta.title,
           });
 
@@ -51,7 +54,7 @@
 
       }
     },
-    mounted: function () {
+    mounted: function() {
       this.nav.push({
         path: this.$route.path,
         title: this.$route.meta.title,
@@ -79,17 +82,20 @@
       border: 1px solid #ebeef5;
       border-radius: 2px;
       display: inline-block;
+
       .close-box {
         display: inline-block;
         height: 100%;
         border-left: 1px solid #ebeef5;
         margin-left: 6px;
       }
+
       &:hover {
         opacity: 0.85;
         //box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.12), 0 0 3px 0 rgba(0, 0, 0, 0.04);
         //border-color: #3d8dbc;
       }
+
       .point {
         display: none;
         width: 8px;
@@ -99,22 +105,27 @@
         position: relative;
         background: #fff;
       }
+
       .el-icon-close {
         font-weight: bolder;
         margin-left: 6px;
+
         &:hover {
           color: #ff0000;
         }
       }
     }
+
     .active {
       border: 1px solid #3d8dbc;
       background: #3d8dbc;
       color: #fff;
+
       .point {
         display: inline-block;
       }
     }
+
     .scroll-container {
       flex: 1;
       height: 100%;

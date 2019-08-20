@@ -34,7 +34,7 @@
   import permission from '../permissions.js'
   import enums from '../enums.js'
   export default {
-    name: 'MenuEdit',
+    name: 'ResourceEdit',
     props: {
       dialogFormVisible: Boolean,
       data: [Object, Boolean],
@@ -73,7 +73,7 @@
           name: [{
             required: true,
             message: '请输入菜单名称',
-            trigger: 'change'
+            trigger: ['change', 'blur']
           }],
         }
       }
@@ -131,8 +131,8 @@
         }
       },
       cancel() {
-        this.$refs["menuForm"].resetFields();
         this.$emit('cancel');
+        this.$refs["menuForm"].resetFields();
         //  重置对象属性为null
         this.$Utils.resetProperties(this.form);
       }

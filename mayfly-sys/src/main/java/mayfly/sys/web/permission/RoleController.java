@@ -5,6 +5,7 @@ import mayfly.common.exception.BusinessException;
 import mayfly.common.log.MethodLog;
 import mayfly.common.permission.Permission;
 import mayfly.common.result.Result;
+import mayfly.common.util.BusinessAssert;
 import mayfly.common.validation.annotation.Valid;
 import mayfly.entity.Role;
 import mayfly.sys.common.utils.BeanUtils;
@@ -47,12 +48,28 @@ public class RoleController {
         role.setCreateTime(now);
         role.setUpdateTime(now);
         role.setStatus(BoolEnum.TRUE.getValue());
-        return Result.success().with(roleService.save(role));
+        return Result.success(roleService.save(role));
+    }
+
+    @PutMapping("/v1/roles/{id}")
+    public Result update(@PathVariable Integer id, @Valid @RequestBody RoleForm roleForm) {
+        Role role = roleService.getById(id);
+        BusinessAssert.notNull(role, "角色不存在");
+        BeanUtils.copyProperties(roleForm, role);
+        LocalDateTime now = LocalDateTime.now();
+        role.setUpdateTime(now);
+        return Result.success(roleService.updateById(role));
+    }
+
+    @DeleteMapping("/v1/roles/{id}")
+    public Result delete(@PathVariable Integer id) {
+        roleService.deleteRole(id);
+        return Result.success();
     }
 
     @GetMapping("/v1/roles/{id}/resources")
     public  Result roleResources(@PathVariable Integer id) {
-        return Result.success().with(roleResourceService.listResourceId(id));
+        return Result.success(roleResourceService.listResourceId(id));
     }
 
     @PostMapping("/v1/roles/{id}/resources")
@@ -64,6 +81,6 @@ public class RoleController {
             return Result.paramError("menuIds参数错误！");
         }
 
-        return Result.success().with(roleResourceService.saveResource(id, ids));
+        return Result.success(roleResourceService.saveResource(id, ids));
     }
 }

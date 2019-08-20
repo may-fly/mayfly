@@ -23,7 +23,7 @@ class Utils {
   static resetProperties(target) {
     for (let k in target) {
       let value = target[k];
-      if (value) {
+      if (value != null) {
         target[k] = null;
       }
     }

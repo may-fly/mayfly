@@ -5,16 +5,16 @@
     </ToolBar>
     <el-tree :indent="38" :props="props" :data="data" @node-click="handleNodeClick" :render-content="renderContent">
     </el-tree>
-    <MenuEdit :title="dialogForm.title" :dialogFormVisible="dialogForm.visible" :data="dialogForm.data" :departTree="data" :type="dialogForm.type"
+    <ResourceEdit :title="dialogForm.title" :dialogFormVisible="dialogForm.visible" :data="dialogForm.data" :departTree="data" :type="dialogForm.type"
       @val-change="valChange" @cancel="editorCancel()">
-    </MenuEdit>
+    </ResourceEdit>
   </div>
 </template>
 
 <script>
   import ToolBar from '~/components/ToolBar/ToolBar.vue';
   import TreeDetails from './TreeDetails.vue';
-  import MenuEdit from './menu_edit.vue'
+  import ResourceEdit from './resource_edit.vue'
   import permissions from '../permissions.js'
   export default {
     data() {
@@ -52,7 +52,6 @@
         }).catch(err => {
           this.$message.error(err);
         });
-
       },
       search() {
         this.permission.list.request(null).then(res => {
@@ -120,7 +119,7 @@
     components: {
       ToolBar,
       TreeDetails,
-      MenuEdit
+      ResourceEdit
     },
     mounted: function() {
       this.search();

@@ -1,8 +1,8 @@
 <template>
   <div class="role-list">
     <ToolBar>
-      <el-button type="primary" icon="el-icon-plus" size="mini" @click="edit()">添加</el-button>
-      <el-button :disabled="currentId == null" @click="edit()" type="primary" icon="el-icon-edit" size="mini">编辑</el-button>
+      <el-button type="primary" icon="el-icon-plus" size="mini" @click="editAccount(true)">添加</el-button>
+      <el-button :disabled="currentId == null" @click="editAccount(false)" type="primary" icon="el-icon-edit" size="mini">编辑</el-button>
       <el-button :disabled="currentId == null" @click="roleEdit()" type="success" icon="el-icon-setting" size="mini">角色分配</el-button>
 
       <div style="float: right">
@@ -38,6 +38,9 @@
     </el-table>
     <el-pagination @current-change="handlePageChange" style="text-align: center;margin-top: 20px;" background layout="prev, pager, next, total, jumper"
       :total="total" :current-page.sync="query.pageNum" :page-size="query.pageSize" />
+
+    <RoleEdit :visible="roleDialog.visible" :account="roleDialog.account" @cancel="cancel()"></RoleEdit>
+    <AccountEdit :visible="accountDialog.visible" :data="accountDialog.data" @cancel="accountDialogCancel()" @val-change="valChange()"></AccountEdit>
   </div>
 </template>
 
@@ -45,6 +48,8 @@
   import ToolBar from '~/components/ToolBar/ToolBar.vue';
   import HelpHint from '~/components/HelpHint/HelpHint.vue';
   import permission from '../permissions.js';
+  import RoleEdit from './role_edit.vue';
+  import AccountEdit from './account_edit.vue'
 
   export default {
     data() {
@@ -58,14 +63,14 @@
         },
         datas: [],
         total: null,
-        menuDialog: {
+        roleDialog: {
           visible: false,
-          role: {}
+          account: {},
+          roles: []
         },
-        permissionDialog: {
-          username: null,
-          role: {},
-          visible: false
+        accountDialog: {
+          visible: false,
+          data: {}
         }
       }
     },
@@ -86,17 +91,38 @@
       changeStatus(status) {
 
       },
-      roleEdit() {
-        if (!this.currentId) {
-          this.$message.error("请选择账号");
-        }
-      },
       handlePageChange(curPage) {
         this.query.pageNum = curPage;
         this.search();
       },
-      edit() {
-
+      roleEdit() {
+        if (!this.currentId) {
+          this.$message.error("请选择账号");
+        }
+        this.roleDialog.visible = true;
+        this.roleDialog.account = this.currentData;
+      },
+      editAccount(isAdd = false) {
+        this.accountDialog.visible = true;
+        if (isAdd) {
+          this.accountDialog.data = false
+        } else {
+          this.accountDialog.data = this.currentData
+        }
+      },
+      cancel() {
+        this.roleDialog.visible = false;
+        this.roleDialog.account = false;
+      },
+      accountDialogCancel() {
+        this.accountDialog.visible = false;
+        setTimeout(() => {
+          this.accountDialog.data = false;
+        }, 800) 
+      },
+      valChange() {
+        this.accountDialog.visible = false;
+        this.search();
       }
     },
     mounted() {
@@ -104,7 +130,9 @@
     },
     components: {
       ToolBar,
-      HelpHint
+      HelpHint,
+      RoleEdit,
+      AccountEdit
     }
   }
 </script>

@@ -21,7 +21,7 @@
           <i class="fa fa-arrows-alt"></i>
         </span>
 
-        <el-dropdown>
+      <!--  <el-dropdown>
           <span class="header-btn">
             <i class="el-icon-setting"></i>
           </span>
@@ -36,24 +36,11 @@
                 <el-alert v-if="switchTabBar" style="margin-top: 10px" title="导航标签超过容器时,可在导航上滚动鼠标来移动标签" type="info"
                   show-icon>
                 </el-alert>
-              </div>
-              <div class="setting-category" style="display: flex;height: 80px;align-items: center">
-                <div style="width: 80px">
-                  <el-button type="primary" icon="el-icon-sort" circle @click="ToggleGrayMode" style="transform: rotate(90deg)"></el-button>
-                </div>
-                <div style="flex: 1;margin-top: -8px">
-                  <el-alert style="margin-top: 10px" title="切换灰度模式!" type="info" show-icon>
-                  </el-alert>
-                </div>
-              </div>
-              <!--<div class="setting-category">-->
-              <!--下个设置块-->
-              <!--</div>-->
-
-            </div>
+              </div> -->
+         <!--   </div>
           </el-dropdown-menu>
         </el-dropdown>
-
+ -->
         <span class="header-btn">
           <el-badge :value="3" class="badge">
             <i class="el-icon-bell"></i>
@@ -75,16 +62,15 @@
     <div class="app">
       <div class="aside">
         <div class="menu">
-          <el-menu background-color="#222d32" text-color="#fff" :default-active="$route.path" class="menu"
-            :collapse="isCollapse">
+          <el-menu background-color="#222d32" text-color="#fff" :default-active="$route.path" class="menu" :collapse="isCollapse">
             <MenuTree @toPath="toPath" :menus="this.menus"></MenuTree>
           </el-menu>
         </div>
       </div>
       <div class="app-body">
-        <NavBar id="nav-bar" v-if="switchTabBar" :style="fixedTabBar && switchTabBar?'position: fixed;top: 0;':''"></NavBar>
+        <NavBar id="nav-bar" v-if="switchTabBar" :style="fixedTabBar && switchTabBar ? 'position: fixed;top: 0;' : ''"></NavBar>
         <!-- <div v-else style="margin-top: 45px;"></div> -->
-        <div id="mainContainer" :style="fixedTabBar && switchTabBar?'margin-top: 88px;':''" class="main-container">
+        <div id="mainContainer" :style="fixedTabBar && switchTabBar ? 'margin-top: 88px;':''" class="main-container">
           <router-view v-if="!iframe"></router-view>
           <iframe v-else :src="iframeSrc"></iframe>
         </div>
@@ -104,8 +90,8 @@
       return {
         iframe: false,
         iframeSrc: null,
-        fixedTabBar: false,
-        switchTabBar: false,
+        fixedTabBar: true,
+        switchTabBar: true,
         isCollapse: false,
         menus: [{
           "id": 8,
@@ -273,9 +259,6 @@
         else navBar.style.width = 'calc(100% - 230px)';
 
       },
-      ToggleGrayMode() {
-        document.body.classList.toggle("gray-mode")
-      },
       screenfullToggle() {
         if (!Screenfull.enabled) {
           this.$message({
@@ -324,9 +307,9 @@
     mounted: function() {
       this.menus = JSON.parse(sessionStorage.getItem("resources"));
 
-      this.switchTabBar = localStorage.getItem('switchTabBar') ? true : false;
-      this.fixedTabBar = localStorage.getItem('fixedTabBar') ? true : false;
-      if (this.switchTabBar) document.getElementById('mainContainer').style.minHeight = 'calc(100vh - 139px)';
+      // this.switchTabBar = localStorage.getItem('switchTabBar') ? true : false;
+      // this.fixedTabBar = localStorage.getItem('fixedTabBar') ? true : false;
+      if (this.switchTabBar) document.getElementById('mainContainer').style.minHeight = 'calc(100vh - 88px)';
 
       if (!this.isCollapse) {
         document.body.classList.remove('sidebar-hidden')
@@ -362,7 +345,6 @@
 
         width: 64px;
       }
-
     }
 
     .aside {
@@ -440,7 +422,7 @@
     .main-container {
       margin-top: 50px;
       padding: 2px;
-      min-height: calc(~'100vh');
+      min-height: calc(~'100vh - 50px');
     }
   }
 

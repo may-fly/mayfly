@@ -6,10 +6,9 @@ import mayfly.common.util.CollectionUtils;
 import mayfly.dao.RoleResourceMapper;
 import mayfly.entity.Resource;
 import mayfly.entity.RoleResource;
-import mayfly.sys.common.enums.ResourceTypeEnum;
 import mayfly.sys.service.base.impl.BaseServiceImpl;
-import mayfly.sys.service.permission.ResourceService;
 import mayfly.sys.service.permission.PermissionService;
+import mayfly.sys.service.permission.ResourceService;
 import mayfly.sys.service.permission.RoleResourceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -66,11 +65,5 @@ public class RoleResourceServiceImpl extends BaseServiceImpl<RoleResourceMapper,
         }
 
         return true;
-    }
-
-    @Override
-    public void deleteByResourceIdAndType(Integer id, ResourceTypeEnum type) {
-        RoleResource rr = RoleResource.builder().resourceId(id).type(type.getValue()).build();
-        deleteByCondition(rr);
     }
 }

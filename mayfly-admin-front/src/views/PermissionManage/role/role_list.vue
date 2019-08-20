@@ -1,7 +1,7 @@
 <template>
   <div class="role-list">
     <ToolBar>
-      <el-button type="primary" icon="el-icon-plus" size="mini" @click="editRole(false)">添加</el-button>
+      <el-button v-permission="permission.save.code" type="primary" icon="el-icon-plus" size="mini" @click="editRole(false)">添加</el-button>
       <div style="float: right">
         <el-input placeholder="请输入角色名称！" size="small" style="width: 140px" v-model="params.name" @clear="searchRole"
           clearable>
@@ -21,8 +21,12 @@
       </el-table-column>
       <el-table-column label="操作" width="350px">
         <template slot-scope="scope">
-          <el-button @click="editRole(scope.row)" type="primary" icon="el-icon-edit" size="mini">编辑</el-button>
-          <el-button @click="editResource(scope.row)" type="primary" icon="el-icon-setting" size="mini">分配菜单&权限</el-button>
+          <el-button v-permission="permission.update.code" @click="editRole(scope.row)" type="primary" icon="el-icon-edit"
+            size="mini">编辑</el-button>
+          <el-button v-permission="permission.saveResources.code" @click="editResource(scope.row)" type="primary" icon="el-icon-setting"
+            size="mini">分配菜单&权限</el-button>
+          <el-button v-permission="permission.del.code" @click="deleteRole(scope.row)" type="danger" icon="el-icon-delete"
+            size="mini">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -82,8 +86,9 @@
         }
       },
       roleEditChange(data) {
-        let self = this;
-        self.roleEdit.visible = false;
+        this.roleEdit.visible = false;
+        this.$message.success("修改成功！");
+        this.search();
       },
       editRole(data) {
         if (data) {
@@ -93,6 +98,22 @@
         }
 
         this.roleEdit.visible = true;
+      },
+      deleteRole(data) {
+        this.$confirm(`此操作将删除 [${data.name}] 该角色，以及角色关联的用户和资源信息, 是否继续?`, '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.permission.del.request({
+            id: data.id
+          }).then(res => {
+            this.$message.success("删除成功！");
+            this.search();
+          })
+        }).catch(err => {
+          this.$message.error(err);
+        });
       },
       editResource(row) {
         permission.menu.list.request(null).then(res => {
@@ -146,15 +167,7 @@
         this.resourceDialog.role = false;
         this.resourceDialog.defaultCheckedKeys = [];
       },
-      deleteRole(id) {
-        this.$message({
-          message: '这里请求api删除或者恢复用户之后刷新分页组件，列表自动更新',
-          type: 'success'
-        });
-
-      },
       resetting(id) {
-
         let dom = this.$refs[id].$el;
         dom.style.transform = 'rotate(180deg)';
         setTimeout(() => {
@@ -166,13 +179,14 @@
         });
 
       },
-
-
+      search() {
+        this.permission.list.request(null).then(res => {
+          this.roles = res;
+        });
+      }
     },
     mounted() {
-      this.permission.list.request(null).then(res => {
-        this.roles = res;
-      });
+      this.search();
     },
     components: {
       ToolBar,

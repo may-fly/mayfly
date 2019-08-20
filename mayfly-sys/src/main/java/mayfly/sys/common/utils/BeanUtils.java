@@ -13,6 +13,9 @@ import java.util.stream.Collectors;
  */
 public class BeanUtils extends mayfly.common.util.BeanUtils {
 
+    public static void copyProperties(Object source, Object target) {
+        org.springframework.beans.BeanUtils.copyProperties(source, target);
+    }
 
     public static <T> T copyProperties(Object source, Class<T> targetClass) {
         if (source == null) {
@@ -21,7 +24,7 @@ public class BeanUtils extends mayfly.common.util.BeanUtils {
         T target;
         try {
             target = targetClass.newInstance();
-            org.springframework.beans.BeanUtils.copyProperties(source, target);
+            copyProperties(source, target);
         } catch (Exception e) {
             throw new IllegalArgumentException(e);
         }

@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.*;
  * @version 1.0
  * @date 2018-12-10 2:49 PM
  */
-@MethodLog("菜单管理：")
-@Permission(code = "menu:")
+@MethodLog("资源管理：")
+@Permission(code = "resource:")
 @RestController
 @RequestMapping("/sys")
 public class ResourceController {
@@ -31,24 +31,24 @@ public class ResourceController {
     @MethodLog(value = "获取菜单列表", resultLevel = MethodLog.LogLevel.DEBUG)
     @GetMapping("/v1/resources")
     public Result getAllMenus(MenuQuery queryForm) {
-        return Result.success().with(resourceService.listResource(BeanUtils.copyProperties(queryForm, Resource.class)));
+        return Result.success(resourceService.listResource(BeanUtils.copyProperties(queryForm, Resource.class)));
     }
 
     @PostMapping("/v1/resources")
     public Result save(@RequestBody @Valid ResourceForm resourceForm) throws BusinessException{
-        return Result.success().with(resourceService.saveResource(BeanUtils.copyProperties(resourceForm, Resource.class)));
+        return Result.success(resourceService.saveResource(BeanUtils.copyProperties(resourceForm, Resource.class)));
     }
 
     @PutMapping("/v1/resources/{id}")
     public Result update(@PathVariable Integer id, @RequestBody @Valid ResourceForm resourceForm) {
         Resource resource = BeanUtils.copyProperties(resourceForm, Resource.class);
         resource.setId(id);
-        return Result.success().with(resourceService.updateResource(resource));
+        return Result.success(resourceService.updateResource(resource));
     }
 
     @PutMapping("/v1/resources/{id}/{status}")
     public Result changeStatus(@PathVariable Integer id, @PathVariable Integer status) {
-        return Result.success().with(resourceService.changeStatus(id, status));
+        return Result.success(resourceService.changeStatus(id, status));
     }
 
     @DeleteMapping("/v1/resources/{id}")

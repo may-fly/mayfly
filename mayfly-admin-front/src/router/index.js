@@ -56,7 +56,7 @@ let RouteList = [{
           title: '菜单管理',
           keepAlive: true
         },
-        component: resolve => require(['~/views/PermissionManage/menu/menu_list.vue'], resolve),
+        component: resolve => require(['~/views/PermissionManage/resource/resource_list.vue'], resolve),
       },
       {
         path: '/account_list',

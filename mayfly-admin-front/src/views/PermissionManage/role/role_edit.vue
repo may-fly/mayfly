@@ -1,6 +1,6 @@
 <template>
   <div class="role-dialog">
-    <el-dialog :title="title" :visible="visible" :show-close="false" width="45%">
+    <el-dialog :title="title" :visible="visible" :show-close="false" width="500px">
       <el-form :model="form" size="small" label-width="90px">
         <el-form-item label="角色名称:" required>
           <el-input v-model="form.name" auto-complete="off"></el-input>
@@ -66,7 +66,8 @@
           this.$message.error(errorMsg);
           return;
         }
-        this.permission.save.request(this.form).then(res => {
+        let p = this.form.id ? this.permission.update : this.permission.save;
+        p.request(this.form).then(res => {
           this.$emit('val-change', this.form);
           this.btnLoading = true;
           setTimeout(() => {

@@ -25,7 +25,7 @@ public final class Result<T> implements Serializable {
     /**
      * 操作结果消息
      */
-    final private String msg;
+    private String msg;
 
     /**
      * 操作结果数据对象
@@ -65,10 +65,22 @@ public final class Result<T> implements Serializable {
         return new Result<T>(resultEnum.getValue(), msg);
     }
 
+    public static <T, E extends Enum & ValueEnum> Result<T> of(E resultEnum, String msg, T data) {
+        return new Result<T>(resultEnum.getValue(), msg, data);
+    }
+
 
     //---------------------------------------------------------------------
     // 各种结果对象的简单工厂，可使用Result.<T>success()调用返回指定泛型data值的对象(防止部分编译警告)
     //---------------------------------------------------------------------
+
+    public static <T> Result<T> success() {
+        return of(ResultEnum.SUCCESS);
+    }
+
+    public static <T> Result<T> success(T data) {
+        return Result.<T>success().with(data);
+    }
 
     public static <T> Result<T> error() {
         return of(ResultEnum.ERROR);
@@ -76,14 +88,6 @@ public final class Result<T> implements Serializable {
 
     public static <T> Result<T> error(String msg) {
         return of(ResultEnum.ERROR, msg);
-    }
-
-    public static <T> Result<T> success() {
-        return of(ResultEnum.SUCCESS);
-    }
-
-    public static <T> Result<T> success(String msg) {
-        return of(ResultEnum.SUCCESS, msg);
     }
 
     public static <T> Result<T> paramError() {
@@ -121,6 +125,16 @@ public final class Result<T> implements Serializable {
      */
     public Result<T> with(T data) {
         this.data = data;
+        return this;
+    }
+
+    /**
+     * 修改结果msg
+     * @param msg  msg
+     * @return     Result
+     */
+    public Result<T> msg(String msg) {
+        this.msg = msg;
         return this;
     }
 
