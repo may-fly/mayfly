@@ -5,7 +5,7 @@
         :props="defaultProps">
         <span class="custom-tree-node" slot-scope="{ node, data }">
           <span v-if="data.type == enums.ResourceTypeEnum.MENU.value">{{ node.label }}</span>
-          <span v-if="data.type == enums.ResourceTypeEnum.PERMISSION.value" style="color: green;">{{ node.label }}</span>
+          <span v-if="data.type == enums.ResourceTypeEnum.PERMISSION.value" style="color: #67c23a;">{{ node.label }}</span>
         </span>
       </el-tree>
       <div slot="footer" class="dialog-footer">

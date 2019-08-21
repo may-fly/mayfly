@@ -1,9 +1,11 @@
 package mayfly.sys.web.permission;
 
+import mayfly.common.enums.BoolEnum;
 import mayfly.common.permission.Permission;
 import mayfly.common.result.Page;
 import mayfly.common.result.Result;
-import mayfly.common.util.DigestUtils;
+import mayfly.common.util.BusinessAssert;
+import mayfly.common.util.EnumUtils;
 import mayfly.common.validation.annotation.Valid;
 import mayfly.entity.Admin;
 import mayfly.sys.common.utils.BeanUtils;
@@ -44,10 +46,28 @@ public class AdminController {
 
     @PostMapping("/v1/admins")
     public Result save(@Valid @RequestBody AdminForm adminForm) {
-        Admin admin = BeanUtils.copyProperties(adminForm, Admin.class);
-        admin.setPassword(DigestUtils.md5DigestAsHex(adminForm.getPassword()));
-        adminService.save(admin);
-        return Result.success(adminForm);
+        adminService.saveAdmin(adminForm);
+        return Result.success();
+    }
+
+    @PutMapping("/v1/admins/{id}")
+    public Result update(@PathVariable Integer id, @Valid @RequestBody AdminForm adminForm) {
+        adminService.saveAdmin(adminForm);
+        return Result.success();
+    }
+
+    @PutMapping("/v1/admins/{id}/{status}")
+    public Result changeStatus(@PathVariable Integer id, @PathVariable Integer status) {
+        BusinessAssert.state(EnumUtils.isExist(BoolEnum.values(), status), "状态值错误");
+        Admin build = Admin.builder().id(id).status(status).build();
+        adminService.updateById(build);
+        return Result.success();
+    }
+
+    @DeleteMapping("/v1/admins/{id}")
+    public Result delete(@PathVariable Integer id) {
+        adminService.deleteById(id);
+        return Result.success();
     }
 
     @GetMapping("/v1/admins/{id}/roles")
@@ -61,7 +81,7 @@ public class AdminController {
         try {
             ids = Stream.of(adminForm.getRoleIds().split(",")).map(Integer::valueOf).collect(Collectors.toList());
         } catch (Exception e) {
-            return Result.paramError("menuIds参数错误！");
+            return Result.paramError("roleIds参数错误！");
         }
         roleUserService.saveRoles(id, ids);
         return Result.success();

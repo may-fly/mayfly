@@ -3,10 +3,11 @@
     <ToolBar>
       <el-button v-permission="permission.save.code" type="primary" icon="el-icon-plus" size="mini" @click="addMenu(false)">添加</el-button>
     </ToolBar>
-    <el-tree :indent="38" :props="props" :data="data" @node-click="handleNodeClick" :render-content="renderContent">
+    <el-tree :indent="38" node-key="id" :props="props" :data="data" @node-expand="handleNodeExpand" @node-collapse="handleNodeCollapse"
+      :default-expanded-keys="defaultExpandedKeys" :render-content="renderContent">
     </el-tree>
-    <ResourceEdit :title="dialogForm.title" :dialogFormVisible="dialogForm.visible" :data="dialogForm.data" :departTree="data" :type="dialogForm.type"
-      @val-change="valChange" @cancel="editorCancel()">
+    <ResourceEdit :title="dialogForm.title" :dialogFormVisible="dialogForm.visible" :data="dialogForm.data" :departTree="data"
+      :type="dialogForm.type" @val-change="valChange" @cancel="editorCancel()">
     </ResourceEdit>
   </div>
 </template>
@@ -34,6 +35,8 @@
           label: 'name',
           children: 'children'
         },
+        // 展开的节点
+        defaultExpandedKeys: []
       }
     },
     methods: {
@@ -95,8 +98,34 @@
           this.$message.success("操作成功！");
         })
       },
-      handleNodeClick(data, k) {
-
+      // 节点被展开时触发的事件
+      handleNodeExpand(data, node) {
+        let id = node.data.id;
+        if (!this.defaultExpandedKeys.includes(id)) {
+          this.defaultExpandedKeys.push(id);
+        }
+      },
+      // 关闭节点
+      handleNodeCollapse(data, node) {
+        this.removeDeafultExpandId(node.data.id);
+        
+        let childNodes = node.childNodes;
+        for (let cn of childNodes) {
+          if (cn.data.type == 2) {
+            return;
+          }
+          if (cn.expanded) {
+            this.removeDeafultExpandId(cn.data.id);
+          }
+          // 递归删除展开的子节点节点id
+          this.handleNodeCollapse(data, cn);
+        }
+      },
+      removeDeafultExpandId(id) {
+        let index = this.defaultExpandedKeys.indexOf(id);
+        if (index > -1) {
+          this.defaultExpandedKeys.splice(index, 1);
+        }
       },
       renderContent(h, {
         node,

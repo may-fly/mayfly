@@ -48,7 +48,7 @@
         </span>
         <el-dropdown>
           <span class="header-btn">
-            Admin<i class="el-icon-arrow-down el-icon--right"></i>
+            {{username}}<i class="el-icon-arrow-down el-icon--right"></i>
           </span>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item @click.native="$router.push('/personal')"><i style="padding-right: 8px" class="fa fa-cog"></i>个人中心</el-dropdown-item>
@@ -93,6 +93,7 @@
         fixedTabBar: true,
         switchTabBar: true,
         isCollapse: false,
+        username: null,
         menus: [{
           "id": 8,
           "pid": 0,
@@ -305,7 +306,8 @@
       }
     },
     mounted: function() {
-      this.menus = JSON.parse(sessionStorage.getItem("resources"));
+      this.menus = JSON.parse(sessionStorage.getItem(this.$Config.name.resourcesKey));
+      this.username = JSON.parse(sessionStorage.getItem(this.$Config.name.adminKey)).username;
 
       // this.switchTabBar = localStorage.getItem('switchTabBar') ? true : false;
       // this.fixedTabBar = localStorage.getItem('fixedTabBar') ? true : false;

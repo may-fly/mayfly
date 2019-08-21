@@ -6,14 +6,11 @@ import mayfly.common.permission.registry.SysPermissionCodeRegistry;
 import mayfly.common.permission.registry.UserPermissionCodeRegistry;
 import mayfly.common.util.BracePlaceholder;
 import mayfly.common.util.UUIDUtils;
-import mayfly.dao.PermissionMapper;
 import mayfly.entity.Admin;
-import mayfly.entity.Permission;
 import mayfly.entity.Resource;
 import mayfly.sys.common.cache.UserCacheKey;
 import mayfly.sys.common.enums.ResourceTypeEnum;
 import mayfly.sys.common.utils.BeanUtils;
-import mayfly.sys.service.base.impl.BaseServiceImpl;
 import mayfly.sys.service.permission.PermissionService;
 import mayfly.sys.service.permission.ResourceService;
 import mayfly.sys.web.permission.vo.AdminVO;
@@ -35,7 +32,7 @@ import java.util.stream.Collectors;
  * @date 2018/6/26 上午9:49
  */
 @Service
-public class PermissionServiceImpl extends BaseServiceImpl<PermissionMapper, Permission> implements PermissionService, UserPermissionCodeRegistry, SysPermissionCodeRegistry {
+public class PermissionServiceImpl implements PermissionService, UserPermissionCodeRegistry, SysPermissionCodeRegistry {
 
     @Autowired
     private RedisTemplate redisTemplate;
@@ -112,6 +109,7 @@ public class PermissionServiceImpl extends BaseServiceImpl<PermissionMapper, Per
     public void save(Integer userId, Collection<String> permissionCodes, long time, TimeUnit timeUnit) {
         // 给权限code key添加用户id
         String permissionKey = BracePlaceholder.resolveByObject(UserCacheKey.USER_PERMISSION_KEY, userId);
+        redisTemplate.delete(permissionKey);
         redisTemplate.boundSetOps(permissionKey).add(permissionCodes.toArray());
         redisTemplate.boundSetOps(permissionKey).expire(time, timeUnit);
     }

@@ -62,7 +62,7 @@ let RouteList = [{
         path: '/account_list',
         name: 'account_list',
         meta: {
-          title: '菜单管理',
+          title: '账号管理',
           keepAlive: true
         },
         component: resolve => require(['~/views/PermissionManage/account/account_list.vue'], resolve),

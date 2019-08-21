@@ -1,12 +1,19 @@
 package mayfly.sys.service.permission.impl;
 
+import mayfly.common.enums.BoolEnum;
+import mayfly.common.util.BusinessAssert;
 import mayfly.common.util.DigestUtils;
 import mayfly.dao.AdminMapper;
 import mayfly.entity.Admin;
+import mayfly.sys.common.utils.BeanUtils;
 import mayfly.sys.service.base.impl.BaseServiceImpl;
 import mayfly.sys.service.permission.AdminService;
+import mayfly.sys.web.permission.form.AdminForm;
 import mayfly.sys.web.permission.form.AdminLoginForm;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.Objects;
 
 /**
  * @author meilin.huang
@@ -20,6 +27,24 @@ public class AdminServiceImpl extends BaseServiceImpl<AdminMapper, Admin> implem
     public Admin login(AdminLoginForm adminForm) {
         Admin condition = Admin.builder().username(adminForm.getUsername())
                 .password(DigestUtils.md5DigestAsHex(adminForm.getPassword())).build();
-        return getByCondition(condition);
+        Admin admin = getByCondition(condition);
+        if (admin != null) {
+            BusinessAssert.state(Objects.equals(admin.getStatus(), BoolEnum.TRUE.getValue()), "该账号已被禁用");
+        }
+        return admin;
+    }
+
+    @Override
+    public void saveAdmin(AdminForm adminForm) {
+        BusinessAssert.isNull(getByCondition(Admin.builder().username(adminForm.getUsername()).build()),
+                "该用户名已存在");
+        Admin admin = BeanUtils.copyProperties(adminForm, Admin.class);
+        admin.setPassword(DigestUtils.md5DigestAsHex(adminForm.getPassword()));
+        LocalDateTime now = LocalDateTime.now();
+        admin.setCreateTime(now);
+        admin.setUpdateTime(now);
+        // 默认启用状态
+        admin.setStatus(BoolEnum.TRUE.getValue());
+        save(admin);
     }
 }

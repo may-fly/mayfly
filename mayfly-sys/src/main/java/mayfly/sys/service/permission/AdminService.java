@@ -2,6 +2,7 @@ package mayfly.sys.service.permission;
 
 import mayfly.entity.Admin;
 import mayfly.sys.service.base.BaseService;
+import mayfly.sys.web.permission.form.AdminForm;
 import mayfly.sys.web.permission.form.AdminLoginForm;
 
 /**
@@ -12,4 +13,6 @@ import mayfly.sys.web.permission.form.AdminLoginForm;
 public interface AdminService extends BaseService<Admin> {
 
     Admin login(AdminLoginForm adminForm);
+
+    void saveAdmin(AdminForm adminForm);
 }

@@ -7,7 +7,7 @@
           <el-tag v-if="data.data.children !== null" size="mini">{{data.data.children.length}}</el-tag>
         </span>
         <span style="font-size: 13px" v-if="data.data.type === enums.ResourceTypeEnum.PERMISSION.value">
-          <span style="color: #3c8dbc">【</span><span style="color: green;">{{ data.data.name }}</span><span style="color: #3c8dbc">】</span>
+          <span style="color: #3c8dbc">【</span><span :style="data.data.status == 1 ? 'color: #67c23a;' : 'color: #f67c6c;'">{{ data.data.name }}</span><span style="color: #3c8dbc">】</span>
         </span>
       </el-col>
       <el-col style="width: 850px;">

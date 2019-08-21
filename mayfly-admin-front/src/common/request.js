@@ -87,10 +87,7 @@ function request(method, uri, params) {
   }
   return Axios.request(query).then(res => parseResponse(res))
     .catch(e => {
-      ElementUI.Notification.error({
-        title: '请求错误',
-        message: e
-      });
+      ElementUI.Message.error(e);
       return Promise.reject(e);
     });
 }

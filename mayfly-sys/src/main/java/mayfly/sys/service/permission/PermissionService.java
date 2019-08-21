@@ -1,8 +1,6 @@
 package mayfly.sys.service.permission;
 
 import mayfly.entity.Admin;
-import mayfly.entity.Permission;
-import mayfly.sys.service.base.BaseService;
 import mayfly.sys.web.permission.vo.LoginSuccessVO;
 
 /**
@@ -10,7 +8,7 @@ import mayfly.sys.web.permission.vo.LoginSuccessVO;
  * @author: meilin.huang
  * @date: 2018/6/26 上午9:48
  */
-public interface PermissionService extends BaseService<Permission> {
+public interface PermissionService {
     /**
      * 保存id以及对应的权限
      * @param admin  管理员信息

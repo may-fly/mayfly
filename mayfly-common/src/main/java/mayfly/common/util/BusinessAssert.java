@@ -27,6 +27,20 @@ public class BusinessAssert {
     }
 
     /**
+     *  断言对象为空
+     * @param object    对象
+     * @param msg       不满足断言的异常信息
+     */
+    public static void isNull(Object object, String msg) {
+        state(object == null, msg);
+    }
+
+    public static void isNull(Object object, Supplier<String> supplier) {
+        state(object == null, supplier);
+    }
+
+
+    /**
      * 断言字符串不为空
      * @param str   字符串
      * @param msg   不满足断言的异常信息

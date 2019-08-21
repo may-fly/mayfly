@@ -13,7 +13,7 @@
           <el-button @click="search" type="success" icon="el-icon-search" size="small"></el-button>
         </div>
       </ToolBar> -->
-      <el-table :data="allRole" stripe border ref="roleTable" @select="select" style="width: 100%">
+      <el-table :data="allRole" border ref="roleTable" @select="select" style="width: 100%">
         <el-table-column type="selection" width="35">
         </el-table-column>
         <el-table-column prop="name" label="角色名称">

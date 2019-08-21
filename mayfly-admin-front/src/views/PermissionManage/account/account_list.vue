@@ -1,10 +1,10 @@
 <template>
   <div class="role-list">
     <ToolBar>
-      <el-button type="primary" icon="el-icon-plus" size="mini" @click="editAccount(true)">添加</el-button>
-      <el-button :disabled="currentId == null" @click="editAccount(false)" type="primary" icon="el-icon-edit" size="mini">编辑</el-button>
-      <el-button :disabled="currentId == null" @click="roleEdit()" type="success" icon="el-icon-setting" size="mini">角色分配</el-button>
-
+      <el-button v-permission="permission.save.code" type="primary" icon="el-icon-plus" size="mini" @click="editAccount(true)">添加</el-button>
+      <el-button v-permission="permission.save.code" :disabled="currentId == null" @click="editAccount(false)" type="primary" icon="el-icon-edit" size="mini">编辑</el-button>
+      <el-button v-permission="permission.saveRoles.code" :disabled="currentId == null" @click="roleEdit()" type="success" icon="el-icon-setting" size="mini">角色分配</el-button>
+      <el-button v-permission="permission.del.code" :disabled="currentId == null" @click="deleteAccount()" type="danger" icon="el-icon-delete" size="mini">删除</el-button>
       <div style="float: right">
         <el-input placeholder="请输入账号名" size="small" style="width: 140px" v-model="query.username" @clear="edit()"
           clearable>
@@ -21,18 +21,21 @@
       <el-table-column label="序号" type="index"></el-table-column>
       <el-table-column prop="username" label="用户名">
       </el-table-column>
-      <el-table-column prop="status" label="状态">
-      </el-table-column>
-      <el-table-column prop="remark" label="描述">
-      </el-table-column>
       <el-table-column prop="createTime" label="创建时间">
       </el-table-column>
       <el-table-column prop="updateTime" label="修改时间">
       </el-table-column>
+      <el-table-column prop="remark" label="备注">
+      </el-table-column>
+      <el-table-column prop="status" label="状态">
+        <template slot-scope="scope">
+          {{scope.row.status == 1 ? '启用' : '禁用'}}
+        </template>
+      </el-table-column>
       <el-table-column label="操作" width="80px">
         <template slot-scope="scope">
-          <el-button v-if="scope.row.status == 0" @click="changeStatus(1)" type="success" size="mini">启用</el-button>
-          <el-button v-if="scope.row.status == 1" @click="changeStatus(0)" type="danger" size="mini">禁用</el-button>
+          <el-button v-permission="permission.changeStatus.code" v-if="scope.row.status == 0" @click="changeStatus(scope.row.id, 1)" type="success" size="mini">启用</el-button>
+          <el-button v-permission="permission.changeStatus.code" v-if="scope.row.status == 1" @click="changeStatus(scope.row.id, 0)" type="danger" size="mini">禁用</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -40,7 +43,8 @@
       :total="total" :current-page.sync="query.pageNum" :page-size="query.pageSize" />
 
     <RoleEdit :visible="roleDialog.visible" :account="roleDialog.account" @cancel="cancel()"></RoleEdit>
-    <AccountEdit :visible="accountDialog.visible" :data="accountDialog.data" @cancel="accountDialogCancel()" @val-change="valChange()"></AccountEdit>
+    <AccountEdit :visible="accountDialog.visible" :data="accountDialog.data" @cancel="accountDialogCancel()"
+      @val-change="valChange()"></AccountEdit>
   </div>
 </template>
 
@@ -88,8 +92,14 @@
           this.total = res.total;
         });
       },
-      changeStatus(status) {
-
+      changeStatus(id, status) {
+        this.permission.changeStatus.request({
+          id,
+          status
+        }).then(res => {
+          this.$message.success("操作成功");
+          this.search();
+        })
       },
       handlePageChange(curPage) {
         this.query.pageNum = curPage;
@@ -118,11 +128,17 @@
         this.accountDialog.visible = false;
         setTimeout(() => {
           this.accountDialog.data = false;
-        }, 800) 
+        }, 800)
       },
       valChange() {
         this.accountDialog.visible = false;
         this.search();
+      },
+      deleteAccount() {
+        this.permission.del.request({id: this.currentId}).then(res => {
+          this.$message.success("删除成功");
+          this.search();
+        })
       }
     },
     mounted() {

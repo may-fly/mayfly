@@ -48,6 +48,8 @@ const code = {
   account: {
     list: Permission.code("admin:list").uri("/sys/v1/admins").method(method.GET),
     save: Permission.code("admin:save").uri("/sys/v1/admins").method(method.POST),
+    del: Permission.code("admin:delete").uri("/sys/v1/admins/{id}").method(method.DELETE),
+    changeStatus: Permission.code("admin:changeStatus").uri("/sys/v1/admins/{id}/{status}").method(method.PUT),
     roles: Permission.code("admin:roles").uri("/sys/v1/admins/{id}/roles").method(method.GET),
     saveRoles: Permission.code("admin:roles").uri("/sys/v1/admins/{id}/roles").method(method.POST)
   }
