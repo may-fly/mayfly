@@ -2,6 +2,7 @@ package mayfly.sys.web.permission;
 
 import mayfly.common.enums.BoolEnum;
 import mayfly.common.permission.Permission;
+import mayfly.common.permission.SessionLocal;
 import mayfly.common.result.Page;
 import mayfly.common.result.Result;
 import mayfly.common.util.BusinessAssert;
@@ -40,6 +41,7 @@ public class AdminController {
 
     @GetMapping("/v1/admins")
     public Result list(@Valid PageForm pageForm, AdminQuery adminQuery) {
+        Integer id = SessionLocal.getUserId();
         Page<Admin> re = adminService.listByCondition(BeanUtils.copyProperties(adminQuery, Admin.class), pageForm);
         return Result.success(Page.with(re.getTotal(), BeanUtils.copyProperties(re.getList(), AdminVO.class)));
     }

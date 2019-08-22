@@ -1,14 +1,13 @@
 package mayfly.common.util;
 
-import mayfly.common.util.annotation.AnnotationUtils;
 import mayfly.common.enums.NameValueEnum;
+import mayfly.common.util.annotation.AnnotationUtils;
 
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -19,7 +18,6 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 /**
  * @author hml
  * @version 1.0
- * @description:
  * @date 2018-11-17 2:13 PM
  */
 public class BeanUtils {
@@ -115,44 +113,39 @@ public class BeanUtils {
         // 遍历属性描述器
         for (PropertyDescriptor descriptor : getPropertyDescriptors(type)) {
             String propertyName = descriptor.getName();
-            if (!"class".equals(propertyName)) {
-                Method readMethod = descriptor.getReadMethod();
-                Object result;
-                try {
-                    result = readMethod.invoke(bean, new Object[0]);
-                } catch (IllegalAccessException | InvocationTargetException e) {
-                    throw new IllegalArgumentException("无法获取Bean属性值", e);
-                }
-                if (result == null) {
-                    continue;
-                }
-                // 如果非基本类型
-                if (!isSimpleValue(result)) {
-                    if (ObjectUtils.isCollection(result)) {
-                        returnMap.put(parsePropertyName(prefix, propertyName), beans2Maps((Collection)result));
-                        continue;
-                    }
-                    if (ObjectUtils.isMap(result)) {
-                        returnMap.put(parsePropertyName(prefix, propertyName), result);
-                        continue;
-                    }
-                    // 递归转换属性Bean
-                    returnMap.putAll(doBean2Map(propertyName, result));
-                    continue;
-                }
-                Bean2MapFieldConverter converterAnnotation = AnnotationUtils
-                        .getAnnotation(ReflectionUtils.getField(type, propertyName), Bean2MapFieldConverter.class);
-                if (converterAnnotation != null) {
-                    // 转换值
-                    result = convertValue(converterAnnotation, result);
-                    // 判断是否需要重命名key
-                    String rename = converterAnnotation.rename();
-                    if (!"".equals(rename.trim())) {
-                        propertyName = rename;
-                    }
-                }
-                returnMap.put(parsePropertyName(prefix, propertyName), result);
+            if ("class".equals(propertyName)) {
+                continue;
             }
+            Object result = ReflectionUtils.invokeMethod(descriptor.getReadMethod(), bean);
+            if (result == null) {
+                continue;
+            }
+            // 如果非基本类型
+            if (!isSimpleValue(result)) {
+                if (ObjectUtils.isCollection(result)) {
+                    returnMap.put(parsePropertyName(prefix, propertyName), beans2Maps((Collection)result));
+                    continue;
+                }
+                if (ObjectUtils.isMap(result)) {
+                    returnMap.put(parsePropertyName(prefix, propertyName), result);
+                    continue;
+                }
+                // 递归转换属性Bean
+                returnMap.putAll(doBean2Map(propertyName, result));
+                continue;
+            }
+            Bean2MapFieldConverter converterAnnotation = AnnotationUtils
+                    .getAnnotation(ReflectionUtils.getField(type, propertyName), Bean2MapFieldConverter.class);
+            if (converterAnnotation != null) {
+                // 转换值
+                result = convertValue(converterAnnotation, result);
+                // 判断是否需要重命名key
+                String rename = converterAnnotation.rename();
+                if (!"".equals(rename.trim())) {
+                    propertyName = rename;
+                }
+            }
+            returnMap.put(parsePropertyName(prefix, propertyName), result);
         }
         return returnMap;
     }
@@ -161,6 +154,7 @@ public class BeanUtils {
         return prefix != null ? prefix + "." + propertyName : propertyName;
     }
 
+    @SuppressWarnings("unchecked")
     private static Object convertValue(Bean2MapFieldConverter converter, Object value) {
         Class<? extends FieldValueConverter> converterClazz = converter.converter();
         // 如果FieldValueConverter不是默认的转换器，就使用该转换器
@@ -209,7 +203,6 @@ public class BeanUtils {
          * 字段值转换, 如将枚举值Integer转换为String类型的name <br/>
          * V:转换后的值， T:bean中原始值
          * @param fieldValue  真实字段值
-         * @return
          */
         V convert(T fieldValue);
     }
@@ -225,19 +218,16 @@ public class BeanUtils {
     public @interface Bean2MapFieldConverter {
         /**
          * 重命名
-         * @return
          */
         String rename() default "";
 
         /**
          * 值转换器
-         * @return
          */
         Class<? extends BeanUtils.FieldValueConverter> converter() default FieldValueConverter.class;
 
         /**
          * 枚举值转换,枚举类必须继承EnumValue接口
-         * @return
          */
         Class<? extends Enum<? extends NameValueEnum>> enumConverter() default DefaultEnum.class;
 

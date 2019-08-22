@@ -32,24 +32,6 @@ let RouteList = [{
         component: resolve => require(['~/views/PermissionManage/role/role_list.vue'], resolve),
       },
       {
-        path: '/permission_list',
-        name: 'permission_list',
-        meta: {
-          title: '权限列表',
-          keepAlive: true
-        },
-        component: resolve => require(['~/views/PermissionManage/permission/permission_list.vue'], resolve),
-      },
-      {
-        path: '/permission_group_list',
-        name: 'permission_group_list',
-        meta: {
-          title: '权限组管理',
-          keepAlive: true
-        },
-        component: resolve => require(['~/views/PermissionManage/permission/permission_group_list.vue'], resolve),
-      },
-      {
         path: '/menu_manage',
         name: 'menu_manage',
         meta: {

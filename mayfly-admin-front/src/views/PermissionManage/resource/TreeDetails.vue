@@ -7,7 +7,8 @@
           <el-tag v-if="data.data.children !== null" size="mini">{{data.data.children.length}}</el-tag>
         </span>
         <span style="font-size: 13px" v-if="data.data.type === enums.ResourceTypeEnum.PERMISSION.value">
-          <span style="color: #3c8dbc">【</span><span :style="data.data.status == 1 ? 'color: #67c23a;' : 'color: #f67c6c;'">{{ data.data.name }}</span><span style="color: #3c8dbc">】</span>
+          <span style="color: #3c8dbc">【</span><span :style="data.data.status == 1 ? 'color: #67c23a;' : 'color: #f67c6c;'">{{ data.data.name }}</span><span
+            style="color: #3c8dbc">】</span>
         </span>
       </el-col>
       <el-col style="width: 850px;">
@@ -16,33 +17,29 @@
         </el-tooltip>
 
         <el-tooltip content="编辑" placement="top" effect="light">
-          <el-button v-permission="permission.update.code" @click="edit(data,$event)" type="primary" icon="el-icon-edit" 
+          <el-button v-permission="permission.update.code" @click="edit(data,$event)" type="primary" icon="el-icon-edit"
             size="mini" circle></el-button>
         </el-tooltip>
 
         <el-tooltip content="新增" placement="top" effect="light">
-          <el-button v-permission="permission.save.code" v-if="data.data.type === enums.ResourceTypeEnum.MENU.value" @click="add(data, $event)" type="success" icon="el-icon-plus"
-            size="mini" circle></el-button>
+          <el-button v-permission="permission.save.code" v-if="data.data.type === enums.ResourceTypeEnum.MENU.value"
+            @click="add(data, $event)" type="success" icon="el-icon-plus" size="mini" circle></el-button>
         </el-tooltip>
 
         <el-tooltip content="禁用" placement="top" effect="light">
-          <el-button v-permission="permission.changeStatus.code" 
-          v-if="data.data.status === 1 && data.data.type === enums.ResourceTypeEnum.PERMISSION.value" 
-          @click="changeStatus(data, $event, 0)" type="warning" icon="el-icon-close"
-            size="mini" circle></el-button>
+          <el-button v-permission="permission.changeStatus.code" v-if="data.data.status === 1 && data.data.type === enums.ResourceTypeEnum.PERMISSION.value"
+            @click="changeStatus(data, $event, 0)" type="warning" icon="el-icon-close" size="mini" circle></el-button>
         </el-tooltip>
 
         <el-tooltip content="启用" placement="top" effect="light">
-          <el-button v-permission="permission.changeStatus.code" 
-          v-if="data.data.status === 0 && data.data.type === enums.ResourceTypeEnum.PERMISSION.value" 
-          @click="changeStatus(data, $event, 1)" type="success" icon="el-icon-check"
-            size="mini" circle></el-button>
+          <el-button v-permission="permission.changeStatus.code" v-if="data.data.status === 0 && data.data.type === enums.ResourceTypeEnum.PERMISSION.value"
+            @click="changeStatus(data, $event, 1)" type="success" icon="el-icon-check" size="mini" circle></el-button>
         </el-tooltip>
-        
+
         <el-tooltip content="删除" placement="top" effect="light">
-          <el-button v-permission="permission.del.code" @click="deleteDepart(data, $event)" 
-          type="danger" icon="el-icon-delete" size="mini" circle></el-button>
-            </el-button>
+          <el-button v-if="data.data.children == null" v-permission="permission.del.code" @click="deleteDepart(data, $event)" type="danger" icon="el-icon-delete"
+            size="mini" circle></el-button>
+          </el-button>
         </el-tooltip>
 
 

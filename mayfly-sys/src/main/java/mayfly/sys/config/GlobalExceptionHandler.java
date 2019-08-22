@@ -1,4 +1,4 @@
-package mayfly.sys.configs;
+package mayfly.sys.config;
 
 import mayfly.common.exception.BusinessException;
 import mayfly.common.exception.BusinessRuntimeException;

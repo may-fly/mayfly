@@ -1,5 +1,6 @@
 package mayfly.sys.interceptor;
 
+import mayfly.common.permission.SessionLocal;
 import mayfly.common.permission.checker.PermissionCheckHandler;
 import mayfly.common.permission.PermissionDisabledException;
 import mayfly.common.result.Result;
@@ -43,6 +44,7 @@ public class PermissionInterceptor implements HandlerInterceptor {
             sendErrorMessage(response, Result.withoutPermission());
             return false;
         }
+        SessionLocal.setUserId(userId);
 //        if (userId.equals(1)) {
 //            return true;
 //        }
@@ -60,6 +62,12 @@ public class PermissionInterceptor implements HandlerInterceptor {
             sendErrorMessage(response, Result.error(e.getMessage()));
             return false;
         }
+    }
+
+    @Override
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+        // 移除ThreadLocal值
+        SessionLocal.remove();
     }
 
     /**

@@ -14,9 +14,10 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
 
-        <alibaba.fastjson.version>1.2.54</alibaba.fastjson.version>
+        <alibaba.fastjson.version>1.2.58</alibaba.fastjson.version>
         <slfj.version>1.7.25</slfj.version>
         <junit.version>4.12</junit.version>
+        <ssh.version>262</ssh.version>
     </properties>
 
     <dependencies>
@@ -37,7 +38,7 @@
         <dependency>
             <groupId>ch.ethz.ganymed</groupId>
             <artifactId>ganymed-ssh2</artifactId>
-            <version>262</version>
+            <version>${ssh.version}</version>
         </dependency>
 
         <dependency>

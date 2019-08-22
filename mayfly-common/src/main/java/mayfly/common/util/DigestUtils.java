@@ -1,6 +1,6 @@
 package mayfly.common.util;
 
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -14,8 +14,6 @@ public class DigestUtils {
     private static final char[] HEX_CHARS = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e',
             'f' };
 
-    private static final Charset UTF8_CHARSET = Charset.forName("UTF8");
-
     /**
      * md5加密
      * @param data 需要加密的字符串
@@ -27,8 +25,7 @@ public class DigestUtils {
 
 
     public static String digestAsHex(String data, String algorithm) {
-        byte[] dataBytes = getDigest(algorithm).digest(data.getBytes(UTF8_CHARSET));
-        return new String(encodeHex(dataBytes));
+        return new String(encodeHex(getDigest(algorithm).digest(data.getBytes(StandardCharsets.UTF_8))));
     }
 
     private static char[] encodeHex(byte[] data) {

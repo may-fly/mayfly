@@ -28,7 +28,7 @@
     name: 'AccountEdit',
     props: {
       visible: Boolean,
-      data: [Object, Boolean],
+      account: [Object, Boolean],
       title: String,
     },
     data() {
@@ -58,11 +58,11 @@
       }
     },
     watch: {
-      'data': {
+      'account': {
         handler: function() {
-          if (this.data) {
+          if (this.account) {
             this.edit = true;
-            this.$Utils.copyProperties(this.data, this.form);
+            this.$Utils.copyProperties(this.account, this.form);
           } else {
             this.edit = false;
           }
@@ -71,14 +71,6 @@
       }
     },
     methods: {
-      handleChange() {},
-      addOperation() {
-        this.dialogForm.visible = true;
-      },
-      operationChange(operation) {
-        this.operations.push(operation);
-        this.dialogForm.visible = false;
-      },
       btnOk() {
         let p = this.form.id ? this.permission.update : this.permission.save;
         let pi = this.$Permission.getPermission(p.code);

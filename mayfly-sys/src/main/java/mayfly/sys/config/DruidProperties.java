@@ -1,4 +1,4 @@
-package mayfly.sys.configs;
+package mayfly.sys.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.PropertySource;

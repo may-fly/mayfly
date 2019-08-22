@@ -43,7 +43,7 @@
       :total="total" :current-page.sync="query.pageNum" :page-size="query.pageSize" />
 
     <RoleEdit :visible="roleDialog.visible" :account="roleDialog.account" @cancel="cancel()"></RoleEdit>
-    <AccountEdit :visible="accountDialog.visible" :data="accountDialog.data" @cancel="accountDialogCancel()"
+    <AccountEdit :visible="accountDialog.visible" :account="accountDialog.data" @cancel="accountDialogCancel()"
       @val-change="valChange()"></AccountEdit>
   </div>
 </template>
@@ -74,7 +74,7 @@
         },
         accountDialog: {
           visible: false,
-          data: {}
+          data: false
         }
       }
     },
@@ -113,12 +113,12 @@
         this.roleDialog.account = this.currentData;
       },
       editAccount(isAdd = false) {
-        this.accountDialog.visible = true;
         if (isAdd) {
           this.accountDialog.data = false
         } else {
           this.accountDialog.data = this.currentData
         }
+        this.accountDialog.visible = true;
       },
       cancel() {
         this.roleDialog.visible = false;

@@ -1,4 +1,4 @@
-package mayfly.sys.configs;
+package mayfly.sys.config;
 
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.support.config.FastJsonConfig;

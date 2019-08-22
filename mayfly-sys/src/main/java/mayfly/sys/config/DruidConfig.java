@@ -1,4 +1,4 @@
-package mayfly.sys.configs;
+package mayfly.sys.config;
 
 import com.alibaba.druid.support.http.StatViewServlet;
 import com.alibaba.druid.support.http.WebStatFilter;

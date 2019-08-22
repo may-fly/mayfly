@@ -1,4 +1,4 @@
-package mayfly.sys.configs;
+package mayfly.sys.config;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.parser.ParserConfig;
