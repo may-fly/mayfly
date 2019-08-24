@@ -204,7 +204,9 @@
             '', '菜单详情', {
               type: 'info',
               dangerouslyUseHTMLString: true,
-            }).then(r => {});
+              closeOnClickModal: true,
+              showConfirmButton: false
+            }).catch(r => {});
           return;
         }
 
@@ -217,7 +219,9 @@
           '', '权限详情', {
             type: 'info',
             dangerouslyUseHTMLString: true,
-          }).then(r => {});
+            closeOnClickModal: true,
+            showConfirmButton: false
+          }).catch(r => {});
       },
       // 自定义节点内容(废弃)
       renderContent(h, {

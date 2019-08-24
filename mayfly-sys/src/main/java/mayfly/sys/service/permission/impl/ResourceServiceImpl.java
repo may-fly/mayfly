@@ -4,14 +4,17 @@ import mayfly.common.enums.BoolEnum;
 import mayfly.common.util.BusinessAssert;
 import mayfly.common.util.CollectionUtils;
 import mayfly.common.util.EnumUtils;
+import mayfly.common.util.TreeUtils;
 import mayfly.dao.ResourceMapper;
 import mayfly.entity.Resource;
 import mayfly.entity.RoleResource;
 import mayfly.sys.common.enums.ResourceTypeEnum;
+import mayfly.sys.common.utils.BeanUtils;
 import mayfly.sys.service.base.impl.BaseServiceImpl;
 import mayfly.sys.service.permission.PermissionService;
 import mayfly.sys.service.permission.ResourceService;
 import mayfly.sys.service.permission.RoleResourceService;
+import mayfly.sys.web.permission.vo.ResourceListVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,21 +30,22 @@ import java.util.*;
 @Service
 public class ResourceServiceImpl extends BaseServiceImpl<ResourceMapper, Resource> implements ResourceService {
 
-    @Autowired
-    private ResourceMapper resourceMapper;
-    @Autowired
-    private RoleResourceService roleResourceService;
-    @Autowired
-    private PermissionService permissionService;
+        @Autowired
+        private ResourceMapper resourceMapper;
+        @Autowired
+        private RoleResourceService roleResourceService;
+        @Autowired
+        private PermissionService permissionService;
 
-    @Override
-    public List<Resource> listByUserId(Integer userId) {
-        return genTreesByResources(resourceMapper.selectByUserId(userId));
-    }
+        @Override
+        public List<ResourceListVO> listByUserId(Integer userId) {
+            return TreeUtils.generateTrees(BeanUtils.copyProperties(resourceMapper.selectByUserId(userId), ResourceListVO.class));
+        }
 
-    @Override
-    public List<Resource> listResource(Resource condition) {
-        return genTreesByResources(resourceMapper.selectAll("pid ASC, weight DESC"));
+        @Override
+        public List<ResourceListVO> listResource(Resource condition) {
+            List<Resource> resources = resourceMapper.selectAll("pid ASC, weight DESC");
+            return TreeUtils.generateTrees(BeanUtils.copyProperties(resources, ResourceListVO.class));
     }
 
     @Override
@@ -129,73 +133,5 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourceMapper, Resourc
         roleResourceService.deleteByCondition(RoleResource.builder().resourceId(id).build());
         // 重新加载权限code
         permissionService.reloadPermission();
-    }
-
-    /**
-     * 获取该菜单及其所有子菜单
-     * @param id
-     * @return
-     */
-//    private List<Integer> getChildrenIdByPid(Integer id) {
-//        List<Integer> ids = new ArrayList<>();
-//        ids.add(id);
-//        Integer pid = id;
-//        a: for (Iterator<Resource> ite = listAll().iterator(); ite.hasNext(); ) {
-//            Resource resource = ite.next();
-//            if (resource.getPid().equals(pid)) {
-//                Integer menuId = resource.getId();
-//                ids.add(menuId);
-//                pid = menuId;
-//                ite.remove();
-//                break a;
-//            }
-//        }
-//
-//        return ids;
-//    }
-
-    /**
-     * 生成菜单树
-     * @param resources
-     * @return
-     */
-    private List<Resource> genTreesByResources(List<Resource> resources) {
-        //获取所有父节点
-        List<Resource> roots = new ArrayList<>();
-        for (Iterator<Resource> ite = resources.iterator(); ite.hasNext();) {
-            Resource resource = ite.next();
-            if (resource.getPid().equals(0)) {
-                roots.add(resource);
-                ite.remove();
-            }
-        }
-        roots.forEach(r -> {
-            setChildren(r, resources);
-        });
-        return roots;
-    }
-
-    /**
-     * 从所有菜单列表中查找并设置parent的所有子节点
-     * @param parent  父节点
-     * @param resources   所有菜单列表
-     */
-    private void setChildren(Resource parent, List<Resource> resources) {
-        List<Resource> children = new ArrayList<>();
-        for (Iterator<Resource> ite = resources.iterator(); ite.hasNext();) {
-            Resource resource = ite.next();
-            if (resource.getPid().equals(parent.getId())) {
-                children.add(resource);
-                ite.remove();
-            }
-        }
-        // 如果孩子为空，则直接返回,否则继续递归设置孩子的孩子
-        if (children.isEmpty()) {
-            return;
-        }
-        parent.setChildren(children);
-        children.forEach(m -> {
-            setChildren(m, resources);
-        });
     }
 }

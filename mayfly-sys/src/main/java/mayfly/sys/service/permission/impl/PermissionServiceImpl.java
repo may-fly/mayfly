@@ -5,6 +5,7 @@ import mayfly.common.permission.registry.PermissionCacheHandler;
 import mayfly.common.permission.registry.SysPermissionCodeRegistry;
 import mayfly.common.permission.registry.UserPermissionCodeRegistry;
 import mayfly.common.util.BracePlaceholder;
+import mayfly.common.util.TreeUtils;
 import mayfly.common.util.UUIDUtils;
 import mayfly.entity.Admin;
 import mayfly.entity.Resource;
@@ -15,6 +16,7 @@ import mayfly.sys.service.permission.PermissionService;
 import mayfly.sys.service.permission.ResourceService;
 import mayfly.sys.web.permission.vo.AdminVO;
 import mayfly.sys.web.permission.vo.LoginSuccessVO;
+import mayfly.sys.web.permission.vo.ResourceListVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -49,11 +51,11 @@ public class PermissionServiceImpl implements PermissionService, UserPermissionC
     public LoginSuccessVO saveIdAndPermission(Admin admin) {
         Integer id = admin.getId();
         String token = UUIDUtils.generateUUID();
-        List<Resource> resources = resourceService.listByUserId(id);
+        List<ResourceListVO> resources = resourceService.listByUserId(id);
         // 获取所有叶子节点
-        List<Resource> permissions = new ArrayList<>();
-        for (Resource root : resources) {
-            resourceService.fillLeaf(root, permissions);
+        List<ResourceListVO> permissions = new ArrayList<>();
+        for (ResourceListVO root : resources) {
+            TreeUtils.fillLeaf(root, permissions);
         }
         // 如果权限被禁用，将会在code后加上:0标志
         List<String> permissionCodes = permissions.stream().filter(p -> Objects.equals(p.getType(), ResourceTypeEnum.PERMISSION.getValue()))

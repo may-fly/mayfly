@@ -120,18 +120,19 @@
     </el-container> -->
     <ToolBar>
       <div style="float: left">
-        <el-input placeholder="请输入key" style="width: 180px" v-model="scanParam.match" size="small" @clear="clear()"
+        <el-input placeholder="请输入key" style="width: 180px" v-model="scanParam.match" size="mini" @clear="clear()"
           clearable>
         </el-input>
-        <el-button @click="search()" type="success" icon="el-icon-search" size="small" plain>搜索</el-button>
-        <el-button type="primary" icon="el-icon-plus" size="small" @click="save(false)" plain>添加</el-button>
+        <el-button @click="search()" type="success" icon="el-icon-search" size="mini" plain>搜索</el-button>
+        <el-button type="primary" icon="el-icon-plus" size="mini" @click="save(false)" plain>添加</el-button>
+        <el-button @click="scan()" icon="el-icon-refresh" size="mini" plain>换一批</el-button>
       </div>
       <div style="float: right;">
         <!-- <el-button @click="scan()" icon="el-icon-refresh" size="small" plain>刷新</el-button> -->
         <span>keys:{{dbsize}}</span>
       </div>
     </ToolBar>
-    <el-table v-loading="loading" :data="keys" border stripe :highlight-current-row="true" style="cursor: pointer;" height="750">
+    <el-table v-loading="loading" :data="keys" border stripe :highlight-current-row="true" style="cursor: pointer;">
       <el-table-column type="selection" width="55">
       </el-table-column>
       <el-table-column show-overflow-tooltip prop="key" label="key"></el-table-column>
@@ -147,9 +148,9 @@
       </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-button @click="" type="success" icon="el-icon-search" size="small" plain>查看</el-button>
-          <el-button @click="" type="primary" icon="el-icon-edit" size="small" plain>修改</el-button>
-          <el-button @click="" type="danger" size="small" icon="el-icon-delete" plain>删除</el-button>
+          <el-button @click="show(scope.row.key)" type="success" icon="el-icon-search" size="mini" plain>查看</el-button>
+          <el-button @click="update(scope.row.key)" type="primary" icon="el-icon-edit" size="mini" plain>修改</el-button>
+          <el-button @click="del(scope.row.key)" type="danger" size="mini" icon="el-icon-delete" plain>删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -157,7 +158,6 @@
       :total="dbsize" :current-page.sync="scanParam.pageNum" :page-size="scanParam.count">
     </el-pagination> -->
     <div style="text-align: center; margin-top: 10px;">
-      <el-button @click="scan()" icon="el-icon-refresh" size="small" plain>换一批</el-button>
       
     </div>
   </div>
@@ -223,6 +223,15 @@
         this.scanParam.match = null;
         this.scanParam.cursor = null;
         this.scan();
+      },
+      show(key) {
+        
+      },
+      update(key) {
+        
+      },
+      del(key) {
+        
       },
       ttlConveter(ttl) {
         if (ttl === -1) {

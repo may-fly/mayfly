@@ -4,6 +4,7 @@ import io.lettuce.core.api.sync.RedisCommands;
 import io.lettuce.core.cluster.api.sync.RedisClusterCommands;
 import mayfly.common.exception.BusinessRuntimeException;
 import mayfly.common.util.Assert;
+import mayfly.common.util.BusinessAssert;
 import mayfly.dao.RedisMapper;
 import mayfly.entity.Redis;
 import mayfly.sys.redis.connection.RedisConnectionRegistry;
@@ -35,9 +36,7 @@ public class RedisServiceImpl extends BaseServiceImpl<RedisMapper, Redis> implem
         //如果不存在该redis信息，则先连接对应的单机or集群连接
         if (registry.getRedisInfo(redisId) == null) {
             Redis redis = getById(redisId);
-            if (redis == null) {
-                throw new BusinessRuntimeException("redis实例不存在！");
-            }
+            BusinessAssert.notNull(redis, "redis实例不存在！");
             if (redis.getClusterId() == RedisInfo.STANDALONE) {
                 registry.registerStandalone(toRedisInfo(redis));
             } else {
@@ -66,7 +65,7 @@ public class RedisServiceImpl extends BaseServiceImpl<RedisMapper, Redis> implem
 
     private Set<RedisInfo> toRedisCluster(int clusterId) {
         List<Redis> nodes = listByCondition(Redis.builder().clusterId(clusterId).build());
-        Assert.notEmpty(nodes, "不存在该redis集群实例！");
+        BusinessAssert.notEmpty(nodes, "不存在该redis集群实例！");
         return nodes.stream().map(n -> RedisInfo.builder(n.getId()).clusterId(clusterId).info(n.getHost(), n.getPort(), n.getPwd()).build())
                 .collect(Collectors.toSet());
     }

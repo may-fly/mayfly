@@ -33,7 +33,7 @@
           </div>
         </el-collapse-item>
         <el-collapse-item title="Clients(客户端连接部分)" name="client">
-           <div class="row">
+          <div class="row">
             <span class="title">connected_clients(已连接客户端数):</span>
             <span class="value">{{ info.Clients.connected_clients }}</span>
           </div>
@@ -88,23 +88,26 @@
   export default {
     props: {
       visible: Boolean,
-      id: [Number]
+      info: Object
     },
     data() {
       return {
-        info: {
-          Server:{},
-          Keyspace: {}
-        },
+        // info: {
+        //   Server: {},
+        //   Keyspace: {},
+        //   Clients: {},
+        //   CPU: {},
+        //   Memory: {}
+        // },
         name: ""
       }
     },
     watch: {
-      id() {
-        Req.get(`/open/redis/${this.id}/info`, this.params, res => {
-          this.info = res;
-        })
-      }
+      // id() {
+      //   Req.request('get', `/open/redis/${this.id}/info`, this.params).then(res => {
+      //     this.info = res;
+      //   })
+      // }
     },
     methods: {
       close() {
@@ -116,10 +119,11 @@
 </script>
 
 <style>
-  .row .title{
+  .row .title {
     font-size: 12px;
   }
-  .row .value{
+
+  .row .value {
     font-size: 12px;
     color: black;
   }

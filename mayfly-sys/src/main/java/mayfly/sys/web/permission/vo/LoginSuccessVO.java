@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import mayfly.entity.Resource;
 
 import java.util.List;
 
@@ -23,5 +22,5 @@ public class LoginSuccessVO {
 
     private AdminVO admin;
 
-    private List<Resource> resources;
+    private List<ResourceListVO> resources;
 }
