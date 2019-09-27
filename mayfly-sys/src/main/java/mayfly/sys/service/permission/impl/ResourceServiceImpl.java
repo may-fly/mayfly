@@ -2,7 +2,6 @@ package mayfly.sys.service.permission.impl;
 
 import mayfly.common.enums.BoolEnum;
 import mayfly.common.util.BusinessAssert;
-import mayfly.common.util.CollectionUtils;
 import mayfly.common.util.EnumUtils;
 import mayfly.common.util.TreeUtils;
 import mayfly.dao.ResourceMapper;
@@ -20,32 +19,34 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * 菜单实现类
+ *
  * @author hml
  * @date 2018/6/27 下午4:09
  */
 @Service
 public class ResourceServiceImpl extends BaseServiceImpl<ResourceMapper, Resource> implements ResourceService {
 
-        @Autowired
-        private ResourceMapper resourceMapper;
-        @Autowired
-        private RoleResourceService roleResourceService;
-        @Autowired
-        private PermissionService permissionService;
+    @Autowired
+    private ResourceMapper resourceMapper;
+    @Autowired
+    private RoleResourceService roleResourceService;
+    @Autowired
+    private PermissionService permissionService;
 
-        @Override
-        public List<ResourceListVO> listByUserId(Integer userId) {
-            return TreeUtils.generateTrees(BeanUtils.copyProperties(resourceMapper.selectByUserId(userId), ResourceListVO.class));
-        }
+    @Override
+    public List<ResourceListVO> listByUserId(Integer userId) {
+        return TreeUtils.generateTrees(BeanUtils.copyProperties(resourceMapper.selectByUserId(userId), ResourceListVO.class));
+    }
 
-        @Override
-        public List<ResourceListVO> listResource(Resource condition) {
-            List<Resource> resources = resourceMapper.selectAll("pid ASC, weight DESC");
-            return TreeUtils.generateTrees(BeanUtils.copyProperties(resources, ResourceListVO.class));
+    @Override
+    public List<ResourceListVO> listResource(Resource condition) {
+        List<Resource> resources = resourceMapper.selectAll("pid ASC, weight DESC");
+        return TreeUtils.generateTrees(BeanUtils.copyProperties(resources, ResourceListVO.class));
     }
 
     @Override
@@ -68,8 +69,6 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourceMapper, Resourc
             BusinessAssert.state(countByCondition(condition) == 0, "该菜单已有权限资源子节点，不能再添加菜单");
         } else {
             BusinessAssert.notEmpty(resource.getCode(), "权限code不能为空");
-            // 将权限code添加进redis set中
-            permissionService.addPermission(resource.getCode());
         }
         //默认启用
         resource.setStatus(BoolEnum.TRUE.getValue());
@@ -88,17 +87,11 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourceMapper, Resourc
         resource.setUpdateTime(LocalDateTime.now());
 
         if (Objects.equals(old.getType(), ResourceTypeEnum.MENU.getValue())) {
-//            BusinessAssert.notEmpty(resource.getPath(), "菜单路径不能为空");
             return updateById(resource);
         }
 
         BusinessAssert.notEmpty(resource.getCode(), "权限code不能为空");
         updateById(resource);
-
-        if (!Objects.equals(resource.getCode(), old.getCode())) {
-            // 重新加载权限code
-            permissionService.reloadPermission();
-        }
         return resource;
     }
 
@@ -115,23 +108,15 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourceMapper, Resourc
         resource.setUpdateTime(LocalDateTime.now());
         // 更新数据库状态
         updateById(resource);
-        // 处理权限资源
-        if (Objects.equals(resource.getType(), ResourceTypeEnum.PERMISSION.getValue())) {
-            // 重命名redis key,是禁用则将key改为 code:0形式，否则将code:0改为code
-            permissionService.reloadPermission();
-        }
         return resource;
     }
 
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void deleteResource(Integer id) {
-        BusinessAssert.state(CollectionUtils.isEmpty(listByCondition(Resource.builder().pid(id).build())),
-                "请先删除该资源的子资源");
+        BusinessAssert.empty(listByCondition(Resource.builder().pid(id).build()), "请先删除该资源的子资源");
         BusinessAssert.state(deleteById(id), "删除菜单失败！");
         // 删除角色资源表中该菜单所关联的所有信息
         roleResourceService.deleteByCondition(RoleResource.builder().resourceId(id).build());
-        // 重新加载权限code
-        permissionService.reloadPermission();
     }
 }

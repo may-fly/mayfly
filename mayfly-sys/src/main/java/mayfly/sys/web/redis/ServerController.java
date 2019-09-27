@@ -1,6 +1,7 @@
 package mayfly.sys.web.redis;
 
 import mayfly.common.log.MethodLog;
+import mayfly.common.permission.Permission;
 import mayfly.common.result.Result;
 import mayfly.common.validation.annotation.Valid;
 import mayfly.entity.Redis;
@@ -21,14 +22,20 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @version 1.0
  * @date 2018-12-19 2:27 PM
  */
+@Permission(code = "redis:")
 @MethodLog
 @RestController
-@RequestMapping("/open")
+@RequestMapping("/sys/redis")
 public class ServerController {
     @Autowired
     private RedisService redisService;
 
     private AtomicInteger tempId = new AtomicInteger(0);
+
+    @GetMapping()
+    public Result list(RedisForm query) {
+        return Result.success(redisService.listByCondition(BeanUtils.copyProperties(query, Redis.class)));
+    }
 
     @PostMapping("/redis")
     public Result saveConnect(@Valid RedisForm redisForm) {
@@ -42,34 +49,34 @@ public class ServerController {
         return Result.success().with(redis);
     }
 
-    @DeleteMapping("/redis/{id}/remove")
+    @DeleteMapping("/{id}/remove")
     public Result remove(@PathVariable Integer id) {
 //        RedisHandler.remove(id);
         return Result.success();
     }
 
-    @PostMapping("/redis/{id}/close")
+    @PostMapping("/{id}/close")
     public Result close(@PathVariable Integer id) {
 //        RedisHandler.close(id);
         return Result.success();
     }
 
-    @PostMapping("/redis/{id}/flushdb")
+    @PostMapping("/{id}/flushdb")
     public Result flushdb(@PathVariable Integer id) {
 //        RedisHandler.getCommands(id).flushdb();
         return Result.success();
     }
 
-    @GetMapping("/redis/{id}/info")
+    @GetMapping("/{id}/info")
     public Result info(@PathVariable Integer id) {
         return Result.success(ServerCommand.info(redisService.getCmds(id)));
     }
-    @GetMapping("/redis/{id}/conf")
+    @GetMapping("/{id}/conf")
     public Result getConf(@PathVariable Integer id) {
         return Result.success(ServerCommand.getConf(redisService.getCmds(id)));
     }
 
-    @PutMapping("/redis/{id}/conf")
+    @PutMapping("/{id}/conf")
     public Result setConf(@PathVariable Integer id, RedisConfParamVO redisConfParam) {
         ServerCommand.configSetAndRewrite(id, RedisConfEnum.getByParam(redisConfParam.getParam()), redisConfParam.getValue());
         return Result.success();

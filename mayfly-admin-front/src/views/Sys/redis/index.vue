@@ -25,9 +25,9 @@
       </el-table-column>
       <el-table-column label="操作" width="">
         <template slot-scope="scope">
-          <el-button type="primary" @click="info(scope.row.id)" :ref="scope.row" icom="el-icon-tickets" size="mini"
+          <el-button v-permission="permission.info.code" type="primary" @click="info(scope.row.id)" :ref="scope.row" icom="el-icon-tickets" size="mini"
             plain>info</el-button>
-          <el-button type="success" @click="manage(scope.row)" :ref="scope.row" size="mini" plain>数据管理</el-button>
+          <el-button v-permission="keyPermission.scan.code" type="success" @click="manage(scope.row)" :ref="scope.row" size="mini" plain>数据管理</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -40,11 +40,14 @@
   import ToolBar from '~/components/ToolBar/ToolBar.vue';
   import Info from './info.vue';
   import Req from "~/common/request"
+  import permission from '../permissions.js'
   // 
   export default {
     data() {
       return {
         redisTable: [],
+        permission: permission.redis,
+        keyPermission: permission.redisKey,
         form: {
           host: "",
           port: 6379,
@@ -83,14 +86,14 @@
         this.$router.push(`/redis_operation/${row.clusterId}/${row.id}`);
       },
       info(id) {
-        Req.request('get', `/open/redis/${id}/info`, this.params).then(res => {
+        this.permission.info.request({id}).then(res => {
           this.infoDialog.info = res;
           this.infoDialog.id = id;
           this.infoDialog.visible = true;
         })
       },
       search() {
-        Req.request('get', "/open/redis", this.params).then(res => {
+        this.permission.list.request(this.params).then(res => {
           this.redisTable = res;
         })
       }

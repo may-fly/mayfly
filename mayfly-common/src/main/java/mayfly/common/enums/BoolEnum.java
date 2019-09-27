@@ -6,7 +6,7 @@ package mayfly.common.enums;
  * @version 1.0
  * @date 2018-12-07 1:43 PM
  */
-public enum BoolEnum implements ValueEnum {
+public enum BoolEnum implements ValueEnum<Integer> {
     /**
      * false
      */

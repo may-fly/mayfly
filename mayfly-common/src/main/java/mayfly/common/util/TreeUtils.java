@@ -53,11 +53,12 @@ public class TreeUtils {
      * @param parent  父节点
      * @param nodes   所有树节点列表
      */
-    private static <T extends TreeNode> void setChildren(T parent, List<T> nodes) {
+    public static <T extends TreeNode> void setChildren(T parent, List<T> nodes) {
         List<T> children = new ArrayList<>();
+        Number parentId = parent.id();
         for (Iterator<T> ite = nodes.iterator(); ite.hasNext();) {
             T node = ite.next();
-            if (Objects.equals(node.parentId(), parent.id())) {
+            if (Objects.equals(node.parentId(), parentId)) {
                 children.add(node);
                 ite.remove();
             }
@@ -95,7 +96,7 @@ public class TreeUtils {
 
 
     /**
-     * 树节点父类，所有需要使用{@linkplain TreeUtils}工具类自定形成树等操作的节点都需要实现该接口
+     * 树节点父类，所有需要使用{@linkplain TreeUtils}工具类形成树形结构等操作的节点都需要实现该接口
      * @param <T>  节点id类型
      */
     public interface TreeNode<T extends Number> {

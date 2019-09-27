@@ -8,7 +8,7 @@ import mayfly.common.enums.NameValueEnum;
  * @version 1.0
  * @date 2019-03-25 5:10 PM
  */
-public enum ResourceTypeEnum implements NameValueEnum {
+public enum ResourceTypeEnum implements NameValueEnum<Integer> {
 
     /**
      * 菜单类型

@@ -148,9 +148,9 @@
       </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-button @click="show(scope.row.key)" type="success" icon="el-icon-search" size="mini" plain>查看</el-button>
-          <el-button @click="update(scope.row.key)" type="primary" icon="el-icon-edit" size="mini" plain>修改</el-button>
-          <el-button @click="del(scope.row.key)" type="danger" size="mini" icon="el-icon-delete" plain>删除</el-button>
+          <el-button v-permission="permission.value.code" @click="show(scope.row.key)" type="success" icon="el-icon-search" size="mini" plain>查看</el-button>
+          <el-button v-permission="permission.update.code" @click="update(scope.row.key)" type="primary" icon="el-icon-edit" size="mini" plain>修改</el-button>
+          <el-button v-permission="permission.del.code" @click="del(scope.row.key)" type="danger" size="mini" icon="el-icon-delete" plain>删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -168,9 +168,12 @@
   import ToolBar from '~/components/ToolBar/ToolBar.vue'
   import Req from "~/common/request"
   import enums from './enums'
+  import permission from '../permissions.js'
+  
   export default {
     data() {
       return {
+        permission: permission.redisKey,
         loading: true,
         enums: enums,
         cluster: this.$route.params.cluster,
@@ -184,7 +187,6 @@
           count: 12,
           cursor: null,
           prevCursor: null,
-          pageNum: 1
         },
         keys: [],
         dbsize: 0
@@ -193,9 +195,9 @@
     methods: {
       scan() {
         this.loading = true;
-        let id = this.cluster == 0 ? this.redis.id : this.cluster;
-        let isCluster = this.cluster == 0 ? 0 : 1;
-        Req.request('get', `/open/redis/${isCluster}/${id}/scan`, this.scanParam).then(res => {
+        this.scanParam.id = this.cluster == 0 ? this.redis.id : this.cluster;
+        this.scanParam.cluster = this.cluster == 0 ? 0 : 1;
+        this.permission.scan.request(this.scanParam).then(res => {
           // console.log(res)
           this.keys = res.keys;
           this.dbsize = res.dbsize;
@@ -206,14 +208,15 @@
       search() {
         // this.scanParam.match = null;
         this.scanParam.cursor = null;
-        let id = this.cluster == 0 ? this.redis.id : this.cluster;
-        let isCluster = this.cluster == 0 ? 0 : 1;
-        Req.request('get', `/open/redis/${isCluster}/${id}/scan`, this.scanParam).then(res => {
-          // console.log(res)
-          this.keys = res.keys;
-          this.dbsize = this.keys.length;
-          this.scanParam.cursor = res.cursor;
-        })
+        // this.scanParam.id = this.cluster == 0 ? this.redis.id : this.cluster;
+        // this.scanParam.cluster = this.cluster == 0 ? 0 : 1;
+        // Req.request('get', `/open/redis/${isCluster}/${id}/scan`, this.scanParam).then(res => {
+        //   // console.log(res)
+        //   this.keys = res.keys;
+        //   this.dbsize = this.keys.length;
+        //   this.scanParam.cursor = res.cursor;
+        // })
+        this.scan();
       },
       handlePageChange(curPage) {
         this.scanParam.pageNum = curPage;
@@ -231,7 +234,19 @@
         
       },
       del(key) {
-        
+        this.$confirm(`此操作将删除对应的key , 是否继续?`, '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          let id = this.cluster == 0 ? this.redis.id : this.cluster;
+          this.permission.del.request({cluster: this.cluster,  key, id}).then(res => {
+            this.$message.success("删除成功！");
+            this.scan();
+          })
+        }).catch(err => {
+          
+        });
       },
       ttlConveter(ttl) {
         if (ttl === -1) {

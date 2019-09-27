@@ -17,7 +17,7 @@ public class ResourceForm {
     private Integer pid;
 
     @NotBlank
-    @Size(min = 2, max = 12)
+    @Size(min = 2, max = 24)
     private String name;
 
     private String path;

@@ -18,11 +18,11 @@ public final class EnumUtils {
      * @param value  枚举值
      * @return
      */
-    public static boolean isExist(ValueEnum[] enums, Integer value) {
+    public static <T> boolean isExist(ValueEnum<T>[] enums, T value) {
         if (value == null) {
             return false;
         }
-        for (ValueEnum e : enums) {
+        for (ValueEnum<T> e : enums) {
             if (value.equals(e.getValue())) {
                 return true;
             }
@@ -36,7 +36,7 @@ public final class EnumUtils {
      * @param value  枚举值
      * @return       枚举名称
      */
-    public static String getNameByValue(NameValueEnum[] enums, Integer value) {
+    public static <T> String getNameByValue(NameValueEnum<T>[] enums, T value) {
         if (value == null) {
             return "";
         }
@@ -54,11 +54,11 @@ public final class EnumUtils {
      * @param name   枚举名
      * @return       枚举值
      */
-    public static Integer getValueByName(NameValueEnum[] enums, String name) {
+    public static <T> T getValueByName(NameValueEnum<T>[] enums, String name) {
         if (StringUtils.isEmpty(name)) {
             return null;
         }
-        for (NameValueEnum e : enums) {
+        for (NameValueEnum<T> e : enums) {
             if (name.equals(e.getName())) {
                 return e.getValue();
             }

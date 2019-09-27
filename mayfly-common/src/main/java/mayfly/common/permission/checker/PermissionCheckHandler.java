@@ -22,27 +22,20 @@ public class PermissionCheckHandler {
      */
     private UserPermissionChecker userPermissionChecker;
 
-    /**
-     * 系统所有权限校验
-     */
-    private SysPermissionChecker sysPermissionChecker;
-
-    private PermissionCheckHandler(UserPermissionChecker userPermissionChecker, SysPermissionChecker sysPermissionChecker) {
+    private PermissionCheckHandler(UserPermissionChecker userPermissionChecker) {
         this.userPermissionChecker = userPermissionChecker;
-        this.sysPermissionChecker = sysPermissionChecker;
     }
 
     /**
      * 权限检查器工厂方法
      * @param userPermissionChecker 用户权限检查（为null则使用默认检查器 {@link DefaultUserPermissionChecker}）
-     * @param sysPermissionChecker 系统所有权限校验，可为空
      * @return
      */
-    public static PermissionCheckHandler of(UserPermissionChecker userPermissionChecker, SysPermissionChecker sysPermissionChecker){
+    public static PermissionCheckHandler of(UserPermissionChecker userPermissionChecker){
         if (userPermissionChecker == null) {
             userPermissionChecker = new DefaultUserPermissionChecker();
         }
-        return new PermissionCheckHandler(userPermissionChecker, sysPermissionChecker);
+        return new PermissionCheckHandler(userPermissionChecker);
     }
 
     /**
@@ -55,10 +48,6 @@ public class PermissionCheckHandler {
     public boolean hasPermission(Integer userId, String permissionCode) throws PermissionDisabledException{
         //判断code注册器是否含有该用户的权限code
         if (userPermissionChecker.has(userId, permissionCode)) {
-            // 判断该权限是否有被禁用,可用于判断实时禁用
-            if (sysPermissionChecker != null && sysPermissionChecker.has(PermissionCacheHandler.getDisablePermissionCode(permissionCode))) {
-                throw new PermissionDisabledException();
-            }
             return true;
         }
         // 判断该权限是否有被禁用
@@ -99,8 +88,8 @@ public class PermissionCheckHandler {
     }
 
     /**
-     * 根据方法获取对应的权限信息,如果方法声明类上有@Permission注解则为类名权限code + 方法权限code <br/>
-     * 否则返回方法上权限code
+     * 根据方法获取对应的权限信息,如果方法声明类上有@{@linkplain Permission}注解则为类名权限code + 方法权限code(方法权限code不存在，则为方法名)<br/>
+     * 如果声明类没有@{@linkplain Permission}注解则只返回方法上权限code
      * @param method
      * @return
      */

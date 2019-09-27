@@ -8,7 +8,7 @@ import mayfly.common.enums.NameValueEnum;
  * @version 1.0
  * @date 2019-06-26 15:24
  */
-public enum ResultEnum implements NameValueEnum {
+public enum ResultEnum implements NameValueEnum<Integer> {
     /**
      * 操作成功
      */

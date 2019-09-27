@@ -50,7 +50,7 @@ public final class Result<T> implements Serializable {
      * @param resultEnum  结果枚举类
      * @return  结果对象
      */
-    public static <T, E extends Enum & NameValueEnum> Result<T> of(E resultEnum) {
+    public static <T, E extends Enum & NameValueEnum<Integer>> Result<T> of(E resultEnum) {
         return new Result<T>(resultEnum.getValue(), resultEnum.getName());
     }
 
@@ -61,11 +61,11 @@ public final class Result<T> implements Serializable {
      * @param msg 覆盖结果对象消息
      * @return  结果对象
      */
-    public static <T, E extends Enum & ValueEnum> Result<T> of(E resultEnum, String msg) {
+    public static <T, E extends Enum & ValueEnum<Integer>> Result<T> of(E resultEnum, String msg) {
         return new Result<T>(resultEnum.getValue(), msg);
     }
 
-    public static <T, E extends Enum & ValueEnum> Result<T> of(E resultEnum, String msg, T data) {
+    public static <T, E extends Enum & ValueEnum<Integer>> Result<T> of(E resultEnum, String msg, T data) {
         return new Result<T>(resultEnum.getValue(), msg, data);
     }
 

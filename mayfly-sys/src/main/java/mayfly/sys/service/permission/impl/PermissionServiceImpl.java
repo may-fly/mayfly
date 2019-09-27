@@ -2,13 +2,11 @@ package mayfly.sys.service.permission.impl;
 
 import mayfly.common.enums.BoolEnum;
 import mayfly.common.permission.registry.PermissionCacheHandler;
-import mayfly.common.permission.registry.SysPermissionCodeRegistry;
 import mayfly.common.permission.registry.UserPermissionCodeRegistry;
 import mayfly.common.util.BracePlaceholder;
 import mayfly.common.util.TreeUtils;
 import mayfly.common.util.UUIDUtils;
 import mayfly.entity.Admin;
-import mayfly.entity.Resource;
 import mayfly.sys.common.cache.UserCacheKey;
 import mayfly.sys.common.enums.ResourceTypeEnum;
 import mayfly.sys.common.utils.BeanUtils;
@@ -34,7 +32,7 @@ import java.util.stream.Collectors;
  * @date 2018/6/26 上午9:49
  */
 @Service
-public class PermissionServiceImpl implements PermissionService, UserPermissionCodeRegistry, SysPermissionCodeRegistry {
+public class PermissionServiceImpl implements PermissionService, UserPermissionCodeRegistry {
 
     @Autowired
     private RedisTemplate redisTemplate;
@@ -44,7 +42,7 @@ public class PermissionServiceImpl implements PermissionService, UserPermissionC
     /**
      * 权限缓存处理器
      */
-    private PermissionCacheHandler permissionCacheHandler = PermissionCacheHandler.of(this, this);
+    private PermissionCacheHandler permissionCacheHandler = PermissionCacheHandler.of(this);
 
 
     @Override
@@ -74,36 +72,10 @@ public class PermissionServiceImpl implements PermissionService, UserPermissionC
         return (Integer)redisTemplate.opsForValue().get(BracePlaceholder.resolveByObject(UserCacheKey.USER_ID_KEY, token));
     }
 
-    @Override
-    public void reloadPermission() {
-        permissionCacheHandler.reloadSysPermission();
-    }
-
-    @Override
-    public void addPermission(String permissionCode) {
-        permissionCacheHandler.addSysPermission(permissionCode);
-    }
-
-//    @Override
-//    public void disablePermission(String code) {
-//        permissionCacheHandler.disabledPermission(code);
-//    }
-//
-//    @Override
-//    public void enablePermission(String code) {
-//        permissionCacheHandler.enablePermission(code);
-//    }
-//
-//    @Override
-//    public void delPermission(String permissionCode) {
-//        permissionCacheHandler.deletePermission(permissionCode);
-//    }
-
-
 
 
     //------------------------------------------------------------
-    //  UserPermissionCodeRegistry  SysPermissionCodeRegistry  接口实现类
+    //  UserPermissionCodeRegistry  接口实现类
     //------------------------------------------------------------
 
     @SuppressWarnings("unchecked")
@@ -127,46 +99,4 @@ public class PermissionServiceImpl implements PermissionService, UserPermissionC
     public boolean has(Integer userId, String permissionCode) {
         return redisTemplate.opsForSet().isMember(BracePlaceholder.resolveByObject(UserCacheKey.USER_PERMISSION_KEY, userId), permissionCode);
     }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public void save() {
-        List<Resource> permissions = resourceService.listByCondition(Resource.builder().type(ResourceTypeEnum.PERMISSION.getValue()).build());
-        String[] permissionCodes = permissions.stream()
-                .map(p -> p.getStatus().equals(BoolEnum.FALSE.getValue()) ? PermissionCacheHandler.getDisablePermissionCode(p.getCode()) : p.getCode())
-                .toArray(String[]::new);
-        redisTemplate.boundSetOps(UserCacheKey.ALL_PERMISSION_KEY).add(permissionCodes);
-    }
-
-    @Override
-    public void reload() {
-        // 删除所有权限，并重新保存
-        redisTemplate.delete(UserCacheKey.ALL_PERMISSION_KEY);
-        this.save();
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public void add(String code) {
-        redisTemplate.boundSetOps(UserCacheKey.ALL_PERMISSION_KEY).add(code);
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public boolean has(String permissionCode) {
-        return redisTemplate.boundSetOps(UserCacheKey.ALL_PERMISSION_KEY).isMember(permissionCode);
-    }
-
-//    @SuppressWarnings("unchecked")
-//    @Override
-//    public void rename(String oldCode, String newCode) {
-//        redisTemplate.boundSetOps(UserCacheKey.ALL_PERMISSION_KEY).remove(oldCode);
-//        redisTemplate.boundSetOps(UserCacheKey.ALL_PERMISSION_KEY).add(newCode);
-//    }
-//
-//    @SuppressWarnings("unchecked")
-//    @Override
-//    public void delete(String code) {
-//        redisTemplate.boundSetOps(UserCacheKey.ALL_PERMISSION_KEY).remove(code);
-//    }
 }

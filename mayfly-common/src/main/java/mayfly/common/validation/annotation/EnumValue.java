@@ -1,6 +1,7 @@
 package mayfly.common.validation.annotation;
 
 import mayfly.common.enums.ValueEnum;
+import mayfly.common.util.Assert;
 import mayfly.common.util.EnumUtils;
 import mayfly.common.util.ObjectUtils;
 import mayfly.common.validation.annotation.validator.Validator;
@@ -39,10 +40,9 @@ public @interface EnumValue {
                 return true;
             }
             Class<? extends Enum> enumClass = enumValue.value();
-            if (!ValueEnum.class.isAssignableFrom(enumClass)) {
-                throw new IllegalArgumentException("@EnumValue注解中的枚举类必须继承ValueEnum接口！");
-            }
-            //判断字段值是否存在指定的枚举类中
+            Assert.assertState(ValueEnum.class.isAssignableFrom(enumClass),
+                    "@EnumValue注解中的枚举类必须继承ValueEnum接口！");
+            // 判断字段值是否存在指定的枚举类中
             return EnumUtils.isExist(ObjectUtils.cast(enumClass.getEnumConstants(), ValueEnum.class), value);
         }
     }

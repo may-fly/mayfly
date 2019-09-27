@@ -59,6 +59,15 @@ public class BusinessAssert {
     }
 
     /**
+     * 断言集合为空
+     * @param collection  集合
+     * @param msg         不满足断言的异常信息
+     */
+    public static void empty(Collection<?> collection, String msg) {
+        state(CollectionUtils.isEmpty(collection), msg);
+    }
+
+    /**
      * 断言一个boolean表达式
      * @param expression  boolean表达式
      * @param message     不满足断言的异常信息

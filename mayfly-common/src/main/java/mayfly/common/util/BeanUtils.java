@@ -162,11 +162,7 @@ public class BeanUtils {
             // 转换器缓存中获取
             FieldValueConverter fc = converterCache.get(converterClazz);
             if (fc == null) {
-                try {
-                    fc = converterClazz.newInstance();
-                } catch (InstantiationException | IllegalAccessException e) {
-                    throw new IllegalArgumentException("实例化field value转换器失败", e);
-                }
+                fc = BeanUtils.instantiate(converterClazz);
                 converterCache.put(converterClazz, fc);
             }
             // 转换值

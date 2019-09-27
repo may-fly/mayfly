@@ -24,7 +24,6 @@ public class PermissionCheckHandlerService {
 
     public PermissionCheckHandler getCheckHandler() {
         return PermissionCheckHandler.of(
-                (id, code)-> redisTemplate.opsForSet().isMember(BracePlaceholder.resolveByObject(UserCacheKey.USER_PERMISSION_KEY, id), code),
-                sysCode -> redisTemplate.boundSetOps(UserCacheKey.ALL_PERMISSION_KEY).isMember(sysCode));
+                (id, code)-> redisTemplate.opsForSet().isMember(BracePlaceholder.resolveByObject(UserCacheKey.USER_PERMISSION_KEY, id), code));
     }
 }

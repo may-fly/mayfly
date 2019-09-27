@@ -22,22 +22,4 @@ public interface PermissionService {
      * @return  userId
      */
     Integer getIdByToken(String token);
-
-    /**
-     * 若有修改权限code以及状态，重新加载权限code，简单粗暴
-     */
-    void reloadPermission();
-
-    /**
-     * 添加新权限code
-     * @param permissionCode
-     */
-    void addPermission(String permissionCode);
-
-//    void disablePermission(String code);
-//
-//    void enablePermission(String code);
-//
-//
-//    void delPermission(String permissionCode);
 }

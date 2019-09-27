@@ -232,7 +232,7 @@
     methods: {
       toPath(path) {
         // 如果是请求其他地址，则使用iframe展示
-        if (path.startsWith('http://') || path.startsWith('https://')) {
+        if (path && (path.startsWith('http://') || path.startsWith('https://'))) {
           this.iframe = true;
           this.iframeSrc = path;
           return;

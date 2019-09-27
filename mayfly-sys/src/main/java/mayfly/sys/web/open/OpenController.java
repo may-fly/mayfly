@@ -34,6 +34,6 @@ public class OpenController {
         if (result == null) {
             return Result.noFound("用户名或密码错误！");
         }
-        return Result.success().with(permissionService.saveIdAndPermission(result));
+        return Result.success(permissionService.saveIdAndPermission(result));
     }
 }

@@ -7,7 +7,7 @@ import mayfly.common.enums.NameValueEnum;
  * @version 1.0
  * @date 2019-04-04 13:21
  */
-public enum RedisValueTypeEnum implements NameValueEnum {
+public enum RedisValueTypeEnum implements NameValueEnum<Integer> {
 
 
     /**

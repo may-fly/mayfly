@@ -43,7 +43,8 @@ public final class AnnotationUtils {
      * @param <A>
      * @return
      */
-    private static <A extends Annotation> A getAnnotation(AnnotatedElement annotatedElement, Class<A> annotationType, boolean cacheExtractor) {
+    private static <A extends Annotation> A getAnnotation(AnnotatedElement annotatedElement, Class<A> annotationType,
+                                                          boolean cacheExtractor) {
         A annotation = annotatedElement.getAnnotation(annotationType);
         // 如果元素上含有直接注解，则返回
         if (annotation != null) {
@@ -138,7 +139,8 @@ public final class AnnotationUtils {
      * @return
      */
     @SuppressWarnings("unchecked")
-    private static <A extends Annotation> A synthesizeAnnotation(AnnotatedElement annotatedElement, Annotation annotation, AttributeValueExtractor valueExtractor) {
+    private static <A extends Annotation> A synthesizeAnnotation(AnnotatedElement annotatedElement, Annotation annotation,
+                                                                 AttributeValueExtractor valueExtractor) {
         Class<? extends Annotation> annotationType = annotation.annotationType();
         // 组合注解代理处理器
         InvocationHandler handler = new SynthesizedAnnotationInvocationHandler(valueExtractor);

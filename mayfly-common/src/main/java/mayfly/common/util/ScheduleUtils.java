@@ -11,7 +11,7 @@ import java.util.concurrent.*;
  */
 public class ScheduleUtils {
 
-    public static final int corePoolSize = 1;
+    private static int corePoolSize = 1;
 
     /**
      *  定时任务线程池

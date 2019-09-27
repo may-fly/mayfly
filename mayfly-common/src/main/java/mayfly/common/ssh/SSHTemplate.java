@@ -29,7 +29,7 @@ public class SSHTemplate {
     private static final int OP_TIMEOUT = 12000;
 
     private static ThreadPoolExecutor taskPool = new ThreadPoolExecutor(
-            4, 4, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(1000),
+            2, 2, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(1000),
             ThreadFactoryBuilder.nameFormat("SSH-%d").daemon(true).build());
 
 
