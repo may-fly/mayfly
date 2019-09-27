@@ -1,7 +1,7 @@
 package mayfly.sys.service.base.impl;
 
 import com.github.pagehelper.PageHelper;
-import mayfly.common.result.Page;
+import mayfly.core.result.Page;
 import mayfly.dao.base.BaseMapper;
 import mayfly.sys.common.utils.SpringUtils;
 import mayfly.sys.service.base.BaseService;

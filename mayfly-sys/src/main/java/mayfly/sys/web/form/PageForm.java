@@ -1,8 +1,8 @@
 package mayfly.sys.web.form;
 
 import lombok.Data;
-import mayfly.common.validation.annotation.NotNull;
-import mayfly.common.validation.annotation.Size;
+import mayfly.core.validation.annotation.NotNull;
+import mayfly.core.validation.annotation.Size;
 
 /**
  * @author meilin.huang

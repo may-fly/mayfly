@@ -1,8 +1,8 @@
 package mayfly.sys.aop.valid;
 
-import mayfly.common.result.Result;
-import mayfly.common.validation.ParamValidErrorException;
-import mayfly.common.validation.aop.AopParamValidator;
+import mayfly.core.result.Result;
+import mayfly.core.validation.ParamValidErrorException;
+import mayfly.core.validation.aop.AopParamValidator;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;

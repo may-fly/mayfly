@@ -1,6 +1,6 @@
 package mayfly.sys.service.base;
 
-import mayfly.common.result.Page;
+import mayfly.core.result.Page;
 import mayfly.sys.web.form.PageForm;
 
 import java.util.List;

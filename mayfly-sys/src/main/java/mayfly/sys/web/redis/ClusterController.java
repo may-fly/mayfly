@@ -1,6 +1,6 @@
 package mayfly.sys.web.redis;
 
-import mayfly.common.result.Result;
+import mayfly.core.result.Result;
 import mayfly.sys.redis.commands.cluster.ClusterCommand;
 import mayfly.sys.service.redis.RedisService;
 import mayfly.sys.web.redis.vo.RedisClusterNodeVO;

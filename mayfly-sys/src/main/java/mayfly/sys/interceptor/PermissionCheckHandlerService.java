@@ -1,7 +1,7 @@
 package mayfly.sys.interceptor;
 
-import mayfly.common.permission.checker.PermissionCheckHandler;
-import mayfly.common.util.BracePlaceholder;
+import mayfly.core.permission.checker.PermissionCheckHandler;
+import mayfly.core.util.BracePlaceholder;
 import mayfly.sys.common.cache.UserCacheKey;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;

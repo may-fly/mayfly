@@ -1,9 +1,9 @@
 package mayfly.sys.web.redis;
 
-import mayfly.common.log.MethodLog;
-import mayfly.common.permission.Permission;
-import mayfly.common.result.Result;
-import mayfly.common.validation.annotation.Valid;
+import mayfly.core.log.MethodLog;
+import mayfly.core.permission.Permission;
+import mayfly.core.result.Result;
+import mayfly.core.validation.annotation.Valid;
 import mayfly.entity.Redis;
 import mayfly.sys.common.utils.BeanUtils;
 import mayfly.sys.redis.commands.ServerCommand;

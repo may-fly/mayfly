@@ -1,8 +1,8 @@
 package mayfly.sys.web.open;
 
-import mayfly.common.log.MethodLog;
-import mayfly.common.result.Result;
-import mayfly.common.validation.annotation.Valid;
+import mayfly.core.log.MethodLog;
+import mayfly.core.result.Result;
+import mayfly.core.validation.annotation.Valid;
 import mayfly.entity.Admin;
 import mayfly.sys.service.permission.AdminService;
 import mayfly.sys.service.permission.PermissionService;

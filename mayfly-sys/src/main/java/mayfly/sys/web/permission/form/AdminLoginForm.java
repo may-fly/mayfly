@@ -1,7 +1,7 @@
 package mayfly.sys.web.permission.form;
 
 import lombok.Data;
-import mayfly.common.validation.annotation.NotBlank;
+import mayfly.core.validation.annotation.NotBlank;
 
 /**
  * @author meilin.huang

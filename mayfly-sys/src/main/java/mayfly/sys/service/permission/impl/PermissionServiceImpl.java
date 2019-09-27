@@ -1,11 +1,11 @@
 package mayfly.sys.service.permission.impl;
 
-import mayfly.common.enums.BoolEnum;
-import mayfly.common.permission.registry.PermissionCacheHandler;
-import mayfly.common.permission.registry.UserPermissionCodeRegistry;
-import mayfly.common.util.BracePlaceholder;
-import mayfly.common.util.TreeUtils;
-import mayfly.common.util.UUIDUtils;
+import mayfly.core.enums.BoolEnum;
+import mayfly.core.permission.registry.PermissionCacheHandler;
+import mayfly.core.permission.registry.UserPermissionCodeRegistry;
+import mayfly.core.util.BracePlaceholder;
+import mayfly.core.util.TreeUtils;
+import mayfly.core.util.UUIDUtils;
 import mayfly.entity.Admin;
 import mayfly.sys.common.cache.UserCacheKey;
 import mayfly.sys.common.enums.ResourceTypeEnum;

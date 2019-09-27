@@ -1,6 +1,6 @@
 package mayfly.sys.web.redis;
 
-import mayfly.common.result.Result;
+import mayfly.core.result.Result;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

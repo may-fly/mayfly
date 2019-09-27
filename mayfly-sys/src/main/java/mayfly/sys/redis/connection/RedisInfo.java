@@ -2,7 +2,7 @@ package mayfly.sys.redis.connection;
 
 import io.lettuce.core.RedisURI;
 import lombok.Data;
-import mayfly.common.util.StringUtils;
+import mayfly.core.util.StringUtils;
 
 /**
  * @author meilin.huang

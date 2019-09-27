@@ -1,10 +1,10 @@
 package mayfly.sys.interceptor;
 
-import mayfly.common.permission.SessionLocal;
-import mayfly.common.permission.checker.PermissionCheckHandler;
-import mayfly.common.permission.PermissionDisabledException;
-import mayfly.common.result.Result;
-import mayfly.common.util.StringUtils;
+import mayfly.core.permission.SessionLocal;
+import mayfly.core.permission.checker.PermissionCheckHandler;
+import mayfly.core.permission.PermissionDisabledException;
+import mayfly.core.result.Result;
+import mayfly.core.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;

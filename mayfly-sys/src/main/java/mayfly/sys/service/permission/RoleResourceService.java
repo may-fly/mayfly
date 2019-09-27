@@ -1,6 +1,6 @@
 package mayfly.sys.service.permission;
 
-import mayfly.common.exception.BusinessException;
+import mayfly.core.exception.BusinessException;
 import mayfly.entity.RoleResource;
 import mayfly.sys.service.base.BaseService;
 

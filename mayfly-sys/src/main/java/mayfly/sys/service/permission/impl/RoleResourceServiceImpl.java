@@ -1,8 +1,8 @@
 package mayfly.sys.service.permission.impl;
 
-import mayfly.common.exception.BusinessException;
-import mayfly.common.util.BusinessAssert;
-import mayfly.common.util.CollectionUtils;
+import mayfly.core.exception.BusinessException;
+import mayfly.core.util.BusinessAssert;
+import mayfly.core.util.CollectionUtils;
 import mayfly.dao.RoleResourceMapper;
 import mayfly.entity.Resource;
 import mayfly.entity.RoleResource;

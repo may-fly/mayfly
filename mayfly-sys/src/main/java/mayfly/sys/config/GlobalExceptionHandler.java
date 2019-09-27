@@ -1,8 +1,8 @@
 package mayfly.sys.config;
 
-import mayfly.common.exception.BusinessException;
-import mayfly.common.exception.BusinessRuntimeException;
-import mayfly.common.result.Result;
+import mayfly.core.exception.BusinessException;
+import mayfly.core.exception.BusinessRuntimeException;
+import mayfly.core.result.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.HttpRequestMethodNotSupportedException;

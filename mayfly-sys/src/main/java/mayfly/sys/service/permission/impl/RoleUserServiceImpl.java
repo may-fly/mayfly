@@ -1,7 +1,7 @@
 package mayfly.sys.service.permission.impl;
 
-import mayfly.common.util.BusinessAssert;
-import mayfly.common.util.CollectionUtils;
+import mayfly.core.util.BusinessAssert;
+import mayfly.core.util.CollectionUtils;
 import mayfly.dao.RoleUserMapper;
 import mayfly.entity.RoleUser;
 import mayfly.sys.service.base.impl.BaseServiceImpl;

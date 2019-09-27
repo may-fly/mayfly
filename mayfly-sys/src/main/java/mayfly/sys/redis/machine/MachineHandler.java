@@ -1,12 +1,12 @@
 package mayfly.sys.redis.machine;
 
-import mayfly.common.exception.BusinessRuntimeException;
-import mayfly.common.ssh.SSHTemplate;
-import mayfly.common.validation.ParamValidErrorException;
-import mayfly.common.validation.ValidationHandler;
-import mayfly.common.validation.annotation.NotBlank;
-import mayfly.common.validation.annotation.NotNull;
-import mayfly.common.validation.annotation.Size;
+import mayfly.core.exception.BusinessRuntimeException;
+import mayfly.core.ssh.SSHTemplate;
+import mayfly.core.validation.ParamValidErrorException;
+import mayfly.core.validation.ValidationHandler;
+import mayfly.core.validation.annotation.NotBlank;
+import mayfly.core.validation.annotation.NotNull;
+import mayfly.core.validation.annotation.Size;
 
 /**
  * @author meilin.huang

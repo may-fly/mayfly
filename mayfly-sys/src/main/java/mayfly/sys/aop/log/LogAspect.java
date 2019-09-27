@@ -1,9 +1,9 @@
 package mayfly.sys.aop.log;
 
-import mayfly.common.log.LogHandler;
-import mayfly.common.log.LogInfo;
-import mayfly.common.log.LogResult;
-import mayfly.common.log.MethodLog;
+import mayfly.core.log.LogHandler;
+import mayfly.core.log.LogInfo;
+import mayfly.core.log.LogResult;
+import mayfly.core.log.MethodLog;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.AfterThrowing;

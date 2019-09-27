@@ -1,10 +1,10 @@
 package mayfly.sys.web.permission;
 
-import mayfly.common.exception.BusinessException;
-import mayfly.common.log.MethodLog;
-import mayfly.common.permission.Permission;
-import mayfly.common.result.Result;
-import mayfly.common.validation.annotation.Valid;
+import mayfly.core.exception.BusinessException;
+import mayfly.core.log.MethodLog;
+import mayfly.core.permission.Permission;
+import mayfly.core.result.Result;
+import mayfly.core.validation.annotation.Valid;
 import mayfly.entity.Resource;
 import mayfly.sys.common.utils.BeanUtils;
 import mayfly.sys.service.permission.ResourceService;

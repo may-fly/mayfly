@@ -1,7 +1,7 @@
 package mayfly.sys.web.permission.vo;
 
 import lombok.Data;
-import mayfly.common.util.TreeUtils;
+import mayfly.core.util.TreeUtils;
 import mayfly.dao.base.annotation.NoColumn;
 
 import java.time.LocalDateTime;

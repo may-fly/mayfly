@@ -1,10 +1,10 @@
 package mayfly.sys.web.permission.form;
 
 import lombok.Data;
-import mayfly.common.validation.annotation.EnumValue;
-import mayfly.common.validation.annotation.NotBlank;
-import mayfly.common.validation.annotation.NotNull;
-import mayfly.common.validation.annotation.Size;
+import mayfly.core.validation.annotation.EnumValue;
+import mayfly.core.validation.annotation.NotBlank;
+import mayfly.core.validation.annotation.NotNull;
+import mayfly.core.validation.annotation.Size;
 import mayfly.sys.common.enums.ResourceTypeEnum;
 
 /**

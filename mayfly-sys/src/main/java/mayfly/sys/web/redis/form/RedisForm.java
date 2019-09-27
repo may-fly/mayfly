@@ -1,8 +1,8 @@
 package mayfly.sys.web.redis.form;
 
 import lombok.Data;
-import mayfly.common.validation.annotation.NotBlank;
-import mayfly.common.validation.annotation.NotNull;
+import mayfly.core.validation.annotation.NotBlank;
+import mayfly.core.validation.annotation.NotNull;
 
 /**
  * @author meilin.huang

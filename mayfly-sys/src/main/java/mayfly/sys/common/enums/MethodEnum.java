@@ -1,6 +1,6 @@
 package mayfly.sys.common.enums;
 
-import mayfly.common.enums.ValueEnum;
+import mayfly.core.enums.ValueEnum;
 
 /**
  * @author meilin.huang

@@ -1,9 +1,9 @@
 package mayfly.sys.service.permission.impl;
 
-import mayfly.common.enums.BoolEnum;
-import mayfly.common.util.BusinessAssert;
-import mayfly.common.util.EnumUtils;
-import mayfly.common.util.TreeUtils;
+import mayfly.core.enums.BoolEnum;
+import mayfly.core.util.BusinessAssert;
+import mayfly.core.util.EnumUtils;
+import mayfly.core.util.TreeUtils;
 import mayfly.dao.ResourceMapper;
 import mayfly.entity.Resource;
 import mayfly.entity.RoleResource;

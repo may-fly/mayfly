@@ -1,12 +1,12 @@
 package mayfly.sys.web.permission;
 
-import mayfly.common.enums.BoolEnum;
-import mayfly.common.exception.BusinessException;
-import mayfly.common.log.MethodLog;
-import mayfly.common.permission.Permission;
-import mayfly.common.result.Result;
-import mayfly.common.util.BusinessAssert;
-import mayfly.common.validation.annotation.Valid;
+import mayfly.core.enums.BoolEnum;
+import mayfly.core.exception.BusinessException;
+import mayfly.core.log.MethodLog;
+import mayfly.core.permission.Permission;
+import mayfly.core.result.Result;
+import mayfly.core.util.BusinessAssert;
+import mayfly.core.validation.annotation.Valid;
 import mayfly.entity.Role;
 import mayfly.sys.common.utils.BeanUtils;
 import mayfly.sys.service.permission.RoleResourceService;

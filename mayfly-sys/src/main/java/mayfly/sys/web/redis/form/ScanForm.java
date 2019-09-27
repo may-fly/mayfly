@@ -1,7 +1,7 @@
 package mayfly.sys.web.redis.form;
 
 import lombok.Data;
-import mayfly.common.validation.annotation.Size;
+import mayfly.core.validation.annotation.Size;
 
 /**
  * @author meilin.huang

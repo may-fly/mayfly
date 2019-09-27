@@ -1,9 +1,9 @@
 package mayfly.sys.common.utils;
 
-import mayfly.common.log.MethodLog;
-import mayfly.common.util.annotation.AnnotationUtils;
-import mayfly.common.util.annotation.OverrideFor;
-import mayfly.common.validation.annotation.DateRange;
+import mayfly.core.log.MethodLog;
+import mayfly.core.util.annotation.AnnotationUtils;
+import mayfly.core.util.annotation.OverrideFor;
+import mayfly.core.validation.annotation.DateRange;
 import org.springframework.core.annotation.AliasFor;
 
 import java.lang.annotation.Documented;
