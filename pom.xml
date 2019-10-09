@@ -16,7 +16,7 @@
     </parent>
 
     <modules>
-        <module>mayfly-common</module>
+        <module>mayfly-core</module>
         <module>mayfly-dao</module>
         <module>mayfly-sys</module>
     </modules>

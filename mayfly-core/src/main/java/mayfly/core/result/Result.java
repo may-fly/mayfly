@@ -1,8 +1,8 @@
 package mayfly.core.result;
 
-import com.alibaba.fastjson.JSON;
 import mayfly.core.enums.NameValueEnum;
 import mayfly.core.enums.ValueEnum;
+import mayfly.core.util.JsonUtils;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -166,6 +166,6 @@ public final class Result<T> implements Serializable {
 
     @Override
     public String toString() {
-        return JSON.toJSONString(this);
+        return JsonUtils.toJSONString(this);
     }
 }

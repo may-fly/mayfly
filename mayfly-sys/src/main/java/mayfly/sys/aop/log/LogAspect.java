@@ -34,7 +34,7 @@ public class LogAspect {
     /**
      * 拦截带有@MethodLog的方法或带有该注解的类
      */
-    @Pointcut("@annotation(mayfly.common.log.MethodLog) || @within(mayfly.common.log.MethodLog)")
+    @Pointcut("@annotation(mayfly.core.log.MethodLog) || @within(mayfly.core.log.MethodLog)")
     private void logPointcut() {}
 
     @AfterThrowing(pointcut = "logPointcut()", throwing="e")

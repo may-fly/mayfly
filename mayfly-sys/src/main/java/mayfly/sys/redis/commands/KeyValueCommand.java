@@ -1,12 +1,12 @@
 package mayfly.sys.redis.commands;
 
-import com.alibaba.fastjson.JSON;
 import io.lettuce.core.KeyScanCursor;
 import io.lettuce.core.ScanArgs;
 import io.lettuce.core.ScanCursor;
 import io.lettuce.core.api.sync.*;
 import mayfly.core.exception.BusinessRuntimeException;
 import mayfly.core.util.EnumUtils;
+import mayfly.core.util.JsonUtils;
 import mayfly.core.util.StringUtils;
 import mayfly.sys.redis.enums.RedisValueTypeEnum;
 import mayfly.sys.web.redis.vo.KeyScanVO;
@@ -139,7 +139,7 @@ public class KeyValueCommand {
         }
         if (RedisValueTypeEnum.SET.getValue().equals(type)) {
             Set<String> members = castSetCommands(commands).smembers(key).stream().map(m -> new String(m)).collect(Collectors.toSet());
-            ki.setValue(JSON.toJSONString(members));
+            ki.setValue(JsonUtils.toJSONString(members));
             return ki;
         }
 

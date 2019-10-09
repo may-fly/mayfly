@@ -28,7 +28,7 @@ public class ParamValid {
     /**
      *
      */
-    @Pointcut("@args(mayfly.common.validation.annotation.Valid)")
+    @Pointcut("@args(mayfly.core.validation.annotation.Valid)")
     private void validArgs() {}
 
     @Around("controller()")

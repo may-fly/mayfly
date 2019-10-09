@@ -33,9 +33,9 @@ public @interface EnumValue {
     String message() default "{fieldName}字段枚举值错误！";
 
 
-    class EnumValueValidator implements Validator<EnumValue, Integer> {
+    class EnumValueValidator implements Validator<EnumValue, Object> {
         @Override
-        public boolean validation(EnumValue enumValue, Integer value) {
+        public boolean validation(EnumValue enumValue, Object value) {
             if (value == null) {
                 return true;
             }

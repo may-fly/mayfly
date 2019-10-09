@@ -1,7 +1,7 @@
 package mayfly.core.log;
 
-import com.alibaba.fastjson.JSON;
 import mayfly.core.util.CollectionUtils;
+import mayfly.core.util.JsonUtils;
 import mayfly.core.util.PlaceholderResolver;
 
 import java.util.HashMap;
@@ -74,7 +74,7 @@ public class LogInfo {
         // 当记录日志结果属性为true并且记录结果的级别大于系统级别时填充结果属性
         if (this.result && this.resultLevel.order() >= sysLogLevel.order()) {
             logMsg.append(RESULT_MSG_TEMP);
-            value.put("result", JSON.toJSONString(result.getResult()));
+            value.put("result", JsonUtils.toJSONString(result.getResult()));
         }
         if (this.time) {
             logMsg.append(TIME_MSG_TEMP);
@@ -86,7 +86,7 @@ public class LogInfo {
             if (CollectionUtils.contains(noNeedLogParamIndex, i)) {
                 continue;
             }
-            value.put("param" + i, JSON.toJSONString(args[i]));
+            value.put("param" + i, JsonUtils.toJSONString(args[i]));
         }
 
         logMsg.append("\n -----------------------------------------------------------");
@@ -113,7 +113,7 @@ public class LogInfo {
             if (CollectionUtils.contains(noNeedLogParamIndex, i))  {
                 continue;
             }
-            value.put("param" + i, JSON.toJSONString(args[i]));
+            value.put("param" + i, JsonUtils.toJSONString(args[i]));
         }
 
         logMsg.append("\n -----------------------------------------------------------");
