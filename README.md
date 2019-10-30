@@ -105,7 +105,7 @@ public class PermissionController
 ## 系统部分页面
 
 1.菜单&权限管理页
-![菜单&权限管理](https://images.gitee.com/uploads/images/2019/0727/160648_88d6bc70_1240250.png "屏幕截图.png")
+![菜单&权限管理](https://images.gitee.com/uploads/images/2019/1030/171326_c4e18bde_1240250.png "屏幕截图.png")
 
 2.角色分配菜单&权限页
-![分配角色权限](https://images.gitee.com/uploads/images/2019/0727/160803_36bf030d_1240250.png "屏幕截图.png")
+![分配角色权限](https://images.gitee.com/uploads/images/2019/1030/171427_7e82fde8_1240250.png "屏幕截图.png")
