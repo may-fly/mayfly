@@ -55,7 +55,7 @@ public class TreeUtils {
      */
     public static <T extends TreeNode> void setChildren(T parent, List<T> nodes) {
         List<T> children = new ArrayList<>();
-        Number parentId = parent.id();
+        Object parentId = parent.id();
         for (Iterator<T> ite = nodes.iterator(); ite.hasNext();) {
             T node = ite.next();
             if (Objects.equals(node.parentId(), parentId)) {
@@ -99,7 +99,7 @@ public class TreeUtils {
      * 树节点父类，所有需要使用{@linkplain TreeUtils}工具类形成树形结构等操作的节点都需要实现该接口
      * @param <T>  节点id类型
      */
-    public interface TreeNode<T extends Number> {
+    public interface TreeNode<T> {
         /**
          * 获取节点id
          * @return  树节点id

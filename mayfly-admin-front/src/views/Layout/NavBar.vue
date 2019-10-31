@@ -118,7 +118,7 @@
 
     .active {
       border: 1px solid #3d8dbc;
-      background: #3d8dbc;
+      background: #303643;
       color: #fff;
 
       .point {

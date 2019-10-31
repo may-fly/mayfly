@@ -62,7 +62,7 @@
     <div class="app">
       <div class="aside">
         <div class="menu">
-          <el-menu background-color="#222d32" text-color="#fff" :default-active="$route.path" class="menu" :collapse="isCollapse">
+          <el-menu background-color="#222d32" text-color="#bbbbbb" active-text-color="#fff" :default-active="$route.path" class="menu" :collapse="isCollapse">
             <MenuTree @toPath="toPath" :menus="this.menus"></MenuTree>
           </el-menu>
         </div>
@@ -433,7 +433,7 @@
     position: fixed;
     display: flex;
     height: 50px;
-    background-color: #3c8dbc;
+    background-color: #303643;
     z-index: 10;
 
     .logo {
@@ -446,7 +446,7 @@
       text-align: center;
       line-height: 50px;
       color: #fff;
-      background-color: #367fa9;
+      background-color: #303643;
       -webkit-transition: width 0.35s;
       transition: all 0.3s ease-in-out;
     }
@@ -481,7 +481,7 @@
       color: #fff;
 
       &:hover {
-        background-color: #367fa9
+        background-color: #222d32
       }
     }
 
@@ -507,5 +507,12 @@
     height: 100%;
     position: absolute;
     background-color: #ecf0f5;
+  }
+  
+  .el-submenu__title {
+    font-weight: 500;
+  }
+  .el-menu-item {
+    font-weight: 500;
   }
 </style>

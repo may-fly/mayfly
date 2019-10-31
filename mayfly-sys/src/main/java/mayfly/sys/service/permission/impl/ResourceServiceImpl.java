@@ -83,13 +83,14 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourceMapper, Resourc
         Resource old = getById(resource.getId());
         BusinessAssert.notNull(old, "资源不存在");
         BusinessAssert.state(Objects.equals(resource.getType(), old.getType()), "资源类型不可变更");
-
+        // 禁止误传修改其父节点
+        resource.setPid(null);
         resource.setUpdateTime(LocalDateTime.now());
 
         if (Objects.equals(old.getType(), ResourceTypeEnum.MENU.getValue())) {
             return updateById(resource);
         }
-
+        // 权限类型需要校验code不能为空
         BusinessAssert.notEmpty(resource.getCode(), "权限code不能为空");
         updateById(resource);
         return resource;

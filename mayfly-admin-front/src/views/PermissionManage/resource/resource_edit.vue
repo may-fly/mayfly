@@ -39,7 +39,8 @@
       dialogFormVisible: Boolean,
       data: [Object, Boolean],
       title: String,
-      type: Number
+      type: Number,
+      typeDisabled: Boolean
     },
     data() {
       return {
@@ -67,12 +68,12 @@
           weight: null
         },
         // 资源类型选择是否禁用
-        typeDisabled: false,
+        // typeDisabled: false,
         btnLoading: false,
         rules: {
           name: [{
             required: true,
-            message: '请输入菜单名称',
+            message: '请输入资源名称',
             trigger: ['change', 'blur']
           }],
         }
@@ -81,15 +82,8 @@
     watch: {
       'data': {
         handler: function() {
-          if (this.data && this.type == 3) {
-            // 编辑修改状态不可修改资源类型
-            this.typeDisabled = true;
+          if (this.data) {
             this.$Utils.copyProperties(this.data, this.form);
-          } else {
-            this.typeDisabled = false;
-            if (this.data && this.type == 2) {
-              this.form.pid = this.data.pid;
-            }
           }
         },
         deep: true
@@ -119,9 +113,8 @@
                 setTimeout(() => {
                   this.btnLoading = false
                 }, 1000);
-                //重置表单域
-                this.$refs["menuForm"].resetFields();
-                this.$Utils.resetProperties(this.form);
+                
+                this.cancel();
               })
             } else {
               this.$message.error('表单填写有误');
@@ -132,9 +125,11 @@
       },
       cancel() {
         this.$emit('cancel');
-        this.$refs["menuForm"].resetFields();
-        //  重置对象属性为null
-        this.$Utils.resetProperties(this.form);
+        setTimeout(() => {
+          this.$refs["menuForm"].resetFields();
+          //  重置对象属性为null
+          this.$Utils.resetProperties(this.form);
+        }, 200)
       }
     },
     mounted() {

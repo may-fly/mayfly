@@ -38,14 +38,14 @@ public final class EnumUtils {
      */
     public static <T> String getNameByValue(NameValueEnum<T>[] enums, T value) {
         if (value == null) {
-            return "";
+            return null;
         }
         for (NameValueEnum e : enums) {
             if (value.equals(e.getValue())) {
                 return e.getName();
             }
         }
-        return "";
+        return null;
     }
 
     /**
