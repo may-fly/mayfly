@@ -4,8 +4,8 @@
       <div><span style="font-size: 14px;"><i class="el-icon-info"></i>可右击树节点对右击节点进行操作</span></div>
       <el-button v-permission="permission.save.code" type="primary" icon="el-icon-plus" size="mini" @click="addResource(false)">添加</el-button>
     </ToolBar>
-    <el-tree class="none-select" :indent="38" node-key="id" :props="props" :data="data" @node-expand="handleNodeExpand" @node-collapse="handleNodeCollapse"
-      @node-contextmenu="rightClick" :default-expanded-keys="defaultExpandedKeys">
+    <el-tree class="none-select" :indent="38" node-key="id" :props="props" :data="data" @node-expand="handleNodeExpand"
+      @node-collapse="handleNodeCollapse" @node-contextmenu="rightClick" :default-expanded-keys="defaultExpandedKeys">
       <span class="custom-tree-node" slot-scope="{ node, data }">
         <span style="font-size: 13px" v-if="data.type === enums.ResourceTypeEnum.MENU.value">
           <span style="color: #3c8dbc">【</span>{{ data.name }}<span style="color: #3c8dbc">】</span>
@@ -19,16 +19,18 @@
       </span>
     </el-tree>
 
-    <ResourceEdit :title="dialogForm.title" :dialogFormVisible="dialogForm.visible" :data="dialogForm.data" :typeDisabled="dialogForm.typeDisabled" :departTree="data"
-      :type="dialogForm.type" @val-change="valChange" @cancel="editorCancel()">
+    <ResourceEdit :title="dialogForm.title" :dialogFormVisible="dialogForm.visible" :data="dialogForm.data"
+      :typeDisabled="dialogForm.typeDisabled" :departTree="data" :type="dialogForm.type" @val-change="valChange"
+      @cancel="editorCancel()">
     </ResourceEdit>
 
     <!-- 鼠标右击后显示的按钮 -->
-    <div style="position: absolute; width: 300px; height: 50px;" @mouseover="btnMouseOver" @mouseleave="btnMouseLeave" v-show="showBtns"
-      id="btns">
+    <div style="position: absolute; width: 300px; height: 50px;" @mouseover="btnMouseOver" @mouseleave="btnMouseLeave"
+      v-show="showBtns" id="btns">
       <el-button @click="info()" style="margin-left: 25px;" type="info" size="mini" plain>详情</el-button>
-      
-      <el-button v-permission="permission.update.code" @click="editResource(rightClickData)" type="primary" size="mini" plain>编辑</el-button>
+
+      <el-button v-permission="permission.update.code" @click="editResource(rightClickData)" type="primary" size="mini"
+        plain>编辑</el-button>
 
       <el-button v-permission="permission.save.code" @click="addResource(rightClickData)" v-if="rightClickData.type === enums.ResourceTypeEnum.MENU.value"
         type="success" size="mini" plain>新增</el-button>
@@ -80,7 +82,7 @@
     },
     methods: {
       deleteMenu(data) {
-        this.$confirm(`此操作将删除 [${data.name}] 该菜单, 是否继续?`, '提示', {
+        this.$confirm(`此操作将删除 [${data.name}], 是否继续?`, '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
@@ -91,8 +93,6 @@
             this.$message.success("删除成功！");
             this.search();
           })
-        }).catch(err => {
-          this.$message.error(err);
         });
       },
       search() {
@@ -112,9 +112,9 @@
           dialog.data.type = menu;
           dialog.title = '添加顶级菜单';
           return;
-        } 
+        }
         // 添加子菜单，把当前菜单id作为新增菜单pid
-        dialog.data.pid = data.id; 
+        dialog.data.pid = data.id;
         dialog.title = '添加“' + data.name + '”的子资源 ';
         if (data.children === null || data.children.length === 0) {
           // 如果子节点不存在，则资源类型可选择
@@ -134,7 +134,7 @@
           } else {
             dialog.data.type = menu;
           }
-        } 
+        }
       },
       editResource(data) {
         this.dialogForm.visible = true;
@@ -281,13 +281,14 @@
       line-height: 40px;
     }
   }
+
   .none-select {
     moz-user-select: -moz-none;
     -moz-user-select: none;
-    -o-user-select:none;
-    -khtml-user-select:none;
-    -webkit-user-select:none;
-    -ms-user-select:none;
-    user-select:none;
+    -o-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
   }
 </style>

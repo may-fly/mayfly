@@ -13,7 +13,7 @@ import io.lettuce.core.cluster.api.sync.RedisClusterCommands;
 import io.lettuce.core.codec.RedisCodec;
 import mayfly.core.exception.BusinessRuntimeException;
 import mayfly.core.util.Assert;
-import mayfly.core.util.ScheduleUtils;
+import mayfly.core.util.thread.ScheduleUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -271,7 +271,7 @@ public class RedisConnectionRegistry {
                 }
             }
 
-            ScheduleUtils.schedule(getKey(), this::close, 10, TimeUnit.MINUTES);
+            ScheduleUtils.schedule(getKey(), this::close, 5, TimeUnit.MINUTES);
             return this;
         }
 

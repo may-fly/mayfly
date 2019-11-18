@@ -1,7 +1,7 @@
 {
-  "name": "ElementUIAdmin",
+  "name": "Mayfly",
   "description": "A Vue.js project",
-  "author": "yi.shyang@ele.me",
+  "author": "meilin.huang",
   "private": true,
   "scripts": {
     "dev": "webpack-dev-server --inline --hot --env.dev",

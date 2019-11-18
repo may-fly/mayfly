@@ -1,6 +1,6 @@
 package mayfly.core.validation;
 
-import mayfly.core.enums.ValueEnum;
+import mayfly.core.util.enums.ValueEnum;
 import mayfly.core.validation.annotation.EnumValue;
 import mayfly.core.validation.annotation.NotBlank;
 import mayfly.core.validation.annotation.NotNull;

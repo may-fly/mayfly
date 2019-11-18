@@ -164,8 +164,10 @@
        */
       cancelEditResources() {
         this.resourceDialog.visible = false;
-        this.resourceDialog.role = false;
-        this.resourceDialog.defaultCheckedKeys = [];
+        setTimeout(function() {
+          this.resourceDialog.role = false;
+          this.resourceDialog.defaultCheckedKeys = [];
+        }, 10);
       },
       resetting(id) {
         let dom = this.$refs[id].$el;

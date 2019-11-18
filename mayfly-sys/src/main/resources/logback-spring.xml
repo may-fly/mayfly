@@ -27,7 +27,7 @@
         <!-- TimeBasedRollingPolicy： 最常用的滚动策略，它根据时间来制定滚动策略，既负责滚动也负责出发滚动 -->
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- 活动文件的名字会根据fileNamePattern的值，每隔一段时间改变一次 -->
-            <!-- 文件名：logVO/freeLog.2018-08-23.0.logVO -->
+            <!-- 文件名：logVO/freeLog.2018-08-23.0.log -->
             <fileNamePattern>log/mayfly.%d.%i.log</fileNamePattern>
             <!-- 每产生一个日志文件，该日志文件的保存期限为30天 -->
             <maxHistory>30</maxHistory>
@@ -63,7 +63,7 @@
     <!-- 指定项目中某个包，当有日志操作行为时的日志记录级别 additivity为false表示<logger>的打印信息不会向父级<root>传递-->
     <!-- mayfly为根包，也就是只要是发生在这个根包下面的所有日志操作行为的权限都是DEBUG -->
     <!-- 级别依次为【从高到低】：FATAL > ERROR > WARN > INFO > DEBUG > TRACE  -->
-    <logger name="mayfly" level="INFO" additivity="false">
+    <logger name="mayfly" level="DEBUG" additivity="false">
         <appender-ref ref="STDOUT"/>
     </logger>
 </configuration>

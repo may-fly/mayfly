@@ -66,12 +66,13 @@ module.exports = (options = {}) => ({
     }
   },
   devServer: {
-    host: '127.0.0.1',
+    disableHostCheck: true,
+    host: 'localhost',
     port: 8016,
     open: true,
     proxy: {
       '/mayfly': {
-        target: 'http://127.0.0.1:8080',
+        target: 'http://localhost:8080',
         changeOrigin: true,
         pathRewrite: {
           '^/mayfly/': '/mayfly/'

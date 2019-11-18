@@ -1,8 +1,13 @@
-package mayfly.core.util;
+package mayfly.core.util.thread;
 
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
+
 
 /**
  * @author meilin.huang
@@ -16,7 +21,8 @@ public class ScheduleUtils {
     /**
      *  定时任务线程池
      */
-    private static ScheduledExecutorService schedule = Executors.newScheduledThreadPool(corePoolSize);
+    private static ScheduledExecutorService schedule = Executors.newScheduledThreadPool(corePoolSize
+    , ThreadFactoryBuilder.name("mayfly-schedule").daemon(true).build());
 
     /**
      * 存定时任务结果
@@ -27,11 +33,11 @@ public class ScheduleUtils {
         //定期检查map中是否有已经执行完成的，有则移除
         scheduleAtFixedRate("removeCompletedFuture", () -> {
             scheduledFutureMap.forEach((key, value) -> {
-                if (value.isDone()) {
+                if (value.isDone() || value.isCancelled()) {
                     removeFuture(key);
                 }
             });
-        }, 0, 10, TimeUnit.SECONDS);
+        }, 0, 30, TimeUnit.SECONDS);
     }
 
 
@@ -55,6 +61,11 @@ public class ScheduleUtils {
      */
     public static void scheduleAtFixedRate(String id, Runnable runnable, long initialDelay, long time, TimeUnit timeUnit) {
         scheduledFutureMap.put(id, schedule.scheduleAtFixedRate(runnable, initialDelay, time, timeUnit));
+    }
+
+    public static boolean containSchedule(String id) {
+        ScheduledFuture scheduledFuture = scheduledFutureMap.get(id);
+        return scheduledFuture != null && !scheduledFuture.isDone();
     }
 
     public static void removeFuture(String id) {

@@ -1,4 +1,4 @@
-package mayfly.core.enums;
+package mayfly.core.util.enums;
 
 /**
  * boolean枚举值

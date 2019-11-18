@@ -1,6 +1,6 @@
 package mayfly.sys.service.permission.impl;
 
-import mayfly.core.enums.BoolEnum;
+import mayfly.core.util.enums.BoolEnum;
 import mayfly.core.permission.registry.PermissionCacheHandler;
 import mayfly.core.permission.registry.UserPermissionCodeRegistry;
 import mayfly.core.util.BracePlaceholder;

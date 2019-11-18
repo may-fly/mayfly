@@ -1,6 +1,7 @@
-package mayfly.core.util;
+package mayfly.core.exception;
 
-import mayfly.core.exception.BusinessRuntimeException;
+import mayfly.core.util.CollectionUtils;
+import mayfly.core.util.StringUtils;
 
 import java.util.Collection;
 import java.util.function.Supplier;

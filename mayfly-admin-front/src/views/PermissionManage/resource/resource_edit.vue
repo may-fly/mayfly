@@ -17,8 +17,8 @@
         <el-form-item v-if="form.type === enums.ResourceTypeEnum.PERMISSION.value" prop="code" label="权限code:" required>
           <el-input v-model.trim="form.code" placeholder="请输入权限code"></el-input>
         </el-form-item>
-        <el-form-item label="权重:" required>
-          <el-input v-model.trim="form.weight" type="number" placeholder="请输入权重"></el-input>
+        <el-form-item label="序号:" required>
+          <el-input v-model.trim="form.weight" type="number" placeholder="请输入序号"></el-input>
         </el-form-item>
       </el-form>
 

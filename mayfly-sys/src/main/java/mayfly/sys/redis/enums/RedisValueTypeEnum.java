@@ -1,6 +1,6 @@
 package mayfly.sys.redis.enums;
 
-import mayfly.core.enums.NameValueEnum;
+import mayfly.core.util.enums.NameValueEnum;
 
 /**
  * @author meilin.huang

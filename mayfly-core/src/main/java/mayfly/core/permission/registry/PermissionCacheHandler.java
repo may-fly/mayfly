@@ -1,6 +1,6 @@
 package mayfly.core.permission.registry;
 
-import mayfly.core.enums.BoolEnum;
+import mayfly.core.util.enums.BoolEnum;
 
 import java.util.Collection;
 import java.util.concurrent.TimeUnit;

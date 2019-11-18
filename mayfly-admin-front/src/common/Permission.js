@@ -46,6 +46,9 @@ class Permission {
     return request.send(this, param);
   }
 
+
+  /**    静态方法     **/
+
   /**
    * 静态工厂，设置code，并返回Permission对象
    * @param {String} code 权限code（权限标识符）Permission对象必有的属性
@@ -59,11 +62,26 @@ class Permission {
    */
   static savePermission(tokenMenuAndPermission) {
     //保存token
-    sessionStorage.setItem(Config.name.tokenKey, tokenMenuAndPermission.token);
+    Permission.saveToken(tokenMenuAndPermission.token);
     //保存menus
     sessionStorage.setItem(Config.name.resourcesKey, JSON.stringify(tokenMenuAndPermission.resources));
     //
     sessionStorage.setItem(Config.name.adminKey, JSON.stringify(tokenMenuAndPermission.admin))
+  }
+
+  /**
+   * 获取token
+   */
+  static getToken() {
+    return sessionStorage.getItem(Config.name.tokenKey);
+  }
+
+  /**
+   * 保存token
+   * @param {Object} token token
+   */
+  static saveToken(token) {
+    sessionStorage.setItem(Config.name.tokenKey, token);
   }
 
   /**

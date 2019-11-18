@@ -1,7 +1,7 @@
 package mayfly.sys.web.permission.form;
 
 import lombok.Data;
-import mayfly.core.enums.BoolEnum;
+import mayfly.core.util.enums.BoolEnum;
 import mayfly.core.validation.annotation.EnumValue;
 import mayfly.core.validation.annotation.NotBlank;
 import mayfly.core.validation.annotation.NotNull;

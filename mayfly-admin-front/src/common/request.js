@@ -80,14 +80,21 @@ function request(method, uri, params) {
   };
   // post和put使用json格式传参
   if (method === enums.requestMethod.POST.label || method === enums.requestMethod.PUT.label) {
-    query.headers = {'Content-Type': 'application/json;charset=UTF-8'},
-    query.data = params;
+    query.headers = {
+        'Content-Type': 'application/json;charset=UTF-8'
+      },
+      query.data = params;
   } else {
     query.params = params;
   }
   return Axios.request(query).then(res => parseResponse(res))
     .catch(e => {
-      ElementUI.Message.error(e);
+      if (typeof e == 'object') {
+        ElementUI.Message.error(e.message);
+      } else {
+        ElementUI.Message.error(e);
+      }
+
       return Promise.reject(e);
     });
 }

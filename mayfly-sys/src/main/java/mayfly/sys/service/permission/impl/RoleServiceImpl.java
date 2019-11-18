@@ -1,6 +1,6 @@
 package mayfly.sys.service.permission.impl;
 
-import mayfly.core.util.BusinessAssert;
+import mayfly.core.exception.BusinessAssert;
 import mayfly.dao.RoleMapper;
 import mayfly.entity.Role;
 import mayfly.entity.RoleResource;

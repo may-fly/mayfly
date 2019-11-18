@@ -1,7 +1,8 @@
 package mayfly.core.util;
 
-import mayfly.core.enums.NameValueEnum;
 import mayfly.core.util.annotation.AnnotationUtils;
+import mayfly.core.util.enums.EnumUtils;
+import mayfly.core.util.enums.NameValueEnum;
 
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
@@ -9,7 +10,12 @@ import java.beans.PropertyDescriptor;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.WeakHashMap;
 import java.util.stream.Collectors;
 
 import static java.lang.annotation.ElementType.FIELD;
@@ -36,8 +42,8 @@ public class BeanUtils {
     public static <T> T instantiate(Class<T> clazz) {
         Assert.assertState(!clazz.isInterface(), "无法实例化接口：" + clazz.getName());
         try {
-            return clazz.newInstance();
-        } catch (InstantiationException | IllegalAccessException e) {
+            return clazz.getDeclaredConstructor().newInstance();
+        } catch (Exception e) {
             throw new IllegalStateException("实例化对象失败", e);
         }
     }
@@ -83,7 +89,7 @@ public class BeanUtils {
      * @param <T>       bean的具体类型
      * @return          实例bean
      */
-    public static <T> T map2Bean(Map sourceMap, Class<T> clazz) {
+    public static <T> T map2Bean(Map<String, Object> sourceMap, Class<T> clazz) {
         T target = BeanUtils.instantiate(clazz);
         for (PropertyDescriptor pd : getPropertyDescriptors(clazz)) {
             Object fieldValue = sourceMap.get(pd.getName());

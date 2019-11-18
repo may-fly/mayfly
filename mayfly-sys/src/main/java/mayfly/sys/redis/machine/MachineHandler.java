@@ -1,9 +1,6 @@
 package mayfly.sys.redis.machine;
 
 import mayfly.core.exception.BusinessRuntimeException;
-import mayfly.core.ssh.SSHTemplate;
-import mayfly.core.validation.ParamValidErrorException;
-import mayfly.core.validation.ValidationHandler;
 import mayfly.core.validation.annotation.NotBlank;
 import mayfly.core.validation.annotation.NotNull;
 import mayfly.core.validation.annotation.Size;
@@ -21,7 +18,7 @@ public class MachineHandler {
     private final static String MEM_USAGE_STRING = "Mem:";
     private final static String SWAP_USAGE_STRING = "Swap:";
 
-    private static SSHTemplate template = SSHTemplate.getSshTemplate();
+//    private static SSHTemplate template = SSHTemplate.getSshTemplate();
 
     public static String getMachineInfo(String ip, int port, String username, String password) {
         try {
@@ -71,36 +68,6 @@ public class MachineHandler {
 
 
         private Integer method;
-    }
-
-    public static void main(String[] args) throws Exception {
-//        for (int i = 0; i < 50; i++) {
-//            new Thread(() -> {
-//                try {
-//                    Result<String> res = template.execute("118.24.26.101", 22, "root", "", session -> session.executeCommand("top -b -n 1 | head -5"));
-//                    System.out.println(res.getData());
-//                    System.out.println();
-//                } catch (Exception e) {
-//                    System.out.println(e.getMessage());
-//                }
-//            }).start();
-//
-//        }
-
-        User user = new User();
-        user.name = "1";
-        user.sex = 100;
-        user.sex6 = 1001;
-        long start = System.currentTimeMillis();
-        for (int i = 0; i < 100000; i++) {
-            try {
-                ValidationHandler.getInstance().validate(user);
-            } catch (ParamValidErrorException e) {
-                System.out.println(e.getMessage());
-            }
-        }
-        long end = System.currentTimeMillis();
-        System.out.println(end - start);
     }
 
 }

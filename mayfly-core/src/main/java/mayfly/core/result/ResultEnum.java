@@ -1,6 +1,6 @@
 package mayfly.core.result;
 
-import mayfly.core.enums.NameValueEnum;
+import mayfly.core.util.enums.NameValueEnum;
 
 /**
  * 结果枚举类
@@ -12,32 +12,32 @@ public enum ResultEnum implements NameValueEnum<Integer> {
     /**
      * 操作成功
      */
-    SUCCESS(200, "操作成功！"),
+    SUCCESS(200, "操作成功"),
 
     /**
      * 失败
      */
-    ERROR(400, "操作失败！"),
+    ERROR(400, "操作失败"),
 
     /**
      * 参数错误
      */
-    PARAM_ERROR(405, "参数错误！"),
+    PARAM_ERROR(405, "参数错误"),
 
     /**
      * 资源未找到
      */
-    NO_FOUND(404, "未找到对应的资源！"),
+    NO_FOUND(404, "未找到对应的资源"),
 
     /**
      * 服务器异常
      */
-    SERVER_ERROR(500, "服务器异常！"),
+    SERVER_ERROR(500, "服务器异常"),
 
     /**
      * 无权限
      */
-    NO_PERMISSION(501, "没有权限！");
+    NO_PERMISSION(501, "没有权限");
 
 
     /**

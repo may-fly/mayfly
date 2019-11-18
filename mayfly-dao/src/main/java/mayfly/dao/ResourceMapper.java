@@ -28,6 +28,6 @@ public interface ResourceMapper extends BaseMapper<Resource> {
             "(SELECT DISTINCT(rmb.resource_id) " +
             "FROM tb_role_user p JOIN tb_role r ON p.role_Id = r.id AND p.user_id = #{userId} AND r.status = 1 " +
             "JOIN tb_role_resource rmb ON rmb.role_id = r.id)" +
-            "ORDER BY m.pid ASC, m.weight DESC")
+            "ORDER BY m.pid ASC, m.weight ASC")
     List<Resource> selectByUserId(Integer userId);
 }

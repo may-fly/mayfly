@@ -29,10 +29,10 @@
         <!--统一版本管理-->
         <mybatis.version>3.4.5</mybatis.version>
         <mybatis.pagehelper.version>1.2.3</mybatis.pagehelper.version>
-        <mysql.connector.version>5.1.26</mysql.connector.version>
+        <mysql.connector.version>8.0.11</mysql.connector.version>
 
         <alibaba.druid.version>1.0.28</alibaba.druid.version>
-<!--        <alibaba.fastjson.version>1.2.54</alibaba.fastjson.version>-->
+        <alibaba.fastjson.version>1.2.54</alibaba.fastjson.version>
         <!--bean自动生成常用方法注解版本-->
         <lombok.version>1.16.18</lombok.version>
     </properties>
@@ -92,16 +92,4 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
-
-
 </project>

@@ -1,8 +1,8 @@
 package mayfly.sys.service.permission.impl;
 
-import mayfly.core.enums.BoolEnum;
-import mayfly.core.util.BusinessAssert;
-import mayfly.core.util.EnumUtils;
+import mayfly.core.util.enums.BoolEnum;
+import mayfly.core.exception.BusinessAssert;
+import mayfly.core.util.enums.EnumUtils;
 import mayfly.core.util.TreeUtils;
 import mayfly.dao.ResourceMapper;
 import mayfly.entity.Resource;
@@ -45,7 +45,7 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourceMapper, Resourc
 
     @Override
     public List<ResourceListVO> listResource(Resource condition) {
-        List<Resource> resources = resourceMapper.selectAll("pid ASC, weight DESC");
+        List<Resource> resources = resourceMapper.selectAll("pid ASC, weight ASC");
         return TreeUtils.generateTrees(BeanUtils.copyProperties(resources, ResourceListVO.class));
     }
 

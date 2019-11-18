@@ -300,6 +300,7 @@
       },
       logout() {
         sessionStorage.clear();
+        console.log(this.$SysMsgSocket)
         this.$router.push({
           path: '/login'
         });
@@ -489,6 +490,14 @@
 
   .menu {
     border-right: none;
+    // 禁止选择
+    moz-user-select: -moz-none;
+    -moz-user-select: none;
+    -o-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
   }
 
   .el-menu--vertical {

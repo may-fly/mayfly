@@ -50,6 +50,15 @@ let RouteList = [{
         component: resolve => require(['~/views/PermissionManage/account/account_list.vue'], resolve),
       },
       {
+        path: '/machines',
+        name: 'machines',
+        meta: {
+          title: '机器管理',
+          keepAlive: true
+        },
+        component: resolve => require(['~/views/Sys/machine/list.vue'], resolve),
+      },
+      {
         path: '/redis_manage',
         name: 'redis_manage',
         meta: {

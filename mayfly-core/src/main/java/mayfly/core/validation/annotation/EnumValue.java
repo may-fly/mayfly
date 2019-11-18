@@ -1,8 +1,8 @@
 package mayfly.core.validation.annotation;
 
-import mayfly.core.enums.ValueEnum;
+import mayfly.core.util.enums.ValueEnum;
 import mayfly.core.util.Assert;
-import mayfly.core.util.EnumUtils;
+import mayfly.core.util.enums.EnumUtils;
 import mayfly.core.util.ObjectUtils;
 import mayfly.core.validation.annotation.validator.Validator;
 

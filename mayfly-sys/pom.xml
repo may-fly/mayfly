@@ -11,6 +11,14 @@
 
     <artifactId>mayfly-sys</artifactId>
 
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <java.version>1.8</java.version>
+
+        <jsch.version>0.1.55</jsch.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>net.yiyue</groupId>
@@ -23,6 +31,7 @@
             <artifactId>mayfly-dao</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+
         <!--springboot相关插件-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -56,7 +65,27 @@
             <groupId>com.alibaba</groupId>
             <artifactId>druid</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.jcraft</groupId>
+            <artifactId>jsch</artifactId>
+            <version>${jsch.version}</version>
+        </dependency>
     </dependencies>
+
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <classifier>exec</classifier>
+                    <mainClass>mayfly.sys.Application</mainClass>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 
 </project>

@@ -1,3 +1,5 @@
+import SocketBuilder from './SocketBuilder'
+
 /**
  * 工具类
  */
@@ -27,6 +29,14 @@ class Utils {
         target[k] = null;
       }
     }
+  }
+  
+  /**
+   * websocket建造器
+   * @param {Object} websocketUrl  socket url
+   */
+  static socketBuilder(websocketUrl) {
+    return SocketBuilder.builder(websocketUrl);
   }
 }
 

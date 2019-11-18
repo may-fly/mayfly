@@ -1,5 +1,5 @@
-import Permission from "../../common/Permission"
-import enums from '../../common/enums'
+import Permission from "~/common/Permission"
+import enums from '~/common/enums'
 
 
 const method = enums.requestMethod
@@ -7,6 +7,25 @@ const method = enums.requestMethod
  * 权限code
  */
 const code = {
+  machine: {
+    // 获取权限列表
+    list: Permission.code("machines:list").uri("/sys/machines").method(method.GET),
+    // 保存按钮
+    save: Permission.code("machine:save").uri("/sys/machines").method(method.POST),
+    // 删除机器
+    del: Permission.code("machine:delete").uri("/sys/machines/{id}").method(method.DELETE),
+    // 服务管理按钮
+    serviceManage: Permission.code("machine:serviceManage"),
+    // 获取配置文件列表
+    files: Permission.code("machine:files").uri("/sys/machines/{id}/files").method(method.GET),
+    // 设置配置文件内容
+    updateFileContent: Permission.code("machine:updateFileContent").uri("/sys/machines/files/{id}").method(method.PUT),
+    // 添加文件or目录
+    addFile: Permission.code("machine:addFile").uri("/sys/machines/{machineId}/files").method(method.POST),
+    // 删除配置的文件or目录
+    delFile: Permission.code("machine:delFile").uri("/sys/machines/files/{id}").method(method.DELETE),
+  },
+  
   // redis相关
   redis: {
     // 获取权限列表

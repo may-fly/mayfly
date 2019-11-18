@@ -1,15 +1,9 @@
-package mayfly.core.ssh;
+package mayfly.core.util.ssh;
 
 /**
  * @author meilin.huang
  * @version 1.0
  * @date 2019-01-07 1:48 PM
- */
-/**
- * ssh异常
- * @author leifu
- * @Date 2016-1-26
- * @Time 下午9:18:54
  */
 public class SSHException extends Exception {
 

@@ -25,6 +25,8 @@
 
 <script>
   import openApi from '../../common/openApi.js'
+  import sockets from '~/common/sockets'
+  // import Vue from 'vue'
   export default {
     data() {
       return {
@@ -48,6 +50,8 @@
               message: '很高兴你使用Mayfly Admin！别忘了给个Star哦。',
               type: 'success'
             });
+            // 登录成功设置系统全局websocket
+            // this.__proto__.$SysMsgSocket = sockets.sysMsgSocket();
             this.loginLoading = false;
             this.$router.push({
               path: '/'

@@ -1,7 +1,7 @@
 package mayfly.sys.service.permission.impl;
 
-import mayfly.core.enums.BoolEnum;
-import mayfly.core.util.BusinessAssert;
+import mayfly.core.util.enums.BoolEnum;
+import mayfly.core.exception.BusinessAssert;
 import mayfly.core.util.DigestUtils;
 import mayfly.dao.AdminMapper;
 import mayfly.entity.Admin;

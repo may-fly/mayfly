@@ -52,7 +52,7 @@ public class PermissionInterceptor implements HandlerInterceptor {
         try {
             //如果校验通过，返回true
             boolean isHandleMethod = handler instanceof HandlerMethod;
-            if (!isHandleMethod || (isHandleMethod && checkHandler.hasPermission(userId, ((HandlerMethod)handler).getMethod()))) {
+            if (!isHandleMethod || checkHandler.hasPermission(userId, ((HandlerMethod)handler).getMethod())) {
                 return true;
             }
             // 无权限

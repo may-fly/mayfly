@@ -8,12 +8,14 @@ import router from './router'
 import Config from './common/config'
 import Permission from './common/Permission'
 import Utils from './common/Utils'
-
+import sockets from './common/sockets.js'
 
 import App from './App.vue'
+
 Vue.prototype.$Permission = Permission
 Vue.prototype.$Config = Config
 Vue.prototype.$Utils = Utils
+
 
 
 Vue.use(ElementUI)
@@ -27,11 +29,22 @@ Vue.directive('permission', function (el, binding) {
 
 router.beforeEach((to, from, next) => {
   window.document.title = to.meta.title ? to.meta.title + '-' + Config.name.siteName : Config.name.siteName;
-
-  if (!sessionStorage.getItem(Config.name.tokenKey) && to.path != '/login') {
+  
+  if (to.path == '/login') {
+    // 如果是退出登录，则有系统通知socket，需要关闭
+    if (Vue.prototype.$SysMsgSocket) {
+      Vue.prototype.$SysMsgSocket.close();
+      Vue.prototype.$SysMsgSocket = null;
+    }
+  }
+  if (!Permission.getToken() && to.path != '/login') {
     next({path: '/login'});
   } else {
     next();
+    // 如果不存在系统通知socket，则连接
+    if (!Vue.prototype.$SysMsgSocket) {
+      Vue.prototype.$SysMsgSocket = sockets.sysMsgSocket()
+    }
   }
 });
 router.afterEach(transition => {

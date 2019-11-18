@@ -15,16 +15,17 @@
         <java.version>1.8</java.version>
 
         <alibaba.fastjson.version>1.2.58</alibaba.fastjson.version>
-        <slfj.version>1.7.25</slfj.version>
         <junit.version>4.12</junit.version>
-        <ssh.version>262</ssh.version>
+        <jsch.version>0.1.55</jsch.version>
     </properties>
 
     <dependencies>
+
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>${slfj.version}</version>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
         </dependency>
 
         <!-- alibaba json -->
@@ -34,19 +35,25 @@
             <version>${alibaba.fastjson.version}</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/ch.ethz.ganymed/ganymed-ssh2 -->
+
+        <!--  ssh  -->
         <dependency>
-            <groupId>ch.ethz.ganymed</groupId>
-            <artifactId>ganymed-ssh2</artifactId>
-            <version>${ssh.version}</version>
+            <groupId>com.jcraft</groupId>
+            <artifactId>jsch</artifactId>
+            <version>${jsch.version}</version>
+            <scope>provided</scope>
+            <optional>true</optional>
         </dependency>
 
+        <!-- websocket -->
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${junit.version}</version>
-            <scope>test</scope>
+            <groupId>javax.websocket</groupId>
+            <artifactId>javax.websocket-api</artifactId>
+            <version>1.1</version>
+            <scope>provided</scope>
+            <optional>true</optional>
         </dependency>
+
     </dependencies>
 
     <build>

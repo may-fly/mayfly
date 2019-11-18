@@ -1,10 +1,9 @@
 package mayfly.core.util;
 
-import mayfly.core.enums.NameValueEnum;
+import mayfly.core.util.enums.EnumUtils;
+import mayfly.core.util.enums.NameValueEnum;
 import org.junit.Assert;
 import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 public class EnumUtilsTest {
 

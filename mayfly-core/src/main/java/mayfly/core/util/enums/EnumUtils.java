@@ -1,7 +1,6 @@
-package mayfly.core.util;
+package mayfly.core.util.enums;
 
-import mayfly.core.enums.NameValueEnum;
-import mayfly.core.enums.ValueEnum;
+import mayfly.core.util.StringUtils;
 
 /**
  * 枚举常用工具类。<br/>

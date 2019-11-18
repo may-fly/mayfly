@@ -1,7 +1,7 @@
 package mayfly.core.result;
 
-import mayfly.core.enums.NameValueEnum;
-import mayfly.core.enums.ValueEnum;
+import mayfly.core.util.enums.NameValueEnum;
+import mayfly.core.util.enums.ValueEnum;
 import mayfly.core.util.JsonUtils;
 
 import java.io.Serializable;

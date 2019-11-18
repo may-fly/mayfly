@@ -1,6 +1,6 @@
 package mayfly.sys.common.enums;
 
-import mayfly.core.enums.NameValueEnum;
+import mayfly.core.util.enums.NameValueEnum;
 
 /**
  * 资源类型枚举

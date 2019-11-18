@@ -21,7 +21,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public Result handleException(Exception e) {
-        log.error("异常：", e);
+        // 如果是业务逻辑异常则无需记录日志
         if (e instanceof BusinessException || e instanceof BusinessRuntimeException) {
             return Result.error(e.getMessage());
         }
@@ -29,6 +29,7 @@ public class GlobalExceptionHandler {
             return Result.serverError("url请求方法错误！");
         }
 
+        log.error("系统异常：", e);
         return Result.serverError();
     }
 }

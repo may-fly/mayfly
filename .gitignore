@@ -4,6 +4,9 @@ target/
 /.settings/
 /.classpath
 /.project
+*/dist
+
+
 
 # Compiled class file
 *.class
