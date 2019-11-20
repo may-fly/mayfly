@@ -11,9 +11,25 @@ export default {
     }
     return Utils.socketBuilder(`${Config.sockeUrl}/sysmsg/${token}`)
       .message(event => {
-        ElementUI.Notification.info({
+        let message = JSON.parse(event.data);
+        let type;
+        switch(message.type) {
+             case 1:
+                type = 'info';
+                break;
+             case 2:
+                type = 'success';
+                break;
+             case 3:
+                type = 'error';
+                break;
+             default:
+                type = 'info';
+        } 
+        ElementUI.Notification({
           title: '系统消息',
-          message: event.data
+          message: message.data,
+          type
         });
       })
       .open(event => console.log(event)).build();

@@ -34,7 +34,7 @@ public class ThreadFactoryBuilder {
      *             那么创建出来的线程名就类似rpc-thread-1，rpc-thread-2等）
      * @return
      */
-    public static ThreadFactoryBuilder name(String name) {
+    public static ThreadFactoryBuilder builder(String name) {
         return new ThreadFactoryBuilder(name);
     }
 

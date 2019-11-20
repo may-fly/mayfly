@@ -8,17 +8,17 @@ import com.jcraft.jsch.ChannelShell;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
+import mayfly.core.exception.BusinessRuntimeException;
 import mayfly.core.util.IOUtils;
 import mayfly.core.util.StringUtils;
-import mayfly.core.util.thread.ScheduleUtils;
+import mayfly.core.util.cache.Cache;
+import mayfly.core.util.cache.CacheBuilder;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -31,9 +31,10 @@ import java.util.function.Supplier;
 public class SSHUtils {
 
     /**
-     * session缓存
+     * session缓存，最多允许15个session同时连接，移除session时候执行close操作
      */
-    private static Map<String, Session> sessionCache = new ConcurrentHashMap<>();
+    private static Cache<String, Session> sessionCache = CacheBuilder.<String, Session>newTimedBuilder(5, TimeUnit.MINUTES)
+            .capacity(15).removeCallback(SSHUtils::close).build();
 
 
     /**
@@ -54,37 +55,14 @@ public class SSHUtils {
      *                            （如果不存在该session缓存，则从sessionInfoSupplier中获取sessionInfo。主要考虑该信息可能从数据库等其他地方获取）
      * @return     session
      */
-    public static Session getSession(String id, Supplier<SessionInfo> sessionInfoSupplier) throws SSHException {
-        Session cacheSession = sessionCache.get(id);
-        String scheduleId = getScheduleId(id);
-        if (cacheSession != null) {
-            // 在指定时间内，若未使用连接则关闭，否则重置定时器
-            if (ScheduleUtils.containSchedule(scheduleId)) {
-                ScheduleUtils.cancel(scheduleId);
-                scheduleCloseSession(id, scheduleId, cacheSession);
+    public static Session getSession(String id, Supplier<SessionInfo> sessionInfoSupplier) {
+        return sessionCache.get(id, () -> {
+            try {
+                return openSession(sessionInfoSupplier.get());
+            } catch (SSHException e) {
+                throw new BusinessRuntimeException(e.getMessage());
             }
-            return cacheSession;
-        }
-
-        Session session = openSession(sessionInfoSupplier.get());
-        sessionCache.put(id, session);
-        scheduleCloseSession(id, scheduleId, session);
-        return session;
-    }
-
-    /**
-     * 倒计时关闭session
-     * @param id   session cache key
-     * @param scheduleId    定时器id
-     * @param session       session
-     */
-    private static void scheduleCloseSession(String id, String scheduleId, Session session) {
-        // 指定时间后关闭session连接
-        ScheduleUtils.schedule(scheduleId, () -> close(id, session), 5, TimeUnit.MINUTES);
-    }
-
-    private static String getScheduleId(String id) {
-        return "SSH-SCHEDULE-" + id;
+        }, true);
     }
 
     /**
@@ -305,6 +283,7 @@ public class SSHUtils {
                 return result;
             }
         } catch (JSchException | IOException e) {
+            close(session);
             throw new SSHException(e);
         } finally {
             IOUtils.close(in);
@@ -312,17 +291,15 @@ public class SSHUtils {
         }
     }
 
-
     /**
      * 关闭SSH连接会话
      *
      * @param session SSH会话
      */
-    public static void close(String id, Session session) {
+    public static void close(Session session) {
         if (session != null && session.isConnected()) {
             session.disconnect();
         }
-        sessionCache.remove(id);
     }
 
     /**

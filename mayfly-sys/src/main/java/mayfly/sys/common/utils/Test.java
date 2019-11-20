@@ -1,7 +1,6 @@
 package mayfly.sys.common.utils;
 
 import mayfly.core.log.MethodLog;
-import mayfly.core.util.annotation.AnnotationUtils;
 import mayfly.core.util.annotation.OverrideFor;
 import mayfly.core.validation.annotation.DateRange;
 import org.springframework.core.annotation.AliasFor;
@@ -22,25 +21,25 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Test5Ann(test4 = "测试5蛤", test3 = "测试53")
 public class Test {
 
-    public static void main(String[] args) {
-        long start = System.currentTimeMillis();
-        for (int i = 0; i < 3; i++) {
-//            Test4Ann anno = AnnotationUtils.getAnnotation(Test.class, Test4Ann.class);
-//            TestAnn anno = AnnotatedElementUtils.getMergedAnnotation(Test.class, TestAnn.class);
-//            System.out.println(AnnotatedElementUtils.getMergedAnnotation(Test.class, Test2Ann.class).test22());
-            System.out.println(AnnotationUtils.getAnnotation(Test.class, Test2Ann.class).test2());
-        }
-        long end = System.currentTimeMillis();
-        System.out.println(end - start);
-//        Test2Ann anno2 = AnnotationUtils.getAnnotation(Test.class, Test2Ann.class);
-//        Test3Ann anno3 = AnnotationUtils.getAnnotation(Test.class, Test3Ann.class);
-//        Test4Ann anno4 = AnnotationUtils.getAnnotation(Test.class, Test4Ann.class);
-//        Test5Ann anno5 = AnnotationUtils.getAnnotation(Test.class, Test5Ann.class);
-//        System.out.println(AnnotationUtils.getValue(anno5, "test5"));
-//        System.out.println(pattern.regexp());
-//        System.out.println(AnnotatedElementUtils.getMergedAnnotation(Test.class, Test3Ann.class).test3());
-//        System.out.println(AnnotationUtils.getAnnotation(Test.class, Test4Ann.class).test42());
-    }
+//    public static void main(String[] args) {
+//        long start = System.currentTimeMillis();
+//        for (int i = 0; i < 3; i++) {
+////            Test4Ann anno = AnnotationUtils.getAnnotation(Test.class, Test4Ann.class);
+////            TestAnn anno = AnnotatedElementUtils.getMergedAnnotation(Test.class, TestAnn.class);
+////            System.out.println(AnnotatedElementUtils.getMergedAnnotation(Test.class, Test2Ann.class).test22());
+//            System.out.println(AnnotationUtils.getAnnotation(Test.class, Test2Ann.class).test2());
+//        }
+//        long end = System.currentTimeMillis();
+//        System.out.println(end - start);
+////        Test2Ann anno2 = AnnotationUtils.getAnnotation(Test.class, Test2Ann.class);
+////        Test3Ann anno3 = AnnotationUtils.getAnnotation(Test.class, Test3Ann.class);
+////        Test4Ann anno4 = AnnotationUtils.getAnnotation(Test.class, Test4Ann.class);
+////        Test5Ann anno5 = AnnotationUtils.getAnnotation(Test.class, Test5Ann.class);
+////        System.out.println(AnnotationUtils.getValue(anno5, "test5"));
+////        System.out.println(pattern.regexp());
+////        System.out.println(AnnotatedElementUtils.getMergedAnnotation(Test.class, Test3Ann.class).test3());
+////        System.out.println(AnnotationUtils.getAnnotation(Test.class, Test4Ann.class).test42());
+//    }
 }
 
 @DateRange

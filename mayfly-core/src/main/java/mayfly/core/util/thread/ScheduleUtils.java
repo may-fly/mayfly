@@ -16,13 +16,13 @@ import java.util.concurrent.TimeUnit;
  */
 public class ScheduleUtils {
 
-    private static int corePoolSize = 1;
+    private static int corePoolSize = 2;
 
     /**
      *  定时任务线程池
      */
     private static ScheduledExecutorService schedule = Executors.newScheduledThreadPool(corePoolSize
-    , ThreadFactoryBuilder.name("mayfly-schedule").daemon(true).build());
+    , ThreadFactoryBuilder.builder("mayfly-schedule").daemon(true).build());
 
     /**
      * 存定时任务结果
@@ -34,7 +34,7 @@ public class ScheduleUtils {
         scheduleAtFixedRate("removeCompletedFuture", () -> {
             scheduledFutureMap.forEach((key, value) -> {
                 if (value.isDone() || value.isCancelled()) {
-                    removeFuture(key);
+                    scheduledFutureMap.remove(key);
                 }
             });
         }, 0, 30, TimeUnit.SECONDS);
@@ -68,17 +68,16 @@ public class ScheduleUtils {
         return scheduledFuture != null && !scheduledFuture.isDone();
     }
 
-    public static void removeFuture(String id) {
-        Optional.ofNullable(scheduledFutureMap.get(id)).ifPresent(x -> {
-            scheduledFutureMap.remove(id);
-        });
-    }
-
+    /**
+     * 取消并移除该定时任务
+     * @param id    任务id
+     */
     public static void cancel(String id) {
         Optional.ofNullable(scheduledFutureMap.get(id)).ifPresent(x -> {
             if (!x.isDone()) {
                 x.cancel(true);
             }
+            scheduledFutureMap.remove(id);
         });
     }
 

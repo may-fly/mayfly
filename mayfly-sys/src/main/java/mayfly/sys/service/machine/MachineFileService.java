@@ -5,6 +5,7 @@ import mayfly.sys.service.base.BaseService;
 import mayfly.sys.web.machine.form.MachineFileForm;
 import mayfly.sys.web.machine.vo.LsVO;
 
+import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -43,6 +44,21 @@ public interface MachineFileService extends BaseService<MachineFile> {
      * @param form       表单
      */
     MachineFile addFile(Integer machineId, MachineFileForm form);
+
+    /**
+     * 文件上传
+     * @param fileId        配置的文件id
+     * @param filePath      文件完整路径，包括文件名
+     * @param inputStream   inputstream
+     */
+    void uploadFile(Integer fileId, String filePath, InputStream inputStream);
+
+    /**
+     * 删除文件
+     * @param fileId    配置的文件id
+     * @param path     路径
+     */
+    void rmFile(Integer fileId, String path);
 
     /**
      * 获取目录下的内容

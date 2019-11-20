@@ -53,9 +53,9 @@ public class ShellCmd {
     public static String fileExist(String filePath) {
         String shell =
                 "if [ -f \"${filePath}\" ];then\n" +
-                "echo \"1\"\n" +
+                "echo 1\n" +
                 "else\n" +
-                "echo \"0\"\n" +
+                "echo 0\n" +
                 "fi";
         return resolver.resolve(shell, filePath);
     }
@@ -68,9 +68,9 @@ public class ShellCmd {
     public static String directoryExist(String path) {
         String shell =
                 "if [ -d \"${path}\" ];then\n" +
-                "echo \"1\" \n" +
+                "echo 1 \n" +
                 "else\n" +
-                "echo \"0\" \n" +
+                "echo 0 \n" +
                 "fi";
         return resolver.resolve(shell, path);
     }

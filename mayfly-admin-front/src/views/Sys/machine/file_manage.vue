@@ -4,10 +4,9 @@
     <el-dialog :title="title" :visible.sync="visible" :show-close="true" :before-close="handleClose" width="800px">
 
       <el-tabs style="height: 50vh;overflow: auto;" v-model="activeName" type="border-card" @tab-click="handleClick">
-        <el-tab-pane label="配置文件" name="conf-file">
+        <el-tab-pane label="文件管理" name="conf-file">
           <div style="float: right;">
-            <el-button v-permission="addFile.code" type="primary" @click="add" icon="el-icon-plus" size="mini"
-              plain>添加</el-button>
+            <el-button v-permission="addFile.code" type="primary" @click="add" icon="el-icon-plus" size="mini" plain>添加</el-button>
           </div>
           <el-table :data="fileTable" stripe style="width: 100%">
             <el-table-column prop="name" label="名称" width="">
@@ -17,14 +16,11 @@
             </el-table-column>
             <el-table-column prop="name" label="类型" width="">
               <template slot-scope="scope">
-                <el-select :disabled="scope.row.id != null" size="mini" v-model="scope.row.type" style="width: 100px" placeholder="请选择">
-                    <el-option
-                      v-for="item in enums.FileTypeEnum"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value">
-                    </el-option>
-                  </el-select>
+                <el-select :disabled="scope.row.id != null" size="mini" v-model="scope.row.type" style="width: 100px"
+                  placeholder="请选择">
+                  <el-option v-for="item in enums.FileTypeEnum" :key="item.value" :label="item.label" :value="item.value">
+                  </el-option>
+                </el-select>
               </template>
             </el-table-column>
             <el-table-column prop="path" label="路径" width="">
@@ -34,8 +30,8 @@
             </el-table-column>
             <el-table-column label="操作" width="">
               <template slot-scope="scope">
-                <el-button v-if="scope.row.id == null" @click="addFiles(scope.row)" type="success" :ref="scope.row" icon="el-icon-success"
-                  size="mini" plain>确定</el-button>
+                <el-button v-if="scope.row.id == null" @click="addFiles(scope.row)" type="success" :ref="scope.row"
+                  icon="el-icon-success" size="mini" plain>确定</el-button>
                 <el-button v-if="scope.row.id != null" @click="getConf(scope.row)" type="primary" :ref="scope.row" icon="el-icon-tickets"
                   size="mini" plain>查看</el-button>
                 <el-button v-permission="delFile.code" type="danger" :ref="scope.row" @click="deleteRow(scope.$index, scope.row)"
@@ -65,18 +61,20 @@
             <span v-if="data.type == '-'">
               <i class="el-icon-document"></i>
             </span>
-      
+
             <span style="display: inline-block;width: 400px;">{{ node.label }}</span>
-      
+
             <span>
-              <el-link @click="getFileContent(tree.folder.id, data.path)" v-if="data.type == '-'" type="info" icon="el-icon-view" :underline="false" />
-      
-              <el-upload :on-success="fileUploadSuccess" :data="{machineId}" action="https://jsonplaceholder.typicode.com/posts/"
-                :show-file-list="false" name="file" multiple :limit="1" style="display: inline-block;">
+              <el-link @click="getFileContent(tree.folder.id, data.path)" v-if="data.type == '-'" type="info" icon="el-icon-view"
+                :underline="false" />
+
+              <el-upload :on-success="uploadSuccess" :headers="{token}" :data="{fileId: tree.folder.id, path: data.path}"
+                action="http://localhost:8080/mayfly/sys/machines/files/upload" :show-file-list="false" name="file"
+                multiple :limit="1" style="display: inline-block;">
                 <el-link v-if="data.type == 'd'" icon="el-icon-upload" :underline="false" />
               </el-upload>
-             
-              <el-link v-if="!dontOperate(data)" @click="deleteFile(data)" type="danger" icon="el-icon-delete"
+
+              <el-link v-if="!dontOperate(data)" @click="deleteFile(node, data)" type="danger" icon="el-icon-delete"
                 :underline="false" />
             </span>
           </span>
@@ -84,7 +82,7 @@
       </div>
     </el-dialog>
 
-    <el-dialog :title="fileContent.dialogTitle" :visible.sync="fileContent.contentVisible" width="600px">
+    <el-dialog :title="fileContent.dialogTitle" :visible.sync="fileContent.contentVisible" width="650px">
       <el-form :model="form">
         <el-form-item>
           <el-input v-model="fileContent.content" type="textarea" :autosize="{ minRows: 10, maxRows:15}" autocomplete="off"></el-input>
@@ -117,6 +115,7 @@
         updateFileContent: permission.machine.updateFileContent,
         enums: enums,
         activeName: "conf-file",
+        token: sessionStorage.getItem("token"),
         form: {
           id: null,
           type: null,
@@ -135,7 +134,7 @@
         tree: {
           title: '',
           visible: false,
-          folder: null,
+          folder: {},
           node: {},
           resolve: {}
         },
@@ -214,7 +213,9 @@
         this.getFileContent(row.id, row.path);
       },
       getFileContent(fileId, path) {
-        Req.request('Get', `/sys/machines/files/${fileId}/cat`, {path}).then(res => {
+        Req.request('Get', `/sys/machines/files/${fileId}/cat`, {
+          path
+        }).then(res => {
           this.fileContent.content = res;
           this.fileContent.fileId = fileId;
           this.fileContent.dialogTitle = path;
@@ -240,7 +241,7 @@
         this.$emit('cancel');
         this.activeName = 'conf-file';
         this.fileTable = [];
-        this.tree.folder = null;
+        this.tree.folder = {};
       },
 
       /**
@@ -263,8 +264,8 @@
             type: 'd',
             path: path
           }]);
-        } 
-        
+        }
+
         let path;
         let data = node.data;
         // 只有在第一级节点时，name==path，即上述level==0时设置的
@@ -273,7 +274,7 @@
         } else {
           path = data.path;
         }
-        
+
         Req.request('Get', '/sys/machines/files/' + this.tree.folder.id + '/ls', {
           path
         }).then(res => {
@@ -287,19 +288,28 @@
         })
       },
 
-      deleteFile(data) {
-        let file = data.path == '/' ? `/${data.name}` : `${data.path}/${data.name}`;
+      deleteFile(node, data) {
+        let file = data.path
         this.$confirm(`此操作将删除 [${file}], 是否继续?`, '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          alert('delete')
+          Req.request('DELETE', '/sys/machines/files/' + this.tree.folder.id + '/rm', {
+            path: file
+          }).then(res => {
+            this.$message.success("删除成功");
+            this.$refs.fileTree.remove(node);
+          })
         }).catch(() => {});
       },
 
-      fileUploadSuccess() {
-
+      uploadSuccess(res) {
+        if (res.success) {
+          this.$message.success("文件上传中...");
+        } else {
+          this.$message.error(res.msg);
+        }
       },
 
       dontOperate(data) {

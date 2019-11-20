@@ -24,10 +24,6 @@ public class WebSocketMessage<T> {
         this.data = data;
     }
 
-    public static<T> String msg(MessageTypeEnum type, ResultEnum resultEnum) {
-        return msg(MessageTypeEnum.SYS_NOTIFY, resultEnum, resultEnum.getName());
-    }
-
     public static<T> String msg(MessageTypeEnum type, ResultEnum result, T data) {
         return JsonUtils.toJSONString(new WebSocketMessage<T>(type.getValue(), result.getValue(), data));
     }

@@ -1,7 +1,10 @@
 package mayfly.sys.service.machine.impl;
 
 import mayfly.core.exception.BusinessAssert;
+import mayfly.core.permission.SessionLocal;
 import mayfly.core.util.ssh.ShellCmd;
+import mayfly.core.util.thread.GlobalThreadPool;
+import mayfly.core.util.websocket.SessionNoFoundException;
 import mayfly.core.util.websocket.WebSocketUtils;
 import mayfly.dao.MachineFileMapper;
 import mayfly.entity.MachineFile;
@@ -17,6 +20,7 @@ import mayfly.sys.web.socket.SysMsgWebSocket;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -63,7 +67,7 @@ public class MachineFileServiceImpl extends BaseServiceImpl<MachineFileMapper, M
     public MachineFile addFile(Integer machineId, MachineFileForm form) {
         boolean isFile = Objects.equals(form.getType(), MachineFileTypeEnum.FILE.getValue());
         String res = machineService.exec(machineId, isFile ? ShellCmd.fileExist(form.getPath()) : ShellCmd.directoryExist(form.getPath()));
-        BusinessAssert.state(Objects.equals(res, "1"), () -> isFile ? "该文件不存在" : "该目录不存在");
+        BusinessAssert.state(Objects.equals(res, "1\n"), () -> isFile ? "该文件不存在" : "该目录不存在");
 
         MachineFile file = BeanUtils.copyProperties(form, MachineFile.class);
         file.setMachineId(machineId);
@@ -75,9 +79,7 @@ public class MachineFileServiceImpl extends BaseServiceImpl<MachineFileMapper, M
     @Override
     public List<LsVO> ls(Integer fileId, String path) {
         MachineFile machineFile = getById(fileId);
-        BusinessAssert.notNull(machineFile, "配置信息不存在");
-        // 访问的路径只能是以配置的路径为前缀
-        BusinessAssert.state(path.startsWith(machineFile.getPath()), "非法路径");
+        checkPath(path, machineFile);
 
         List<LsVO> ls = new ArrayList<>(16);
         String pathPrefix = path.endsWith("/") ? path : path + "/";
@@ -99,9 +101,42 @@ public class MachineFileServiceImpl extends BaseServiceImpl<MachineFileMapper, M
 //            vo.setSize(Long.parseLong(strs[4]));
             ls.add(vo);
         });
-        WebSocketUtils.broadcastText(SysMsgWebSocket.URI, MessageTypeEnum.SYS_NOTIFY.toMsg("机器执行了ls操作"));
         return ls;
     }
+
+
+    @Override
+    public void uploadFile(Integer fileId, String filePath, InputStream inputStream) {
+        MachineFile file = getById(fileId);
+        checkPath(filePath, file);
+
+        Integer userId = SessionLocal.getUserId();
+        // 异步上传，成功与否都webscoket通知上传者
+        GlobalThreadPool.execute(() -> {
+            machineService.sftpOperate(file.getMachineId(), sftp -> {
+                try {
+                    sftp.put(inputStream, filePath);
+                    WebSocketUtils.sendText(SysMsgWebSocket.URI, userId, MessageTypeEnum.SUCCESS.toMsg(filePath + "文件上传成功"));
+                } catch (Exception e) {
+                    try {
+                        WebSocketUtils.sendText(SysMsgWebSocket.URI, userId, MessageTypeEnum.ERROR.toMsg("文件上传失败：" + e.getMessage()));
+                    } catch (SessionNoFoundException se) {
+                        //
+                    }
+                }
+                return null;
+            });
+        });
+    }
+
+    @Override
+    public void rmFile(Integer fileId, String path) {
+        MachineFile file = getById(fileId);
+        checkPath(path, file);
+
+        machineService.exec(file.getMachineId(), "rm -rf " + path);
+    }
+
 
 
     private boolean isFile(MachineFile file) {

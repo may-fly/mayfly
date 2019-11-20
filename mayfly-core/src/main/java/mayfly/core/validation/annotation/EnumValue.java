@@ -34,6 +34,7 @@ public @interface EnumValue {
 
 
     class EnumValueValidator implements Validator<EnumValue, Object> {
+        @SuppressWarnings("unchecked")
         @Override
         public boolean validation(EnumValue enumValue, Object value) {
             if (value == null) {

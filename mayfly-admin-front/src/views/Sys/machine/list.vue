@@ -109,6 +109,7 @@
       cancel() {
         this.dialog.visible = false
         this.dialog.machineId = null
+        this.search()
       },
       search() {
         this.permission.list.request(this.params).then(res => {

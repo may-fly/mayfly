@@ -5,7 +5,7 @@ target/
 /.classpath
 /.project
 */dist
-
+*/resources/static
 
 
 # Compiled class file

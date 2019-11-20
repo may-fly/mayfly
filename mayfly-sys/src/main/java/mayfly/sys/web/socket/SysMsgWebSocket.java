@@ -30,7 +30,7 @@ public class SysMsgWebSocket {
 
     public static final String URI = "/sysmsg/{token}";
 
-    private static WebSocketUtils.SessionRegistry<String> registry = WebSocketUtils.SessionRegistry.create(URI, true);
+    private static WebSocketUtils.SessionRegistry<Integer> registry = WebSocketUtils.SessionRegistry.create(URI, false);
     static {
         WebSocketUtils.putRegistry(registry);
     }
@@ -42,11 +42,11 @@ public class SysMsgWebSocket {
     public void onOpen(@PathParam("token") String token, Session session) {
         Integer userId = SpringUtils.getBean(PermissionCheckHandlerService.class).getIdByToken(token);
         if (userId == null) {
-            WebSocketUtils.sendText(session, MessageTypeEnum.SYS_NOTIFY.error(ResultEnum.NO_PERMISSION));
+            WebSocketUtils.sendText(session, MessageTypeEnum.ERROR.toMsg(ResultEnum.NO_PERMISSION.getName()));
             return;
         }
-        registry.putSession(session.getId(), session);
-        WebSocketUtils.sendText(session, "连接成功");
+        registry.putSession(userId, session);
+        WebSocketUtils.sendText(session, MessageTypeEnum.SUCCESS.toMsg("连接成功"));
     }
 
     /**

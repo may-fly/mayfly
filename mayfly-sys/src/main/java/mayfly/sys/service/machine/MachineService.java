@@ -4,7 +4,6 @@ import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.Session;
 import mayfly.core.exception.BusinessAssert;
 import mayfly.core.exception.BusinessRuntimeException;
-import mayfly.core.result.Result;
 import mayfly.core.util.IOUtils;
 import mayfly.core.util.ssh.SSHException;
 import mayfly.core.util.ssh.SSHUtils;
@@ -63,11 +62,10 @@ public interface MachineService extends BaseService<Machine> {
      * 获取sftp 并对channel执行操作
      *
      * @param machineId   机器id
-     * @return
      */
-    default Result sftpOperate(Integer machineId, Function<ChannelSftp, Result> function) {
+    default void sftpOperate(Integer machineId, Function<ChannelSftp, Void> function) {
         try {
-            return SSHUtils.sftpOperate(getSession(machineId), function);
+            SSHUtils.sftpOperate(getSession(machineId), function);
         } catch (SSHException e) {
             throw new BusinessRuntimeException(e.getMessage());
         }
@@ -79,15 +77,11 @@ public interface MachineService extends BaseService<Machine> {
      * @return      session
      */
     default Session getSession(Integer machineId) {
-        try {
-            return SSHUtils.getSession(Objects.toString(machineId), () -> {
-                Machine machine = getById(machineId);
-                BusinessAssert.notNull(machine, "机器不存在");
-                return SessionInfo.builder(machine.getIp()).port(machine.getPort())
-                        .password(machine.getPassword()).username(machine.getUsername()).build();
-            });
-        } catch (SSHException e) {
-            throw new BusinessRuntimeException(e.getMessage());
-        }
+        return SSHUtils.getSession(Objects.toString(machineId), () -> {
+            Machine machine = getById(machineId);
+            BusinessAssert.notNull(machine, "机器不存在");
+            return SessionInfo.builder(machine.getIp()).port(machine.getPort())
+                    .password(machine.getPassword()).username(machine.getUsername()).build();
+        });
     }
 }

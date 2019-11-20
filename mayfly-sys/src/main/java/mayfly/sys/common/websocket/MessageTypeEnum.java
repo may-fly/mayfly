@@ -11,19 +11,19 @@ import mayfly.core.util.enums.ValueEnum;
 public enum MessageTypeEnum implements ValueEnum<Integer> {
 
     /**
-     * 系统通知消息
+     * info消息
      */
-    SYS_NOTIFY(1) {
-        @Override
-        public String toMsg(Object data) {
-            return WebSocketMessage.msg(this, ResultEnum.SUCCESS, data);
-        }
+    INFO(1),
 
-        @Override
-        public String error(ResultEnum result) {
-            return WebSocketMessage.msg(this, result);
-        }
-    }
+    /**
+     * 成功消息
+     */
+    SUCCESS(2),
+
+    /**
+     * 错误消息
+     */
+    ERROR(3);
     ;
 
     private Integer value;
@@ -35,11 +35,11 @@ public enum MessageTypeEnum implements ValueEnum<Integer> {
     /**
      * 获取WebSocketMessage对象的字符串信息
      * @param data  数据
-     * @return
+     * @return      websocket message
      */
-    public abstract String toMsg(Object data);
-
-    public abstract String error(ResultEnum result);
+    public String toMsg(Object data) {
+        return WebSocketMessage.msg(this, ResultEnum.SUCCESS, data);
+    }
 
     @Override
     public Integer getValue() {

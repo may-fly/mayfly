@@ -1,7 +1,6 @@
 package mayfly.sys.common.utils;
 
 import org.springframework.core.annotation.AliasFor;
-import org.springframework.core.annotation.AnnotatedElementUtils;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
@@ -49,12 +48,12 @@ public class SynthesizedAnnotationTest {
     @Test3(test3 = "覆盖Test2属性中的test2方法")
     static class Element {}
 
-    public static void main(String[] args) {
-        Test2 test2 = AnnotatedElementUtils.getMergedAnnotation(Element.class, Test2.class);
-        // 虽然调用了Test2注解的test2方法，但是实际显示的是Test3注解中的test3属性声明的值
-        // 则说明Test2的test2属性被覆盖了
-        System.out.println(test2.test2());// out '覆盖Test2属性中的test2方法'
-
-        System.out.println(SynthesizedAnnotationTest.class.getClassLoader().getResource("").getPath());
-    }
+//    public static void main(String[] args) {
+//        Test2 test2 = AnnotatedElementUtils.getMergedAnnotation(Element.class, Test2.class);
+//        // 虽然调用了Test2注解的test2方法，但是实际显示的是Test3注解中的test3属性声明的值
+//        // 则说明Test2的test2属性被覆盖了
+//        System.out.println(test2.test2());// out '覆盖Test2属性中的test2方法'
+//
+//        System.out.println(SynthesizedAnnotationTest.class.getClassLoader().getResource("").getPath());
+//    }
 }
