@@ -34,6 +34,15 @@ public class ThreadPoolBuilder {
     private ThreadPoolBuilder() {}
 
     /**
+     * 创建ThreadPoolBuilder，开始构建
+     *
+     * @return {@link ThreadPoolBuilder}
+     */
+    public static ThreadPoolBuilder newBuilder() {
+        return new ThreadPoolBuilder();
+    }
+
+    /**
      * 设置初始池大小，默认0
      *
      * @param corePoolSize 初始池大小
@@ -146,15 +155,6 @@ public class ThreadPoolBuilder {
     public ThreadPoolBuilder allowCoreThreadTimeOut(boolean allowCoreThreadTimeOut) {
         this.allowCoreThreadTimeOut = allowCoreThreadTimeOut;
         return this;
-    }
-
-    /**
-     * 创建ExecutorBuilder，开始构建
-     *
-     * @return {@link ThreadPoolBuilder}
-     */
-    public static ThreadPoolBuilder builder() {
-        return new ThreadPoolBuilder();
     }
 
     /**

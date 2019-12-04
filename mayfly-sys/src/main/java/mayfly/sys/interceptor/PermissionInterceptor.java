@@ -22,7 +22,7 @@ public class PermissionInterceptor implements HandlerInterceptor {
 
     private PermissionCheckHandlerService checkHandlerService;
 
-    private PermissionCheckHandler checkHandler;
+    private PermissionCheckHandler<Integer> checkHandler;
 
     public PermissionInterceptor(PermissionCheckHandlerService checkHandlerService) {
         this.checkHandlerService = checkHandlerService;
@@ -36,13 +36,11 @@ public class PermissionInterceptor implements HandlerInterceptor {
         }
         String token = request.getHeader("token");
         if (StringUtils.isEmpty(token)) {
-            sendErrorMessage(response, Result.withoutPermission());
-            return false;
+            return noPermission(response);
         }
         Integer userId = checkHandlerService.getIdByToken(token);
         if (userId == null) {
-            sendErrorMessage(response, Result.withoutPermission());
-            return false;
+            return noPermission(response);
         }
         SessionLocal.setUserId(userId);
 //        if (userId.equals(1)) {
@@ -56,8 +54,7 @@ public class PermissionInterceptor implements HandlerInterceptor {
                 return true;
             }
             // 无权限
-            sendErrorMessage(response, Result.withoutPermission());
-            return false;
+            return noPermission(response);
         } catch (PermissionDisabledException e) {
             //权限禁用
             sendErrorMessage(response, Result.error(e.getMessage()));
@@ -69,6 +66,12 @@ public class PermissionInterceptor implements HandlerInterceptor {
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
         // 移除ThreadLocal值
         SessionLocal.remove();
+    }
+
+
+    public static boolean noPermission(HttpServletResponse response) {
+        sendErrorMessage(response, Result.withoutPermission());
+        return false;
     }
 
     /**

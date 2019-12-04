@@ -2,6 +2,7 @@ package mayfly.core.validation.annotation;
 
 import mayfly.core.validation.annotation.validator.Validator;
 
+import java.lang.annotation.Annotation;
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
@@ -23,5 +24,5 @@ public @interface ValidateBy {
     /**
      * 参数校验器
      */
-    Class<? extends Validator>[] value();
+    Class<? extends Validator<? extends Annotation, ?>>[] value();
 }

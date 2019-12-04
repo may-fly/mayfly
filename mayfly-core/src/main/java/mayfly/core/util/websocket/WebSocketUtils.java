@@ -15,7 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class WebSocketUtils {
 
-    private static Map<String, SessionRegistry> registryMap = new ConcurrentHashMap<>();
+    private static Map<String, SessionRegistry<?>> registryMap = new ConcurrentHashMap<>();
 
     /**
      * put registry
@@ -30,8 +30,8 @@ public class WebSocketUtils {
     /**
      * 发送消息，实践表明，每次浏览器刷新，session会发生变化。
      *
-     * @param session
-     * @param message
+     * @param session session
+     * @param message 消息
      */
     @SuppressWarnings("unchecked")
     public static<T> void sendText(Session session, String message) {
@@ -51,7 +51,7 @@ public class WebSocketUtils {
      * @param key        存储session的key（可以是sessionId，也也是用户标识id等）
      * @param message    文本消息
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("all")
     public static<T> void sendText(String namespace, T key, String message) throws SessionNoFoundException {
         SessionRegistry sessionRegistry = registryMap.get(namespace);
         isExistRegistry(namespace, sessionRegistry);

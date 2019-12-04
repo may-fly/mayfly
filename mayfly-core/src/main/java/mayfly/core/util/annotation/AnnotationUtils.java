@@ -34,14 +34,25 @@ public final class AnnotationUtils {
 
 
     /**
+     * 获取指定元素的直接注解类型
+     * @param annotatedElement   可以包含注解的元素，如Class, Field, Method等
+     * @param annotationType  注解类型
+     * @param <A>
+     * @return
+     */
+    public static <A extends Annotation> A getAnnotation(AnnotatedElement annotatedElement, Class<A> annotationType) {
+        return annotatedElement.getAnnotation(annotationType);
+    }
+
+    /**
      * 获取指定元素的注解类型（若没有直接注解，则从元素其他注解的元注解上查找）
      * @param annotatedElement   可以包含注解的元素，如Field, Method等
      * @param annotationType  注解类型
      * @param <A>
      * @return
      */
-    public static <A extends Annotation> A getAnnotation(AnnotatedElement annotatedElement, Class<A> annotationType) {
-        return getAnnotation(annotatedElement, annotationType, true);
+    public static <A extends Annotation> A getMergeAnnotation(AnnotatedElement annotatedElement, Class<A> annotationType) {
+        return getMergeAnnotation(annotatedElement, annotationType, true);
     }
 
     /**
@@ -52,8 +63,8 @@ public final class AnnotationUtils {
      * @param <A>
      * @return
      */
-    private static <A extends Annotation> A getAnnotation(AnnotatedElement annotatedElement, Class<A> annotationType,
-                                                          boolean cacheExtractor) {
+    private static <A extends Annotation> A getMergeAnnotation(AnnotatedElement annotatedElement, Class<A> annotationType,
+                                                               boolean cacheExtractor) {
         A annotation = annotatedElement.getAnnotation(annotationType);
         // 如果元素上含有直接注解，则返回
         if (annotation != null) {
@@ -105,6 +116,37 @@ public final class AnnotationUtils {
     }
 
     /**
+     * 获取注解的属性值
+     * @param annotation  注解对象
+     * @param attributeName  属性名（即方法名）
+     * @return               属性值
+     */
+    public static Object getAttributeValue(Annotation annotation, String attributeName) {
+        if (annotation == null || StringUtils.isEmpty(attributeName)) {
+            return null;
+        }
+        try {
+            return ReflectionUtils.invokeMethod(annotation.annotationType().getDeclaredMethod(attributeName), annotation);
+        } catch (Exception ex) {
+            String msg = String.format("%s注解无法获取%s属性值！", annotation.annotationType().getName(), attributeName);
+            throw new IllegalArgumentException(msg, ex);
+        }
+    }
+
+    /**
+     * 获取注解的属性以及属性值；key->属性  value->属性值
+     * @param annotation  注解类
+     * @return  Map
+     */
+    public static Map<String, Object> getAttributeMap(Annotation annotation) {
+        Map<String, Object> attributeMap = new HashMap<>(8);
+        getAttributeMethods(annotation.getClass()).forEach(method -> {
+            attributeMap.put(method.getName(), ReflectionUtils.invokeMethod(method, annotation));
+        });
+        return attributeMap;
+    }
+
+    /**
      * 根据元注解类型递归查找指定注解的元注解
      * @param annotation  注解
      * @param targetType   元注解类型
@@ -150,12 +192,10 @@ public final class AnnotationUtils {
     @SuppressWarnings("unchecked")
     private static <A extends Annotation> A synthesizeAnnotation(AnnotatedElement annotatedElement, Annotation annotation,
                                                                  AttributeValueExtractor valueExtractor) {
-        Class<? extends Annotation> annotationType = annotation.annotationType();
-        // 组合注解代理处理器
-        InvocationHandler handler = new SynthesizedAnnotationInvocationHandler(valueExtractor);
-
-        Class<?>[] exposedInterfaces = new Class<?>[] {annotationType};
-        return (A) Proxy.newProxyInstance(annotation.getClass().getClassLoader(), exposedInterfaces, handler);
+        // 组合注解代理
+        return (A) Proxy.newProxyInstance(annotation.getClass().getClassLoader()
+                , new Class<?>[] {annotation.annotationType()}
+                , new SynthesizedAnnotationInvocationHandler(valueExtractor));
     }
 
     /**
@@ -201,37 +241,6 @@ public final class AnnotationUtils {
         return (method != null && method.getParameterCount() == 0 && method.getReturnType() != void.class);
     }
 
-    /**
-     * 获取注解的属性值
-     * @param annotation  注解对象
-     * @param attributeName  属性值（即方法名）
-     * @return
-     */
-    public static Object getAttributeValue(Annotation annotation, String attributeName) {
-        if (annotation == null || StringUtils.isEmpty(attributeName)) {
-            return null;
-        }
-        try {
-            Method method = annotation.annotationType().getDeclaredMethod(attributeName);
-            return ReflectionUtils.invokeMethod(method, annotation);
-        } catch (Exception ex) {
-            String msg = String.format("%s注解无法获取%s属性值！", annotation.annotationType().getName(), attributeName);
-            throw new IllegalArgumentException(msg, ex);
-        }
-    }
-
-    /**
-     * 获取注解的属性以及属性值；key->属性  value->属性值
-     * @param annotation  注解类
-     * @return  Map
-     */
-    public static Map<String, Object> getAttributeMap(Annotation annotation) {
-        Map<String, Object> attributeMap = new HashMap<>(8);
-        getAttributeMethods(annotation.getClass()).forEach(method -> {
-            attributeMap.put(method.getName(), ReflectionUtils.invokeMethod(method, annotation));
-        });
-        return attributeMap;
-    }
 
 
 
@@ -295,7 +304,7 @@ public final class AnnotationUtils {
                         String targetAttributeName = descriptor.overrideAttributeName;
                         if (!attributes.containsKey(targetAttributeName)) {
                             attributes.put(targetAttributeName, ReflectionUtils.invokeMethod(descriptor.sourceAttribute,
-                                    AnnotationUtils.getAnnotation(element, descriptor.sourceAnnotationType, false)));
+                                    AnnotationUtils.getMergeAnnotation(element, descriptor.sourceAnnotationType, false)));
                         }
                     }
                 }
@@ -457,36 +466,6 @@ public final class AnnotationUtils {
 
         private Object getAttributeValue(Method attributeMethod) {
             return attributeValueExtractor.getAttributeValue(attributeMethod.getName());
-        }
-
-        private Object cloneArray(Object array) {
-            if (array instanceof boolean[]) {
-                return ((boolean[]) array).clone();
-            }
-            if (array instanceof byte[]) {
-                return ((byte[]) array).clone();
-            }
-            if (array instanceof char[]) {
-                return ((char[]) array).clone();
-            }
-            if (array instanceof double[]) {
-                return ((double[]) array).clone();
-            }
-            if (array instanceof float[]) {
-                return ((float[]) array).clone();
-            }
-            if (array instanceof int[]) {
-                return ((int[]) array).clone();
-            }
-            if (array instanceof long[]) {
-                return ((long[]) array).clone();
-            }
-            if (array instanceof short[]) {
-                return ((short[]) array).clone();
-            }
-
-            // else
-            return ((Object[]) array).clone();
         }
 
         private Class<? extends Annotation> annotationType() {

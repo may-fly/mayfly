@@ -18,8 +18,4 @@ public class PermissionInfo {
     public String getPermissionCode() {
         return permissionCode;
     }
-
-    public void setPermissionCode(String permissionCode) {
-        this.permissionCode = permissionCode;
-    }
 }

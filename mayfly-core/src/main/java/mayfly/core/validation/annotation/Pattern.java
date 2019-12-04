@@ -29,10 +29,7 @@ public @interface Pattern {
     class PatternValidator implements Validator<Pattern, String> {
         @Override
         public boolean validation(Pattern pattern, String value) {
-            if (value == null) {
-                return true;
-            }
-            return value.matches(pattern.regexp());
+            return value == null || value.matches(pattern.regexp());
         }
     }
 }

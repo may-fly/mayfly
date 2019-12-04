@@ -28,13 +28,13 @@ public @interface EnumValue {
     /**
      * 枚举值类型，枚举必须继承{@link ValueEnum}
      */
-    Class<? extends Enum<? extends ValueEnum>> value();
+    Class<? extends Enum<? extends ValueEnum<?>>> value();
 
     String message() default "{fieldName}字段枚举值错误！";
 
 
     class EnumValueValidator implements Validator<EnumValue, Object> {
-        @SuppressWarnings("unchecked")
+        @SuppressWarnings("all")
         @Override
         public boolean validation(EnumValue enumValue, Object value) {
             if (value == null) {

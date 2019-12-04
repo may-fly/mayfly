@@ -9,6 +9,7 @@ import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Collections;
@@ -43,6 +44,20 @@ public class BeanUtils {
         Assert.assertState(!clazz.isInterface(), "无法实例化接口：" + clazz.getName());
         try {
             return clazz.getDeclaredConstructor().newInstance();
+        } catch (Exception e) {
+            throw new IllegalStateException("实例化对象失败", e);
+        }
+    }
+
+    /**
+     * 实例化对象
+     * @param constructor  构造器
+     * @param <T>    对象泛型类
+     * @return       对象
+     */
+    public static <T> T instantiate(Constructor<T> constructor, Object... initargs) {
+        try {
+            return constructor.newInstance(initargs);
         } catch (Exception e) {
             throw new IllegalStateException("实例化对象失败", e);
         }
@@ -114,7 +129,7 @@ public class BeanUtils {
         if (bean == null) {
             return null;
         }
-        Class type = bean.getClass();
+        Class<?> type = bean.getClass();
         Map<String ,Object> returnMap = new HashMap<>(32);
         // 遍历属性描述器
         for (PropertyDescriptor descriptor : getPropertyDescriptors(type)) {
@@ -233,7 +248,7 @@ public class BeanUtils {
          */
         Class<? extends Enum<? extends NameValueEnum>> enumConverter() default DefaultEnum.class;
 
-        enum DefaultEnum implements NameValueEnum {
+        enum DefaultEnum implements NameValueEnum<Integer> {
             ;
             @Override
             public Integer getValue() {

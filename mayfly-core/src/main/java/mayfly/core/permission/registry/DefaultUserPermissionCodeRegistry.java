@@ -13,23 +13,23 @@ import java.util.concurrent.TimeUnit;
  * @version 1.0
  * @date 2019-03-23 8:25 PM
  */
-public class DefaultUserPermissionCodeRegistry implements UserPermissionCodeRegistry {
+public class DefaultUserPermissionCodeRegistry<I> implements UserPermissionCodeRegistry<I> {
 
     private static DefaultUserPermissionCodeRegistry defaultUserPermissionCodeRegistry = new DefaultUserPermissionCodeRegistry();
 
-    public static DefaultUserPermissionCodeRegistry getInstance() {
+    public static <T> DefaultUserPermissionCodeRegistry<T> getInstance() {
         return defaultUserPermissionCodeRegistry;
     }
 
     /**
      * 权限缓存
      */
-    private static Map<Integer, Collection<String>> permissionCache = new ConcurrentHashMap<>(255);
+    private Map<I, Collection<String>> permissionCache = new ConcurrentHashMap<>(255);
 
     private DefaultUserPermissionCodeRegistry(){}
 
     @Override
-    public void save(Integer userId, Collection<String> permissionCodes, long time, TimeUnit timeUnit) {
+    public void save(I userId, Collection<String> permissionCodes, long time, TimeUnit timeUnit) {
         if (permissionCache.containsKey(userId)) {
             delete(userId);
         }
@@ -40,13 +40,13 @@ public class DefaultUserPermissionCodeRegistry implements UserPermissionCodeRegi
     }
 
     @Override
-    public void delete(Integer userId) {
+    public void delete(I userId) {
         permissionCache.remove(userId);
         ScheduleUtils.cancel(String.valueOf(userId));
     }
 
     @Override
-    public boolean has(Integer userId, String permissionCode) {
+    public boolean has(I userId, String permissionCode) {
         return CollectionUtils.contains(permissionCache.get(userId), permissionCode);
     }
 }

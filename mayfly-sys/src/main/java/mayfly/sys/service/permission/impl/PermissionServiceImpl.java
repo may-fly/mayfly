@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
  * @date 2018/6/26 上午9:49
  */
 @Service
-public class PermissionServiceImpl implements PermissionService, UserPermissionCodeRegistry {
+public class PermissionServiceImpl implements PermissionService, UserPermissionCodeRegistry<Integer> {
 
     @Autowired
     private RedisTemplate redisTemplate;
@@ -42,7 +42,7 @@ public class PermissionServiceImpl implements PermissionService, UserPermissionC
     /**
      * 权限缓存处理器
      */
-    private PermissionCacheHandler permissionCacheHandler = PermissionCacheHandler.of(this);
+    private PermissionCacheHandler<Integer> permissionCacheHandler = PermissionCacheHandler.of(this);
 
 
     @Override
@@ -94,7 +94,7 @@ public class PermissionServiceImpl implements PermissionService, UserPermissionC
         redisTemplate.delete(BracePlaceholder.resolveByObject(UserCacheKey.USER_PERMISSION_KEY, userId));
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("all")
     @Override
     public boolean has(Integer userId, String permissionCode) {
         return redisTemplate.opsForSet().isMember(BracePlaceholder.resolveByObject(UserCacheKey.USER_PERMISSION_KEY, userId), permissionCode);

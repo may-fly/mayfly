@@ -79,7 +79,7 @@ public class TimedCache<K, V> extends AbstractCache<K, V> {
                     remove(k);
                 }
             });
-        }, 0, 30, TimeUnit.SECONDS);
+        }, 0, 10, TimeUnit.SECONDS);
     }
 
 }

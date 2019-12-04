@@ -39,7 +39,7 @@ public final class EnumUtils {
         if (value == null) {
             return null;
         }
-        for (NameValueEnum e : enums) {
+        for (NameValueEnum<?> e : enums) {
             if (value.equals(e.getValue())) {
                 return e.getName();
             }

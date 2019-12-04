@@ -103,14 +103,4 @@ public class ObjectUtils {
     public static boolean isPrimitiveArray(Object obj) {
         return isArray(obj) && obj.getClass().getComponentType().isPrimitive();
     }
-
-    /**
-     * 调用对象toString方法，如果对象为空则返回指定的默认字符串
-     * @param object      对象
-     * @param defaultStr  对象为空时，返回的默认字符串
-     * @return             对象toString方法or默认字符串
-     */
-    public static String toString(Object object, String defaultStr) {
-        return object == null ? defaultStr : String.valueOf(object);
-    }
 }

@@ -40,7 +40,7 @@ public class AdminController {
     private RoleUserService roleUserService;
 
     @GetMapping("/v1/admins")
-    public Result list(@Valid PageForm pageForm, AdminQuery adminQuery) {
+    public Result<?> list(@Valid PageForm pageForm, AdminQuery adminQuery) {
         Integer id = SessionLocal.getUserId();
         Page<Admin> re = adminService.listByCondition(BeanUtils.copyProperties(adminQuery, Admin.class), pageForm);
         return Result.success(Page.with(re.getTotal(), BeanUtils.copyProperties(re.getList(), AdminVO.class)));

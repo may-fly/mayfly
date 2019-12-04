@@ -1,5 +1,7 @@
 package mayfly.core.exception;
 
+import mayfly.core.result.Result;
+
 /**
  * @author meilin.huang
  * @version 1.0
@@ -10,20 +12,21 @@ public class BusinessRuntimeException extends RuntimeException {
     private static final long serialVersionUID = -789021883759549647L;
 
     /**
-     * 异常码
+     * 异常结果
      */
-    private Integer code;
+    private Result result;
 
     public BusinessRuntimeException(String msg) {
         super(msg);
     }
+    
 
-    public BusinessRuntimeException(Integer code, String msg) {
-        super(msg);
-        this.code = code;
+    public BusinessRuntimeException(Result result) {
+        super(result.getMsg());
+        this.result = result;
     }
 
-    public Integer getCode() {
-        return code;
+    public Result getResult() {
+        return result;
     }
 }

@@ -67,7 +67,7 @@ public class MachineFileController {
 
     @MethodLog("删除文件配置")
     @DeleteMapping("/files/{id}")
-    public Result delConf(@PathVariable Integer machineId, @PathVariable Integer id) {
+    public Result delConf(@PathVariable Integer id) {
         machineFileService.deleteById(id);
         return Result.success();
     }

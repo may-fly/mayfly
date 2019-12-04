@@ -24,6 +24,9 @@ public class ThreadFactoryBuilder {
 
     private Integer priority;
 
+    private Thread.UncaughtExceptionHandler uncaughtExceptionHandler;
+
+
     private ThreadFactoryBuilder (String name) {
         this.name = name;
     }
@@ -34,7 +37,7 @@ public class ThreadFactoryBuilder {
      *             那么创建出来的线程名就类似rpc-thread-1，rpc-thread-2等）
      * @return
      */
-    public static ThreadFactoryBuilder builder(String name) {
+    public static ThreadFactoryBuilder newBuilder(String name) {
         return new ThreadFactoryBuilder(name);
     }
 
@@ -45,6 +48,11 @@ public class ThreadFactoryBuilder {
 
     public ThreadFactoryBuilder priority(Integer priority) {
         this.priority = priority;
+        return this;
+    }
+
+    public ThreadFactoryBuilder uncaughtExceptionHandler(Thread.UncaughtExceptionHandler ueh) {
+        this.uncaughtExceptionHandler = ueh;
         return this;
     }
 
@@ -60,6 +68,9 @@ public class ThreadFactoryBuilder {
             }
             if (this.priority != null) {
                 t.setPriority(priority);
+            }
+            if (this.uncaughtExceptionHandler != null) {
+                t.setUncaughtExceptionHandler(uncaughtExceptionHandler);
             }
             return t;
         };

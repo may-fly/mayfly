@@ -21,14 +21,14 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public Result handleException(Exception e) {
-        // 如果是业务逻辑异常则无需记录日志
+        // 如果是业务逻辑异常则无需记录日志，错误提示即可
         if (e instanceof BusinessException || e instanceof BusinessRuntimeException) {
             return Result.error(e.getMessage());
         }
         if (e instanceof HttpRequestMethodNotSupportedException) {
             return Result.serverError("url请求方法错误！");
         }
-
+        // 记录未知异常日志
         log.error("系统异常：", e);
         return Result.serverError();
     }

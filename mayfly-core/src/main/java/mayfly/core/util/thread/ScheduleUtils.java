@@ -22,7 +22,7 @@ public class ScheduleUtils {
      *  定时任务线程池
      */
     private static ScheduledExecutorService schedule = Executors.newScheduledThreadPool(corePoolSize
-    , ThreadFactoryBuilder.builder("mayfly-schedule").daemon(true).build());
+    , ThreadFactoryBuilder.newBuilder("mayfly-schedule").daemon(true).build());
 
     /**
      * 存定时任务结果

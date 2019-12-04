@@ -9,7 +9,21 @@ public class BusinessException extends Exception {
 
     private static final long serialVersionUID = 7448623878598565912L;
 
+    /**
+     * 异常码
+     */
+    private Integer code;
+
     public BusinessException(String msg) {
         super(msg);
+    }
+
+    public BusinessException(Integer code, String msg) {
+        super(msg);
+        this.code = code;
+    }
+
+    public Integer getCode() {
+        return code;
     }
 }

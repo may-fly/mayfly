@@ -27,7 +27,7 @@ public class ValidationHandler {
     /**
      * 校验注解对应的校验器
      */
-    private static Map<Class<? extends Annotation>, Validator[]> validatorCache = new ConcurrentHashMap<>(32);
+    private static Map<Class<? extends Annotation>, Validator<?, ?>[]> validatorCache = new ConcurrentHashMap<>(32);
 
     /**
      * 校验注解注册
@@ -59,6 +59,7 @@ public class ValidationHandler {
      * @param obj  需要校验参数值的对象
      * @throws ParamValidErrorException  若不符合指定注解的参数值则抛出该异常
      */
+    @SuppressWarnings("all")
     public void validate(Object obj) throws ParamValidErrorException {
         Assert.notNull(obj, "校验对象不能为空！");
         // 如果是包装类型或者是java原生基本类型，则直接返回
@@ -76,17 +77,13 @@ public class ValidationHandler {
                 }
                 Validator[] validators = validatorCache.computeIfAbsent(anno, key -> {
                     ValidateBy vb = AnnotationUtils.getAnnotation(anno, ValidateBy.class);
-                    if (vb == null) {
-                        throw new IllegalArgumentException(String.format("@%s注解上没有对应@ValidateBy注解", anno.getSimpleName()));
-                    }
+                    Assert.notNull(vb, String.format("@%s注解上没有对应@ValidateBy注解", anno.getSimpleName()));
                     return Stream.of(vb.value()).map(BeanUtils::instantiate).toArray(Validator[]::new);
                 });
 
                 for (Validator validator : validators) {
                     Annotation validAnno = AnnotationUtils.getAnnotation(field, anno);
-                    @SuppressWarnings("unchecked")
-                    boolean result = validator.validation(validAnno, fieldValue);
-                    if (!result) {
+                    if (!validator.validation(validAnno, fieldValue)) {
                         throw new ParamValidErrorException(getErrorMessage(field, validAnno));
                     }
                 }
@@ -117,8 +114,8 @@ public class ValidationHandler {
 
     /**
      * 获取指定对象中所有字段基本信息（含有哪些校验器）
-     * @param obj
-     * @return
+     * @param obj  校验对象
+     * @return     fieldInfo {@link FieldInfo} list
      */
     public List<FieldInfo> getAllFieldInfo(Object obj) {
         return cache.computeIfAbsent(obj.getClass(), key -> {
@@ -132,16 +129,14 @@ public class ValidationHandler {
     /**
      * 获取不满足验证规则的错误消息
      * @param annotation  校验注解
-     * @return
+     * @return            错误信息
      */
     private String getErrorMessage(Field field, Annotation annotation) {
         // 获取注解的message属性值
         Object annoMessage = AnnotationUtils.getAttributeValue(annotation, "message");
-        if (annoMessage == null) {
-            throw new IllegalArgumentException(annotation.annotationType().getName() + "注解类必须含有message属性方法");
-        }
+        Assert.notNull(annoMessage, annotation.annotationType().getName() + "注解类必须含有message属性方法");
         // 替换错误消息提示
-        String message = annoMessage.toString();
+        String message = Objects.toString(annoMessage);
         Map<String, Object> attributeMap = AnnotationUtils.getAttributeMap(annotation);
         attributeMap.put("fieldName", field.getName());
         return BracePlaceholder.resolveByMap(message, attributeMap);
@@ -149,8 +144,8 @@ public class ValidationHandler {
 
     /**
      * 创建fieldInfo对象
-     * @param field
-     * @return 如果field字段不包含任何校验注解则返回null
+     * @param field   字段
+     * @return       如果field字段不包含任何校验注解则返回null
      */
     private FieldInfo getFieldInfo(Field field) {
         // 该字段上所包含的校验注解
@@ -179,8 +174,6 @@ public class ValidationHandler {
          * 字段包含的校验注解列表
          */
         private List<Class<? extends Annotation>> validAnnotations;
-
-        public FieldInfo(){}
 
         public FieldInfo(Field field, List<Class<? extends Annotation>> validAnnotations) {
             this.field = field;

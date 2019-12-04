@@ -16,13 +16,13 @@ import java.util.Optional;
  * @version 1.0
  * @date 2019-03-28 2:03 PM
  */
-public class PermissionCheckHandler {
+public class PermissionCheckHandler<I> {
     /**
      * 用户权限校验
      */
-    private UserPermissionChecker userPermissionChecker;
+    private UserPermissionChecker<I> userPermissionChecker;
 
-    private PermissionCheckHandler(UserPermissionChecker userPermissionChecker) {
+    private PermissionCheckHandler(UserPermissionChecker<I> userPermissionChecker) {
         this.userPermissionChecker = userPermissionChecker;
     }
 
@@ -31,11 +31,11 @@ public class PermissionCheckHandler {
      * @param userPermissionChecker 用户权限检查（为null则使用默认检查器 {@link DefaultUserPermissionChecker}）
      * @return
      */
-    public static PermissionCheckHandler of(UserPermissionChecker userPermissionChecker){
+    public static <T> PermissionCheckHandler<T> of(UserPermissionChecker<T> userPermissionChecker){
         if (userPermissionChecker == null) {
-            userPermissionChecker = new DefaultUserPermissionChecker();
+            userPermissionChecker = new DefaultUserPermissionChecker<T>();
         }
-        return new PermissionCheckHandler(userPermissionChecker);
+        return new PermissionCheckHandler<T>(userPermissionChecker);
     }
 
     /**
@@ -45,7 +45,7 @@ public class PermissionCheckHandler {
      * @return
      * @throws PermissionDisabledException  若不存在权限code,而存在与之对应的禁用权限code,抛出此异常
      */
-    public boolean hasPermission(Integer userId, String permissionCode) throws PermissionDisabledException{
+    public boolean hasPermission(I userId, String permissionCode) throws PermissionDisabledException{
         //判断code注册器是否含有该用户的权限code
         if (userPermissionChecker.has(userId, permissionCode)) {
             return true;
@@ -64,7 +64,7 @@ public class PermissionCheckHandler {
      * @return
      * @throws PermissionDisabledException
      */
-    public boolean hasPermission(Integer userId, Method method) throws PermissionDisabledException{
+    public boolean hasPermission(I userId, Method method) throws PermissionDisabledException{
         PermissionInfo pi = getPermissionInfo(method);
         if (pi == null) {
             return true;

@@ -20,7 +20,7 @@ public class LsVO {
 
     private Character type;
 
-    private Long size;
+    private String size;
 
     private Date updateTime;
 }

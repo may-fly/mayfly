@@ -50,6 +50,10 @@ public class BusinessAssert {
         state(!StringUtils.isEmpty(str), msg);
     }
 
+    public static void notEmpty(String str, Supplier<String> supplier) {
+        state(!StringUtils.isEmpty(str), supplier);
+    }
+
     /**
      * 断言集合不为空
      * @param collection  集合

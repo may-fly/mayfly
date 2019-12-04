@@ -1,12 +1,16 @@
-package mayfly.core.validation.annotation.validator;;
+package mayfly.core.validation.annotation.validator;
+
+import java.lang.annotation.Annotation;
+
+;
 
 /**
+ * 校验器接口
  * @author hml
  * @version 1.0
- * @description: 校验器接口
  * @date 2018-10-30 8:08 PM
  */
-public interface Validator<A, V> {
+public interface Validator<A extends Annotation, V> {
 
     /**
      * 校验规则

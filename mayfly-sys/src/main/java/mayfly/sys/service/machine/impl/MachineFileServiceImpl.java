@@ -34,6 +34,10 @@ import java.util.Objects;
 @Service
 public class MachineFileServiceImpl extends BaseServiceImpl<MachineFileMapper, MachineFile> implements MachineFileService {
 
+    public static char file = '-';
+    public static char directory = 'd';
+    public static char link = 'l';
+
     @Autowired
     private MachineService machineService;
 
@@ -90,7 +94,7 @@ public class MachineFileServiceImpl extends BaseServiceImpl<MachineFileMapper, M
             String[] strs = lineContent.split("\\s+");
             char[] typeAndPermission =  strs[0].toCharArray();
             char type = typeAndPermission[0];
-            if (type == 'l') {
+            if (type == link) {
                 return;
             }
             LsVO vo = new LsVO();
@@ -98,7 +102,10 @@ public class MachineFileServiceImpl extends BaseServiceImpl<MachineFileMapper, M
             vo.setPath(pathPrefix + fileName);
             vo.setType(typeAndPermission[0]);
             vo.setName(fileName);
-//            vo.setSize(Long.parseLong(strs[4]));
+            // 如果是文件，则设置文件大小
+            if (type == file) {
+                vo.setSize(strs[4]);
+            }
             ls.add(vo);
         });
         return ls;

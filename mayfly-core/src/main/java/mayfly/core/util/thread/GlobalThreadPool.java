@@ -14,13 +14,16 @@ import java.util.concurrent.TimeUnit;
  */
 public class GlobalThreadPool {
 
-    private static int coreSize = 4;
+    /**
+     * 设置 CPU 最大核心数 * 2
+     */
+    private static int coreSize = Runtime.getRuntime().availableProcessors() * 2;
 
     /**
      * 线程池
      */
-    private static ThreadPoolExecutor executor = ThreadPoolBuilder.builder()
-            .threadFactory(ThreadFactoryBuilder.builder("mayfly-thread-pool").build())
+    private static ThreadPoolExecutor executor = ThreadPoolBuilder.newBuilder()
+            .threadFactory(ThreadFactoryBuilder.newBuilder("mayfly-thread-pool").build())
             .corePoolSize(coreSize)
             .maxPoolSize(coreSize)
             .keepAliveTime(5, TimeUnit.MINUTES)

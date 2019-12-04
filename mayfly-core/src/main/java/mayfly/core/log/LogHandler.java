@@ -1,5 +1,6 @@
 package mayfly.core.log;
 
+import mayfly.core.util.Assert;
 import mayfly.core.util.annotation.AnnotationUtils;
 import mayfly.core.util.CollectionUtils;
 import mayfly.core.util.StringUtils;
@@ -57,9 +58,7 @@ public class LogHandler {
         if (log == null) {
             //如果方法没有该注解，则判断方法声明类上的该注解
             log = AnnotationUtils.getAnnotation(method.getDeclaringClass(), MethodLog.class);
-            if (log == null) {
-                throw new IllegalArgumentException(method + "方法或类必须添加@MethodLog注解！");
-            }
+            Assert.notNull(log, "方法或类必须添加@MethodLog注解！");
             desc = StringUtils.isEmpty(log.value()) ? "" : log.value() + method.getName();
         } else {
             MethodLog typeLog = AnnotationUtils.getAnnotation(method.getDeclaringClass(), MethodLog.class);

@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
  * @version 1.0
  * @date 2018-11-26 11:02 AM
  */
-public final class PermissionCacheHandler {
+public final class PermissionCacheHandler<I> {
 
     /**
      * 权限码与状态分割符号
@@ -20,10 +20,10 @@ public final class PermissionCacheHandler {
     /**
      * 用户权限码注册
      */
-    private UserPermissionCodeRegistry userCodeRegistry;
+    private UserPermissionCodeRegistry<I> userCodeRegistry;
 
 
-    private PermissionCacheHandler(UserPermissionCodeRegistry userCodeRegistry){
+    private PermissionCacheHandler(UserPermissionCodeRegistry<I> userCodeRegistry){
         this.userCodeRegistry = userCodeRegistry;
     }
 
@@ -32,11 +32,11 @@ public final class PermissionCacheHandler {
      * @param userCodeRegistry 用户权限缓存器(null则使用默认注册器 {@link DefaultUserPermissionCodeRegistry})
      * @return
      */
-    public static PermissionCacheHandler of(UserPermissionCodeRegistry userCodeRegistry) {
+    public static <T> PermissionCacheHandler<T> of(UserPermissionCodeRegistry<T> userCodeRegistry) {
         if (userCodeRegistry == null) {
-            userCodeRegistry = DefaultUserPermissionCodeRegistry.getInstance();
+            userCodeRegistry = DefaultUserPermissionCodeRegistry.<T>getInstance();
         }
-        return new PermissionCacheHandler(userCodeRegistry);
+        return new PermissionCacheHandler<T>(userCodeRegistry);
     }
 
     /**
@@ -46,7 +46,7 @@ public final class PermissionCacheHandler {
      * @param time  时间
      * @param timeUnit  时间单位
      */
-    public void savePermission(Integer userId, Collection<String> permissionCodes, long time, TimeUnit timeUnit) {
+    public void savePermission(I userId, Collection<String> permissionCodes, long time, TimeUnit timeUnit) {
         userCodeRegistry.save(userId, permissionCodes, time, timeUnit);
     }
 
