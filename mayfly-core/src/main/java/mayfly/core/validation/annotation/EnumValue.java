@@ -16,11 +16,12 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
  * 枚举值校验
+ *
  * @author meilin.huang
  * @version 1.0
  * @date 2019-03-28 5:10 PM
  */
-@Target({ FIELD, PARAMETER })
+@Target({FIELD, PARAMETER})
 @Retention(RUNTIME)
 @Documented
 @ValidateBy(EnumValue.EnumValueValidator.class)

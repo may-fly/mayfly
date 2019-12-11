@@ -11,11 +11,12 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
  * 字符串正则表达式校验
+ *
  * @author hml
  * @version 1.0
  * @date 2018-10-28 5:21 PM
  */
-@Target({ FIELD, PARAMETER, ANNOTATION_TYPE })
+@Target({FIELD, PARAMETER, ANNOTATION_TYPE})
 @Retention(RUNTIME)
 @Documented
 @ValidateBy(Pattern.PatternValidator.class)

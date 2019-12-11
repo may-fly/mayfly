@@ -33,6 +33,7 @@ public class ValidationHandler {
      * 校验注解注册
      */
     private static Set<Class<? extends Annotation>> validAnnotationRegister = new HashSet<>(8);
+
     static {
         validAnnotationRegister.add(NotNull.class);
         validAnnotationRegister.add(NotBlank.class);
@@ -44,10 +45,13 @@ public class ValidationHandler {
     }
 
     private static ValidationHandler instance = new ValidationHandler();
-    private ValidationHandler(){}
+
+    private ValidationHandler() {
+    }
 
     /**
      * 单例入口
+     *
      * @return 参数检验处理器
      */
     public static ValidationHandler getInstance() {
@@ -56,8 +60,9 @@ public class ValidationHandler {
 
     /**
      * 校验对象中字段是否符合字段注解上的规则
-     * @param obj  需要校验参数值的对象
-     * @throws ParamValidErrorException  若不符合指定注解的参数值则抛出该异常
+     *
+     * @param obj 需要校验参数值的对象
+     * @throws ParamValidErrorException 若不符合指定注解的参数值则抛出该异常
      */
     @SuppressWarnings("all")
     public void validate(Object obj) throws ParamValidErrorException {
@@ -70,7 +75,7 @@ public class ValidationHandler {
             Field field = fieldValidators.field;
             Object fieldValue = ReflectionUtils.getFieldValue(field, obj);
             // 遍历field字段需要校验的校验器
-            for(Class<? extends Annotation> anno : fieldValidators.validAnnotations) {
+            for (Class<? extends Annotation> anno : fieldValidators.validAnnotations) {
                 // 如果是Valid注解，则跳过
                 if (anno == Valid.class) {
                     continue;
@@ -114,8 +119,9 @@ public class ValidationHandler {
 
     /**
      * 获取指定对象中所有字段基本信息（含有哪些校验器）
-     * @param obj  校验对象
-     * @return     fieldInfo {@link FieldInfo} list
+     *
+     * @param obj 校验对象
+     * @return fieldInfo {@link FieldInfo} list
      */
     public List<FieldInfo> getAllFieldInfo(Object obj) {
         return cache.computeIfAbsent(obj.getClass(), key -> {
@@ -128,8 +134,9 @@ public class ValidationHandler {
 
     /**
      * 获取不满足验证规则的错误消息
-     * @param annotation  校验注解
-     * @return            错误信息
+     *
+     * @param annotation 校验注解
+     * @return 错误信息
      */
     private String getErrorMessage(Field field, Annotation annotation) {
         // 获取注解的message属性值
@@ -144,14 +151,15 @@ public class ValidationHandler {
 
     /**
      * 创建fieldInfo对象
-     * @param field   字段
-     * @return       如果field字段不包含任何校验注解则返回null
+     *
+     * @param field 字段
+     * @return 如果field字段不包含任何校验注解则返回null
      */
     private FieldInfo getFieldInfo(Field field) {
         // 该字段上所包含的校验注解
         List<Class<? extends Annotation>> validAnnotations = null;
         // 获取所有注册过的注解校验类
-        for(Class<? extends Annotation> anno : validAnnotationRegister){
+        for (Class<? extends Annotation> anno : validAnnotationRegister) {
             if (AnnotationUtils.isAnnotationPresent(field, anno)) {
                 if (validAnnotations == null) {
                     validAnnotations = new ArrayList<>(4);

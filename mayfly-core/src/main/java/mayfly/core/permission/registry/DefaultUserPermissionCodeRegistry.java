@@ -26,7 +26,8 @@ public class DefaultUserPermissionCodeRegistry<I> implements UserPermissionCodeR
      */
     private Map<I, Collection<String>> permissionCache = new ConcurrentHashMap<>(255);
 
-    private DefaultUserPermissionCodeRegistry(){}
+    private DefaultUserPermissionCodeRegistry() {
+    }
 
     @Override
     public void save(I userId, Collection<String> permissionCodes, long time, TimeUnit timeUnit) {

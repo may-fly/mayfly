@@ -36,9 +36,10 @@ public class BeanUtils {
 
     /**
      * 实例化对象
-     * @param clazz  对象类型
-     * @param <T>    对象泛型类
-     * @return       对象
+     *
+     * @param clazz 对象类型
+     * @param <T>   对象泛型类
+     * @return 对象
      */
     public static <T> T instantiate(Class<T> clazz) {
         Assert.assertState(!clazz.isInterface(), "无法实例化接口：" + clazz.getName());
@@ -51,9 +52,10 @@ public class BeanUtils {
 
     /**
      * 实例化对象
-     * @param constructor  构造器
-     * @param <T>    对象泛型类
-     * @return       对象
+     *
+     * @param constructor 构造器
+     * @param <T>         对象泛型类
+     * @return 对象
      */
     public static <T> T instantiate(Constructor<T> constructor, Object... initargs) {
         try {
@@ -65,7 +67,8 @@ public class BeanUtils {
 
     /**
      * 获取bean的属性描述器
-     * @param clazz  bean类型
+     *
+     * @param clazz bean类型
      * @return
      */
     public static PropertyDescriptor[] getPropertyDescriptors(Class<?> clazz) {
@@ -80,6 +83,7 @@ public class BeanUtils {
     /**
      * 将的bean转为map, key:fieldName, value:fieldValue  <br/> <br/>
      * 如果bean的属性中还有bean，则key为以前一个beanName.fieldName
+     *
      * @param bean
      * @return
      */
@@ -90,6 +94,7 @@ public class BeanUtils {
     /**
      * 将list中的bean转为map, key:fieldName, value:fieldValue  <br/> </br/>
      * 如果bean的属性中还有bean，则key为以前一个beanName.fieldName
+     *
      * @param beans
      * @return
      */
@@ -99,10 +104,11 @@ public class BeanUtils {
 
     /**
      * 将map对象里的key(属性名)-value(属性值)转换为bean属性值
-     * @param sourceMap  map
+     *
+     * @param sourceMap map
      * @param clazz     bean类型
      * @param <T>       bean的具体类型
-     * @return          实例bean
+     * @return 实例bean
      */
     public static <T> T map2Bean(Map<String, Object> sourceMap, Class<T> clazz) {
         T target = BeanUtils.instantiate(clazz);
@@ -121,6 +127,7 @@ public class BeanUtils {
 
     /**
      * 将bean转为map,递归转换bean中非常用基本类型
+     *
      * @param prefix map中key字段的前缀，即map中key为perfix + "." + fieldName
      * @param bean
      * @return
@@ -130,7 +137,7 @@ public class BeanUtils {
             return null;
         }
         Class<?> type = bean.getClass();
-        Map<String ,Object> returnMap = new HashMap<>(32);
+        Map<String, Object> returnMap = new HashMap<>(32);
         // 遍历属性描述器
         for (PropertyDescriptor descriptor : getPropertyDescriptors(type)) {
             String propertyName = descriptor.getName();
@@ -144,7 +151,7 @@ public class BeanUtils {
             // 如果非基本类型
             if (!isSimpleValue(result)) {
                 if (ObjectUtils.isCollection(result)) {
-                    returnMap.put(parsePropertyName(prefix, propertyName), beans2Maps((Collection)result));
+                    returnMap.put(parsePropertyName(prefix, propertyName), beans2Maps((Collection) result));
                     continue;
                 }
                 if (ObjectUtils.isMap(result)) {
@@ -192,7 +199,7 @@ public class BeanUtils {
 
         Class<? extends Enum> enumClass = converter.enumConverter();
         if (enumClass != Bean2MapFieldConverter.DefaultEnum.class && value instanceof Integer) {
-            return EnumUtils.getNameByValue(ObjectUtils.cast(enumClass.getEnumConstants(), NameValueEnum.class), (Integer)value);
+            return EnumUtils.getNameByValue(ObjectUtils.cast(enumClass.getEnumConstants(), NameValueEnum.class), (Integer) value);
         }
 
         return value;
@@ -200,6 +207,7 @@ public class BeanUtils {
 
     /**
      * 判断对象是否为简单基本类型
+     *
      * @param res
      * @return
      */
@@ -210,6 +218,7 @@ public class BeanUtils {
     /**
      * Bean字段值转换 </br>
      * 泛型 T:bean中原始值类型 V:转换后的值类型，
+     *
      * @author meilin.huang
      * @version 1.0
      * @date 2019-03-06 6:42 PM
@@ -219,18 +228,20 @@ public class BeanUtils {
         /**
          * 字段值转换, 如将枚举值Integer转换为String类型的name <br/>
          * V:转换后的值， T:bean中原始值
-         * @param fieldValue  真实字段值
+         *
+         * @param fieldValue 真实字段值
          */
         V convert(T fieldValue);
     }
 
     /**
      * bean属性转换器注解  </br>
+     *
      * @author meilin.huang
      * @version 1.0
      * @date 2019-03-06 6:42 PM
      */
-    @Target({ FIELD })
+    @Target({FIELD})
     @Retention(RUNTIME)
     public @interface Bean2MapFieldConverter {
         /**
@@ -250,10 +261,12 @@ public class BeanUtils {
 
         enum DefaultEnum implements NameValueEnum<Integer> {
             ;
+
             @Override
             public Integer getValue() {
                 return 0;
             }
+
             @Override
             public String getName() {
                 return null;

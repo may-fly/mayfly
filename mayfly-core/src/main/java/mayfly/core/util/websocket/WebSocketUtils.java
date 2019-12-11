@@ -20,10 +20,10 @@ public class WebSocketUtils {
     /**
      * put registry
      *
-     * @param registry   SessionRegistry
-     * @param <T>        key类型
+     * @param registry SessionRegistry
+     * @param <T>      key类型
      */
-    public static<T> void putRegistry(SessionRegistry<T> registry) {
+    public static <T> void putRegistry(SessionRegistry<T> registry) {
         registryMap.put(registry.namespace, registry);
     }
 
@@ -34,7 +34,7 @@ public class WebSocketUtils {
      * @param message 消息
      */
     @SuppressWarnings("unchecked")
-    public static<T> void sendText(Session session, String message) {
+    public static <T> void sendText(Session session, String message) {
         try {
             if (session.isOpen()) {
                 session.getBasicRemote().sendText(message);
@@ -47,12 +47,12 @@ public class WebSocketUtils {
     /**
      * 发送消息，实践表明，每次浏览器刷新，session会发生变化。
      *
-     * @param namespace  命名空间(区别不同的websocket，可用uri表示)
-     * @param key        存储session的key（可以是sessionId，也也是用户标识id等）
-     * @param message    文本消息
+     * @param namespace 命名空间(区别不同的websocket，可用uri表示)
+     * @param key       存储session的key（可以是sessionId，也也是用户标识id等）
+     * @param message   文本消息
      */
     @SuppressWarnings("all")
-    public static<T> void sendText(String namespace, T key, String message) throws SessionNoFoundException {
+    public static <T> void sendText(String namespace, T key, String message) throws SessionNoFoundException {
         SessionRegistry sessionRegistry = registryMap.get(namespace);
         isExistRegistry(namespace, sessionRegistry);
         Session session = sessionRegistry.getSession(key);
@@ -65,19 +65,19 @@ public class WebSocketUtils {
     /**
      * 广播文本消息
      *
-     * @param namespace     命名空间
-     * @param message       消息
-     * @param <T>           存储session的key（可以是sessionId，也也是用户标识id等）
+     * @param namespace 命名空间
+     * @param message   消息
+     * @param <T>       存储session的key（可以是sessionId，也也是用户标识id等）
      */
     @SuppressWarnings("unchecked")
-    public static<T> void broadcastText(String namespace, String message) {
+    public static <T> void broadcastText(String namespace, String message) {
         SessionRegistry sessionRegistry = registryMap.get(namespace);
         // 判断是否存在该registry
         isExistRegistry(namespace, sessionRegistry);
         sessionRegistry.sessionMap.forEach((k, v) -> {
             try {
                 sendText(namespace, k, message);
-            }  catch (SessionNoFoundException e) {
+            } catch (SessionNoFoundException e) {
                 // skip，不会发生因为就是遍历 session map
             }
         });
@@ -96,7 +96,8 @@ public class WebSocketUtils {
 
     /**
      * websocket session注册器（即用来保存、获取以及删除session的）
-     * @param <T>      session对应key的类型
+     *
+     * @param <T> session对应key的类型
      */
     public static class SessionRegistry<T> {
 
@@ -121,8 +122,8 @@ public class WebSocketUtils {
         /**
          * 获取session
          *
-         * @param key   存储session的key（可以是sessionId，也也是用户标识id等）
-         * @return      session
+         * @param key 存储session的key（可以是sessionId，也也是用户标识id等）
+         * @return session
          */
         public Session getSession(T key) {
             return sessionMap.get(key);
@@ -138,7 +139,7 @@ public class WebSocketUtils {
         /**
          * 移除session
          *
-         * @param sessionId  sessionId
+         * @param sessionId sessionId
          */
         public void removeSession(String sessionId) {
             // 如果该registry map中的key是sessionId的话，则直接移除即可，否则遍历map找出对应key再删除
@@ -157,12 +158,12 @@ public class WebSocketUtils {
         /**
          * 创建SessionRegistry对象
          *
-         * @param namespace             命名空间（url即可）
-         * @param keyIsSessionId        map中的key是否为sessionId(是的话在移除时可以直接移除，否则需要遍历map找出对应key再删除)
-         * @param <T>                   key类型
-         * @return                      SessionRegistry
+         * @param namespace      命名空间（url即可）
+         * @param keyIsSessionId map中的key是否为sessionId(是的话在移除时可以直接移除，否则需要遍历map找出对应key再删除)
+         * @param <T>            key类型
+         * @return SessionRegistry
          */
-        public static<T> SessionRegistry<T> create(String namespace, boolean keyIsSessionId) {
+        public static <T> SessionRegistry<T> create(String namespace, boolean keyIsSessionId) {
             return new SessionRegistry<T>(namespace, keyIsSessionId);
         }
     }

@@ -3,7 +3,8 @@ package mayfly.dao.base;
 import java.lang.reflect.Field;
 
 /**
- *  table info
+ * table info
+ *
  * @author hml
  * @date 2018/1/25 下午4:16
  */
@@ -80,7 +81,9 @@ public class TableInfo {
         }
     }
 
-    /**  getter setter  **/
+    /**
+     * getter setter
+     **/
 
     public Class<?> getEntityClass() {
         return entityClass;

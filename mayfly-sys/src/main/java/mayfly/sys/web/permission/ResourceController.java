@@ -35,7 +35,7 @@ public class ResourceController {
     }
 
     @PostMapping("/v1/resources")
-    public Result save(@RequestBody @Valid ResourceForm resourceForm) throws BusinessException{
+    public Result save(@RequestBody @Valid ResourceForm resourceForm) throws BusinessException {
         return Result.success(resourceService.saveResource(BeanUtils.copyProperties(resourceForm, Resource.class)));
     }
 

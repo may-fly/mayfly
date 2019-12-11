@@ -24,6 +24,7 @@ public class ServerCommand {
 
     /**
      * 获取redis命令操作
+     *
      * @param redisId
      * @return
      */
@@ -33,7 +34,8 @@ public class ServerCommand {
 
     /**
      * 获取redis info信息
-     * @param serverCommands  命令操作对象
+     *
+     * @param serverCommands 命令操作对象
      * @return
      */
     public static Map<RedisInfoEnum, Map<String, Object>> info(RedisServerCommands serverCommands) {
@@ -46,6 +48,7 @@ public class ServerCommand {
 
     /**
      * 获取 redis.conf的配置信息
+     *
      * @param redisId
      * @return
      */
@@ -60,6 +63,7 @@ public class ServerCommand {
 
     /**
      * 设置并保存redis指定配置
+     *
      * @param redisId
      * @param param
      * @param value

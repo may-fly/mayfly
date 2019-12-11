@@ -3,7 +3,8 @@ package mayfly.core.util;
 import java.util.UUID;
 
 /**
- *  uuid工具类
+ * uuid工具类
+ *
  * @author hml
  * @date 2018/6/27 下午2:40
  */

@@ -2,6 +2,7 @@ package mayfly.core.util.enums;
 
 /**
  * boolean枚举值
+ *
  * @author meilin.huang
  * @version 1.0
  * @date 2018-12-07 1:43 PM

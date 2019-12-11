@@ -26,6 +26,7 @@ import java.util.stream.Stream;
 
 /**
  * 管理员控制器
+ *
  * @author hml
  * @date 2018/6/27 下午4:44
  */
@@ -47,7 +48,7 @@ public class AdminController {
     }
 
     @PostMapping("/v1/admins")
-    public Result save(@Valid @RequestBody AdminForm adminForm) {
+    public Result<?> save(@Valid @RequestBody AdminForm adminForm) {
         adminService.saveAdmin(adminForm);
         return Result.success();
     }

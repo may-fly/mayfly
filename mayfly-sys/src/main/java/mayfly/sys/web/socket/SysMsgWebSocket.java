@@ -31,6 +31,7 @@ public class SysMsgWebSocket {
     public static final String URI = "/sysmsg/{token}";
 
     private static WebSocketUtils.SessionRegistry<Integer> registry = WebSocketUtils.SessionRegistry.create(URI, false);
+
     static {
         WebSocketUtils.putRegistry(registry);
     }
@@ -60,8 +61,7 @@ public class SysMsgWebSocket {
     /**
      * 收到客户端消息后调用的方法
      *
-     * @param message
-     *            客户端发送过来的消息
+     * @param message 客户端发送过来的消息
      */
     @OnMessage
     public void onMessage(String message, Session session) {
@@ -70,12 +70,13 @@ public class SysMsgWebSocket {
 
     /**
      * 出现错误
+     *
      * @param session
      * @param error
      */
     @OnError
     public void onError(Session session, Throwable error) {
-        log.error("发生错误：{}，Session ID： {}",error.getMessage(),session.getId());
+        log.error("发生错误：{}，Session ID： {}", error.getMessage(), session.getId());
         error.printStackTrace();
     }
 }

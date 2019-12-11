@@ -16,8 +16,9 @@ public class ObjectUtils {
 
     /**
      * 所有数组元素向上转型
+     *
      * @param objs  转换前对象数组
-     * @param clazz  转换后数组对象类型
+     * @param clazz 转换后数组对象类型
      * @param <T>
      * @return
      */
@@ -79,6 +80,7 @@ public class ObjectUtils {
 
     /**
      * 判断对象是否为包装类或者非包装类的基本类型
+     *
      * @param obj
      * @return
      */
@@ -88,6 +90,7 @@ public class ObjectUtils {
 
     /**
      * 判断一个对象是否为数组
+     *
      * @param obj
      * @return
      */
@@ -97,6 +100,7 @@ public class ObjectUtils {
 
     /**
      * 判断一个对象是否为基本类型数组即(int[], long[], boolean[], double[]....)
+     *
      * @param obj
      * @return
      */

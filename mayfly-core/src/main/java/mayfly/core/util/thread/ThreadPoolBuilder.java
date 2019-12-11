@@ -16,22 +16,37 @@ import java.util.concurrent.TimeUnit;
  */
 public class ThreadPoolBuilder {
 
-    /** 初始池大小 */
+    /**
+     * 初始池大小
+     */
     private int corePoolSize;
-    /** 最大池大小（允许同时执行的最大线程数） */
+    /**
+     * 最大池大小（允许同时执行的最大线程数）
+     */
     private int maxPoolSize = Integer.MAX_VALUE;
-    /** 线程存活时间，即当池中线程多于初始大小时，多出的线程保留的时长 */
+    /**
+     * 线程存活时间，即当池中线程多于初始大小时，多出的线程保留的时长
+     */
     private long keepAliveTime = TimeUnit.SECONDS.toNanos(60);
-    /** 队列，用于存在未执行的线程 */
+    /**
+     * 队列，用于存在未执行的线程
+     */
     private BlockingQueue<Runnable> workQueue;
-    /** 线程工厂，用于自定义线程创建 */
+    /**
+     * 线程工厂，用于自定义线程创建
+     */
     private ThreadFactory threadFactory;
-    /** 当线程阻塞（block）时的异常处理器，所谓线程阻塞即线程池和等待队列已满，无法处理线程时采取的策略 */
+    /**
+     * 当线程阻塞（block）时的异常处理器，所谓线程阻塞即线程池和等待队列已满，无法处理线程时采取的策略
+     */
     private RejectedExecutionHandler handler;
-    /** 核心线程执行超时后是否回收线程 */
+    /**
+     * 核心线程执行超时后是否回收线程
+     */
     private Boolean allowCoreThreadTimeOut;
 
-    private ThreadPoolBuilder() {}
+    private ThreadPoolBuilder() {
+    }
 
     /**
      * 创建ThreadPoolBuilder，开始构建
@@ -68,7 +83,7 @@ public class ThreadPoolBuilder {
      * 设置线程存活时间，即当池中线程多于初始大小时，多出的线程保留的时长
      *
      * @param keepAliveTime 线程存活时间
-     * @param unit 单位
+     * @param unit          单位
      * @return this
      */
     public ThreadPoolBuilder keepAliveTime(long keepAliveTime, TimeUnit unit) {
@@ -95,6 +110,7 @@ public class ThreadPoolBuilder {
      * 2. LinkedBlockingQueue 无界队列，当运行线程大于corePoolSize时始终放入此队列，此时maximumPoolSize无效
      * 3. ArrayBlockingQueue  有界队列，相对无界队列有利于控制队列大小，队列满时，运行线程小于maxPoolSize时会创建新线程，否则触发异常策略
      * </pre>
+     *
      * @param workQueue 队列
      * @return this
      */
@@ -106,6 +122,7 @@ public class ThreadPoolBuilder {
     /**
      * 使用{@link SynchronousQueue} 做为等待队列（非公平策略）<br>
      * 它将任务直接提交给线程而不保持它们。当运行线程小于maxPoolSize时会创建新线程，否则触发异常策略
+     *
      * @return this
      */
     public ThreadPoolBuilder useSynchronousQueue() {
@@ -149,6 +166,7 @@ public class ThreadPoolBuilder {
 
     /**
      * 设置线程执行超时后是否回收线程
+     *
      * @param allowCoreThreadTimeOut 线程执行超时后是否回收线程
      * @return this
      */

@@ -10,6 +10,7 @@ import java.util.List;
 
 /**
  * 集群节点基本uri信息
+ *
  * @author meilin.huang
  * @version 1.0
  * @date 2019-01-09 11:02 AM
@@ -41,6 +42,7 @@ public class ClusterNodeUrl {
 
     /**
      * 添加从节点信息
+     *
      * @param slaveUri
      * @return
      */

@@ -71,6 +71,7 @@ public class ServerController {
     public Result info(@PathVariable Integer id) {
         return Result.success(ServerCommand.info(redisService.getCmds(id)));
     }
+
     @GetMapping("/{id}/conf")
     public Result getConf(@PathVariable Integer id) {
         return Result.success(ServerCommand.getConf(redisService.getCmds(id)));

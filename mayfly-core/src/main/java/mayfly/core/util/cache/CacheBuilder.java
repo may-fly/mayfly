@@ -18,20 +18,22 @@ public final class CacheBuilder<K, V> {
 
     /**
      * 创建一个具有过期时间的缓存对象builder
-     * @param timeout       过期时间
-     * @param timeUnit      时间单位
-     * @param <K>           key类型
-     * @param <V>           value类型
-     * @return              builder
+     *
+     * @param timeout  过期时间
+     * @param timeUnit 时间单位
+     * @param <K>      key类型
+     * @param <V>      value类型
+     * @return builder
      */
-    public static<K, V> CacheBuilder<K, V> newTimedBuilder(long timeout, TimeUnit timeUnit) {
+    public static <K, V> CacheBuilder<K, V> newTimedBuilder(long timeout, TimeUnit timeUnit) {
         return new CacheBuilder<K, V>(new TimedCache<K, V>(timeout, timeUnit));
     }
 
     /**
      * 缓存容量
+     *
      * @param capacity 容量
-     * @return  builder
+     * @return builder
      */
     public CacheBuilder<K, V> capacity(int capacity) {
         abstractCache.setCapacity(capacity);
@@ -40,8 +42,9 @@ public final class CacheBuilder<K, V> {
 
     /**
      * 移除对象时的回调函数
-     * @param removeCallback  回调函数
-     * @return  builder
+     *
+     * @param removeCallback 回调函数
+     * @return builder
      */
     public CacheBuilder<K, V> removeCallback(Consumer<V> removeCallback) {
         abstractCache.setRemoveCallback(removeCallback);
@@ -50,7 +53,8 @@ public final class CacheBuilder<K, V> {
 
     /**
      * 返回具体的cache对象
-     * @return  abstract cache
+     *
+     * @return abstract cache
      */
     public AbstractCache<K, V> build() {
         return this.abstractCache;

@@ -24,7 +24,8 @@ public interface MachineService extends BaseService<Machine> {
 
     /**
      * 保存新增的机器信息
-     * @param form  机器信息
+     *
+     * @param form 机器信息
      */
     void saveMachine(MachineForm form);
 
@@ -32,8 +33,8 @@ public interface MachineService extends BaseService<Machine> {
     /**
      * 执行指定机器的命令
      *
-     * @param machineId  机器id
-     * @param cmd        命令
+     * @param machineId 机器id
+     * @param cmd       命令
      */
     default String exec(Integer machineId, String cmd) {
         try {
@@ -46,8 +47,8 @@ public interface MachineService extends BaseService<Machine> {
     /**
      * 执行指定机器的命令
      *
-     * @param machineId  机器id
-     * @param cmd        命令
+     * @param machineId     机器id
+     * @param cmd           命令
      * @param lineProcessor 行处理器
      */
     default void exec(Integer machineId, String cmd, IOUtils.LineProcessor lineProcessor) {
@@ -61,7 +62,7 @@ public interface MachineService extends BaseService<Machine> {
     /**
      * 获取sftp 并对channel执行操作
      *
-     * @param machineId   机器id
+     * @param machineId 机器id
      */
     default void sftpOperate(Integer machineId, Function<ChannelSftp, Void> function) {
         try {
@@ -73,8 +74,9 @@ public interface MachineService extends BaseService<Machine> {
 
     /**
      * 获取指定机器的session
+     *
      * @param machineId 机器id
-     * @return      session
+     * @return session
      */
     default Session getSession(Integer machineId) {
         return SSHUtils.getSession(Objects.toString(machineId), () -> {

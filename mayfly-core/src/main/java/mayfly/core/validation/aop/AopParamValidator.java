@@ -23,7 +23,8 @@ public class AopParamValidator {
     private static Map<Method, List<Integer>> indexCache = new ConcurrentHashMap<>(64);
 
 
-    private AopParamValidator(){}
+    private AopParamValidator() {
+    }
 
     private static AopParamValidator validator = new AopParamValidator();
 
@@ -37,7 +38,7 @@ public class AopParamValidator {
             List<Integer> index = null;
             Parameter[] params = method.getParameters();
             for (int i = 0; i < params.length; i++) {
-                if(AnnotationUtils.isAnnotationPresent(params[i], Valid.class)) {
+                if (AnnotationUtils.isAnnotationPresent(params[i], Valid.class)) {
                     if (index == null) {
                         index = new ArrayList<>();
                     }

@@ -5,6 +5,7 @@ import java.lang.annotation.*;
 /**
  * 可用于类和方法，用于类则该类的方法都会记录日志 <br/>
  * 如果方法和类都有该注解，result和time属性则使用方法级的注解属性描述，而value信息则为两则相加
+ *
  * @author meilin.huang
  * @version 1.0
  * @date 2018-11-06 10:41 AM
@@ -41,7 +42,7 @@ public @interface MethodLog {
     /**
      * 打印日志的级别
      */
-    enum LogLevel{
+    enum LogLevel {
         /**
          * 不打印日志
          */
@@ -56,6 +57,7 @@ public @interface MethodLog {
         ERROR(4);
 
         private int order;
+
         LogLevel(int order) {
             this.order = order;
         }

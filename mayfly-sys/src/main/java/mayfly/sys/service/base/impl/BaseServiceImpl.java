@@ -68,7 +68,7 @@ public class BaseServiceImpl<M extends BaseMapper<E>, E> implements BaseService<
         PageHelper.startPage(pageForm.getPageNum(), pageForm.getPageSize());
         List<E> result = listByCondition(e);
         if (result instanceof com.github.pagehelper.Page) {
-            com.github.pagehelper.Page<E> pageResult = (com.github.pagehelper.Page<E>)result;
+            com.github.pagehelper.Page<E> pageResult = (com.github.pagehelper.Page<E>) result;
             return Page.with(pageResult.getTotal(), pageResult.getResult());
         }
         return Page.empty();
@@ -88,6 +88,6 @@ public class BaseServiceImpl<M extends BaseMapper<E>, E> implements BaseService<
     private M getMapper() {
         // mapper class对象
         Class<?> mapperClazz = (Class<?>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
-        return (M)SpringUtils.getBean(mapperClazz);
+        return (M) SpringUtils.getBean(mapperClazz);
     }
 }

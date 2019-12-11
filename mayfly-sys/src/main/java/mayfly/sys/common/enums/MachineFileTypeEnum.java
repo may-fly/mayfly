@@ -19,6 +19,7 @@ public enum MachineFileTypeEnum implements ValueEnum<Integer> {
     DIRECTORY(1);
 
     private Integer type;
+
     private MachineFileTypeEnum(Integer type) {
         this.type = type;
     }

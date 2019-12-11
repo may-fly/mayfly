@@ -4,6 +4,7 @@ import java.lang.annotation.*;
 
 /**
  * 数据库对象不映射注解
+ *
  * @author hml
  */
 @Target(ElementType.FIELD)

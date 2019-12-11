@@ -25,6 +25,7 @@ public class RedisCluster {
 
     /**
      * 获取node信息
+     *
      * @param id
      * @return
      */

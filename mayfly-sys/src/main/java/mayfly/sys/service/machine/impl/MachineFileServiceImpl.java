@@ -64,7 +64,7 @@ public class MachineFileServiceImpl extends BaseServiceImpl<MachineFileMapper, M
         MachineFile file = getById(confId);
         checkPath(path, file);
 
-        machineService.exec(file.getMachineId(), "echo '" + content +  "' >" + path);
+        machineService.exec(file.getMachineId(), "echo '" + content + "' >" + path);
     }
 
     @Override
@@ -92,7 +92,7 @@ public class MachineFileServiceImpl extends BaseServiceImpl<MachineFileMapper, M
                 return;
             }
             String[] strs = lineContent.split("\\s+");
-            char[] typeAndPermission =  strs[0].toCharArray();
+            char[] typeAndPermission = strs[0].toCharArray();
             char type = typeAndPermission[0];
             if (type == link) {
                 return;
@@ -145,7 +145,6 @@ public class MachineFileServiceImpl extends BaseServiceImpl<MachineFileMapper, M
     }
 
 
-
     private boolean isFile(MachineFile file) {
         return Objects.equals(file.getType(), MachineFileTypeEnum.FILE.getValue());
     }
@@ -156,6 +155,7 @@ public class MachineFileServiceImpl extends BaseServiceImpl<MachineFileMapper, M
 
     /**
      * 校验前端传过来的path，是否符合配置的路径。即为目录的话，该path必须为配置目录的子目录文件
+     *
      * @param path
      * @param file
      */

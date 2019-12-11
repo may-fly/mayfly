@@ -44,7 +44,7 @@ public class Test {
 
 @DateRange
 @Documented
-@Target({ ANNOTATION_TYPE, FIELD, TYPE })
+@Target({ANNOTATION_TYPE, FIELD, TYPE})
 @Retention(RUNTIME)
 @Test2Ann
 @interface TestAnn {
@@ -57,7 +57,7 @@ public class Test {
 
 @DateRange
 @Documented
-@Target({ ANNOTATION_TYPE, FIELD, TYPE })
+@Target({ANNOTATION_TYPE, FIELD, TYPE})
 @Retention(RUNTIME)
 @TestAnn
 @interface Test2Ann {
@@ -69,7 +69,7 @@ public class Test {
 @DateRange
 @MethodLog
 @Documented
-@Target({ ANNOTATION_TYPE, FIELD, TYPE })
+@Target({ANNOTATION_TYPE, FIELD, TYPE})
 @Retention(RUNTIME)
 @Test2Ann
 @interface Test3Ann {
@@ -79,14 +79,14 @@ public class Test {
     @OverrideFor(annotation = Test2Ann.class, attribute = "test2")
     String test32() default "test32";
 
-//    @OverrideFor(annotation = Test2Ann.class, attribute = "test22")
+    //    @OverrideFor(annotation = Test2Ann.class, attribute = "test22")
     String test33() default "test33";
 }
 
 @DateRange
 @MethodLog
 @Documented
-@Target({ ANNOTATION_TYPE, FIELD, TYPE })
+@Target({ANNOTATION_TYPE, FIELD, TYPE})
 @Retention(RUNTIME)
 @Test3Ann
 @TestAnn
@@ -104,7 +104,7 @@ public class Test {
 @DateRange
 @MethodLog
 @Documented
-@Target({ ANNOTATION_TYPE, FIELD, TYPE })
+@Target({ANNOTATION_TYPE, FIELD, TYPE})
 @Retention(RUNTIME)
 @Test4Ann(test42 = "hahahah42")
 @interface Test5Ann {

@@ -41,8 +41,8 @@ public class SSHUtils {
     /**
      * 获得一个SSH主机会话，重用已经使用的会话（若在指定时间内一直未使用该session，则会关闭该session）
      *
-     * @param sessionInfo  会话信息
-     * @return      session
+     * @param sessionInfo 会话信息
+     * @return session
      */
     public static Session getSession(SessionInfo sessionInfo) throws SSHException {
         return getSession(sessionInfo.getId(), () -> sessionInfo);
@@ -51,10 +51,10 @@ public class SSHUtils {
     /**
      * 获得一个SSH主机会话，重用已经使用的会话（若在指定时间内一直未使用该session，则会关闭该session）
      *
-     * @param id  session cache key
+     * @param id                  session cache key
      * @param sessionInfoSupplier sessionInfo{@link SessionInfo}生产者
      *                            （如果不存在该session缓存，则从sessionInfoSupplier中获取sessionInfo。主要考虑该信息可能从数据库等其他地方获取）
-     * @return     session
+     * @return session
      */
     public static Session getSession(String id, Supplier<SessionInfo> sessionInfoSupplier) {
         return sessionCache.get(id, () -> {
@@ -69,7 +69,7 @@ public class SSHUtils {
     /**
      * 打开一个新的SSH会话
      *
-     * @param info  会话信息
+     * @param info 会话信息
      * @return SSH会话
      */
     public static Session openSession(SessionInfo info) throws SSHException {
@@ -85,7 +85,7 @@ public class SSHUtils {
     /**
      * 新建一个新的SSH会话，此方法并不打开会话（即不调用connect方法）
      *
-     * @param info  会话信息
+     * @param info 会话信息
      * @return SSH会话
      */
     public static Session createSession(SessionInfo info) throws SSHException {
@@ -136,7 +136,7 @@ public class SSHUtils {
     /**
      * 打开Shell通道
      *
-     * @param info         会话信息
+     * @param info 会话信息
      * @return {@link ChannelShell}
      * @since 4.0.3
      */
@@ -147,7 +147,7 @@ public class SSHUtils {
     /**
      * 打开sftp通道，并connect
      *
-     * @param info      会话信息
+     * @param info 会话信息
      * @return {@link ChannelShell}
      */
     public static ChannelSftp openChannelSftp(SessionInfo info) throws SSHException {
@@ -168,26 +168,26 @@ public class SSHUtils {
     /**
      * 执行sftp操作（已处理channel的关闭）
      *
-     * @param info        会话信息
-     * @param function    操作channel
-     * @param <T>         操作返回值
-     * @return            执行结果
-     * @throws SSHException  ssh异常
+     * @param info     会话信息
+     * @param function 操作channel
+     * @param <T>      操作返回值
+     * @return 执行结果
+     * @throws SSHException ssh异常
      */
-    public static<T> T sftpOperate(SessionInfo info, Function<ChannelSftp, T> function) throws SSHException {
+    public static <T> T sftpOperate(SessionInfo info, Function<ChannelSftp, T> function) throws SSHException {
         return sftpOperate(getSession(info), function);
     }
 
     /**
      * 执行sftp操作（已处理channel的关闭）
      *
-     * @param session        会话
-     * @param function    操作channel
-     * @param <T>         操作返回值
-     * @return            执行结果
-     * @throws SSHException  ssh异常
+     * @param session  会话
+     * @param function 操作channel
+     * @param <T>      操作返回值
+     * @return 执行结果
+     * @throws SSHException ssh异常
      */
-    public static<T> T sftpOperate(Session session, Function<ChannelSftp, T> function) throws SSHException {
+    public static <T> T sftpOperate(Session session, Function<ChannelSftp, T> function) throws SSHException {
         ChannelSftp sftp = null;
         try {
             sftp = openChannelSftp(session);
@@ -203,7 +203,7 @@ public class SSHUtils {
     /**
      * 执行Shell命令
      *
-     * @param cmd     命令
+     * @param cmd 命令
      * @return {@link ChannelExec}
      */
     public static String exec(SessionInfo info, String cmd) throws SSHException {
@@ -213,9 +213,9 @@ public class SSHUtils {
     /**
      * 执行Shell命令
      *
-     * @param cmd     命令
+     * @param cmd           命令
      * @param lineProcessor 行处理器
-     * @return        执行结果。如果有lineProcessor {@link mayfly.core.util.IOUtils.LineProcessor}，则返回null(结果自行从lineProcessor解析处理取得)
+     * @return 执行结果。如果有lineProcessor {@link mayfly.core.util.IOUtils.LineProcessor}，则返回null(结果自行从lineProcessor解析处理取得)
      */
     public static String exec(SessionInfo info, String cmd, IOUtils.LineProcessor lineProcessor)
             throws SSHException {
@@ -228,7 +228,7 @@ public class SSHUtils {
      *
      * @param session Session会话
      * @param cmd     命令
-     * @return        执行结果
+     * @return 执行结果
      */
     public static String exec(Session session, String cmd) throws SSHException {
         return exec(session, cmd, null, null);
@@ -239,7 +239,7 @@ public class SSHUtils {
      *
      * @param session Session会话
      * @param cmd     命令
-     * @return        执行结果。如果有lineProcessor {@link mayfly.core.util.IOUtils.LineProcessor}，则返回null(结果自行从lineProcessor解析处理取得)
+     * @return 执行结果。如果有lineProcessor {@link mayfly.core.util.IOUtils.LineProcessor}，则返回null(结果自行从lineProcessor解析处理取得)
      */
     public static String exec(Session session, String cmd, IOUtils.LineProcessor lineProcessor) throws SSHException {
         return exec(session, cmd, null, lineProcessor);
@@ -248,11 +248,11 @@ public class SSHUtils {
     /**
      * 执行Shell命令
      *
-     * @param session   Session会话
-     * @param cmd       命令
-     * @param charset   发送和读取内容的编码
+     * @param session       Session会话
+     * @param cmd           命令
+     * @param charset       发送和读取内容的编码
      * @param lineProcessor 行处理器（解析每行的数据结果）
-     * @return          执行结果。如果有lineProcessor {@link mayfly.core.util.IOUtils.LineProcessor}，则返回null(结果自行从lineProcessor解析处理取得)
+     * @return 执行结果。如果有lineProcessor {@link mayfly.core.util.IOUtils.LineProcessor}，则返回null(结果自行从lineProcessor解析处理取得)
      */
     public static String exec(Session session, String cmd, Charset charset, IOUtils.LineProcessor lineProcessor) throws SSHException {
         if (charset == null) {
@@ -269,11 +269,11 @@ public class SSHUtils {
             channel.connect();
             in = channel.getInputStream();
             // 如果行处理器不为空，则调用行处理器
-            if(lineProcessor != null) {
+            if (lineProcessor != null) {
                 IOUtils.processReadLine(in, lineProcessor);
                 return null;
             } else {
-                String result =  IOUtils.read(in);
+                String result = IOUtils.read(in);
                 // 如果结果为null，则有可能含有错误信息
                 if (StringUtils.isEmpty(result)) {
                     byte[] err = outputStream.toByteArray();

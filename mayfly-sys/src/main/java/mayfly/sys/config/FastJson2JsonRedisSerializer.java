@@ -11,6 +11,7 @@ import java.nio.charset.StandardCharsets;
 
 /**
  * fastjson序列化
+ *
  * @author: hml
  * @date: 2018/6/28 上午10:54
  */

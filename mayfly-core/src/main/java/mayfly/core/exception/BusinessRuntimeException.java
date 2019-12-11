@@ -19,7 +19,7 @@ public class BusinessRuntimeException extends RuntimeException {
     public BusinessRuntimeException(String msg) {
         super(msg);
     }
-    
+
 
     public BusinessRuntimeException(Result result) {
         super(result.getMsg());

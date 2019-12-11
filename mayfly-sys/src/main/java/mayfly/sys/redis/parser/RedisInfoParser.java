@@ -8,6 +8,7 @@ import java.util.Map;
 
 /**
  * redis info信息解析
+ *
  * @author meilin.huang
  * @version 1.0
  * @date 2019-01-11 12:48 PM

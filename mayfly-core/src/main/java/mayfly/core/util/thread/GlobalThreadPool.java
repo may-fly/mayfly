@@ -15,9 +15,9 @@ import java.util.concurrent.TimeUnit;
 public class GlobalThreadPool {
 
     /**
-     * 设置 CPU 最大核心数 * 2
+     * 设置为 CPU 最大核心数
      */
-    private static int coreSize = Runtime.getRuntime().availableProcessors() * 2;
+    private static int coreSize = Runtime.getRuntime().availableProcessors();
 
     /**
      * 线程池
@@ -32,7 +32,8 @@ public class GlobalThreadPool {
 
     /**
      * 执行线程
-     * @param runnable  runnable
+     *
+     * @param runnable runnable
      */
     public static void execute(Runnable runnable) {
         executor.execute(runnable);
@@ -42,7 +43,7 @@ public class GlobalThreadPool {
      * 执行有返回值的异步方法<br>
      * Future代表一个异步执行的操作，通过get()方法可以获得操作的结果，如果异步操作还没有完成，则get()会使当前线程阻塞
      *
-     * @param <T> 执行的Task
+     * @param <T>  执行的Task
      * @param task {@link Callable}
      * @return Future
      */

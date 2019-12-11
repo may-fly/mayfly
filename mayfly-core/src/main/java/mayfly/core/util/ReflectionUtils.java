@@ -20,7 +20,7 @@ public final class ReflectionUtils {
     /**
      * 获取所有field字段，包含父类继承的
      *
-     * @param clazz  字段所属类型
+     * @param clazz 字段所属类型
      * @return
      */
     public static Field[] getFields(Class<?> clazz) {
@@ -30,9 +30,9 @@ public final class ReflectionUtils {
     /**
      * 获取指定类的所有的field,包括父类
      *
-     * @param clazz  字段所属类型
+     * @param clazz       字段所属类型
      * @param fieldFilter 字段过滤器
-     * @return  符合过滤器条件的字段数组
+     * @return 符合过滤器条件的字段数组
      */
     public static Field[] getFields(Class<?> clazz, Predicate<Field> fieldFilter) {
         List<Field> fields = new ArrayList<>(32);
@@ -52,8 +52,9 @@ public final class ReflectionUtils {
 
     /**
      * 对指定类的所有字段执行consumer操作
-     * @param clazz     目标对象
-     * @param consumer  对字段进行操作
+     *
+     * @param clazz    目标对象
+     * @param consumer 对字段进行操作
      */
     public static void doWithFields(Class<?> clazz, Consumer<Field> consumer) {
         Arrays.stream(getFields(clazz)).forEach(consumer);
@@ -62,7 +63,7 @@ public final class ReflectionUtils {
     /**
      * 获取指定类的指定field,包括父类
      *
-     * @param clazz  字段所属类型
+     * @param clazz 字段所属类型
      * @param name  字段名
      * @return
      */
@@ -73,7 +74,7 @@ public final class ReflectionUtils {
     /**
      * 获取指定类的指定field,包括父类
      *
-     * @param clazz  字段所属类型
+     * @param clazz 字段所属类型
      * @param name  字段名
      * @param type  field类型
      * @return
@@ -94,8 +95,9 @@ public final class ReflectionUtils {
 
     /**
      * 获取字段值
+     *
      * @param field  字段
-     * @param target  字段所属实例对象
+     * @param target 字段所属实例对象
      * @return
      */
     public static Object getFieldValue(Field field, Object target) {
@@ -109,8 +111,9 @@ public final class ReflectionUtils {
 
     /**
      * 获取对象中指定field值
-     * @param obj  对象
-     * @param fieldName  字段名
+     *
+     * @param obj       对象
+     * @param fieldName 字段名
      * @return
      */
     public static Object getFieldValue(Object obj, String fieldName) {
@@ -123,12 +126,12 @@ public final class ReflectionUtils {
 
     /**
      * 获取指定对象中指定字段路径的值(类似js访问对象属性) <br/>
-     *  如：Product p = new Product(new User())  <br/>
-     *  可使用ReflectionUtils.getValueByFieldPath(p, "user.name")获取到用户的name属性
+     * 如：Product p = new Product(new User())  <br/>
+     * 可使用ReflectionUtils.getValueByFieldPath(p, "user.name")获取到用户的name属性
      *
-     * @param obj   取值对象
-     * @param fieldPath  字段路径(形如 user.name)
-     * @return  字段value
+     * @param obj       取值对象
+     * @param fieldPath 字段路径(形如 user.name)
+     * @return 字段value
      */
     public static Object getValueByFieldPath(Object obj, String fieldPath) {
         String[] fieldNames = fieldPath.split("\\.");
@@ -145,8 +148,9 @@ public final class ReflectionUtils {
 
     /**
      * 设置字段值
+     *
      * @param field  字段
-     * @param target  字段所属对象实例
+     * @param target 字段所属对象实例
      * @param value  需要设置的值
      */
     public static void setFieldValue(Field field, Object target, Object value) {
@@ -160,6 +164,7 @@ public final class ReflectionUtils {
 
     /**
      * 设置字段为可见
+     *
      * @param field
      */
     public static void makeAccessible(Field field) {
@@ -172,9 +177,10 @@ public final class ReflectionUtils {
 
     /**
      * 调用无参数方法
-     * @param method  方法对象
-     * @param target  调用对象
-     * @return        执行结果
+     *
+     * @param method 方法对象
+     * @param target 调用对象
+     * @return 执行结果
      */
     public static Object invokeMethod(Method method, Object target) {
         return invokeMethod(method, target, new Object[0]);
@@ -182,10 +188,11 @@ public final class ReflectionUtils {
 
     /**
      * 调用指定对象的方法
-     * @param method  方法对象
-     * @param target  调用对象
-     * @param args    方法参数
-     * @return        执行结果
+     *
+     * @param method 方法对象
+     * @param target 调用对象
+     * @param args   方法参数
+     * @return 执行结果
      */
     public static Object invokeMethod(Method method, Object target, Object... args) {
         try {
@@ -198,6 +205,7 @@ public final class ReflectionUtils {
 
     /**
      * 设置方法可见性
+     *
      * @param method
      */
     public static void makeAccessible(Method method) {
@@ -209,6 +217,7 @@ public final class ReflectionUtils {
 
     /**
      * 是否为equals方法
+     *
      * @see java.lang.Object#equals(Object)
      */
     public static boolean isEqualsMethod(Method method) {
@@ -221,14 +230,16 @@ public final class ReflectionUtils {
 
     /**
      * 是否为hashCode方法
+     *
      * @see java.lang.Object#hashCode()
      */
-    public static boolean isHashCodeMethod( Method method) {
+    public static boolean isHashCodeMethod(Method method) {
         return (method != null && method.getName().equals("hashCode") && method.getParameterCount() == 0);
     }
 
     /**
      * 是否为Object的toString方法
+     *
      * @see java.lang.Object#toString()
      */
     public static boolean isToStringMethod(Method method) {

@@ -14,6 +14,7 @@ import java.lang.reflect.Method;
 
 /**
  * 参数校验切面
+ *
  * @author hml
  * @version 1.0
  * @date 2018-10-28 1:17 PM
@@ -23,13 +24,15 @@ import java.lang.reflect.Method;
 public class ParamValid {
 
     @Pointcut(value = "execution(* mayfly.sys.web..*Controller.*(..))")
-    private void controller() {}
+    private void controller() {
+    }
 
     /**
      *
      */
     @Pointcut("@args(mayfly.core.validation.annotation.Valid)")
-    private void validArgs() {}
+    private void validArgs() {
+    }
 
     @Around("controller()")
     public Object validateAround(ProceedingJoinPoint joinPoint) throws Throwable {

@@ -9,7 +9,8 @@ public class PermissionInfo {
 
     private String permissionCode;
 
-    public PermissionInfo(){}
+    public PermissionInfo() {
+    }
 
     public PermissionInfo(String permissionCode) {
         this.permissionCode = permissionCode;

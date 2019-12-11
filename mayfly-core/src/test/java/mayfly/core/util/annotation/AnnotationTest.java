@@ -25,7 +25,7 @@ public class AnnotationTest {
         }
     }
 
-    @Target({ FIELD, PARAMETER, ElementType.TYPE})
+    @Target({FIELD, PARAMETER, ElementType.TYPE})
     @Retention(RUNTIME)
     @Documented
     public @interface ATest {
@@ -33,7 +33,7 @@ public class AnnotationTest {
     }
 
     @Test
-    public void testDynamic() throws Exception{
+    public void testDynamic() throws Exception {
         System.out.println(AnnotationUtils.getAnnotation(AnnotationTest.class, ATest.class).value());
     }
 

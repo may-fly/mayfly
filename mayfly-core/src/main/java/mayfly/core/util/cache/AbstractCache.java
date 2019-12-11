@@ -100,6 +100,7 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
 
     /**
      * 移除key时调用
+     *
      * @param value value
      */
     private void onRemove(V value) {
@@ -110,7 +111,8 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
 
     /**
      * 判断该缓存是否已满
-     * @return  缓存个数是否超过capacity
+     *
+     * @return 缓存个数是否超过capacity
      */
     private boolean isFull() {
         return capacity > 0 && cacheMap.size() >= capacity;
@@ -119,7 +121,8 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
 
     /**
      * 如果有移除回调函数，则说明覆盖或者删除对象时需要对缓存对象进行一些处理（如关闭连接等）
-     * @param key  要put的key
+     *
+     * @param key 要put的key
      */
     private void putCheck(K key, V object) {
         Assert.notNull(object, "object must not be null");
@@ -134,8 +137,9 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
 
     /**
      * 没有校验是否需要执行移除回调函数的put
-     * @param key       key
-     * @param object    object
+     *
+     * @param key    key
+     * @param object object
      */
     protected void putWithoutCheck(K key, V object) {
         if (isFull()) {
@@ -146,10 +150,11 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
 
     /**
      * 没有校验是否需要执行移除回调函数的put
-     * @param key       key
-     * @param object    object
-     * @param timeout   过期时间
-     * @param timeUnit  时间单位
+     *
+     * @param key      key
+     * @param object   object
+     * @param timeout  过期时间
+     * @param timeUnit 时间单位
      */
     void putWithoutCheck(K key, V object, long timeout, TimeUnit timeUnit) {
         if (isFull()) {

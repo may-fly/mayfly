@@ -14,11 +14,12 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 /**
  * 如果校验字段类型为{@link String}和{@link Collection}类型则比较其长度和size<br/>
  * 如果为{@link Integer}则比较范围
+ *
  * @author hml
  * @version 1.0
  * @date 2018-10-28 3:49 PM
  */
-@Target({ FIELD, PARAMETER })
+@Target({FIELD, PARAMETER})
 @Retention(RUNTIME)
 @Documented
 @ValidateBy(Size.SizeValidator.class)
@@ -41,7 +42,7 @@ public @interface Size {
             int max = size.max();
 
             if (fieldValue instanceof String) {
-                String v = (String)fieldValue;
+                String v = (String) fieldValue;
                 int len = v.length();
                 if (len >= min && len <= max) {
                     return true;
@@ -59,7 +60,7 @@ public @interface Size {
             }
 
             if (fieldValue instanceof Collection) {
-                Collection v = (Collection)fieldValue;
+                Collection v = (Collection) fieldValue;
                 int len = v.size();
                 if (len >= min && len <= max) {
                     return true;

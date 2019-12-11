@@ -26,8 +26,9 @@ public class TimedCache<K, V> extends AbstractCache<K, V> {
 
     /**
      * 由于默认都需要超时时间，所以覆盖抽象类的该方法，强制使用带有过期时间的参数
-     * @param key       key
-     * @param object    object
+     *
+     * @param key    key
+     * @param object object
      */
     @Override
     protected void putWithoutCheck(K key, V object) {

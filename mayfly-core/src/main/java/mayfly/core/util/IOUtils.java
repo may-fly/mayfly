@@ -32,9 +32,10 @@ public class IOUtils {
 
     /**
      * 使用NIO拷贝流
+     *
      * @param in  输入流
      * @param out 输出流
-     * @return  传输的byte数
+     * @return 传输的byte数
      * @throws IOException io异常
      */
     public static long copy(InputStream in, OutputStream out) throws IOException {
@@ -44,14 +45,14 @@ public class IOUtils {
     /**
      * 拷贝文件流，使用NIO
      *
-     * @param in 输入
+     * @param in  输入
      * @param out 输出
      * @return 拷贝的字节数
      * @throws IOException IO异常
      */
     public static long copy(FileInputStream in, FileOutputStream out) throws IOException {
-        Assert.notNull(in, "FileInputStream is null!");
-        Assert.notNull(out, "FileOutputStream is null!");
+        Assert.notNull(in, "FileInputStream must not be null!");
+        Assert.notNull(out, "FileOutputStream must not be null!");
 
         FileChannel inChannel = null;
         FileChannel outChannel = null;
@@ -68,8 +69,8 @@ public class IOUtils {
     /**
      * 拷贝流，使用NIO，不会关闭流
      *
-     * @param in {@link ReadableByteChannel}
-     * @param out {@link WritableByteChannel}
+     * @param in         {@link ReadableByteChannel}
+     * @param out        {@link WritableByteChannel}
      * @param bufferSize 缓冲大小，如果小于等于0，使用默认
      * @return 拷贝的字节数
      */
@@ -87,6 +88,32 @@ public class IOUtils {
             byteBuffer.clear();
         }
         return size;
+    }
+
+    /**
+     * 读取指定长度的byte数组，不关闭流
+     *
+     * @param in     {@link InputStream} 为null返回null
+     * @param length 长度，小于等于0返回空byte数组
+     * @return bytes
+     */
+    public static byte[] readBytes(InputStream in, int length) throws IOException {
+        if (in == null) {
+            return null;
+        }
+        if (length <= 0) {
+            return new byte[0];
+        }
+
+        byte[] b = new byte[length];
+        int readLength = in.read(b);
+        if (readLength > 0 && readLength < length) {
+            byte[] b2 = new byte[readLength];
+            System.arraycopy(b, 0, b2, 0, readLength);
+            return b2;
+        }
+
+        return b;
     }
 
 
@@ -128,7 +155,7 @@ public class IOUtils {
     /**
      * 获得一个Reader
      *
-     * @param in 输入流
+     * @param in      输入流
      * @param charset 字符集
      * @return BufferedReader对象
      */
@@ -205,18 +232,18 @@ public class IOUtils {
     }
 
 
-
     /**
      * 行处理器，用于处理字符串流中每行的数据内容
      */
     @FunctionalInterface
-    public interface LineProcessor{
+    public interface LineProcessor {
 
         /**
          * 处理行
+         *
          * @param lineContent 每行的内容
          * @param lineNum     行号，从1开始
-         * @throws Exception  处理过程出现的异常
+         * @throws Exception 处理过程出现的异常
          */
         void process(int lineNum, String lineContent) throws Exception;
     }

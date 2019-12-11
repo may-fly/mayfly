@@ -10,10 +10,11 @@ import java.util.List;
  * @version 1.0
  * @date 2018-12-06 2:19 PM
  */
-public interface BaseService< E> {
+public interface BaseService<E> {
 
     /**
      * 保存实体
+     *
      * @param e
      * @return
      */
@@ -21,6 +22,7 @@ public interface BaseService< E> {
 
     /**
      * 根据id更新实体
+     *
      * @param e
      * @return
      */
@@ -28,6 +30,7 @@ public interface BaseService< E> {
 
     /**
      * 删除指定id的实体
+     *
      * @param id
      * @return
      */
@@ -35,6 +38,7 @@ public interface BaseService< E> {
 
     /**
      * 根据条件删除
+     *
      * @param e
      * @return
      */
@@ -42,6 +46,7 @@ public interface BaseService< E> {
 
     /**
      * 根据条件统计实体数
+     *
      * @param e
      * @return
      */
@@ -50,7 +55,8 @@ public interface BaseService< E> {
 
     /**
      * 获取所有数据
-     * @param orderBy  排序条件
+     *
+     * @param orderBy 排序条件
      * @return
      */
     List<E> listAll(String orderBy);
@@ -59,6 +65,7 @@ public interface BaseService< E> {
 
     /**
      * 根据实体条件查询实体列表
+     *
      * @param e
      * @return
      */
@@ -70,6 +77,7 @@ public interface BaseService< E> {
 
     /**
      * 根据条件获取单个对象
+     *
      * @param e
      * @return
      */

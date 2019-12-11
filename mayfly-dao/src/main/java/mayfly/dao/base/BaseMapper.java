@@ -20,12 +20,14 @@ import java.util.stream.Stream;
 
 /**
  * meilin.huang
+ *
  * @param <Entity>
  */
 public interface BaseMapper<Entity> {
 
     /**
      * 插入新对象,并返回主键id值
+     *
      * @param entity 实体对象
      * @return
      */
@@ -39,6 +41,7 @@ public interface BaseMapper<Entity> {
 
     /**
      * 根据主键id更新实体，若实体field为null，则对应数据库的字段也更新为null
+     *
      * @param entity
      * @return
      */
@@ -47,6 +50,7 @@ public interface BaseMapper<Entity> {
 
     /**
      * 根据主键id更新实体，若实体field为null，则对应数据库的字段不更新
+     *
      * @param entity
      * @return
      */
@@ -101,7 +105,7 @@ public interface BaseMapper<Entity> {
         public String sql(Object entities, ProviderContext context) {
             TableInfo table = tableInfo(context);
 
-            int size = ((List)((Map)entities).get("list")).size();
+            int size = ((List) ((Map) entities).get("list")).size();
             String value = "(" + String.join(",", Stream.of(table.getFields()).map(this::bindParameter).toArray(String[]::new)) + ")";
             String[] values = new String[size];
             Arrays.fill(values, value);
@@ -109,7 +113,7 @@ public interface BaseMapper<Entity> {
             SQL sql = new SQL()
                     .INSERT_INTO(table.getTableName())
                     .INTO_COLUMNS(table.getColumns());
-            StringBuilder sqlBuilder =  new StringBuilder(sql.toString());
+            StringBuilder sqlBuilder = new StringBuilder(sql.toString());
             sqlBuilder.append(" VALUES ");
             sqlBuilder.append(String.join(",", values));
             return sqlBuilder.toString();
@@ -251,6 +255,7 @@ public interface BaseMapper<Entity> {
 
         /**
          * 获取表信息结构
+         *
          * @param context
          * @return
          */
@@ -277,6 +282,7 @@ public interface BaseMapper<Entity> {
 
         /**
          * 获取BaseMapper接口中的泛型类型
+         *
          * @param context
          * @return
          */
@@ -298,8 +304,9 @@ public interface BaseMapper<Entity> {
 
         /**
          * 过滤含有@NoColumn注解的field
-         * @param totalField  entityClass所有的字段
-         * @return   不包含@NoColumn注解的fields
+         *
+         * @param totalField entityClass所有的字段
+         * @return 不包含@NoColumn注解的fields
          */
         protected Field[] excludeNoColumnField(Field[] totalField) {
             return Stream.of(totalField)
@@ -307,6 +314,7 @@ public interface BaseMapper<Entity> {
                     .filter(field -> !AnnotationUtils.isAnnotationPresent(field, NoColumn.class))
                     .toArray(Field[]::new);
         }
+
         /**
          * 获取查询对应的字段 (不包含pojo中含有@NoColumn主键的属性)
          *
@@ -329,8 +337,9 @@ public interface BaseMapper<Entity> {
 
         /**
          * 如果fields中含有@Primary的字段，则返回该字段名为主键，否则默认'id'为主键名
+         *
          * @param fields entityClass所有fields
-         * @return  主键column(驼峰转为下划线)
+         * @return 主键column(驼峰转为下划线)
          */
         protected String primaryKeyColumn(Field[] fields) {
             return Stream.of(fields).filter(field -> field.isAnnotationPresent(Primary.class))
@@ -353,7 +362,7 @@ public interface BaseMapper<Entity> {
         /**
          * 获取单个属性对应的数据库字段
          *
-         * @param field  entityClass中的field
+         * @param field entityClass中的field
          * @return
          */
         protected String columnName(Field field) {

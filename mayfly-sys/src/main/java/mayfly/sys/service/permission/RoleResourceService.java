@@ -15,8 +15,9 @@ public interface RoleResourceService extends BaseService<RoleResource> {
 
     /**
      * 获取角色拥有的资源id列表
+     *
      * @param roleId 角色id
-     * @return       资源id列表
+     * @return 资源id列表
      */
     List<Integer> listResourceId(Integer roleId);
 

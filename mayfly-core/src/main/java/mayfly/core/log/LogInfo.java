@@ -10,6 +10,7 @@ import java.util.Map;
 
 /**
  * 日志基本信息
+ *
  * @author meilin.huang
  * @version 1.0
  * @date 2018-11-12 9:18 AM
@@ -60,7 +61,8 @@ public class LogInfo {
 
     /**
      * 填充日志占位符
-     * @param result  要记录的具体日志信息
+     *
+     * @param result 要记录的具体日志信息
      * @return 如果打印日志的级别小于系统日志级别，则返回null,即无需记录该日志
      */
     public String fillLogMsg(MethodLog.LogLevel sysLogLevel, LogResult result) {
@@ -95,6 +97,7 @@ public class LogInfo {
 
     /**
      * 获取异常日志信息
+     *
      * @param result
      * @return
      */
@@ -103,14 +106,14 @@ public class LogInfo {
             throw new RuntimeException("LogResult中异常对象字段不能为空");
         }
 
-        StringBuilder logMsg =  new StringBuilder("\n -----------------------------------------------------------");
+        StringBuilder logMsg = new StringBuilder("\n -----------------------------------------------------------");
         logMsg.append(this.descAndInvoke).append(EXCEPTION_MSG_TEMP);
         Map<String, Object> value = new HashMap<>(4);
         value.put("e", result.getE().getMessage());
 
         Object[] args = result.getArgs();
         for (int i = 0; i < args.length; i++) {
-            if (CollectionUtils.contains(noNeedLogParamIndex, i))  {
+            if (CollectionUtils.contains(noNeedLogParamIndex, i)) {
                 continue;
             }
             value.put("param" + i, JsonUtils.toJSONString(args[i]));
@@ -133,7 +136,7 @@ public class LogInfo {
         return new Builder(descAndInvoke);
     }
 
-    public static class Builder{
+    public static class Builder {
         private LogInfo logInfo;
 
         public Builder(String descAndInvoke) {

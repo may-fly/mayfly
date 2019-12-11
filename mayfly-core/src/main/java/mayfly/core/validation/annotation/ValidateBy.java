@@ -12,12 +12,13 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
  * 作用于校验规则注解类上，指明用何种校验器（实现了Validator接口）校验参数值
+ *
  * @author meilin.huang
  * @version 1.0
  * @date 2019-05-30 13:36
  */
 @Documented
-@Target({ ANNOTATION_TYPE })
+@Target({ANNOTATION_TYPE})
 @Retention(RUNTIME)
 public @interface ValidateBy {
 

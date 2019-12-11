@@ -68,12 +68,12 @@ public class RoleController {
     }
 
     @GetMapping("/v1/roles/{id}/resources")
-    public  Result roleResources(@PathVariable Integer id) {
+    public Result roleResources(@PathVariable Integer id) {
         return Result.success(roleResourceService.listResourceId(id));
     }
 
     @PostMapping("/v1/roles/{id}/resources")
-    public  Result saveResources(@PathVariable Integer id, @RequestBody RoleForm roleForm) throws BusinessException {
+    public Result saveResources(@PathVariable Integer id, @RequestBody RoleForm roleForm) throws BusinessException {
         List<Integer> ids;
         try {
             ids = Stream.of(roleForm.getResourceIds().split(",")).map(Integer::valueOf).collect(Collectors.toList());

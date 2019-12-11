@@ -35,12 +35,13 @@ public class LogAspect {
      * 拦截带有@MethodLog的方法或带有该注解的类
      */
     @Pointcut("@annotation(mayfly.core.log.MethodLog) || @within(mayfly.core.log.MethodLog)")
-    private void logPointcut() {}
+    private void logPointcut() {
+    }
 
-    @AfterThrowing(pointcut = "logPointcut()", throwing="e")
-    public void doException(JoinPoint jp, Exception e){
+    @AfterThrowing(pointcut = "logPointcut()", throwing = "e")
+    public void doException(JoinPoint jp, Exception e) {
         Object[] args = jp.getArgs();
-        Method method = ((MethodSignature)jp.getSignature()).getMethod();
+        Method method = ((MethodSignature) jp.getSignature()).getMethod();
         LogInfo logInfo = handler.getLogInfo(method);
         LOG.error(logInfo.getExceptionLogMsg(LogResult.exception(args, e)));
     }
@@ -48,7 +49,7 @@ public class LogAspect {
     @Around(value = "logPointcut()")
     private Object afterReturning(ProceedingJoinPoint pjp) throws Throwable {
         Object[] args = pjp.getArgs();
-        Method method = ((MethodSignature)pjp.getSignature()).getMethod();
+        Method method = ((MethodSignature) pjp.getSignature()).getMethod();
         LogInfo logInfo = handler.getLogInfo(method);
 
         long startTime = System.currentTimeMillis();
@@ -84,6 +85,7 @@ public class LogAspect {
 
     /**
      * 获取系统的日志级别
+     *
      * @return
      */
     private MethodLog.LogLevel getSysLogLevel() {

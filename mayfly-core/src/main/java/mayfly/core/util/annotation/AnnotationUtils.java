@@ -35,8 +35,9 @@ public final class AnnotationUtils {
 
     /**
      * 获取指定元素的直接注解类型
-     * @param annotatedElement   可以包含注解的元素，如Class, Field, Method等
-     * @param annotationType  注解类型
+     *
+     * @param annotatedElement 可以包含注解的元素，如Class, Field, Method等
+     * @param annotationType   注解类型
      * @param <A>
      * @return
      */
@@ -46,8 +47,9 @@ public final class AnnotationUtils {
 
     /**
      * 获取指定元素的注解类型（若没有直接注解，则从元素其他注解的元注解上查找）
-     * @param annotatedElement   可以包含注解的元素，如Field, Method等
-     * @param annotationType  注解类型
+     *
+     * @param annotatedElement 可以包含注解的元素，如Field, Method等
+     * @param annotationType   注解类型
      * @param <A>
      * @return
      */
@@ -57,9 +59,10 @@ public final class AnnotationUtils {
 
     /**
      * 获取指定元素的注解类型（若没有直接注解，则从元素其他注解的元注解上查找）
-     * @param annotatedElement   可以包含注解的元素，如Field, Method等
-     * @param annotationType  注解类型
-     * @param cacheExtractor  是否缓存属性值提取器
+     *
+     * @param annotatedElement 可以包含注解的元素，如Field, Method等
+     * @param annotationType   注解类型
+     * @param cacheExtractor   是否缓存属性值提取器
      * @param <A>
      * @return
      */
@@ -106,8 +109,9 @@ public final class AnnotationUtils {
 
     /**
      * 判断指定元素是否含有某个注解（若没有直接注解，则从元素其他注解的元注解上查找）
-     * @param annotatedElement   可以包含注解的元素，如Field, Method等
-     * @param annotationType  注解类型
+     *
+     * @param annotatedElement 可以包含注解的元素，如Field, Method等
+     * @param annotationType   注解类型
      * @param <A>
      * @return
      */
@@ -117,9 +121,10 @@ public final class AnnotationUtils {
 
     /**
      * 获取注解的属性值
-     * @param annotation  注解对象
-     * @param attributeName  属性名（即方法名）
-     * @return               属性值
+     *
+     * @param annotation    注解对象
+     * @param attributeName 属性名（即方法名）
+     * @return 属性值
      */
     public static Object getAttributeValue(Annotation annotation, String attributeName) {
         if (annotation == null || StringUtils.isEmpty(attributeName)) {
@@ -135,8 +140,9 @@ public final class AnnotationUtils {
 
     /**
      * 获取注解的属性以及属性值；key->属性  value->属性值
-     * @param annotation  注解类
-     * @return  Map
+     *
+     * @param annotation 注解类
+     * @return Map
      */
     public static Map<String, Object> getAttributeMap(Annotation annotation) {
         Map<String, Object> attributeMap = new HashMap<>(8);
@@ -148,9 +154,10 @@ public final class AnnotationUtils {
 
     /**
      * 根据元注解类型递归查找指定注解的元注解
-     * @param annotation  注解
-     * @param targetType   元注解类型
-     * @param visited 访问链
+     *
+     * @param annotation 注解
+     * @param targetType 元注解类型
+     * @param visited    访问链
      * @param <A>
      * @return
      */
@@ -184,8 +191,9 @@ public final class AnnotationUtils {
 
     /**
      * 将注解使用动态代理包装，以实现组合注解功能
-     * @param annotatedElement  注解作用的元素
-     * @param valueExtractor 属性值提取器
+     *
+     * @param annotatedElement 注解作用的元素
+     * @param valueExtractor   属性值提取器
      * @param <A>
      * @return
      */
@@ -194,12 +202,13 @@ public final class AnnotationUtils {
                                                                  AttributeValueExtractor valueExtractor) {
         // 组合注解代理
         return (A) Proxy.newProxyInstance(annotation.getClass().getClassLoader()
-                , new Class<?>[] {annotation.annotationType()}
+                , new Class<?>[]{annotation.annotationType()}
                 , new SynthesizedAnnotationInvocationHandler(valueExtractor));
     }
 
     /**
      * 获取指定注解上的所有属性方法含有的别名属性描述
+     *
      * @param a
      * @return
      */
@@ -219,7 +228,8 @@ public final class AnnotationUtils {
 
     /**
      * 获取注解中的所有属性方法
-     * @param annotationType  注解类型
+     *
+     * @param annotationType 注解类型
      * @return 属性方法列表
      */
     private static List<Method> getAttributeMethods(Class<? extends Annotation> annotationType) {
@@ -234,14 +244,13 @@ public final class AnnotationUtils {
 
     /**
      * 判断方法是否为注解的属性方法
-     * @param method  方法
+     *
+     * @param method 方法
      * @return
      */
     private static boolean isAttributeMethod(Method method) {
         return (method != null && method.getParameterCount() == 0 && method.getReturnType() != void.class);
     }
-
-
 
 
     /**
@@ -250,22 +259,24 @@ public final class AnnotationUtils {
     interface AttributeValueExtractor {
         /**
          * 根据属性名获取对应的属性值
-         * @param attribute  属性名（注解方法名）
-         * @return  属性值
+         *
+         * @param attribute 属性名（注解方法名）
+         * @return 属性值
          */
         Object getAttributeValue(String attribute);
 
         /**
          * 获取注解
-         * @return  目标注解
+         *
+         * @return 目标注解
          */
-       Annotation getAnnotation();
+        Annotation getAnnotation();
     }
 
     /**
      * 默认属性值提取器（将属性值和属性名存于map，并从中获取对应的属性值）
      */
-    private static class DefaultAttributeExtractor implements AttributeValueExtractor{
+    private static class DefaultAttributeExtractor implements AttributeValueExtractor {
         /**
          * 目标注解
          */
@@ -276,7 +287,8 @@ public final class AnnotationUtils {
          */
         private Map<String, Object> attributes;
 
-        private DefaultAttributeExtractor() {}
+        private DefaultAttributeExtractor() {
+        }
 
         private DefaultAttributeExtractor(Annotation annotation, Map<String, Object> attributes) {
             this.annotation = annotation;
@@ -285,7 +297,8 @@ public final class AnnotationUtils {
 
         /**
          * 生成默认的属性值提取器
-         * @param target 目标注解
+         *
+         * @param target  目标注解
          * @param visited 目标注解的访问路径
          * @return 默认属性值提取器
          */
@@ -413,8 +426,9 @@ public final class AnnotationUtils {
 
         /**
          * 获取属性方法上的被覆盖的属性名
-         * @param overrideFor  别名注解
-         * @param sourceAttribute  注解属性方法
+         *
+         * @param overrideFor     别名注解
+         * @param sourceAttribute 注解属性方法
          * @return 如果 {@link OverrideFor} 注解的attribute和value属性值都为空，则反回sourceAttribute的方法名
          */
         private String getOverrideAttributeName(OverrideFor overrideFor, Method sourceAttribute) {
@@ -505,8 +519,7 @@ public final class AnnotationUtils {
                 int hashCode;
                 if (value.getClass().isArray()) {
                     hashCode = hashCodeForArray(value);
-                }
-                else {
+                } else {
                     hashCode = value.hashCode();
                 }
                 result += (127 * attributeMethod.getName().hashCode()) ^ hashCode;
@@ -546,7 +559,7 @@ public final class AnnotationUtils {
         }
 
         /**
-         *  代理组合注解toString方法
+         * 代理组合注解toString方法
          */
         private String annotationToString() {
             StringBuilder sb = new StringBuilder("@").append(annotationType().getName()).append("(");

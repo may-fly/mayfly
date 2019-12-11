@@ -11,7 +11,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- *  资源类
+ * 资源类
+ *
  * @author hml
  * @date 2018/6/27 下午2:01
  */
@@ -37,7 +38,7 @@ public class Resource implements Serializable {
 
     private String code;
 
-    private Integer status ;
+    private Integer status;
 
     private LocalDateTime createTime;
 

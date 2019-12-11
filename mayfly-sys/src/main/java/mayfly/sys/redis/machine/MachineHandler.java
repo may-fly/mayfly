@@ -29,7 +29,7 @@ public class MachineHandler {
         }
     }
 
-    static class User{
+    static class User {
 
         @NotBlank
         private String name;

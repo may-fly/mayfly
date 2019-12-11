@@ -51,7 +51,8 @@ public class RedisConnectionRegistry {
         return instance;
     }
 
-    private RedisConnectionRegistry(){}
+    private RedisConnectionRegistry() {
+    }
 
     public synchronized void registerStandalone(RedisInfo redisInfo) {
         Assert.notNull(redisInfo, "单机节点uri不能为空！");
@@ -80,6 +81,7 @@ public class RedisConnectionRegistry {
 
     /**
      * 移除单机
+     *
      * @param redisInfo
      */
     public void remove(RedisInfo redisInfo) {
@@ -92,6 +94,7 @@ public class RedisConnectionRegistry {
 
     /**
      * 移除集群
+     *
      * @param clusterId
      */
     public void remove(int clusterId) {
@@ -116,7 +119,8 @@ public class RedisConnectionRegistry {
 
     /**
      * 获取单台机器的连接
-     * @param redisId  redis id
+     *
+     * @param redisId redis id
      * @return
      */
     public StatefulRedisConnection<String, byte[]> getConnection(int redisId) {
@@ -132,18 +136,20 @@ public class RedisConnectionRegistry {
 
     /**
      * 获取集群连接
+     *
      * @param clusterId 集群id
      * @return
      */
     public StatefulRedisClusterConnection<String, byte[]> getClusterConnection(int clusterId) {
         return Optional.ofNullable(connectionCache.get(getClusterKey(clusterId)))
-                .map(x -> (StatefulRedisClusterConnection<String, byte[]>)x.getRequireConnection())
+                .map(x -> (StatefulRedisClusterConnection<String, byte[]>) x.getRequireConnection())
                 .orElseThrow(() -> new BusinessRuntimeException("不存在该集群连接实例！"));
     }
 
 
     /**
      * 获取redis信息
+     *
      * @param redisId
      * @return
      */
@@ -158,6 +164,7 @@ public class RedisConnectionRegistry {
 
     /**
      * 获取指定机器的命令操作对象
+     *
      * @param redisId
      * @return
      */
@@ -167,6 +174,7 @@ public class RedisConnectionRegistry {
 
     /**
      * 获取集群命令操作对象
+     *
      * @param clusterId
      * @return
      */
@@ -176,7 +184,8 @@ public class RedisConnectionRegistry {
 
     /**
      * 获取集群缓存key
-     * @param clusterId  集群id
+     *
+     * @param clusterId 集群id
      * @return
      */
     public static String getClusterKey(int clusterId) {
@@ -185,6 +194,7 @@ public class RedisConnectionRegistry {
 
     /**
      * 获取单机缓存key
+     *
      * @param redisId
      * @return
      */
@@ -233,6 +243,7 @@ public class RedisConnectionRegistry {
 
         /**
          * 连接单机redis
+         *
          * @param redisInfo
          * @return
          */
@@ -242,6 +253,7 @@ public class RedisConnectionRegistry {
 
         /**
          * 连接集群redis
+         *
          * @param redisCluster
          * @return
          */
@@ -292,6 +304,7 @@ public class RedisConnectionRegistry {
 
         /**
          * 获取客户端，不存在重连
+         *
          * @return
          */
         public AbstractRedisClient getRequireRedisClient() {
@@ -301,6 +314,7 @@ public class RedisConnectionRegistry {
 
         /**
          * 获取redis连接，不存在则重连
+         *
          * @return
          */
         public StatefulConnection<String, byte[]> getRequireConnection() {

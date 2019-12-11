@@ -8,6 +8,7 @@ import java.time.temporal.TemporalAccessor;
 
 /**
  * 日期工具类
+ *
  * @author hml
  * @version 1.0
  * @date 2018-11-07 10:56 AM
@@ -22,8 +23,9 @@ public final class DateUtils {
 
     /**
      * 格式化日期时间
+     *
      * @param temporal  可以是LocalDateTime, LocalDate以及LocalTime等常用日期时间类
-     * @param formatter  格式器
+     * @param formatter 格式器
      * @return
      */
     public static String formatDate(TemporalAccessor temporal, DateTimeFormatter formatter) {
@@ -35,7 +37,8 @@ public final class DateUtils {
      * localDate格式为 yyyy-MM-dd  <br/>
      * localTime格式为 HH:mm:ss <br/>
      * localDateTime格式为 yyyy-MM-dd HH:mm:ss <br/>
-     * @param temporalAccessor  可以是LocalDateTime, LocalDate以及LocalTime等常用日期时间类
+     *
+     * @param temporalAccessor 可以是LocalDateTime, LocalDate以及LocalTime等常用日期时间类
      * @return
      */
     public static String defaultFormat(TemporalAccessor temporalAccessor) {
@@ -53,8 +56,9 @@ public final class DateUtils {
 
     /**
      * 格式化日期时间
-     * @param temporal  可以是LocalDateTime, LocalDate以及LocalTime等常用日期时间类
-     * @param pattern   yyyy:年 MM:月 dd:日 HH:小时 mm:分钟 ss:秒
+     *
+     * @param temporal 可以是LocalDateTime, LocalDate以及LocalTime等常用日期时间类
+     * @param pattern  yyyy:年 MM:月 dd:日 HH:小时 mm:分钟 ss:秒
      * @return
      */
     public static String formatDate(TemporalAccessor temporal, String pattern) {
@@ -63,6 +67,7 @@ public final class DateUtils {
 
     /**
      * 默认解析字符串日期时间
+     *
      * @param dateTime
      * @return
      */

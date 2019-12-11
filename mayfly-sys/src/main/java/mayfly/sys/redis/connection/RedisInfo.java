@@ -10,7 +10,7 @@ import mayfly.core.util.StringUtils;
  * @date 2019-01-16 4:16 PM
  */
 @Data
-public class RedisInfo implements Comparable<RedisInfo>{
+public class RedisInfo implements Comparable<RedisInfo> {
 
     /**
      * 默认为单机
@@ -35,6 +35,7 @@ public class RedisInfo implements Comparable<RedisInfo>{
 
     /**
      * 是否为单机模式
+     *
      * @return
      */
     public static boolean isStandlone(Integer clusterId) {
@@ -45,7 +46,7 @@ public class RedisInfo implements Comparable<RedisInfo>{
         return new Builder(id);
     }
 
-    public static class Builder{
+    public static class Builder {
         private RedisInfo redisInfo;
 
         public Builder(int id) {

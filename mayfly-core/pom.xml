@@ -4,19 +4,22 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>net.yiyue</groupId>
+    <parent>
+        <artifactId>mayfly</artifactId>
+        <groupId>net.yiyue</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <!--    <groupId>net.yiyue</groupId>-->
     <artifactId>mayfly-core</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <java.version>1.8</java.version>
-
         <alibaba.fastjson.version>1.2.58</alibaba.fastjson.version>
         <junit.version>4.12</junit.version>
         <jsch.version>0.1.55</jsch.version>
+        <okhttp.version>3.11.0</okhttp.version>
     </properties>
 
     <dependencies>
@@ -36,6 +39,14 @@
         </dependency>
 
 
+        <!--okhttp-->
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+            <version>${okhttp.version}</version>
+            <scope>provided</scope>
+            <optional>true</optional>
+        </dependency>
         <!--  ssh  -->
         <dependency>
             <groupId>com.jcraft</groupId>
@@ -44,7 +55,6 @@
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
-
         <!-- websocket -->
         <dependency>
             <groupId>javax.websocket</groupId>
@@ -53,20 +63,5 @@
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
-
     </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
-                    <encoding>${project.build.sourceEncoding}</encoding>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
 </project>

@@ -2,6 +2,7 @@ package mayfly.core.util;
 
 /**
  * String工具类
+ *
  * @author hml
  * @date 2018/6/14 下午3:01
  */
@@ -13,6 +14,7 @@ public class StringUtils {
 
     /**
      * 驼峰模式字符串转换为下划线字符串
+     *
      * @param camelStr
      * @return
      */
@@ -24,8 +26,9 @@ public class StringUtils {
      * 转换驼峰字符串为指定分隔符的字符串 <br/>
      * 如：camelStr:"UserInfo"    separator:'_' <br/>
      * return "user_info"
+     *
      * @param camelStr  驼峰字符串
-     * @param separator  分隔符
+     * @param separator 分隔符
      * @return
      */
     public static String convertCamel(String camelStr, char separator) {

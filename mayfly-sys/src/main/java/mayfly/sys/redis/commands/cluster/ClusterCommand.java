@@ -115,6 +115,7 @@ public class ClusterCommand {
 
     /**
      * 根据host和port获取该分区指定节点信息
+     *
      * @param host
      * @return
      */
@@ -123,9 +124,9 @@ public class ClusterCommand {
     }
 
 
-
     /**
      * 创建redis集群
+     *
      * @param clusterMasterUrls
      * @throws InterruptedException
      */
@@ -190,6 +191,7 @@ public class ClusterCommand {
     /**
      * 执行cluster meet命令使各个孤立的节点相互感知，初步形成集群。
      * 只需以一个节点为基准，让所有节点与之meet即可
+     *
      * @param clusterNodes
      */
     private static void doClusterMeet(List<ClusterNode> clusterNodes) {
@@ -247,6 +249,7 @@ public class ClusterCommand {
 
     /**
      * 删除节点
+     *
      * @param rmNodeId
      */
     public static void delNode(int clusterId, String rmNodeId) {
@@ -296,7 +299,7 @@ public class ClusterCommand {
     /**
      * 用于创建并连接要新建的集群节点
      */
-    private static class ClusterNode{
+    private static class ClusterNode {
         private ClusterNodeUrl nodeUri;
         private String myId;
         private StatefulRedisConnection<String, String> connection;
@@ -312,11 +315,12 @@ public class ClusterCommand {
 
         /**
          * 连接node
+         *
          * @param uri
          * @return
          */
         public static ClusterNode connect(ClusterNodeUrl uri) {
-            ClusterNode master =  new ClusterNode(uri);
+            ClusterNode master = new ClusterNode(uri);
             master.connect();
             return master;
         }
@@ -348,6 +352,7 @@ public class ClusterCommand {
 
         /**
          * 添加slave节点
+         *
          * @param slave
          */
         public ClusterNode addSlave(ClusterNode slave) {

@@ -92,6 +92,7 @@ public class KeyValueCommand {
 
     /**
      * key剩余有效期  单位：秒
+     *
      * @param commands
      * @param key
      * @return
@@ -102,6 +103,7 @@ public class KeyValueCommand {
 
     /**
      * 设置key的过期时间
+     *
      * @param commands
      * @param key
      * @param time
@@ -183,6 +185,7 @@ public class KeyValueCommand {
 
     /**
      * 检查并且设置过期时间
+     *
      * @param commands
      * @param keyInfo
      */
@@ -192,7 +195,6 @@ public class KeyValueCommand {
             expire(commands, keyInfo.getKey(), expire);
         }
     }
-
 
 
     @SuppressWarnings("unchecked")

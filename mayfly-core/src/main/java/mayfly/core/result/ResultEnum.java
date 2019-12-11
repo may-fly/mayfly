@@ -4,6 +4,7 @@ import mayfly.core.util.enums.NameValueEnum;
 
 /**
  * 结果枚举类
+ *
  * @author meilin.huang
  * @version 1.0
  * @date 2019-06-26 15:24

@@ -15,8 +15,7 @@ public enum RedisValueTypeEnum implements NameValueEnum<Integer> {
      */
     STRING(1, "string"),
 
-    SET(2, "set")
-    ;
+    SET(2, "set");
 
     private Integer value;
 

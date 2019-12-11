@@ -14,6 +14,7 @@ public interface RedisService extends BaseService<Redis> {
 
     /**
      * 获取单台机器的redis命令操作对象，可以是单机版也可以是集群版
+     *
      * @param redisId
      * @return
      */
@@ -21,6 +22,7 @@ public interface RedisService extends BaseService<Redis> {
 
     /**
      * 获取集群连接
+     *
      * @param clusterId
      * @return
      */

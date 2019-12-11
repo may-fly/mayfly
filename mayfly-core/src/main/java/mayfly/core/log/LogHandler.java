@@ -37,6 +37,7 @@ public class LogHandler {
 
     /**
      * 获取含有@MethodLog注解方法对应的日志信息
+     *
      * @param method
      * @return 日志信息，含有需要记录的基本信息
      */
@@ -47,6 +48,7 @@ public class LogHandler {
 
     /**
      * 解析方法上对应的注解，生成对应的LogInfo对象
+     *
      * @param method
      * @return
      */

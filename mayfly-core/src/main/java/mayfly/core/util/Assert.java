@@ -10,30 +10,43 @@ import java.util.function.Supplier;
  */
 public class Assert {
 
-    private Assert() {}
+    private Assert() {
+    }
 
     public static void notEmpty(String string, String message) {
-        state(!StringUtils.isEmpty(string), message);
+        if (StringUtils.isEmpty(string)) {
+            throw new IllegalArgumentException(message);
+        }
     }
 
     public static void notEmpty(String string, Supplier<String> messageSupplier) {
-        state(!StringUtils.isEmpty(string), messageSupplier);
+        notEmpty(string, messageSupplier.get());
     }
 
     public static <T> void notNull(T object, String message) {
-        state(object != null, message);
+        if (object == null) {
+            throw new IllegalArgumentException(message);
+        }
     }
 
     public static <T> void notNull(T object, Supplier<String> messageSupplier) {
-        state(object != null, messageSupplier);
+        notNull(object, messageSupplier.get());
     }
 
     public static <T> void notEmpty(T[] array, String message) {
-        state(array != null && array.length > 0, message);
+        if (array == null || array.length == 0) {
+            throw new IllegalArgumentException(message);
+        }
+    }
+
+    public static <T> void notEmpty(T[] array, Supplier<String> messageSupplier) {
+        notEmpty(array, messageSupplier.get());
     }
 
     public static void notEmpty(Collection<?> collection, String message) {
-        state(!CollectionUtils.isEmpty(collection), message);
+        if (CollectionUtils.isEmpty(collection)) {
+            throw new IllegalArgumentException(message);
+        }
     }
 
     public static void assertState(boolean condition, String message) {
@@ -50,8 +63,9 @@ public class Assert {
 
     /**
      * 断言一个boolean表达式，用于需要大量拼接字符串以及一些其他操作等
-     * @param expression  boolean表达式
-     * @param supplier    msg生产者
+     *
+     * @param expression boolean表达式
+     * @param supplier   msg生产者
      */
     public static void state(boolean expression, Supplier<String> supplier) {
         if (!expression) {

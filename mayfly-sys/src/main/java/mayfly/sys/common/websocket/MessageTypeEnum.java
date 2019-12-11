@@ -23,8 +23,7 @@ public enum MessageTypeEnum implements ValueEnum<Integer> {
     /**
      * 错误消息
      */
-    ERROR(3);
-    ;
+    ERROR(3);;
 
     private Integer value;
 
@@ -34,8 +33,9 @@ public enum MessageTypeEnum implements ValueEnum<Integer> {
 
     /**
      * 获取WebSocketMessage对象的字符串信息
-     * @param data  数据
-     * @return      websocket message
+     *
+     * @param data 数据
+     * @return websocket message
      */
     public String toMsg(Object data) {
         return WebSocketMessage.msg(this, ResultEnum.SUCCESS, data);

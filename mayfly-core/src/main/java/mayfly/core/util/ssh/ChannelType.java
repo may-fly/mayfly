@@ -6,26 +6,46 @@ import mayfly.core.util.enums.ValueEnum;
  * Jsch支持的Channel类型
  */
 public enum ChannelType implements ValueEnum<String> {
-    /** Session */
+    /**
+     * Session
+     */
     SESSION("session"),
-    /** shell */
+    /**
+     * shell
+     */
     SHELL("shell"),
-    /** exec */
+    /**
+     * exec
+     */
     EXEC("exec"),
-    /** x11 */
+    /**
+     * x11
+     */
     X11("x11"),
-    /** agent forwarding */
+    /**
+     * agent forwarding
+     */
     AGENT_FORWARDING("auth-agent@openssh.com"),
-    /** direct tcpip */
+    /**
+     * direct tcpip
+     */
     DIRECT_TCPIP("direct-tcpip"),
-    /** forwarded tcpip */
+    /**
+     * forwarded tcpip
+     */
     FORWARDED_TCPIP("forwarded-tcpip"),
-    /** sftp */
+    /**
+     * sftp
+     */
     SFTP("sftp"),
-    /** subsystem */
+    /**
+     * subsystem
+     */
     SUBSYSTEM("subsystem");
 
-    /** channel值 */
+    /**
+     * channel值
+     */
     private String value;
 
     /**

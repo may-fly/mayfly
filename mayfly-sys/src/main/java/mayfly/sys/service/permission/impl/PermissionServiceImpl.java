@@ -28,6 +28,7 @@ import java.util.stream.Collectors;
 
 /**
  * 权限服务实现类
+ *
  * @author hml
  * @date 2018/6/26 上午9:49
  */
@@ -69,9 +70,8 @@ public class PermissionServiceImpl implements PermissionService, UserPermissionC
 
     @Override
     public Integer getIdByToken(String token) {
-        return (Integer)redisTemplate.opsForValue().get(BracePlaceholder.resolveByObject(UserCacheKey.USER_ID_KEY, token));
+        return (Integer) redisTemplate.opsForValue().get(BracePlaceholder.resolveByObject(UserCacheKey.USER_ID_KEY, token));
     }
-
 
 
     //------------------------------------------------------------

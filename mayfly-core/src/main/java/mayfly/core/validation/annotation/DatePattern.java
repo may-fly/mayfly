@@ -14,7 +14,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  * @date 2019-06-02 15:09
  */
 @Documented
-@Target({ ANNOTATION_TYPE, FIELD })
+@Target({ANNOTATION_TYPE, FIELD})
 @Retention(RUNTIME)
 public @interface DatePattern {
 

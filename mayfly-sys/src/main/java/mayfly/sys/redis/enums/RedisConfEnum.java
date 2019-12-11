@@ -48,8 +48,7 @@ public enum RedisConfEnum {
      * 设置当本机为slave服务时，设置master服务的IP地址及端口，在redis启动时，它会自动从master进行数据同步
      * slaveof <masterip><masterport>
      */
-    SLAVEOF("slaveof")
-    ;
+    SLAVEOF("slaveof");
 
     public String parameter;
 

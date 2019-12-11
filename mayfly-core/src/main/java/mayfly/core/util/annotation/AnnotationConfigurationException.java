@@ -2,6 +2,7 @@ package mayfly.core.util.annotation;
 
 /**
  * 注解配置错误异常
+ *
  * @author meilin.huang
  * @version 1.0
  * @date 2019-05-09 17:03

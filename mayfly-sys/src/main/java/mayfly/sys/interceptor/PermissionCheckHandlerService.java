@@ -19,11 +19,11 @@ public class PermissionCheckHandlerService {
     private RedisTemplate redisTemplate;
 
     public Integer getIdByToken(String token) {
-        return (Integer)redisTemplate.opsForValue().get(BracePlaceholder.resolveByObject(UserCacheKey.USER_ID_KEY, token));
+        return (Integer) redisTemplate.opsForValue().get(BracePlaceholder.resolveByObject(UserCacheKey.USER_ID_KEY, token));
     }
 
     public PermissionCheckHandler<Integer> getCheckHandler() {
-        return PermissionCheckHandler.of((id, code)-> redisTemplate.opsForSet()
-                        .isMember(BracePlaceholder.resolveByObject(UserCacheKey.USER_PERMISSION_KEY, id), code));
+        return PermissionCheckHandler.of((id, code) -> redisTemplate.opsForSet()
+                .isMember(BracePlaceholder.resolveByObject(UserCacheKey.USER_PERMISSION_KEY, id), code));
     }
 }

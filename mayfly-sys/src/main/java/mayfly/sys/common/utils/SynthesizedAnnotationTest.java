@@ -15,19 +15,19 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  */
 public class SynthesizedAnnotationTest {
 
-    @Target({ ANNOTATION_TYPE, FIELD, TYPE })
+    @Target({ANNOTATION_TYPE, FIELD, TYPE})
     @Retention(RUNTIME)
     @interface Test1 {
         String test1() default "test1";
     }
 
-    @Target({ ANNOTATION_TYPE, FIELD, TYPE })
+    @Target({ANNOTATION_TYPE, FIELD, TYPE})
     @Retention(RUNTIME)
     @interface Test2 {
         String test2() default "test2";
     }
 
-    @Target({ ANNOTATION_TYPE, FIELD, TYPE })
+    @Target({ANNOTATION_TYPE, FIELD, TYPE})
     @Retention(RUNTIME)
     @Test2
     @interface Test3 {
@@ -46,14 +46,15 @@ public class SynthesizedAnnotationTest {
      * 当然也可以将组合注解作用于更高层次，如Test3组合Test2,Test2组合Test1，然后将Test3作用于元素，通过工具类获取Test1注解覆盖的属性值
      */
     @Test3(test3 = "覆盖Test2属性中的test2方法")
-    static class Element {}
+    static class Element {
+    }
 
-//    public static void main(String[] args) {
+    public static void main(String[] args) {
 //        Test2 test2 = AnnotatedElementUtils.getMergedAnnotation(Element.class, Test2.class);
 //        // 虽然调用了Test2注解的test2方法，但是实际显示的是Test3注解中的test3属性声明的值
 //        // 则说明Test2的test2属性被覆盖了
 //        System.out.println(test2.test2());// out '覆盖Test2属性中的test2方法'
 //
 //        System.out.println(SynthesizedAnnotationTest.class.getClassLoader().getResource("").getPath());
-//    }
+    }
 }

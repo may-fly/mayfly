@@ -12,11 +12,12 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
  * 对象非null校验
+ *
  * @author hml
  * @version 1.0
  * @date 2018-10-27 5:10 PM
  */
-@Target({ FIELD, PARAMETER })
+@Target({FIELD, PARAMETER})
 @Retention(RUNTIME)
 @Documented
 @ValidateBy({NotNull.NotNullValidator.class})

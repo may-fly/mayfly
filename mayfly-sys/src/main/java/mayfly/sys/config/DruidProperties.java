@@ -5,7 +5,6 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 /**
- *
  * @author meilin.huang
  * @date 2018/6/21 下午3:34
  */

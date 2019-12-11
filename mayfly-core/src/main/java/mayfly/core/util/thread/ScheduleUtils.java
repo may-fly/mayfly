@@ -19,10 +19,10 @@ public class ScheduleUtils {
     private static int corePoolSize = 2;
 
     /**
-     *  定时任务线程池
+     * 定时任务线程池
      */
     private static ScheduledExecutorService schedule = Executors.newScheduledThreadPool(corePoolSize
-    , ThreadFactoryBuilder.newBuilder("mayfly-schedule").daemon(true).build());
+            , ThreadFactoryBuilder.newBuilder("mayfly-schedule").daemon(true).build());
 
     /**
      * 存定时任务结果
@@ -43,6 +43,7 @@ public class ScheduleUtils {
 
     /**
      * 倒计时执行
+     *
      * @param id
      * @param runnable
      * @param time
@@ -54,6 +55,7 @@ public class ScheduleUtils {
 
     /**
      * 周期性定时执行
+     *
      * @param id
      * @param runnable
      * @param time
@@ -70,7 +72,8 @@ public class ScheduleUtils {
 
     /**
      * 取消并移除该定时任务
-     * @param id    任务id
+     *
+     * @param id 任务id
      */
     public static void cancel(String id) {
         Optional.ofNullable(scheduledFutureMap.get(id)).ifPresent(x -> {

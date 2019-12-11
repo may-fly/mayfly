@@ -34,7 +34,7 @@ public class RedisController {
     public Result scan(@PathVariable Boolean cluster, @PathVariable Integer id, @Valid ScanForm scanForm) {
         RedisKeyCommands<String, byte[]> cmds = getKeyCmd(cluster, id);
         KeyScanVO scan = cluster ? KeyValueCommand.clusterScan(cmds, scanForm.getCount(), scanForm.getMatch())
-                : KeyValueCommand.scan(cmds, scanForm.getCursor(), scanForm.getCount(),  scanForm.getMatch());
+                : KeyValueCommand.scan(cmds, scanForm.getCursor(), scanForm.getCount(), scanForm.getMatch());
         return Result.success(scan);
     }
 

@@ -15,6 +15,7 @@ import java.io.PrintWriter;
 
 /**
  * 权限拦截器
+ *
  * @author hml
  * @date 2018/6/14 下午3:23
  */
@@ -50,7 +51,7 @@ public class PermissionInterceptor implements HandlerInterceptor {
         try {
             //如果校验通过，返回true
             boolean isHandleMethod = handler instanceof HandlerMethod;
-            if (!isHandleMethod || checkHandler.hasPermission(userId, ((HandlerMethod)handler).getMethod())) {
+            if (!isHandleMethod || checkHandler.hasPermission(userId, ((HandlerMethod) handler).getMethod())) {
                 return true;
             }
             // 无权限
@@ -76,10 +77,11 @@ public class PermissionInterceptor implements HandlerInterceptor {
 
     /**
      * 发送无权限消息
+     *
      * @param response
      * @throws Exception
      */
-    public static void sendErrorMessage(HttpServletResponse response, Result result){
+    public static void sendErrorMessage(HttpServletResponse response, Result result) {
         response.setContentType("application/json; charset=utf-8");
         response.setHeader("Access-Control-Allow-Origin", "*");
         response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE, PUT");

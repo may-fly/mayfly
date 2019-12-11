@@ -30,7 +30,7 @@ public class ResourceListVO implements TreeUtils.TreeNode<Integer> {
 
     private String code;
 
-    private Integer status ;
+    private Integer status;
 
     private Integer weight;
 

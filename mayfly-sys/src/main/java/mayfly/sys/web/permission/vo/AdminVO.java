@@ -18,7 +18,7 @@ public class AdminVO {
 
     private Integer status;
 
-    private LocalDateTime  createTime;
+    private LocalDateTime createTime;
 
     private LocalDateTime updateTime;
 }

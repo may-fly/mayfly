@@ -11,7 +11,7 @@ import java.util.concurrent.locks.LockSupport;
  */
 public class CodeByteTest {
 
-    static class Test2{
+    static class Test2 {
         public static String str = "hello world";
 
         static {
@@ -19,14 +19,16 @@ public class CodeByteTest {
         }
     }
 
-    static class Test3 extends Test2{
+    static class Test3 extends Test2 {
         public static final String str = "hello test3";
+
         static {
             System.out.println("Test3 init");
         }
     }
 
     public static Method method;
+
     static {
         try {
             method = Test4.class.getDeclaredMethod("sys");
@@ -82,7 +84,6 @@ public class CodeByteTest {
 
         /**
          * 纯粹为了演示在方法中申明多余的变量与直接将值传递给方法的区别
-         *
          */
         public int invokeAdd() {
             int x = 1;
@@ -118,8 +119,8 @@ public class CodeByteTest {
         }
     }
 
-    static class MetaSpace{
-        public static void print()  {
+    static class MetaSpace {
+        public static void print() {
             int i = 1000000;
             String str = "hello world";
             System.out.println(str);

@@ -13,11 +13,12 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
  * 日期范围校验注解，可作用于 {@link java.util.Date} 以及 {@link java.time.LocalDate}
+ *
  * @author meilin.huang
  * @version 1.0
  * @date 2019-05-31 22:47
  */
-@Target({ FIELD, PARAMETER, ElementType.TYPE})
+@Target({FIELD, PARAMETER, ElementType.TYPE})
 @Retention(RUNTIME)
 @Documented
 @DatePattern
@@ -28,6 +29,6 @@ public @interface DateRange {
     @OverrideFor(attribute = "pattern", annotation = DatePattern.class)
     String pattern() default "";
 
-//    @OverrideFor(attribute = "value")
+    //    @OverrideFor(attribute = "value")
     String before() default "";
 }
