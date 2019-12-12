@@ -19,18 +19,23 @@
         </template>
       </el-table-column>
       <el-table-column label="序号" type="index"></el-table-column>
-      <el-table-column prop="username" label="用户名">
+      <el-table-column prop="username" label="用户名" width="115vh">
+      </el-table-column>
+      <el-table-column prop="status" label="角色">
+        <template slot-scope="scope">
+          <el-tag v-for="role in scope.row.roles" :type="role.status === 1 ? 'success' : 'danger'">{{role.name}}</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column prop="status" label="状态" width="60">
+        <template slot-scope="scope">
+          {{scope.row.status == 1 ? '启用' : '禁用'}}
+        </template>
       </el-table-column>
       <el-table-column prop="createTime" label="创建时间">
       </el-table-column>
       <el-table-column prop="updateTime" label="修改时间">
       </el-table-column>
       <el-table-column prop="remark" label="备注">
-      </el-table-column>
-      <el-table-column prop="status" label="状态">
-        <template slot-scope="scope">
-          {{scope.row.status == 1 ? '启用' : '禁用'}}
-        </template>
       </el-table-column>
       <el-table-column label="操作" width="80px">
         <template slot-scope="scope">
@@ -123,6 +128,7 @@
       cancel() {
         this.roleDialog.visible = false;
         this.roleDialog.account = false;
+        this.search();
       },
       accountDialogCancel() {
         this.accountDialog.visible = false;

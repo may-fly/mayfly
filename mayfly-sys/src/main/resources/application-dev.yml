@@ -8,20 +8,20 @@ spring:
     password:
     # 连接超时时间（毫秒）
     timeout: 1000
-#    lettuce:
-#      pool:
-         # 连接池最大连接数（使用负值表示没有限制）
-#         max-active: 9
-#         # 连接池最大阻塞等待时间（使用负值表示没有限制）
-#         max-wait: -1
-#         # 连接池中的最大空闲连接
-#         max-idle: 9
-#         # 连接池中的最小空闲连接
-#         min-idle: 1
+      #    lettuce:
+      #      pool:
+    # 连接池最大连接数（使用负值表示没有限制）
+  #         max-active: 9
+  #         # 连接池最大阻塞等待时间（使用负值表示没有限制）
+  #         max-wait: -1
+  #         # 连接池中的最大空闲连接
+  #         max-idle: 9
+  #         # 连接池中的最小空闲连接
+  #         min-idle: 1
   # 数据源
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/sys?useUnicode=true&autoReconnect=true&useSSL=false
+    url: jdbc:mysql://127.0.0.1:3306/mayfly?useUnicode=true&autoReconnect=true&useSSL=false
     username: root
     password: 111049
     # 下面为连接池的补充设置，应用到上面所有数据源中
@@ -41,7 +41,7 @@ spring:
       max-request-size: 200MB
 #日志
 logging:
-#  level:
-#    root: INFO
-#    mayfly: DEBUG
+  #  level:
+  #    root: INFO
+  #    mayfly: DEBUG
   config: classpath:logback-spring.xml

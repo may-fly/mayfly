@@ -15,7 +15,7 @@
           <el-input v-model.trim="form.username" placeholder="请输入用户名" auto-complete="off" clearable></el-input>
         </el-form-item>
         <el-form-item prop="password" label="密码:" required>
-          <el-input type="password" v-model.trim="form.password" placeholder="请输入密码" autocomplete="off" clearable></el-input>
+          <el-input type="password" v-model.trim="form.password" placeholder="请输入密码" autocomplete="new-password" clearable></el-input>
         </el-form-item>
       </el-form>
 

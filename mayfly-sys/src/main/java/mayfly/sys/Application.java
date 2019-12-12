@@ -9,7 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @date 2018/6/7 下午5:21
  */
 @SpringBootApplication
-@MapperScan("mayfly.dao")
+@MapperScan(basePackages = "mayfly.sys.module.**.mapper")
 public class Application {
     public static void main(String[] args) {
         SpringApplication.run(Application.class);

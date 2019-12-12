@@ -22,12 +22,6 @@
             <version>1.0-SNAPSHOT</version>
         </dependency>
 
-        <dependency>
-            <groupId>net.yiyue</groupId>
-            <artifactId>mayfly-dao</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-
         <!--springboot相关插件-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -56,6 +50,18 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis</artifactId>
+        </dependency>
+
+        <!-- 添加MySQL jdbc -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+        </dependency>
+
 
         <dependency>
             <groupId>com.alibaba</groupId>

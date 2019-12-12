@@ -14,8 +14,7 @@
         </div>
       </ToolBar> -->
       <el-table :data="allRole" border ref="roleTable" @select="select" style="width: 100%">
-        <el-table-column type="selection" width="35">
-        </el-table-column>
+        <el-table-column type="selection" width="40"></el-table-column>
         <el-table-column prop="name" label="角色名称">
         </el-table-column>
         <el-table-column prop="remark" label="角色描述">

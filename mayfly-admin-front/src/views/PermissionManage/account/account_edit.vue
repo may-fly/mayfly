@@ -6,10 +6,10 @@
           <el-input :disabled="edit" v-model.trim="form.username" placeholder="请输入用户名" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item prop="password" label="密码:" required>
-          <el-input type="password" v-model.trim="form.password" placeholder="请输入密码" autocomplete="off"></el-input>
+          <el-input type="password" v-model.trim="form.password" placeholder="请输入密码" autocomplete="new-password"></el-input>
         </el-form-item>
         <el-form-item v-if="!edit" label="确认密码:" required>
-          <el-input type="password" v-model.trim="form.repassword" placeholder="请输入确认密码" autocomplete="off"></el-input>
+          <el-input type="password" v-model.trim="form.repassword" placeholder="请输入确认密码" autocomplete="new-password"></el-input>
         </el-form-item>
       </el-form>
 
@@ -100,9 +100,11 @@
       },
       cancel() {
         this.$emit('cancel');
-        this.$refs["accountForm"].resetFields();
-        //  重置对象属性为null
-        this.$Utils.resetProperties(this.form);
+        setTimeout(() => {
+          this.$refs["accountForm"].resetFields();
+          //  重置对象属性为null
+          this.$Utils.resetProperties(this.form);
+        }, 200);
       }
     },
     mounted() {

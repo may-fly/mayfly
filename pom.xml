@@ -17,7 +17,6 @@
 
     <modules>
         <module>mayfly-core</module>
-        <module>mayfly-dao</module>
         <module>mayfly-sys</module>
     </modules>
 

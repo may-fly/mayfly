@@ -50,8 +50,7 @@ public class PermissionInterceptor implements HandlerInterceptor {
         // 判断该用户是否有执行该方法的权限
         try {
             //如果校验通过，返回true
-            boolean isHandleMethod = handler instanceof HandlerMethod;
-            if (!isHandleMethod || checkHandler.hasPermission(userId, ((HandlerMethod) handler).getMethod())) {
+            if (!(handler instanceof HandlerMethod) || checkHandler.hasPermission(userId, ((HandlerMethod) handler).getMethod())) {
                 return true;
             }
             // 无权限

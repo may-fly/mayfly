@@ -13,7 +13,7 @@ spring:
       enabled: true
 #日志
 logging:
-#  level:
-#    root: INFO
-#    mayfly: DEBUG
+  #  level:
+  #    root: INFO
+  #    mayfly: DEBUG
   config: classpath:logback-spring.xml

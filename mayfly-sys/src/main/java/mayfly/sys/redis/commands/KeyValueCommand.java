@@ -9,7 +9,7 @@ import mayfly.core.util.enums.EnumUtils;
 import mayfly.core.util.JsonUtils;
 import mayfly.core.util.StringUtils;
 import mayfly.sys.redis.enums.RedisValueTypeEnum;
-import mayfly.sys.web.redis.vo.KeyScanVO;
+import mayfly.sys.module.redis.controller.vo.KeyScanVO;
 
 import java.util.HashSet;
 import java.util.Map;

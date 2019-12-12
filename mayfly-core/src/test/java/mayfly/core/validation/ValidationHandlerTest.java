@@ -16,6 +16,7 @@ public class ValidationHandlerTest {
         S1("01"), S2("02");
 
         private String value;
+
         StringEnum(String value) {
             this.value = value;
         }
@@ -42,7 +43,7 @@ public class ValidationHandlerTest {
         }
     }
 
-    static class User{
+    static class User {
         @NotBlank
         private String username;
 
@@ -53,7 +54,7 @@ public class ValidationHandlerTest {
         private Integer iEnum;
     }
 
-    static class Product{
+    static class Product {
         @NotBlank
         private String name;
 
@@ -70,9 +71,14 @@ public class ValidationHandlerTest {
 
     @Test
     public void validate() {
-        Product p = new Product(); p.name = "111";
-        User u = new User(); u.username = "111"; u.iEnum = 2; u.sEnum = "021";
-        User u2 = new User(); u2.username = "1";
+        Product p = new Product();
+        p.name = "111";
+        User u = new User();
+        u.username = "111";
+        u.iEnum = 2;
+        u.sEnum = "021";
+        User u2 = new User();
+        u2.username = "1";
         p.us = new User[]{u, u2};
         p.ids = Arrays.asList(1, 2);
         p.is = new int[]{3, 4};

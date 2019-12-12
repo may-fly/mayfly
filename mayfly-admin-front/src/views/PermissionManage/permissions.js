@@ -46,12 +46,12 @@ const code = {
   },
 
   account: {
-    list: Permission.code("admin:list").uri("/sys/v1/admins").method(method.GET),
-    save: Permission.code("admin:save").uri("/sys/v1/admins").method(method.POST),
-    del: Permission.code("admin:delete").uri("/sys/v1/admins/{id}").method(method.DELETE),
-    changeStatus: Permission.code("admin:changeStatus").uri("/sys/v1/admins/{id}/{status}").method(method.PUT),
-    roles: Permission.code("admin:roles").uri("/sys/v1/admins/{id}/roles").method(method.GET),
-    saveRoles: Permission.code("admin:roles").uri("/sys/v1/admins/{id}/roles").method(method.POST)
+    list: Permission.code("account:list").uri("/sys/accounts").method(method.GET),
+    save: Permission.code("account:save").uri("/sys/accounts").method(method.POST),
+    del: Permission.code("account:delete").uri("/sys/accounts/{id}").method(method.DELETE),
+    changeStatus: Permission.code("account:changeStatus").uri("/sys/accounts/{id}/{status}").method(method.PUT),
+    roles: Permission.code("account:roles").uri("/sys/accounts/{id}/roles").method(method.GET),
+    saveRoles: Permission.code("account:roles").uri("/sys/accounts/{id}/roles").method(method.POST)
   }
 }
 

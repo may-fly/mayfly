@@ -94,9 +94,10 @@
       editCancel() {
         this.editDialog.visible = false
         this.editDialog.data = null
+        this.search()
       },
       deleteMachine(id) {
-        this.permission.list.request({id}).then(res => {
+        this.permission.del.request({id}).then(res => {
           this.$message.success("操作成功");
           this.search();
         })
@@ -109,7 +110,6 @@
       cancel() {
         this.dialog.visible = false
         this.dialog.machineId = null
-        this.search()
       },
       search() {
         this.permission.list.request(this.params).then(res => {

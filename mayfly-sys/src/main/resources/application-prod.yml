@@ -1,0 +1,42 @@
+#debug=true
+spring:
+  # redis
+  redis:
+    database: 0
+    host: 114.67.67.10
+    port: 6379
+    password: 111049
+    # 连接超时时间（毫秒）
+    timeout: 1000
+      #    lettuce:
+      #      pool:
+    # 连接池最大连接数（使用负值表示没有限制）
+  #         max-active: 9
+  #         # 连接池最大阻塞等待时间（使用负值表示没有限制）
+  #         max-wait: -1
+  #         # 连接池中的最大空闲连接
+  #         max-idle: 9
+  #         # 连接池中的最小空闲连接
+  #         min-idle: 1
+  # 数据源
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://114.67.67.10:3306/mayfly?useUnicode=true&autoReconnect=true&useSSL=false
+    username: root
+    password: 111049
+    # 下面为连接池的补充设置，应用到上面所有数据源中
+    # 初始化大小，最小，最大
+    initialSize: 5
+    minIdle: 5
+    maxActive: 20
+    # 配置获取连接等待超时的时间
+    maxWait: 60000
+    # 通过connectProperties属性来打开mergeSql功能；慢SQL记录
+    connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+
+#日志
+logging:
+  #  level:
+  #    root: INFO
+  #    mayfly: DEBUG
+  config: classpath:logback-spring.xml

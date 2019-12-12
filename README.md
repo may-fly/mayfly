@@ -10,17 +10,14 @@ mayfly前后端分离的后台系统(包含按钮级别的权限管理，以及�
 - DB： mysql，  redis
 
 ## 模块介绍
-> mayfly-admin-front
+> mayfly-account-front
 前端系统
 
 > mayfly-core
 后端核心模块，包括一些常用的uitls以及权限管理，参数校验器，日志处理等。
 
-> mayfly-dao
-后端DAO模块，主要包含通用BaseMapper的封装，系统需要的PO以及Mapper等
-
 > mayfly-sys
-后端系统主要模块，包含BaseService以及各功能对应的Service和Controller等
+后端系统主要模块，包含BaseMapper，BaseService以及各功能对应的Service和Controller等
 
 ## 项目特点 
 
@@ -86,7 +83,7 @@ Controller方法参数校验用法：
 
 
 - ### 自定义权限校验注解(控制后端接口以及前端列表按钮权限)
-系统使用自定义权限注解@mayfly.core.permission.Permission来控制用户的操作权限（即后端接口调用的权限，可实时禁用以及删除权限），和通过权限code控制前端页面的列表权限以及按钮权限（显示与否，以及是否为禁用状态。前端通过VUE的自定义指令v-permission进行按钮的控制，详情可见前端模块：mayfly-admin-front ）。
+系统使用自定义权限注解@mayfly.core.permission.Permission来控制用户的操作权限（即后端接口调用的权限，可实时禁用以及删除权限），和通过权限code控制前端页面的列表权限以及按钮权限（显示与否，以及是否为禁用状态。前端通过VUE的自定义指令v-permission进行按钮的控制，详情可见前端模块：mayfly-account-front ）。
 ```
 /**
 *每个方法都有丢应的权限code(用来进行权限校验以及前端页面按钮控制)  
@@ -100,7 +97,7 @@ public class PermissionController
 具体如何拦截以及实时启用禁用可见对应拦截器:mayfly.sys.interceptor.PermissionInterceptor
 
 - ### 前端枚举值统一管理维护
-具体细节可见前端模块：mayfly-admin-front 或者博客：https://www.jianshu.com/p/75516ec4f366
+具体细节可见前端模块：mayfly-account-front 或者博客：https://www.jianshu.com/p/75516ec4f366
 
 ## 系统部分页面
 
