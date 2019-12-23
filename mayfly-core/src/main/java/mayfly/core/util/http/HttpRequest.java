@@ -1,7 +1,7 @@
 package mayfly.core.util.http;
 
 import mayfly.core.util.Assert;
-import mayfly.core.util.BeanUtils;
+import mayfly.core.util.bean.BeanUtils;
 import mayfly.core.util.JsonUtils;
 import mayfly.core.util.ObjectUtils;
 

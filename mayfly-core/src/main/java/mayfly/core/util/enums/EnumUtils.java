@@ -17,7 +17,7 @@ public final class EnumUtils {
      *
      * @param enums 枚举数组
      * @param value 枚举值
-     * @return
+     * @return      是否存在
      */
     public static <T> boolean isExist(ValueEnum<T>[] enums, T value) {
         if (value == null) {
@@ -42,7 +42,7 @@ public final class EnumUtils {
         if (value == null) {
             return null;
         }
-        for (NameValueEnum<?> e : enums) {
+        for (NameValueEnum<T> e : enums) {
             if (value.equals(e.getValue())) {
                 return e.getName();
             }
@@ -67,5 +67,31 @@ public final class EnumUtils {
             }
         }
         return null;
+    }
+
+    /**
+     * 根据枚举值获取对应的枚举对象
+     *
+     * @param enums 枚举列表
+     * @return 枚举对象
+     */
+    @SuppressWarnings("unchecked")
+    public static <E extends Enum<? extends ValueEnum<V>>, V> E getEnumByValue(E[] enums, V value) {
+        for (Enum<? extends ValueEnum<V>> e : enums) {
+            if (((ValueEnum<V>) e).getValue().equals(value)) {
+                return (E) e;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 根据枚举值获取对应的枚举对象
+     *
+     * @param enumClass 枚举class
+     * @return 枚举对象
+     */
+    public static <E extends Enum<? extends ValueEnum<V>>, V> E getEnumByValue(Class<E> enumClass, V value) {
+        return getEnumByValue(enumClass.getEnumConstants(), value);
     }
 }

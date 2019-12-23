@@ -37,6 +37,13 @@ class Permission {
     this.method = method;
     return this;
   }
+  
+  /**
+   * 获取权限的完整url
+   */
+  getUrl() {
+    return request.getApiUrl(this.uri);
+  }
 
   /**
    * 操作该权限，即请求对应的uri

@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @Permission(code = "redis:key:")
 @RestController
-@RequestMapping("/sys/redis")
+@RequestMapping("/devops/redis")
 public class RedisController {
     @Autowired
     private RedisService redisService;

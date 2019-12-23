@@ -32,7 +32,7 @@ function parseResponse(res) {
         message: '登录超时'
       });
       setTimeout(() => {
-        location.href = '/login';
+        location.href = '/';
       }, 1000)
       return;
     }
@@ -66,6 +66,8 @@ function parseRestUrl(restUrl, param) {
 
 /**
  * 请求uri
+ * 该方法已处理请求结果中code != 200的message提示,如需其他错误处理(取消加载状态,重置对象状态等等),可catch继续处理
+ * 
  * @param {Object} method 请求方法(GET,POST,PUT,DELTE等)
  * @param {Object} uri    uri
  * @param {Object} params 参数
@@ -117,11 +119,12 @@ function send(permission, params) {
 
 export function getApiUrl(url) {
   // 只是返回api地址而不做请求，用在上传组件之类的
-  return buildApiUrl(url) + '?token=' + sessionStorage.getItem(Config.tokenKey);
+  return buildApiUrl(url) + '?token=' + sessionStorage.getItem(Config.name.tokenKey);
 }
 
 export default {
   request,
   send,
-  parseRestUrl
+  parseRestUrl,
+  getApiUrl
 }

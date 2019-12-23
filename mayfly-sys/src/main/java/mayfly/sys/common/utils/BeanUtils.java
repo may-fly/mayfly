@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
  * @version 1.0
  * @date 2018-11-23 6:17 PM
  */
-public class BeanUtils extends mayfly.core.util.BeanUtils {
+public class BeanUtils extends mayfly.core.util.bean.BeanUtils {
 
     public static void copyProperties(Object source, Object target) {
         org.springframework.beans.BeanUtils.copyProperties(source, target);

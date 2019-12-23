@@ -3,6 +3,7 @@ package mayfly.core.validation;
 
 import mayfly.core.util.*;
 import mayfly.core.util.annotation.AnnotationUtils;
+import mayfly.core.util.bean.BeanUtils;
 import mayfly.core.validation.annotation.*;
 import mayfly.core.validation.annotation.validator.*;
 

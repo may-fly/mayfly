@@ -27,7 +27,7 @@ public class ScheduleUtils {
     /**
      * 存定时任务结果
      */
-    private static Map<String, ScheduledFuture> scheduledFutureMap = new ConcurrentHashMap<>();
+    private static Map<String, ScheduledFuture<?>> scheduledFutureMap = new ConcurrentHashMap<>();
 
     static {
         //定期检查map中是否有已经执行完成的，有则移除
@@ -66,7 +66,7 @@ public class ScheduleUtils {
     }
 
     public static boolean containSchedule(String id) {
-        ScheduledFuture scheduledFuture = scheduledFutureMap.get(id);
+        ScheduledFuture<?> scheduledFuture = scheduledFutureMap.get(id);
         return scheduledFuture != null && !scheduledFuture.isDone();
     }
 

@@ -4,6 +4,9 @@ import Permission from './Permission'
 import ElementUI from 'element-ui'
 
 export default {
+  /**
+   * 全局系统消息websocket
+   */
   sysMsgSocket() {
     let token = Permission.getToken();
     if (!token) {

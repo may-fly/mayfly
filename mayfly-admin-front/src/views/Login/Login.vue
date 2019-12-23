@@ -39,28 +39,26 @@
       }
     },
     methods: {
-      login() {
+      async login() {
         this.loginLoading = true;
-        openApi.login(this.loginForm).then(data => {
+        try {
+          let res = await openApi.login(this.loginForm);
           setTimeout(() => {
             //保存用户token以及菜单按钮权限
-            this.$Permission.savePermission(data);
+            this.$Permission.savePermission(res);
             this.$notify({
               title: '登录成功',
               message: '很高兴你使用Mayfly Admin！别忘了给个Star哦。',
               type: 'success'
             });
-            // 登录成功设置系统全局websocket
-            // this.__proto__.$SysMsgSocket = sockets.sysMsgSocket();
             this.loginLoading = false;
             this.$router.push({
               path: '/'
             });
           }, 500);
-        }).catch(e => {
-          // this.$message.error(e);
+        } catch (err) {
           this.loginLoading = false;
-        })
+        }
       }
     }
   }

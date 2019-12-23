@@ -1,8 +1,8 @@
 const devUrl = 'http://127.0.0.1:8080/mayfly';
 const devSocketUrl = 'ws://127.0.0.1:8080/mayfly';
 
-const proUrl = 'http://94.191.96.31:8080/mayfly';
-const proSocketUrl = 'ws://94.191.96.31:8080/mayfly';
+const proUrl = 'http://mayfly.1yue.net/mayfly';
+const proSocketUrl = 'ws://mayfly.1yue.net/mayfly';
 
 export default {
   apiUrl: __DEV__ ? devUrl : proUrl,

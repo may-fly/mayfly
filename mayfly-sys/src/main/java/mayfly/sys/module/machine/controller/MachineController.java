@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 //@Permission(code = "machine:")
 @RestController
-@RequestMapping("/sys/machines")
+@RequestMapping("/devops/machines")
 public class MachineController {
 
     @Autowired

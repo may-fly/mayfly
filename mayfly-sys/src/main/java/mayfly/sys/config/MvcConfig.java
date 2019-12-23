@@ -3,8 +3,8 @@ package mayfly.sys.config;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
-import mayfly.sys.interceptor.PermissionInterceptor;
 import mayfly.sys.interceptor.PermissionCheckHandlerService;
+import mayfly.sys.interceptor.PermissionInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
@@ -57,7 +57,7 @@ public class MvcConfig implements WebMvcConfigurer {
         fastMediaTypes.add(MediaType.APPLICATION_JSON_UTF8);
         //在convert中添加配置信息.
         fastJsonHttpMessageConverter.setSupportedMediaTypes(fastMediaTypes);
-        fastJsonHttpMessageConverter.setFeatures(SerializerFeature.WriteMapNullValue);
+        fastJsonHttpMessageConverter.setFeatures(SerializerFeature.WriteDateUseDateFormat);
         fastJsonHttpMessageConverter.setFastJsonConfig(fastJsonConfig);
         converters.add(fastJsonHttpMessageConverter);
     }

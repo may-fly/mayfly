@@ -90,7 +90,7 @@ public final class ReflectionUtils {
             }
             clazz = clazz.getSuperclass();
         }
-        throw new IllegalStateException(clazz.getName() + "." + name + "字段不存在！");
+        return null;
     }
 
     /**

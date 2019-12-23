@@ -34,7 +34,7 @@ public class SSHUtils {
     /**
      * session缓存，最多允许15个session同时连接，移除session时候执行close操作
      */
-    private static Cache<String, Session> sessionCache = CacheBuilder.<String, Session>newTimedBuilder(5, TimeUnit.MINUTES)
+    private static Cache<String, Session> sessionCache = CacheBuilder.<String, Session>newTimedBuilder(30, TimeUnit.MINUTES)
             .capacity(15).removeCallback(SSHUtils::close).build();
 
 
@@ -61,7 +61,7 @@ public class SSHUtils {
             try {
                 return openSession(sessionInfoSupplier.get());
             } catch (SSHException e) {
-                throw new BusinessRuntimeException(e.getMessage());
+                throw new BusinessRuntimeException("连接失败，请重试");
             }
         }, true);
     }
@@ -75,7 +75,7 @@ public class SSHUtils {
     public static Session openSession(SessionInfo info) throws SSHException {
         final Session session = createSession(info);
         try {
-            session.connect(5000);
+            session.connect();
         } catch (JSchException e) {
             throw new SSHException(e);
         }
@@ -284,7 +284,7 @@ public class SSHUtils {
                 return result;
             }
         } catch (JSchException | IOException e) {
-            close(session);
+            sessionCache.removeByValue(session);
             throw new SSHException(e);
         } finally {
             IOUtils.close(in);

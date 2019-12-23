@@ -23,7 +23,7 @@ import java.lang.reflect.Method;
 @Component
 public class ParamValid {
 
-    @Pointcut(value = "execution(* mayfly.sys.web..*Controller.*(..))")
+    @Pointcut(value = "execution(* mayfly.sys.module..*Controller.*(..))")
     private void controller() {
     }
 

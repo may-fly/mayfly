@@ -21,7 +21,7 @@ Vue.prototype.$Utils = Utils
 Vue.use(ElementUI)
 
 /**
- * 增加vue permission指令
+ * 定义vue permission指令
  */
 Vue.directive('permission', function (el, binding) {
   Permission.checkCodeAndSetDom(binding.value, el);

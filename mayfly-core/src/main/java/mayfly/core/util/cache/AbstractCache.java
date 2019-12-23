@@ -97,9 +97,18 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
         onRemove(cacheMap.remove(key).get());
     }
 
+    @Override
+    public void removeByValue(V value) {
+        for (Map.Entry<K, CacheValue<V>> entry : cacheMap.entrySet()) {
+            if (entry.getValue().get() == value) {
+                remove(entry.getKey());
+                return;
+            }
+        }
+    }
 
     /**
-     * 移除key时调用
+     * 移除key时的回调
      *
      * @param value value
      */

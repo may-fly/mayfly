@@ -85,4 +85,11 @@ public interface Cache<K, V> {
      * @param key key
      */
     void remove(K key);
+
+    /**
+     * 移除指定value
+     *
+     * @param value value
+     */
+    void removeByValue(V value);
 }

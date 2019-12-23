@@ -25,7 +25,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Permission(code = "redis:")
 @MethodLog
 @RestController
-@RequestMapping("/sys/redis")
+@RequestMapping("/devops/redis")
 public class ServerController {
     @Autowired
     private RedisService redisService;

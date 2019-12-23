@@ -2,6 +2,7 @@ package mayfly.sys.module.machine.controller;
 
 import mayfly.core.exception.BusinessAssert;
 import mayfly.core.log.MethodLog;
+import mayfly.core.permission.Permission;
 import mayfly.core.result.Result;
 import mayfly.core.validation.annotation.Valid;
 import mayfly.sys.module.machine.service.MachineFileService;
@@ -28,7 +29,8 @@ import java.io.IOException;
  * @date 2019-11-12 3:16 下午
  */
 @RestController
-@RequestMapping("/sys/machines")
+@RequestMapping("/devops/machines")
+@Permission(code = "machineFile:")
 public class MachineFileController {
 
     @Autowired
@@ -37,43 +39,43 @@ public class MachineFileController {
     private MachineService machineService;
 
     @GetMapping("/{machineId}/files")
-    public Result confs(@PathVariable Integer machineId) {
+    public Result<?> files(@PathVariable Integer machineId) {
         return Result.success(machineFileService.listByMachineId(machineId));
     }
 
     @GetMapping("/files/{id}/ls")
-    public Result ls(@PathVariable Integer id, String path) {
+    public Result<?> ls(@PathVariable Integer id, String path) {
         BusinessAssert.notNull(path, "path不能为空");
         return Result.success(machineFileService.ls(id, path));
     }
 
     @GetMapping("/files/{id}/cat")
-    public Result cat(@PathVariable Integer id, String path) {
+    public Result<?> cat(@PathVariable Integer id, String path) {
         return Result.success(machineFileService.getFileContent(id, path));
     }
 
     @MethodLog("修改文件内容")
     @PutMapping("/files/{id}")
-    public Result setConf(@PathVariable Integer id, @RequestBody @Valid MachineConfContentForm form) {
+    public Result<?> setConf(@PathVariable Integer id, @RequestBody @Valid MachineConfContentForm form) {
         machineFileService.updateFileContent(id, form.getPath(), form.getContent());
         return Result.success();
     }
 
     @MethodLog("新增文件配置")
     @PostMapping("/{machineId}/files")
-    public Result addConf(@PathVariable Integer machineId, @RequestBody @Valid MachineFileForm form) {
+    public Result<?> addConf(@PathVariable Integer machineId, @RequestBody @Valid MachineFileForm form) {
         return Result.success(machineFileService.addFile(machineId, form));
     }
 
     @MethodLog("删除文件配置")
     @DeleteMapping("/files/{id}")
-    public Result delConf(@PathVariable Integer id) {
+    public Result<?> delConf(@PathVariable Integer id) {
         machineFileService.deleteById(id);
         return Result.success();
     }
 
     @PostMapping("/files/upload")
-    public Result upload(@Valid UploadForm form) {
+    public Result<?> upload(@Valid UploadForm form) {
         MultipartFile file = form.getFile();
         try {
             machineFileService.uploadFile(form.getFileId(), form.getPath() + "/" + file.getOriginalFilename(), file.getInputStream());
@@ -84,7 +86,7 @@ public class MachineFileController {
     }
 
     @DeleteMapping("/files/{fileId}/rm")
-    public Result rm(@PathVariable Integer fileId, String path) {
+    public Result<?> rm(@PathVariable Integer fileId, String path) {
         machineFileService.rmFile(fileId, path);
         return Result.success();
     }
