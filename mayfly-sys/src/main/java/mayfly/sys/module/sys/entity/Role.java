@@ -1,7 +1,7 @@
 package mayfly.sys.module.sys.entity;
 
 import lombok.Data;
-import mayfly.sys.module.base.mapper.annotation.NoColumn;
+import mayfly.sys.common.base.mapper.annotation.NoColumn;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;

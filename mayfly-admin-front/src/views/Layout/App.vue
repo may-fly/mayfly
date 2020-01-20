@@ -9,9 +9,9 @@
       <div class="logo">
         <span class="big">{{ $Config.name.siteName }}</span>
         <!-- <img width="40" style="margin-top: 5px" src="../../assets/images/logo.svg" alt=""> -->
-        <span class="min">
-          <img width="40" style="margin-top: 5px" src="../../assets/images/logo.svg" alt="">
-        </span>
+        <!-- <span class="min">
+          <img width="100px" style="margin-top: 5px" src="../../assets/images/logo.png" alt="">
+        </span> -->
       </div>
       <!-- <span class="header-btn" @click="hiddenSidebar">
         <i class="el-icon-menu"></i>
@@ -81,9 +81,9 @@
 
 <script>
   import Screenfull from 'screenfull'
-  import EuiFooter from '~/views/Layout/Footer.vue';
-  import NavBar from './NavBar.vue'
-  import MenuTree from './MenuTree.vue'
+  import EuiFooter from '~/views/layout/footer.vue';
+  import NavBar from './nav-bar.vue'
+  import MenuTree from './menu-tree.vue'
 
   export default {
     data() {
@@ -101,8 +101,9 @@
       toPath(path) {
         // 如果是请求其他地址，则使用iframe展示
         if (path && (path.startsWith('http://') || path.startsWith('https://'))) {
-          this.iframe = true;
-          this.iframeSrc = path;
+          // this.iframe = true;
+          // this.iframeSrc = path;
+          window.open(path);
           return;
         }
 
@@ -168,7 +169,6 @@
       },
       logout() {
         sessionStorage.clear();
-        console.log(this.$SysMsgSocket)
         this.$router.push({
           path: '/login'
         });

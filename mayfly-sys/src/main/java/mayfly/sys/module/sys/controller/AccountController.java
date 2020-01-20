@@ -3,10 +3,10 @@ package mayfly.sys.module.sys.controller;
 import mayfly.core.exception.BusinessAssert;
 import mayfly.core.permission.Permission;
 import mayfly.core.result.Result;
-import mayfly.core.util.enums.BoolEnum;
 import mayfly.core.util.enums.EnumUtils;
 import mayfly.core.validation.annotation.Valid;
-import mayfly.sys.module.base.form.PageForm;
+import mayfly.sys.common.enums.EnableDisableEnum;
+import mayfly.sys.common.base.form.PageForm;
 import mayfly.sys.module.sys.controller.form.AccountForm;
 import mayfly.sys.module.sys.controller.form.RoleUserForm;
 import mayfly.sys.module.sys.controller.query.AccountQuery;
@@ -62,7 +62,7 @@ public class AccountController {
 
     @PutMapping("/{id}/{status}")
     public Result<?> changeStatus(@PathVariable Integer id, @PathVariable Integer status) {
-        BusinessAssert.state(EnumUtils.isExist(BoolEnum.values(), status), "状态值错误");
+        BusinessAssert.state(EnumUtils.isExist(EnableDisableEnum.values(), status), "状态值错误");
         Account build = Account.builder().id(id).status(status).build();
         accountService.updateById(build);
         return Result.success();

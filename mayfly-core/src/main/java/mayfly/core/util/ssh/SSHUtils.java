@@ -11,8 +11,8 @@ import com.jcraft.jsch.Session;
 import mayfly.core.exception.BusinessRuntimeException;
 import mayfly.core.util.IOUtils;
 import mayfly.core.util.StringUtils;
-import mayfly.core.util.cache.Cache;
-import mayfly.core.util.cache.CacheBuilder;
+import mayfly.core.cache.Cache;
+import mayfly.core.cache.CacheBuilder;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -34,7 +34,7 @@ public class SSHUtils {
     /**
      * session缓存，最多允许15个session同时连接，移除session时候执行close操作
      */
-    private static Cache<String, Session> sessionCache = CacheBuilder.<String, Session>newTimedBuilder(30, TimeUnit.MINUTES)
+    private static Cache<String, Session> sessionCache = CacheBuilder.<String, Session>newTimedBuilder(20, TimeUnit.MINUTES)
             .capacity(15).removeCallback(SSHUtils::close).build();
 
 

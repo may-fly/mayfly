@@ -1,6 +1,6 @@
 package mayfly.sys.module.sys.mapper;
 
-import mayfly.sys.module.base.mapper.BaseMapper;
+import mayfly.sys.common.base.mapper.BaseMapper;
 import mayfly.sys.module.sys.entity.RoleResource;
 
 /**

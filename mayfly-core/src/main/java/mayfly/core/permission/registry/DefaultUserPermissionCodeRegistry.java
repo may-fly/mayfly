@@ -1,7 +1,7 @@
 package mayfly.core.permission.registry;
 
 import mayfly.core.util.CollectionUtils;
-import mayfly.core.util.thread.ScheduleUtils;
+import mayfly.core.thread.ScheduleUtils;
 
 import java.util.Collection;
 import java.util.Map;

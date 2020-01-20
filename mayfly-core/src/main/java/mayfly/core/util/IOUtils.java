@@ -2,6 +2,7 @@ package mayfly.core.util;
 
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -26,9 +27,9 @@ import java.nio.charset.Charset;
 public class IOUtils {
 
     /**
-     * 默认缓存大小 1024
+     * 默认缓存大小 4096
      */
-    public static final int DEFAULT_BUFFER_SIZE = 2 << 10;
+    public static final int DEFAULT_BUFFER_SIZE = 2 << 12;
 
     /**
      * 使用NIO拷贝流
@@ -97,23 +98,54 @@ public class IOUtils {
      * @param length 长度，小于等于0返回空byte数组
      * @return bytes
      */
-    public static byte[] readBytes(InputStream in, int length) throws IOException {
+    public static byte[] readByte(InputStream in, int length, final boolean close) throws IOException {
         if (in == null) {
             return null;
         }
         if (length <= 0) {
             return new byte[0];
         }
+        try {
+            byte[] b = new byte[length];
+            int readLength = in.read(b);
+            if (readLength > 0 && readLength < length) {
+                byte[] b2 = new byte[readLength];
+                System.arraycopy(b, 0, b2, 0, readLength);
+                return b2;
+            }
 
-        byte[] b = new byte[length];
-        int readLength = in.read(b);
-        if (readLength > 0 && readLength < length) {
-            byte[] b2 = new byte[readLength];
-            System.arraycopy(b, 0, b2, 0, readLength);
-            return b2;
+            return b;
+        } finally {
+            if (close) {
+                close(in);
+            }
         }
+    }
 
-        return b;
+    /**
+     * 获取流的字节数组
+     *
+     * @param inputStream   输入流
+     * @param close         是否关闭
+     * @return              字节数组
+     * @throws IOException  io异常
+     */
+    public static byte[] readByte(final InputStream inputStream, final boolean close) throws IOException {
+        Assert.notNull(inputStream, "inputStream must not be null");
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        byte[] data = new byte[DEFAULT_BUFFER_SIZE];
+        int bytesRead;
+        try {
+            while ((bytesRead = inputStream.read(data, 0, data.length)) != -1) {
+                outputStream.write(data, 0, bytesRead);
+            }
+            outputStream.flush();
+            return outputStream.toByteArray();
+        } finally {
+            if (close) {
+                close(inputStream);
+            }
+        }
     }
 
 

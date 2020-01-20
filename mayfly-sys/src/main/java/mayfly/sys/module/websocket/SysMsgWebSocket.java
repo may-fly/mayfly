@@ -47,7 +47,7 @@ public class SysMsgWebSocket {
             return;
         }
         registry.putSession(userId, session);
-        WebSocketUtils.sendText(session, MessageTypeEnum.SUCCESS.toMsg("连接成功"));
+//        WebSocketUtils.sendText(session, MessageTypeEnum.SUCCESS.toMsg("连接成功"));
     }
 
     /**

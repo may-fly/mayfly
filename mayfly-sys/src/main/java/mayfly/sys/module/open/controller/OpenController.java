@@ -6,7 +6,7 @@ import mayfly.core.validation.annotation.Valid;
 import mayfly.sys.module.sys.entity.Account;
 import mayfly.sys.module.sys.service.AccountService;
 import mayfly.sys.module.sys.service.PermissionService;
-import mayfly.sys.module.sys.controller.form.AccountLoginForm;
+import mayfly.sys.module.open.controller.form.AccountLoginForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,7 +29,7 @@ public class OpenController {
 
     @MethodLog(value = "管理员登录", result = false)
     @PostMapping("/v1/login")
-    public Result login(@RequestBody @Valid AccountLoginForm loginForm) {
+    public Result<?> login(@RequestBody @Valid AccountLoginForm loginForm) {
         Account result = accountService.login(loginForm);
         if (result == null) {
             return Result.noFound("用户名或密码错误！");

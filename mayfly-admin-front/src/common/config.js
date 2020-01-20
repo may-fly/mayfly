@@ -1,8 +1,11 @@
-const devUrl = 'http://127.0.0.1:8080/mayfly';
-const devSocketUrl = 'ws://127.0.0.1:8080/mayfly';
+const devBaseUri = 'localhost:8080/mayfly';
+const prodBaseUri = "mayfly.1yue.net/mayfly";
 
-const proUrl = 'http://mayfly.1yue.net/mayfly';
-const proSocketUrl = 'ws://mayfly.1yue.net/mayfly';
+const devUrl = `http://${devBaseUri}`;
+const devSocketUrl = `ws://${devBaseUri}`;
+
+const proUrl = `http://${prodBaseUri}`;
+const proSocketUrl = `ws://${prodBaseUri}`;
 
 export default {
   apiUrl: __DEV__ ? devUrl : proUrl,

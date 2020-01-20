@@ -21,11 +21,11 @@ public class TreeUtils {
      * @param <T>   节点类型
      * @return 树形结构列表
      */
-    public static <T extends TreeNode> List<T> generateTrees(List<T> nodes) {
+    public static <T extends TreeNode<?>> List<T> generateTrees(List<T> nodes) {
         List<T> roots = new ArrayList<>();
         for (Iterator<T> ite = nodes.iterator(); ite.hasNext(); ) {
             T node = ite.next();
-            if (node.isRoot()) {
+            if (node.root()) {
                 roots.add(node);
                 // 从所有节点列表中删除该节点
                 ite.remove();
@@ -45,7 +45,7 @@ public class TreeUtils {
      * @param <T>    实际节点类型
      * @return 叶子节点
      */
-    public static <T extends TreeNode> List<T> getLeafs(T parent) {
+    public static <T extends TreeNode<?>> List<T> getLeafs(T parent) {
         List<T> leafs = new ArrayList<>();
         fillLeaf(parent, leafs);
         return leafs;
@@ -57,7 +57,7 @@ public class TreeUtils {
      * @param parent 父节点
      * @param nodes  所有树节点列表
      */
-    public static <T extends TreeNode> void setChildren(T parent, List<T> nodes) {
+    public static <T extends TreeNode<?>> void setChildren(T parent, List<T> nodes) {
         List<T> children = new ArrayList<>();
         Object parentId = parent.id();
         for (Iterator<T> ite = nodes.iterator(); ite.hasNext(); ) {
@@ -85,8 +85,8 @@ public class TreeUtils {
      * @param leafs  叶子节点列表
      * @param <T>    实际节点类型
      */
+    @SuppressWarnings("all")
     public static <T extends TreeNode> void fillLeaf(T parent, List<T> leafs) {
-        @SuppressWarnings("unchecked")
         List<T> children = parent.getChildren();
         // 如果节点没有子节点则说明为叶子节点
         if (CollectionUtils.isEmpty(children)) {
@@ -125,20 +125,20 @@ public class TreeUtils {
          *
          * @return true：根节点
          */
-        boolean isRoot();
+        boolean root();
 
         /**
          * 设置节点的子节点列表
          *
          * @param children 子节点
          */
-        void setChildren(List<? extends TreeNode> children);
+        void setChildren(List<? extends TreeNode<?>> children);
 
         /**
          * 获取所有子节点
          *
          * @return 子节点列表
          */
-        List<? extends TreeNode> getChildren();
+        List<? extends TreeNode<?>> getChildren();
     }
 }

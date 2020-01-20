@@ -1,10 +1,10 @@
 import Vue from 'vue'
-import store from './store'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
-import './assets/css/font-awesome.min.css'
 import './assets/css/style.css'
+
 import router from './router'
+import store from './store'
 import Config from './common/config'
 import Permission from './common/Permission'
 import Utils from './common/Utils'
@@ -15,8 +15,6 @@ import App from './App.vue'
 Vue.prototype.$Permission = Permission
 Vue.prototype.$Config = Config
 Vue.prototype.$Utils = Utils
-
-
 
 Vue.use(ElementUI)
 

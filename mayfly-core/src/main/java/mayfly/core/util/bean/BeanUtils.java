@@ -45,7 +45,7 @@ public class BeanUtils {
     public static <T> T instantiate(Class<T> clazz) {
         Assert.assertState(!clazz.isInterface(), "无法实例化接口：" + clazz.getName());
         try {
-            return clazz.getDeclaredConstructor().newInstance();
+            return instantiate(clazz.getDeclaredConstructor());
         } catch (Exception e) {
             throw new IllegalStateException("实例化对象失败", e);
         }
@@ -62,7 +62,7 @@ public class BeanUtils {
         try {
             return constructor.newInstance(initargs);
         } catch (Exception e) {
-            throw new IllegalStateException("实例化对象失败", e);
+            throw new IllegalStateException(String.format("实例化%s对象失败", constructor.getDeclaringClass().getName()), e);
         }
     }
 
@@ -89,7 +89,7 @@ public class BeanUtils {
      */
     public static List<FieldValueChangeRecord> getFieldValueChangeRecords(Object newObj, Object old) {
         Class<?> oldObjClass = old.getClass();
-        List<FieldValueChangeRecord> changeRecords = new ArrayList<>(8);
+        List<FieldValueChangeRecord> changeRecords = new ArrayList<>();
         for (Field nf : ReflectionUtils.getFields(newObj.getClass())) {
             String fieldName = nf.getName();
             // 旧值不存在指定字段，直接跳过

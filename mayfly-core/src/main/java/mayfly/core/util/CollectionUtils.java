@@ -24,7 +24,7 @@ public class CollectionUtils {
      *
      * @param collection 集合对象
      * @param value      集合元素
-     * @param <T>
+     * @param <T>        集合类型
      * @return true:存在 否则不存在
      */
     public static <T> boolean contains(Collection<T> collection, T value) {

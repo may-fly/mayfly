@@ -3,8 +3,6 @@ package mayfly.core.util.enums;
 import org.junit.Assert;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
-
 public class EnumUtilsTest {
 
     enum Test1 implements NameValueEnum<String> {
@@ -81,8 +79,5 @@ public class EnumUtilsTest {
     public void getEnumByValue() {
         Test2 enumByValue = EnumUtils.getEnumByValue(Test2.values(), 1);
         Test1 test = EnumUtils.getEnumByValue(Test1.class, "02");
-        System.out.println();
     }
-
-
 }

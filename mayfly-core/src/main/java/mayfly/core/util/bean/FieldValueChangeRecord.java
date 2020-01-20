@@ -10,17 +10,17 @@ public class FieldValueChangeRecord {
     /**
      * 字段名
      */
-    private String fieldName;
+    private final String fieldName;
 
     /**
      * 旧值
      */
-    private Object oldValue;
+    private final Object oldValue;
 
     /**
      * 新值
      */
-    private Object newValue;
+    private final Object newValue;
 
     public FieldValueChangeRecord(String fieldName, Object oldValue, Object newValue) {
         this.fieldName = fieldName;

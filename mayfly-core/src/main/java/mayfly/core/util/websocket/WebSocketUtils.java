@@ -69,7 +69,7 @@ public class WebSocketUtils {
      * @param message   消息
      * @param <T>       存储session的key（可以是sessionId，也也是用户标识id等）
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("all")
     public static <T> void broadcastText(String namespace, String message) {
         SessionRegistry sessionRegistry = registryMap.get(namespace);
         // 判断是否存在该registry

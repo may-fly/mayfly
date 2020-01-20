@@ -1,7 +1,7 @@
 package mayfly.sys.module.sys.service;
 
 import mayfly.sys.module.sys.entity.Role;
-import mayfly.sys.module.base.service.BaseService;
+import mayfly.sys.common.base.service.BaseService;
 
 /**
  * @author meilin.huang

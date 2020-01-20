@@ -1,19 +1,26 @@
 package mayfly.sys.module.sys.controller;
 
-import mayfly.core.util.enums.BoolEnum;
+import mayfly.core.exception.BusinessAssert;
 import mayfly.core.exception.BusinessException;
 import mayfly.core.log.MethodLog;
 import mayfly.core.permission.Permission;
 import mayfly.core.result.Result;
-import mayfly.core.exception.BusinessAssert;
 import mayfly.core.validation.annotation.Valid;
-import mayfly.sys.module.sys.entity.Role;
+import mayfly.sys.common.enums.EnableDisableEnum;
 import mayfly.sys.common.utils.BeanUtils;
+import mayfly.sys.module.sys.controller.form.RoleForm;
+import mayfly.sys.module.sys.entity.Role;
 import mayfly.sys.module.sys.service.RoleResourceService;
 import mayfly.sys.module.sys.service.RoleService;
-import mayfly.sys.module.sys.controller.form.RoleForm;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -47,7 +54,7 @@ public class RoleController {
         LocalDateTime now = LocalDateTime.now();
         role.setCreateTime(now);
         role.setUpdateTime(now);
-        role.setStatus(BoolEnum.TRUE.getValue());
+        role.setStatus(EnableDisableEnum.ENABLE.getValue());
         return Result.success(roleService.save(role));
     }
 

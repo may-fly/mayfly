@@ -6,7 +6,7 @@ import mayfly.core.util.CollectionUtils;
 import mayfly.sys.module.sys.mapper.RoleResourceMapper;
 import mayfly.sys.module.sys.entity.Resource;
 import mayfly.sys.module.sys.entity.RoleResource;
-import mayfly.sys.module.base.service.impl.BaseServiceImpl;
+import mayfly.sys.common.base.service.impl.BaseServiceImpl;
 import mayfly.sys.module.sys.service.PermissionService;
 import mayfly.sys.module.sys.service.ResourceService;
 import mayfly.sys.module.sys.service.RoleResourceService;

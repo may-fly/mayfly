@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import mayfly.sys.module.base.mapper.annotation.NoColumn;
+import mayfly.sys.common.base.mapper.annotation.NoColumn;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -22,6 +22,8 @@ import java.util.List;
 @AllArgsConstructor
 public class Resource implements Serializable {
 
+    private static final long serialVersionUID = 6346288647519202567L;
+
     private Integer id;
 
     private Integer pid;
@@ -34,7 +36,7 @@ public class Resource implements Serializable {
 
     private String icon;
 
-    private String path;
+//    private String path;
 
     private String code;
 

@@ -1,6 +1,6 @@
 package mayfly.sys.module.sys.mapper;
 
-import mayfly.sys.module.base.mapper.BaseMapper;
+import mayfly.sys.common.base.mapper.BaseMapper;
 import mayfly.sys.module.sys.entity.Resource;
 import org.apache.ibatis.annotations.Select;
 
@@ -23,7 +23,7 @@ public interface ResourceMapper extends BaseMapper<Resource> {
 //            "JOIN tb_role_menu rm ON r.id = rm.role_id)")
 //    List<Resource> selectByUserId(Integer userId);
 
-    @Select("SELECT m.id, m.pid, m.weight, m.name, m.code, m.icon, m.path, m.type, m.status " +
+    @Select("SELECT m.id, m.pid, m.weight, m.name, m.code, m.icon, m.type, m.status " +
             "FROM tb_resource m WHERE " +
             "m.id IN " +
             "(SELECT DISTINCT(rmb.resource_id) " +

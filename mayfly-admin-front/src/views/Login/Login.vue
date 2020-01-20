@@ -2,8 +2,8 @@
   <div class="login">
     <div class="login-form">
       <div class="login-header">
-        <img src="../../assets/images/logo.svg" width="100" height="100" alt="">
-        <p>{{ $Config.name.siteName }}</p>
+        <img src="../../assets/images/logo.png" width="150" height="120" alt="">
+        <!-- <p>{{ $Config.name.siteName }}</p> -->
       </div>
       <el-input placeholder="请输入用户名" suffix-icon="fa fa-user" v-model="loginForm.username" style="margin-bottom: 18px">
       </el-input>

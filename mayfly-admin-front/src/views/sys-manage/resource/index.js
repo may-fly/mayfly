@@ -1,0 +1,1 @@
+export { default } from './resource-list.vue';

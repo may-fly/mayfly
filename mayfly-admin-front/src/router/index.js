@@ -5,10 +5,9 @@ import Personal from './personal'
 Vue.use(Router)
 
 
-
 let RouteList = [{
     path: '/',
-    component: resolve => require(['~/views/Layout/App.vue'], resolve),
+    component: resolve => require(['~/views/layout/app.vue'], resolve),
     meta: {
       title: '首页',
       keepAlive: false,
@@ -20,7 +19,7 @@ let RouteList = [{
           title: '首页',
           keepAlive: false
         },
-        component: resolve => require(['~/views/Home/Index.vue'], resolve),
+        component: resolve => require(['~/views/home'], resolve),
       },
       {
         path: '/role_manage',
@@ -29,7 +28,7 @@ let RouteList = [{
           title: '角色列表',
           keepAlive: true
         },
-        component: resolve => require(['~/views/SysManage/role/role_list.vue'], resolve),
+        component: resolve => require(['~/views/sys-manage/role'], resolve),
       },
       {
         path: '/menu_manage',
@@ -38,7 +37,7 @@ let RouteList = [{
           title: '菜单管理',
           keepAlive: true
         },
-        component: resolve => require(['~/views/SysManage/resource/resource_list.vue'], resolve),
+        component: resolve => require(['~/views/sys-manage/resource'], resolve),
       },
       {
         path: '/account_list',
@@ -47,7 +46,7 @@ let RouteList = [{
           title: '账号管理',
           keepAlive: true
         },
-        component: resolve => require(['~/views/SysManage/account/account_list.vue'], resolve),
+        component: resolve => require(['~/views/sys-manage/account'], resolve),
       },
       {
         path: '/machines',
@@ -56,7 +55,7 @@ let RouteList = [{
           title: '机器管理',
           keepAlive: true
         },
-        component: resolve => require(['~/views/DevOps/machine/list.vue'], resolve),
+        component: resolve => require(['~/views/devops/machine'], resolve),
       },
       {
         path: '/redis_manage',
@@ -65,7 +64,7 @@ let RouteList = [{
           title: 'redis机器列表',
           keepAlive: true
         },
-        component: resolve => require(['~/views/DevOps/redis/index.vue'], resolve),
+        component: resolve => require(['~/views/devops/redis'], resolve),
       },
       {
         path: '/redis_operation/:cluster/:id',
@@ -74,7 +73,7 @@ let RouteList = [{
           title: 'redis管理',
           keepAlive: true
         },
-        component: resolve => require(['~/views/DevOps/redis/redis_operation.vue'], resolve),
+        component: resolve => require(['~/views/devops/redis/redis-operation.vue'], resolve),
       },
       //个人中心，可能有修改密码，头像修改等路由
       Personal.index,
@@ -88,7 +87,7 @@ let RouteList = [{
       keepAlive: false
     },
     components: {
-      blank: resolve => require(['~/views/Login/Login.vue'], resolve),
+      blank: resolve => require(['~/views/login/login.vue'], resolve),
     }
   },
 

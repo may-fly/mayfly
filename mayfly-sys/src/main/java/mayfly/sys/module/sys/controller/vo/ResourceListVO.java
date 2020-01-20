@@ -2,9 +2,7 @@ package mayfly.sys.module.sys.controller.vo;
 
 import lombok.Data;
 import mayfly.core.util.TreeUtils;
-import mayfly.sys.module.base.mapper.annotation.NoColumn;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -26,19 +24,10 @@ public class ResourceListVO implements TreeUtils.TreeNode<Integer> {
 
     private String icon;
 
-    private String path;
-
     private String code;
 
     private Integer status;
 
-    private Integer weight;
-
-    private LocalDateTime createTime;
-
-    private LocalDateTime updateTime;
-
-    @NoColumn
     private List<ResourceListVO> children;
 
     @Override
@@ -52,7 +41,7 @@ public class ResourceListVO implements TreeUtils.TreeNode<Integer> {
     }
 
     @Override
-    public boolean isRoot() {
+    public boolean root() {
         return Objects.equals(this.pid, 0);
     }
 

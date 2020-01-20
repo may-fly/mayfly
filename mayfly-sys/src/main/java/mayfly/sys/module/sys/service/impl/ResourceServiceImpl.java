@@ -1,15 +1,15 @@
 package mayfly.sys.module.sys.service.impl;
 
-import mayfly.core.util.enums.BoolEnum;
 import mayfly.core.exception.BusinessAssert;
 import mayfly.core.util.enums.EnumUtils;
 import mayfly.core.util.TreeUtils;
+import mayfly.sys.common.enums.EnableDisableEnum;
 import mayfly.sys.module.sys.mapper.ResourceMapper;
 import mayfly.sys.module.sys.entity.Resource;
 import mayfly.sys.module.sys.entity.RoleResource;
-import mayfly.sys.common.enums.ResourceTypeEnum;
+import mayfly.sys.module.sys.enums.ResourceTypeEnum;
 import mayfly.sys.common.utils.BeanUtils;
-import mayfly.sys.module.base.service.impl.BaseServiceImpl;
+import mayfly.sys.common.base.service.impl.BaseServiceImpl;
 import mayfly.sys.module.sys.service.PermissionService;
 import mayfly.sys.module.sys.service.ResourceService;
 import mayfly.sys.module.sys.service.RoleResourceService;
@@ -63,7 +63,6 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourceMapper, Resourc
         }
         // 如果是添加菜单，则该父节点不能存在有权限节点
         if (resource.getType().equals(ResourceTypeEnum.MENU.getValue())) {
-            BusinessAssert.notEmpty(resource.getPath(), "菜单路径不能为空");
             // 查询指定pid节点下是否有权限节点
             Resource condition = Resource.builder().pid(resource.getPid()).type(ResourceTypeEnum.PERMISSION.getValue()).build();
             BusinessAssert.state(countByCondition(condition) == 0, "该菜单已有权限资源子节点，不能再添加菜单");
@@ -71,7 +70,7 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourceMapper, Resourc
             BusinessAssert.notEmpty(resource.getCode(), "权限code不能为空");
         }
         //默认启用
-        resource.setStatus(BoolEnum.TRUE.getValue());
+        resource.setStatus(EnableDisableEnum.ENABLE.getValue());
         LocalDateTime now = LocalDateTime.now();
         resource.setCreateTime(now);
         resource.setUpdateTime(now);
@@ -98,7 +97,7 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourceMapper, Resourc
 
     @Override
     public Resource changeStatus(Integer id, Integer status) {
-        BusinessAssert.state(EnumUtils.isExist(BoolEnum.values(), status), "状态值错误");
+        BusinessAssert.state(EnumUtils.isExist(EnableDisableEnum.values(), status), "状态值错误");
         Resource resource = getById(id);
         BusinessAssert.notNull(resource, "该资源不存在");
         // 状态不变直接返回

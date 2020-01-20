@@ -1,7 +1,5 @@
 package mayfly.core.permission.registry;
 
-import mayfly.core.util.enums.BoolEnum;
-
 import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 
@@ -59,6 +57,6 @@ public final class PermissionCacheHandler<I> {
      * @return
      */
     public static String getDisablePermissionCode(String code) {
-        return code + CODE_STATUS_SEPARATOR + BoolEnum.FALSE.getValue();
+        return code + CODE_STATUS_SEPARATOR + 0;
     }
 }

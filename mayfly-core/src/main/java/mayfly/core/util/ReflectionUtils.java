@@ -37,7 +37,7 @@ public final class ReflectionUtils {
     public static Field[] getFields(Class<?> clazz, Predicate<Field> fieldFilter) {
         List<Field> fields = new ArrayList<>(32);
         while (Object.class != clazz && clazz != null) {
-            // 获得该类的所有声明的字段，即包括public、private和protected，但是不包括父类的申明字段，
+            // 获得该类所有声明的字段，即包括public、private和protected，但是不包括父类的申明字段，
             // getFields：获得某个类的所有的公共（public）的字段，包括父类中的字段
             for (Field field : clazz.getDeclaredFields()) {
                 if (fieldFilter != null && !fieldFilter.test(field)) {
@@ -77,7 +77,7 @@ public final class ReflectionUtils {
      * @param clazz 字段所属类型
      * @param name  字段名
      * @param type  field类型
-     * @return
+     * @return      Field对象
      */
     public static Field getField(Class<?> clazz, String name, Class<?> type) {
         Assert.notNull(clazz, "clazz不能为空！");
@@ -96,16 +96,17 @@ public final class ReflectionUtils {
     /**
      * 获取字段值
      *
-     * @param field  字段
-     * @param target 字段所属实例对象
-     * @return
+     * @param field    字段
+     * @param target  字段所属实例对象
+     * @return        字段值
      */
     public static Object getFieldValue(Field field, Object target) {
         makeAccessible(field);
         try {
             return field.get(target);
         } catch (Exception e) {
-            throw new IllegalStateException("获取field值错误！");
+            throw new IllegalStateException(String.format("获取%s对象的%s字段值错误!"
+                    , target.getClass().getName(), field.getName()), e);
         }
     }
 
@@ -113,8 +114,8 @@ public final class ReflectionUtils {
      * 获取对象中指定field值
      *
      * @param obj       对象
-     * @param fieldName 字段名
-     * @return
+     * @param fieldName  字段名
+     * @return          字段值
      */
     public static Object getFieldValue(Object obj, String fieldName) {
         Assert.notNull(obj, "obj不能为空!");
@@ -158,7 +159,8 @@ public final class ReflectionUtils {
         try {
             field.set(target, value);
         } catch (Exception e) {
-            throw new IllegalStateException("设置field值错误！");
+            throw new IllegalStateException(String.format("设置%s对象的%s字段值错误!"
+                    , target.getClass().getName(), field.getName()), e);
         }
     }
 
@@ -199,7 +201,8 @@ public final class ReflectionUtils {
             makeAccessible(method);
             return method.invoke(target, args);
         } catch (Exception ex) {
-            throw new IllegalStateException("执行方法失败！", ex);
+            throw new IllegalStateException(String.format("执行%s.%s()方法错误!"
+                    , target.getClass().getName(), method.getName()), ex);
         }
     }
 

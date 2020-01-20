@@ -5,7 +5,7 @@ import mayfly.core.validation.annotation.EnumValue;
 import mayfly.core.validation.annotation.NotBlank;
 import mayfly.core.validation.annotation.NotNull;
 import mayfly.core.validation.annotation.Size;
-import mayfly.sys.common.enums.ResourceTypeEnum;
+import mayfly.sys.module.sys.enums.ResourceTypeEnum;
 
 /**
  * @author meilin.huang
@@ -19,8 +19,6 @@ public class ResourceForm {
     @NotBlank
     @Size(min = 2, max = 24)
     private String name;
-
-    private String path;
 
     private String code;
 

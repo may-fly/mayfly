@@ -1,0 +1,1 @@
+export { default } from './redis-list.vue';

@@ -5,7 +5,7 @@ import mayfly.sys.module.sys.mapper.RoleMapper;
 import mayfly.sys.module.sys.entity.Role;
 import mayfly.sys.module.sys.entity.RoleResource;
 import mayfly.sys.module.sys.entity.AccountRole;
-import mayfly.sys.module.base.service.impl.BaseServiceImpl;
+import mayfly.sys.common.base.service.impl.BaseServiceImpl;
 import mayfly.sys.module.sys.service.RoleResourceService;
 import mayfly.sys.module.sys.service.RoleService;
 import mayfly.sys.module.sys.service.AccountRoleService;

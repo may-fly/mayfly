@@ -3,12 +3,12 @@ package mayfly.sys.module.sys.service.impl;
 import mayfly.core.exception.BusinessAssert;
 import mayfly.core.result.Page;
 import mayfly.core.util.DigestUtils;
-import mayfly.core.util.enums.BoolEnum;
+import mayfly.sys.common.enums.EnableDisableEnum;
 import mayfly.sys.common.utils.BeanUtils;
-import mayfly.sys.module.base.form.PageForm;
-import mayfly.sys.module.base.service.impl.BaseServiceImpl;
+import mayfly.sys.common.base.form.PageForm;
+import mayfly.sys.common.base.service.impl.BaseServiceImpl;
 import mayfly.sys.module.sys.controller.form.AccountForm;
-import mayfly.sys.module.sys.controller.form.AccountLoginForm;
+import mayfly.sys.module.open.controller.form.AccountLoginForm;
 import mayfly.sys.module.sys.controller.query.AccountQuery;
 import mayfly.sys.module.sys.controller.vo.AccountVO;
 import mayfly.sys.module.sys.entity.Account;
@@ -49,7 +49,7 @@ public class AccountServiceImpl extends BaseServiceImpl<AccountMapper, Account> 
                 .password(DigestUtils.md5DigestAsHex(adminForm.getPassword())).build();
         Account account = getByCondition(condition);
         if (account != null) {
-            BusinessAssert.state(Objects.equals(account.getStatus(), BoolEnum.TRUE.getValue()), "该账号已被禁用");
+            BusinessAssert.state(Objects.equals(account.getStatus(), EnableDisableEnum.ENABLE.getValue()), "该账号已被禁用");
         }
         return account;
     }
@@ -64,7 +64,7 @@ public class AccountServiceImpl extends BaseServiceImpl<AccountMapper, Account> 
         account.setCreateTime(now);
         account.setUpdateTime(now);
         // 默认启用状态
-        account.setStatus(BoolEnum.TRUE.getValue());
+        account.setStatus(EnableDisableEnum.ENABLE.getValue());
         save(account);
     }
 }

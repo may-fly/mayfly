@@ -30,7 +30,8 @@ public class MvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new PermissionInterceptor(permissionCheckHandlerService)).addPathPatterns("/sys/**");
+        registry.addInterceptor(new PermissionInterceptor(permissionCheckHandlerService))
+                .addPathPatterns("/sys/**", "/devops/**");
     }
 
     @Override

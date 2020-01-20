@@ -1,15 +1,15 @@
 package mayfly.sys.module.sys.service.impl;
 
 import mayfly.core.util.CollectionUtils;
-import mayfly.core.util.enums.BoolEnum;
 import mayfly.core.permission.registry.PermissionCacheHandler;
 import mayfly.core.permission.registry.UserPermissionCodeRegistry;
 import mayfly.core.util.BracePlaceholder;
 import mayfly.core.util.TreeUtils;
 import mayfly.core.util.UUIDUtils;
+import mayfly.sys.common.enums.EnableDisableEnum;
 import mayfly.sys.module.sys.entity.Account;
 import mayfly.sys.common.cache.UserCacheKey;
-import mayfly.sys.common.enums.ResourceTypeEnum;
+import mayfly.sys.module.sys.enums.ResourceTypeEnum;
 import mayfly.sys.common.utils.BeanUtils;
 import mayfly.sys.module.sys.service.PermissionService;
 import mayfly.sys.module.sys.service.ResourceService;
@@ -59,7 +59,7 @@ public class PermissionServiceImpl implements PermissionService, UserPermissionC
         }
         // 如果权限被禁用，将会在code后加上:0标志
         List<String> permissionCodes = permissions.stream().filter(p -> Objects.equals(p.getType(), ResourceTypeEnum.PERMISSION.getValue()))
-                .map(p -> p.getStatus().equals(BoolEnum.FALSE.getValue()) ? PermissionCacheHandler.getDisablePermissionCode(p.getCode()) : p.getCode())
+                .map(p -> p.getStatus().equals(EnableDisableEnum.DISABLE.getValue()) ? PermissionCacheHandler.getDisablePermissionCode(p.getCode()) : p.getCode())
                 .collect(Collectors.toList());
         // 缓存用户id
         redisTemplate.opsForValue().set(BracePlaceholder.resolveByObject(UserCacheKey.USER_ID_KEY, token), id, UserCacheKey.EXPIRE_TIME, TimeUnit.MINUTES);
