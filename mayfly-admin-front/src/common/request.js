@@ -1,4 +1,5 @@
 import ElementUI from 'element-ui';
+import router from "../router";
 import Axios from 'axios';
 import Config from './config';
 import enums from './enums'
@@ -32,7 +33,9 @@ function parseResponse(res) {
         message: '登录超时'
       });
       setTimeout(() => {
-        location.href = '/';
+        router.push({
+          path: '/login',
+        });
       }, 1000)
       return;
     }
@@ -72,19 +75,24 @@ function parseRestUrl(restUrl, param) {
  * @param {Object} uri    uri
  * @param {Object} params 参数
  */
-function request(method, uri, params) {
-  if (!uri)
+function request(method, url, params) {
+  if (!url)
     return;
+  // 简单判断该url是否是restful风格
+  if (url.indexOf("{") != -1) {
+    url = parseRestUrl(url, params);
+  }
   setToken();
   let query = {
     method,
-    url: buildApiUrl(uri),
+    url: buildApiUrl(url),
   };
+  let lowMethod = method.toLowerCase();
   // post和put使用json格式传参
-  if (method === enums.requestMethod.POST.label || method === enums.requestMethod.PUT.label) {
+  if (lowMethod === 'post' || lowMethod === 'put') {
     query.headers = {
-        'Content-Type': 'application/json;charset=UTF-8'
-      },
+      'Content-Type': 'application/json;charset=UTF-8'
+    },
       query.data = params;
   } else {
     query.params = params;
@@ -104,17 +112,11 @@ function request(method, uri, params) {
 /**
  * 根据Permission中对应的方法值，请求对应的方法
  * 
- * @param {Object} permission       Permission对象(~/common/Permission.js)，包含uri和请求方法
+ * @param {Object} permission       Permission对象(~/common/Permission.js)，包含url和请求方法
  * @param {Object} params    api请求参数
  */
 function send(permission, params) {
-  let uri = permission.uri;
-  // 简单判断该uri是否是restful风格
-  if (uri.indexOf("{") != -1) {
-    uri = parseRestUrl(uri, params);
-  }
-  let method = permission.method.label;
-  return request(method, uri, params);
+  return request(permission.method, permission.url, params);
 }
 
 export function getApiUrl(url) {

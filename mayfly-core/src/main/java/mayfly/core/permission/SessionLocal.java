@@ -5,16 +5,16 @@ package mayfly.core.permission;
  * @version 1.0
  * @date 2019-08-22 09:26
  */
-public class SessionLocal {
+public class SessionLocal<T> {
 
-    private static ThreadLocal<Integer> idLocal = new ThreadLocal<>();
+    private static ThreadLocal idLocal = new ThreadLocal<>();
 
-    public static void setUserId(Integer id) {
+    public static <T> void setUserId(T id) {
         idLocal.set(id);
     }
 
-    public static Integer getUserId() {
-        return idLocal.get();
+    public static <T> T getUserId() {
+        return (T)idLocal.get();
     }
 
     public static void remove() {

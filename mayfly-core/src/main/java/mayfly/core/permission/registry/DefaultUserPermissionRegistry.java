@@ -13,11 +13,11 @@ import java.util.concurrent.TimeUnit;
  * @version 1.0
  * @date 2019-03-23 8:25 PM
  */
-public class DefaultUserPermissionCodeRegistry<I> implements UserPermissionCodeRegistry<I> {
+public class DefaultUserPermissionRegistry<I> implements UserPermissionRegistry<I> {
 
-    private static DefaultUserPermissionCodeRegistry defaultUserPermissionCodeRegistry = new DefaultUserPermissionCodeRegistry();
+    private static DefaultUserPermissionRegistry defaultUserPermissionCodeRegistry = new DefaultUserPermissionRegistry();
 
-    public static <T> DefaultUserPermissionCodeRegistry<T> getInstance() {
+    public static <T> DefaultUserPermissionRegistry<T> getInstance() {
         return defaultUserPermissionCodeRegistry;
     }
 
@@ -26,7 +26,7 @@ public class DefaultUserPermissionCodeRegistry<I> implements UserPermissionCodeR
      */
     private Map<I, Collection<String>> permissionCache = new ConcurrentHashMap<>(255);
 
-    private DefaultUserPermissionCodeRegistry() {
+    private DefaultUserPermissionRegistry() {
     }
 
     @Override
@@ -49,5 +49,10 @@ public class DefaultUserPermissionCodeRegistry<I> implements UserPermissionCodeR
     @Override
     public boolean has(I userId, String permissionCode) {
         return CollectionUtils.contains(permissionCache.get(userId), permissionCode);
+    }
+
+    @Override
+    public I getUserIdByToken(String token) {
+        return null;
     }
 }

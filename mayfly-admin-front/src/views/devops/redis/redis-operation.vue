@@ -56,7 +56,7 @@
   import ToolBar from '~/components/tool-bar/tool-bar.vue'
   import Req from "~/common/request"
   import enums from './enums'
-  import permission from '../permissions.js'
+  import permission from './permissions.js'
   import ValueDialog from './value-dialog.vue';
 
   export default {

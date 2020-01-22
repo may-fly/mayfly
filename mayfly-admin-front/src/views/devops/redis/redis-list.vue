@@ -91,7 +91,7 @@
 <script>
 import ToolBar from "~/components/tool-bar/tool-bar.vue";
 import Info from "./info.vue";
-import permission from "../permissions.js";
+import permission from "./permissions.js";
 import { DynamicFormDialog } from "~/components/dynamic-form";
 
 //

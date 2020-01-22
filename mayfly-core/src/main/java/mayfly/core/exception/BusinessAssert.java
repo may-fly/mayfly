@@ -4,6 +4,7 @@ import mayfly.core.util.CollectionUtils;
 import mayfly.core.util.StringUtils;
 
 import java.util.Collection;
+import java.util.Objects;
 import java.util.function.Supplier;
 
 /**
@@ -76,6 +77,28 @@ public class BusinessAssert {
      */
     public static void empty(Collection<?> collection, String msg) {
         state(CollectionUtils.isEmpty(collection), msg);
+    }
+
+    /**
+     * 断言两个对象必须相等
+     *
+     * @param o1   对象1
+     * @param o2   对象2
+     * @param msg  错误消息
+     */
+    public static void equals(Object o1, Object o2, String msg) {
+        state(Objects.equals(o1, o2), msg);
+    }
+
+    /**
+     * 断言两个对象必须相等
+     *
+     * @param o1   对象1
+     * @param o2   对象2
+     * @param msgSupplier  错误消息提供器
+     */
+    public static void equals(Object o1, Object o2, Supplier<String> msgSupplier) {
+        state(Objects.equals(o1, o2), msgSupplier);
     }
 
     /**

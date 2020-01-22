@@ -1,21 +1,20 @@
 package mayfly.sys.module.sys.service.impl;
 
-import mayfly.core.util.CollectionUtils;
 import mayfly.core.permission.registry.PermissionCacheHandler;
-import mayfly.core.permission.registry.UserPermissionCodeRegistry;
 import mayfly.core.util.BracePlaceholder;
+import mayfly.core.util.CollectionUtils;
 import mayfly.core.util.TreeUtils;
 import mayfly.core.util.UUIDUtils;
-import mayfly.sys.common.enums.EnableDisableEnum;
-import mayfly.sys.module.sys.entity.Account;
 import mayfly.sys.common.cache.UserCacheKey;
-import mayfly.sys.module.sys.enums.ResourceTypeEnum;
+import mayfly.sys.common.enums.EnableDisableEnum;
 import mayfly.sys.common.utils.BeanUtils;
-import mayfly.sys.module.sys.service.PermissionService;
-import mayfly.sys.module.sys.service.ResourceService;
 import mayfly.sys.module.sys.controller.vo.AccountVO;
 import mayfly.sys.module.sys.controller.vo.LoginSuccessVO;
 import mayfly.sys.module.sys.controller.vo.ResourceListVO;
+import mayfly.sys.module.sys.entity.Account;
+import mayfly.sys.module.sys.enums.ResourceTypeEnum;
+import mayfly.sys.module.sys.service.PermissionService;
+import mayfly.sys.module.sys.service.ResourceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -34,7 +33,7 @@ import java.util.stream.Collectors;
  * @date 2018/6/26 上午9:49
  */
 @Service
-public class PermissionServiceImpl implements PermissionService, UserPermissionCodeRegistry<Integer> {
+public class PermissionServiceImpl implements PermissionService  {
 
     @Autowired
     private RedisTemplate redisTemplate;
@@ -72,13 +71,18 @@ public class PermissionServiceImpl implements PermissionService, UserPermissionC
     }
 
     @Override
-    public Integer getIdByToken(String token) {
-        return (Integer) redisTemplate.opsForValue().get(BracePlaceholder.resolveByObject(UserCacheKey.USER_ID_KEY, token));
+    public void removeToken(String token) {
+        redisTemplate.delete(BracePlaceholder.resolveByObject(UserCacheKey.USER_ID_KEY, token));
+    }
+
+    @Override
+    public void removePermissions(Integer userId) {
+        permissionCacheHandler.deletePermissions(userId);
     }
 
 
     //------------------------------------------------------------
-    //  UserPermissionCodeRegistry  接口实现类
+    //  UserPermissionRegistry  接口实现类
     //------------------------------------------------------------
 
     @SuppressWarnings("unchecked")
@@ -101,5 +105,10 @@ public class PermissionServiceImpl implements PermissionService, UserPermissionC
     @Override
     public boolean has(Integer userId, String permissionCode) {
         return redisTemplate.opsForSet().isMember(BracePlaceholder.resolveByObject(UserCacheKey.USER_PERMISSION_KEY, userId), permissionCode);
+    }
+
+    @Override
+    public Integer getUserIdByToken(String token) {
+        return (Integer) redisTemplate.opsForValue().get(BracePlaceholder.resolveByObject(UserCacheKey.USER_ID_KEY, token));
     }
 }

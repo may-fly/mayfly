@@ -16,9 +16,9 @@ import java.lang.annotation.*;
 @Documented
 public @interface Permission {
     /**
-     * 默认需要登录
+     * 默认需用用户拥有指定的权限code（也就是需要对用户分配指定的权限code），才可执行。
      */
-    boolean login() default true;
+    boolean requireCode() default true;
 
-    String code();
+    String code() default "";
 }

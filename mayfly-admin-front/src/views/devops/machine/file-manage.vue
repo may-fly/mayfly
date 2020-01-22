@@ -92,7 +92,7 @@
 </template>
 
 <script>
-  import permission from '../permissions.js'
+  import permission from './permissions.js'
   import enums from './enums.js'
   import Req from "~/common/request"
   export default {
@@ -104,11 +104,11 @@
     },
     data() {
       return {
-        permission: permission.machine,
-        addFile: permission.machine.addConf,
-        delFile: permission.machine.delConf,
-        updateFileContent: permission.machine.updateFileContent,
-        files: permission.machine.files,
+        permission: permission,
+        addFile: permission.addConf,
+        delFile: permission.delConf,
+        updateFileContent: permission.updateFileContent,
+        files: permission.files,
         enums: enums,
         activeName: "conf-file",
         token: sessionStorage.getItem("token"),

@@ -7,7 +7,6 @@ package mayfly.core.permission.checker;
  * @version 1.0
  * @date 2019-03-28 1:44 PM
  */
-@FunctionalInterface
 public interface UserPermissionChecker<I> {
 
     /**
@@ -18,4 +17,11 @@ public interface UserPermissionChecker<I> {
      * @return
      */
     boolean has(I userId, String permissionCode);
+
+    /**
+     * 获取用户id
+     * @param token token
+     * @return      user id
+     */
+    I getUserIdByToken(String token);
 }

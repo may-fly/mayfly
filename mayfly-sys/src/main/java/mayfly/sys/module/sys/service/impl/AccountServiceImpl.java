@@ -1,26 +1,27 @@
 package mayfly.sys.module.sys.service.impl;
 
 import mayfly.core.exception.BusinessAssert;
+import mayfly.core.permission.SessionLocal;
 import mayfly.core.result.Page;
 import mayfly.core.util.DigestUtils;
-import mayfly.sys.common.enums.EnableDisableEnum;
-import mayfly.sys.common.utils.BeanUtils;
 import mayfly.sys.common.base.form.PageForm;
 import mayfly.sys.common.base.service.impl.BaseServiceImpl;
-import mayfly.sys.module.sys.controller.form.AccountForm;
+import mayfly.sys.common.enums.EnableDisableEnum;
+import mayfly.sys.common.utils.BeanUtils;
 import mayfly.sys.module.open.controller.form.AccountLoginForm;
+import mayfly.sys.module.sys.controller.form.AccountForm;
 import mayfly.sys.module.sys.controller.query.AccountQuery;
 import mayfly.sys.module.sys.controller.vo.AccountVO;
 import mayfly.sys.module.sys.entity.Account;
 import mayfly.sys.module.sys.mapper.AccountMapper;
 import mayfly.sys.module.sys.service.AccountRoleService;
 import mayfly.sys.module.sys.service.AccountService;
+import mayfly.sys.module.sys.service.PermissionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * @author meilin.huang
@@ -32,6 +33,8 @@ public class AccountServiceImpl extends BaseServiceImpl<AccountMapper, Account> 
 
     @Autowired
     private AccountRoleService accountRoleService;
+    @Autowired
+    private PermissionService permissionService;
 
     @Override
     public Page<AccountVO> listByQuery(AccountQuery query, PageForm pageForm) {
@@ -49,9 +52,15 @@ public class AccountServiceImpl extends BaseServiceImpl<AccountMapper, Account> 
                 .password(DigestUtils.md5DigestAsHex(adminForm.getPassword())).build();
         Account account = getByCondition(condition);
         if (account != null) {
-            BusinessAssert.state(Objects.equals(account.getStatus(), EnableDisableEnum.ENABLE.getValue()), "该账号已被禁用");
+            BusinessAssert.equals(account.getStatus(), EnableDisableEnum.ENABLE.getValue(), "该账号已被禁用");
         }
         return account;
+    }
+
+    @Override
+    public void logout(String token) {
+        permissionService.removeToken(token);
+        permissionService.removePermissions(SessionLocal.getUserId());
     }
 
     @Override

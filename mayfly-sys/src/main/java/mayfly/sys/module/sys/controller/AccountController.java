@@ -5,8 +5,8 @@ import mayfly.core.permission.Permission;
 import mayfly.core.result.Result;
 import mayfly.core.util.enums.EnumUtils;
 import mayfly.core.validation.annotation.Valid;
-import mayfly.sys.common.enums.EnableDisableEnum;
 import mayfly.sys.common.base.form.PageForm;
+import mayfly.sys.common.enums.EnableDisableEnum;
 import mayfly.sys.module.sys.controller.form.AccountForm;
 import mayfly.sys.module.sys.controller.form.RoleUserForm;
 import mayfly.sys.module.sys.controller.query.AccountQuery;
@@ -88,6 +88,13 @@ public class AccountController {
             return Result.paramError("roleIds参数错误！");
         }
         accountRoleService.saveRoles(id, ids);
+        return Result.success();
+    }
+
+    @Permission(requireCode = false)
+    @PostMapping("/logout/{token}")
+    public Result<?> logout(@PathVariable String token) {
+        accountService.logout(token);
         return Result.success();
     }
 

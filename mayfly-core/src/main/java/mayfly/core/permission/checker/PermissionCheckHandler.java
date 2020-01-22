@@ -1,14 +1,16 @@
 package mayfly.core.permission.checker;
 
+import mayfly.core.exception.BusinessException;
 import mayfly.core.permission.Permission;
-import mayfly.core.permission.registry.PermissionCacheHandler;
 import mayfly.core.permission.PermissionDisabledException;
 import mayfly.core.permission.PermissionInfo;
+import mayfly.core.permission.SessionLocal;
+import mayfly.core.permission.registry.PermissionCacheHandler;
+import mayfly.core.util.StringUtils;
 import mayfly.core.util.annotation.AnnotationUtils;
 
 import java.lang.reflect.Method;
 import java.util.Collection;
-import java.util.Optional;
 
 /**
  * 权限校验处理器
@@ -41,6 +43,27 @@ public class PermissionCheckHandler<I> {
     }
 
     /**
+     * 判断指定方法是否需要权限校验，需要则校验用户是否具有该方法@Permisison注解对应的code
+     *
+     * @param token  请求token
+     * @param method 用户访问的方法
+     * @return
+     * @throws PermissionDisabledException
+     */
+    public boolean hasPermission(String token, Method method) throws BusinessException {
+        I userId;
+        if (StringUtils.isEmpty(token) || (userId = userPermissionChecker.getUserIdByToken(token)) == null) {
+            return false;
+        }
+        SessionLocal.setUserId(userId);
+        PermissionInfo pi = getPermissionInfo(method);
+        if (pi == null) {
+            return true;
+        }
+        return hasPermission(userId, pi.getPermissionCode());
+    }
+
+    /**
      * 判断用户是否拥有指定权限code
      *
      * @param userId         用户id
@@ -48,7 +71,7 @@ public class PermissionCheckHandler<I> {
      * @return
      * @throws PermissionDisabledException 若不存在权限code,而存在与之对应的禁用权限code,抛出此异常
      */
-    public boolean hasPermission(I userId, String permissionCode) throws PermissionDisabledException {
+    public boolean hasPermission(I userId, String permissionCode) throws BusinessException {
         //判断code注册器是否含有该用户的权限code
         if (userPermissionChecker.has(userId, permissionCode)) {
             return true;
@@ -57,7 +80,7 @@ public class PermissionCheckHandler<I> {
         if (userPermissionChecker.has(userId, PermissionCacheHandler.getDisablePermissionCode(permissionCode))) {
             throw new PermissionDisabledException();
         }
-        return false;
+        throw new BusinessException("没有该权限");
     }
 
     /**
@@ -68,7 +91,7 @@ public class PermissionCheckHandler<I> {
      * @return
      * @throws PermissionDisabledException
      */
-    public boolean hasPermission(I userId, Method method) throws PermissionDisabledException {
+    public boolean hasPermission(I userId, Method method) throws BusinessException {
         PermissionInfo pi = getPermissionInfo(method);
         if (pi == null) {
             return true;
@@ -96,14 +119,14 @@ public class PermissionCheckHandler<I> {
      * 根据方法获取对应的权限信息,如果方法声明类上有@{@linkplain Permission}注解则为类名权限code + 方法权限code(方法权限code不存在，则为方法名)<br/>
      * 如果声明类没有@{@linkplain Permission}注解则只返回方法上权限code
      *
-     * @param method
-     * @return
+     * @param method  方法
+     * @return        权限信息
      */
     public PermissionInfo getPermissionInfo(Method method) {
         Permission permission = AnnotationUtils.getAnnotation(method.getDeclaringClass(), Permission.class);
         if (permission == null) {
             permission = AnnotationUtils.getAnnotation(method, Permission.class);
-            if (permission == null) {
+            if (permission == null || !permission.requireCode()) {
                 return null;
             }
 
@@ -111,8 +134,14 @@ public class PermissionCheckHandler<I> {
         }
 
         String classCode = permission.code();
-        return Optional.ofNullable(AnnotationUtils.getAnnotation(method, Permission.class))
-                .map(p -> new PermissionInfo(classCode + p.code()))
-                .orElse(new PermissionInfo(classCode + method.getName()));
+        Permission methodCodeAnno = AnnotationUtils.getAnnotation(method, Permission.class);
+        if (methodCodeAnno != null) {
+            if (!methodCodeAnno.requireCode()) {
+                return null;
+            }
+            return new PermissionInfo(classCode + methodCodeAnno.code());
+        } else {
+            return new PermissionInfo(classCode + method.getName());
+        }
     }
 }

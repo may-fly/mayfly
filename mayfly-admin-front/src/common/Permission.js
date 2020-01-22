@@ -2,39 +2,38 @@ import request from './request'
 import Config from './config'
 
 /**
- * show: 菜单按钮是否显示
- * disabled: 菜单功能是否被禁用
- */
-class PermissionInfo {
-  constructor(show, disabled) {
-    this.show = show;
-    this.disabled = disabled;
-  }
-}
-
-/**
- * 可用于各模块定义各自权限对象
+ * 可用于各模块定义各自权限请求对象
  */
 class Permission {
-  constructor(code) {
-    this.code = code;
+
+  constructor(url) {
+    this.url = url;
   }
 
   /**
-   * 权限对应的uri
-   * @param {String} uri 请求uri
+   * 权限对应的url
+   * @param {String} uri 请求url
    */
-  uri(uri) {
-    this.uri = uri;
+  url(url) {
+    this.url = url;
     return this;
   }
 
   /**
-   * uri的请求方法(方法枚举)
-   * @param {Number} method 请求方法
+   * url的请求方法
+   * @param {String} method 请求方法
    */
   method(method) {
     this.method = method;
+    return this;
+  }
+
+  /**
+   * 设置权限code，用于控制按钮等资源
+   * @param {String} code 权限code
+   */
+  code(code) {
+    this.code = code;
     return this;
   }
   
@@ -42,11 +41,11 @@ class Permission {
    * 获取权限的完整url
    */
   getUrl() {
-    return request.getApiUrl(this.uri);
+    return request.getApiUrl(this.url);
   }
 
   /**
-   * 操作该权限，即请求对应的uri
+   * 操作该权限，即请求对应的url
    * @param {Object} param 请求该权限的参数
    */
   request(param) {
@@ -60,8 +59,8 @@ class Permission {
    * 静态工厂，设置code，并返回Permission对象
    * @param {String} code 权限code（权限标识符）Permission对象必有的属性
    */
-  static code(code) {
-    return new Permission(code);
+  static url(url) {
+    return new Permission(url);
   }
 
   /**
@@ -167,6 +166,17 @@ class Permission {
       // element-ui需要添加该类样式
       elDom.className = elDom.className + ' ' + 'is-disabled';
     }
+  }
+}
+
+/**
+ * show: 菜单按钮是否显示
+ * disabled: 菜单功能是否被禁用
+ */
+class PermissionInfo {
+  constructor(show, disabled) {
+    this.show = show;
+    this.disabled = disabled;
   }
 }
 

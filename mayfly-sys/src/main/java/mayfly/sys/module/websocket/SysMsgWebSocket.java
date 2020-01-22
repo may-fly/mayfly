@@ -5,7 +5,7 @@ import mayfly.core.result.ResultEnum;
 import mayfly.core.util.websocket.WebSocketUtils;
 import mayfly.sys.common.utils.SpringUtils;
 import mayfly.sys.common.websocket.MessageTypeEnum;
-import mayfly.sys.interceptor.PermissionCheckHandlerService;
+import mayfly.sys.module.sys.service.PermissionService;
 import org.springframework.stereotype.Component;
 
 import javax.websocket.OnClose;
@@ -41,7 +41,7 @@ public class SysMsgWebSocket {
      */
     @OnOpen
     public void onOpen(@PathParam("token") String token, Session session) {
-        Integer userId = SpringUtils.getBean(PermissionCheckHandlerService.class).getIdByToken(token);
+        Integer userId = SpringUtils.getBean(PermissionService.class).getUserIdByToken(token);
         if (userId == null) {
             WebSocketUtils.sendText(session, MessageTypeEnum.ERROR.toMsg(ResultEnum.NO_PERMISSION.getName()));
             return;

@@ -1,7 +1,8 @@
 package mayfly.sys.module.sys.service;
 
-import mayfly.sys.module.sys.entity.Account;
+import mayfly.core.permission.registry.UserPermissionRegistry;
 import mayfly.sys.module.sys.controller.vo.LoginSuccessVO;
+import mayfly.sys.module.sys.entity.Account;
 
 /**
  * 权限服务
@@ -9,7 +10,7 @@ import mayfly.sys.module.sys.controller.vo.LoginSuccessVO;
  * @author: meilin.huang
  * @date: 2018/6/26 上午9:48
  */
-public interface PermissionService {
+public interface PermissionService extends UserPermissionRegistry<Integer> {
     /**
      * 保存id以及对应的权限
      *
@@ -19,10 +20,17 @@ public interface PermissionService {
     LoginSuccessVO saveIdAndPermission(Account account);
 
     /**
-     * 根据token获取用户id
+     * 移除token
      *
-     * @param token
-     * @return userId
+     * @param token token
      */
-    Integer getIdByToken(String token);
+    void removeToken(String token);
+
+    /**
+     * 退出登录移除权限
+     *
+     * @param userId  user id
+     */
+    void removePermissions(Integer userId);
+
 }

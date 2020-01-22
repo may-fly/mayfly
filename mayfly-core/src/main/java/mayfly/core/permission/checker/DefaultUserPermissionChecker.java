@@ -1,6 +1,6 @@
 package mayfly.core.permission.checker;
 
-import mayfly.core.permission.registry.DefaultUserPermissionCodeRegistry;
+import mayfly.core.permission.registry.DefaultUserPermissionRegistry;
 
 /**
  * @author meilin.huang
@@ -10,6 +10,11 @@ import mayfly.core.permission.registry.DefaultUserPermissionCodeRegistry;
 public class DefaultUserPermissionChecker<I> implements UserPermissionChecker<I> {
     @Override
     public boolean has(I userId, String permissionCode) {
-        return DefaultUserPermissionCodeRegistry.getInstance().has(userId, permissionCode);
+        return DefaultUserPermissionRegistry.getInstance().has(userId, permissionCode);
+    }
+
+    @Override
+    public I getUserIdByToken(String token) {
+        throw new UnsupportedOperationException();
     }
 }

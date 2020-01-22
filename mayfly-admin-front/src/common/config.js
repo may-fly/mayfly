@@ -1,5 +1,5 @@
-const devBaseUri = 'localhost:8080/mayfly';
-const prodBaseUri = "mayfly.1yue.net/mayfly";
+const devBaseUri = 'localhost:8080';
+const prodBaseUri = "mayfly.1yue.net";
 
 const devUrl = `http://${devBaseUri}`;
 const devSocketUrl = `ws://${devBaseUri}`;

@@ -7,6 +7,10 @@ package mayfly.core.permission;
  */
 public class PermissionInfo {
 
+    private boolean requireToken;
+
+    private boolean requireCode;
+
     private String permissionCode;
 
     public PermissionInfo() {
@@ -16,7 +20,29 @@ public class PermissionInfo {
         this.permissionCode = permissionCode;
     }
 
+    public PermissionInfo(boolean requireToken, boolean requireCode, String permissionCode) {
+        this.requireCode = requireCode;
+        this.requireToken = requireToken;
+        this.permissionCode = permissionCode;
+    }
+
     public String getPermissionCode() {
         return permissionCode;
+    }
+
+    public boolean isRequireCode() {
+        return requireCode;
+    }
+
+    public void setRequireCode(boolean requireCode) {
+        this.requireCode = requireCode;
+    }
+
+    public boolean isRequireToken() {
+        return requireToken;
+    }
+
+    public void setRequireToken(boolean requireToken) {
+        this.requireToken = requireToken;
     }
 }

@@ -93,17 +93,6 @@ let RouteList = [{
 
 ]
 
-// 
-// RouteList[0].children.push({
-// 	path: '/build_code',
-// 	name: 'BuildCode',
-// 	meta: {
-// 		title: '构建代码',
-// 		keepAlive: true
-// 	},
-// 	component: resolve => require(['~/views/DevelopmentTool/Build.vue'], resolve),
-// });
-
 export default new Router({
   routes: RouteList
 })

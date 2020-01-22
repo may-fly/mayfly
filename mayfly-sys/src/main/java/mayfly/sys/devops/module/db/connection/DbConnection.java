@@ -26,7 +26,7 @@ public class DbConnection {
     /**
      * mysql jdbc url模板
      */
-    private static String mysqlJdbcUrlTemp = "jdbc:mysql://{url}:{port}/{name}?useUnicode=true&autoReconnect=true&useSSL=false";
+    private static final String MYSQL_URL_TEMP = "jdbc:mysql://{url}:{port}/{name}?useUnicode=true&autoReconnect=true&useSSL=false";
 
     /**
      * connection缓存，最多允许15个connection同时连接，移除connection时候执行close操作
@@ -44,7 +44,7 @@ public class DbConnection {
 
     private static String getJdbcUrl(Db db) {
         if (Objects.equals(db.getType(), DbTypeEnum.MYSQL.getValue())) {
-            return BracePlaceholder.resolveByObject(mysqlJdbcUrlTemp, db);
+            return BracePlaceholder.resolveByObject(MYSQL_URL_TEMP, db);
         }
         throw new BusinessRuntimeException("数据库类型错误");
     }

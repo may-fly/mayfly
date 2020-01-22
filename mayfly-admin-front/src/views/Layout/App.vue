@@ -84,6 +84,7 @@
   import EuiFooter from '~/views/layout/footer.vue';
   import NavBar from './nav-bar.vue'
   import MenuTree from './menu-tree.vue'
+  import api from '~/common/openApi.js';
 
   export default {
     data() {
@@ -168,6 +169,7 @@
         this.NavBarWidth();
       },
       logout() {
+        api.logout({token: this.$Permission.getToken()});
         sessionStorage.clear();
         this.$router.push({
           path: '/login'

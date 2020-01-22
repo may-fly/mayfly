@@ -18,22 +18,22 @@ public final class PermissionCacheHandler<I> {
     /**
      * 用户权限码注册
      */
-    private UserPermissionCodeRegistry<I> userCodeRegistry;
+    private UserPermissionRegistry<I> userCodeRegistry;
 
 
-    private PermissionCacheHandler(UserPermissionCodeRegistry<I> userCodeRegistry) {
+    private PermissionCacheHandler(UserPermissionRegistry<I> userCodeRegistry) {
         this.userCodeRegistry = userCodeRegistry;
     }
 
     /**
      * 权限缓存工厂方法
      *
-     * @param userCodeRegistry 用户权限缓存器(null则使用默认注册器 {@link DefaultUserPermissionCodeRegistry})
+     * @param userCodeRegistry 用户权限缓存器(null则使用默认注册器 {@link DefaultUserPermissionRegistry})
      * @return
      */
-    public static <T> PermissionCacheHandler<T> of(UserPermissionCodeRegistry<T> userCodeRegistry) {
+    public static <T> PermissionCacheHandler<T> of(UserPermissionRegistry<T> userCodeRegistry) {
         if (userCodeRegistry == null) {
-            userCodeRegistry = DefaultUserPermissionCodeRegistry.<T>getInstance();
+            userCodeRegistry = DefaultUserPermissionRegistry.<T>getInstance();
         }
         return new PermissionCacheHandler<T>(userCodeRegistry);
     }
@@ -48,6 +48,15 @@ public final class PermissionCacheHandler<I> {
      */
     public void savePermission(I userId, Collection<String> permissionCodes, long time, TimeUnit timeUnit) {
         userCodeRegistry.save(userId, permissionCodes, time, timeUnit);
+    }
+
+    /**
+     * 退出登录删除用户权限
+     *
+     * @param userId user id
+     */
+    public void deletePermissions(I userId) {
+        userCodeRegistry.delete(userId);
     }
 
     /**

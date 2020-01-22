@@ -71,7 +71,7 @@ public class MachineFileServiceImpl extends BaseServiceImpl<MachineFileMapper, M
     public MachineFile addFile(Integer machineId, MachineFileForm form) {
         boolean isFile = Objects.equals(form.getType(), MachineFileTypeEnum.FILE.getValue());
         String res = machineService.exec(machineId, isFile ? ShellCmd.fileExist(form.getPath()) : ShellCmd.directoryExist(form.getPath()));
-        BusinessAssert.state(Objects.equals(res, "1\n"), () -> isFile ? "该文件不存在" : "该目录不存在");
+        BusinessAssert.equals(res, "1\n", () -> isFile ? "该文件不存在" : "该目录不存在");
 
         MachineFile file = BeanUtils.copyProperties(form, MachineFile.class);
         file.setMachineId(machineId);
@@ -165,7 +165,7 @@ public class MachineFileServiceImpl extends BaseServiceImpl<MachineFileMapper, M
             // 访问的文件路径必须是在配置的子目录下
             BusinessAssert.state(path.startsWith(file.getPath()), "无法访问该文件");
         } else {
-            BusinessAssert.state(Objects.equals(path, file.getPath()), "文件路径错误");
+            BusinessAssert.equals(path, file.getPath(), "文件路径错误");
             BusinessAssert.state(isFile(file), "该路径为目录，非文件");
         }
     }

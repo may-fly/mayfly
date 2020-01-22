@@ -56,7 +56,7 @@ public class MachineFileController {
 
     @MethodLog("修改文件内容")
     @PutMapping("/files/{id}")
-    public Result<?> setConf(@PathVariable Integer id, @RequestBody @Valid MachineConfContentForm form) {
+    public Result<?> updateFileContent(@PathVariable Integer id, @RequestBody @Valid MachineConfContentForm form) {
         machineFileService.updateFileContent(id, form.getPath(), form.getContent());
         return Result.success();
     }

@@ -1,8 +1,6 @@
 # 服务器配置
 server:
   port: 8080
-  servlet:
-    context-path: /mayfly
 spring:
   profiles:
     # 环境 激活application-active配置文件

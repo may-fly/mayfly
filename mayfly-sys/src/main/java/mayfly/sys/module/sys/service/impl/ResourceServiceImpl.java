@@ -53,13 +53,11 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourceMapper, Resourc
     public Resource saveResource(Resource resource) {
         if (resource.getPid() == null || resource.getPid().equals(0)) {
             resource.setPid(0);
-            BusinessAssert.state(Objects.equals(resource.getType(), ResourceTypeEnum.MENU.getValue())
-                    , "权限资源不能为根节点");
+            BusinessAssert.equals(resource.getType(), ResourceTypeEnum.MENU.getValue(), "权限资源不能为根节点");
         } else {
             Resource pResource = getById(resource.getPid());
             BusinessAssert.notNull(pResource, "pid不存在！");
-            BusinessAssert.state(Objects.equals(pResource.getType(), ResourceTypeEnum.MENU.getValue())
-                    , "权限资源不能添加子节点");
+            BusinessAssert.equals(pResource.getType(), ResourceTypeEnum.MENU.getValue(), "权限资源不能添加子节点");
         }
         // 如果是添加菜单，则该父节点不能存在有权限节点
         if (resource.getType().equals(ResourceTypeEnum.MENU.getValue())) {
@@ -81,7 +79,7 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourceMapper, Resourc
     public Resource updateResource(Resource resource) {
         Resource old = getById(resource.getId());
         BusinessAssert.notNull(old, "资源不存在");
-        BusinessAssert.state(Objects.equals(resource.getType(), old.getType()), "资源类型不可变更");
+        BusinessAssert.equals(resource.getType(), old.getType(), "资源类型不可变更");
         // 禁止误传修改其父节点
         resource.setPid(null);
         resource.setUpdateTime(LocalDateTime.now());

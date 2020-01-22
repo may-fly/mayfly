@@ -1,10 +1,9 @@
 package mayfly.sys.interceptor;
 
+import mayfly.core.exception.BusinessException;
 import mayfly.core.permission.SessionLocal;
 import mayfly.core.permission.checker.PermissionCheckHandler;
-import mayfly.core.permission.PermissionDisabledException;
 import mayfly.core.result.Result;
-import mayfly.core.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -21,13 +20,10 @@ import java.io.PrintWriter;
  */
 public class PermissionInterceptor implements HandlerInterceptor {
 
-    private PermissionCheckHandlerService checkHandlerService;
-
     private PermissionCheckHandler<Integer> checkHandler;
 
-    public PermissionInterceptor(PermissionCheckHandlerService checkHandlerService) {
-        this.checkHandlerService = checkHandlerService;
-        this.checkHandler = checkHandlerService.getCheckHandler();
+    public PermissionInterceptor(PermissionCheckHandler<Integer> permissionCheckHandler) {
+        this.checkHandler = permissionCheckHandler;
     }
 
     @Override
@@ -36,27 +32,16 @@ public class PermissionInterceptor implements HandlerInterceptor {
             return true;
         }
         String token = request.getHeader("token");
-        if (StringUtils.isEmpty(token)) {
-            return noPermission(response);
-        }
-        Integer userId = checkHandlerService.getIdByToken(token);
-        if (userId == null) {
-            return noPermission(response);
-        }
-        SessionLocal.setUserId(userId);
-//        if (userId.equals(1)) {
-//            return true;
-//        }
         // 判断该用户是否有执行该方法的权限
         try {
             //如果校验通过，返回true
-            if (!(handler instanceof HandlerMethod) || checkHandler.hasPermission(userId, ((HandlerMethod) handler).getMethod())) {
+            if (!(handler instanceof HandlerMethod) || checkHandler.hasPermission(token, ((HandlerMethod) handler).getMethod())) {
                 return true;
             }
-            // 无权限
+            // token 过期
             return noPermission(response);
-        } catch (PermissionDisabledException e) {
-            //权限禁用
+        } catch (BusinessException e) {
+            //权限禁用or没有权限
             sendErrorMessage(response, Result.error(e.getMessage()));
             return false;
         }

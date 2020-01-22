@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
  * @version 1.0
  * @date 2019-03-23 8:17 PM
  */
-public interface UserPermissionCodeRegistry<I> extends UserPermissionChecker<I> {
+public interface UserPermissionRegistry<I> extends UserPermissionChecker<I> {
 
     /**
      * 保存用户权限码列表

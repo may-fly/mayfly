@@ -94,13 +94,13 @@
 import ToolBar from "~/components/tool-bar/tool-bar.vue";
 import { DynamicFormDialog } from "~/components/dynamic-form";
 import FileManage from "./file-manage.vue";
-import permission from "../permissions.js";
+import permission from "./permissions.js";
 
 export default {
   data() {
     return {
       table: [],
-      permission: permission.machine,
+      permission: permission,
       currentId: null,
       currentData: null,
       params: {
@@ -116,8 +116,8 @@ export default {
         visible: false,
         title: null,
         formInfo: {
-          addPermission: permission.machine.save,
-          updatePermission: permission.machine.update,
+          addPermission: permission.save,
+          updatePermission: permission.update,
           formItems: [
             {
               type: "input",

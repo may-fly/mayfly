@@ -20,5 +20,7 @@ public interface AccountService extends BaseService<Account> {
 
     Account login(AccountLoginForm adminForm);
 
+    void logout(String token);
+
     void saveAccount(AccountForm accountForm);
 }

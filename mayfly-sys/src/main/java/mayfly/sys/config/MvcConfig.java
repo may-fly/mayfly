@@ -3,8 +3,9 @@ package mayfly.sys.config;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
-import mayfly.sys.interceptor.PermissionCheckHandlerService;
+import mayfly.core.permission.checker.PermissionCheckHandler;
 import mayfly.sys.interceptor.PermissionInterceptor;
+import mayfly.sys.module.sys.service.PermissionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
@@ -26,11 +27,11 @@ import java.util.List;
 public class MvcConfig implements WebMvcConfigurer {
 
     @Autowired
-    private PermissionCheckHandlerService permissionCheckHandlerService;
+    private PermissionService permissionService;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new PermissionInterceptor(permissionCheckHandlerService))
+        registry.addInterceptor(new PermissionInterceptor(PermissionCheckHandler.of(permissionService)))
                 .addPathPatterns("/sys/**", "/devops/**");
     }
 
