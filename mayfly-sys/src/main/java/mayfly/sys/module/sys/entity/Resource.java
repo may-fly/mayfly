@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import mayfly.sys.common.base.mapper.annotation.NoColumn;
+import mayfly.sys.common.base.model.BaseEntity;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -20,7 +21,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Resource implements Serializable {
+public class Resource extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 6346288647519202567L;
 

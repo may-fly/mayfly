@@ -28,7 +28,7 @@ public class SSHUtilsTest {
         Vector<ChannelSftp.LsEntry> ls = sftp.ls("/");
 //        sftp.disconnect();
         System.out.println(JsonUtils.toJSONString(ls));
-//        ChannelShell shell = SSHUtils.openChannelShell(SSHUtils.getSession("118.24.26.101", 22, "root", "hml,.111049"));
+//        ChannelShell shell = SSHUtils.openChannelShell(SSHUtils.getSession("118.24.26.101", 22, "root", ""));
 //        shell.setInputStream(System.in, true);
 //        shell.setOutputStream(System.out);
 //        shell.connect();

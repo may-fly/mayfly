@@ -4,8 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
+import mayfly.sys.common.base.model.BaseEntity;
 
 /**
  * @author meilin.huang
@@ -16,10 +15,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Redis {
-
-    private Integer id;
-
+public class Redis extends BaseEntity {
     private String host;
 
     private Integer port;
@@ -29,8 +25,4 @@ public class Redis {
     private String description;
 
     private Integer clusterId;
-
-    private LocalDateTime createTime;
-
-    private LocalDateTime updateTime;
 }

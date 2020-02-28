@@ -21,7 +21,7 @@
     </modules>
 
     <properties>
-        <java.version>1.8</java.version>
+        <java.version>11</java.version>
         <!--项目编码以及编译版本-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>${java.version}</maven.compiler.source>
@@ -33,7 +33,7 @@
         <mysql.connector.version>8.0.11</mysql.connector.version>
         <alibaba.druid.version>1.0.28</alibaba.druid.version>
         <alibaba.fastjson.version>1.2.54</alibaba.fastjson.version>
-        <lombok.version>1.18.10</lombok.version>
+        <lombok.version>1.18.12</lombok.version>
     </properties>
 
 

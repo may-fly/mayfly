@@ -1,7 +1,7 @@
 package mayfly.sys.module.sys.service;
 
-import mayfly.core.result.Page;
-import mayfly.sys.common.base.form.PageForm;
+import mayfly.sys.common.base.model.PageQuery;
+import mayfly.sys.common.base.model.PageResult;
 import mayfly.sys.common.base.service.BaseService;
 import mayfly.sys.module.sys.controller.form.AccountForm;
 import mayfly.sys.module.open.controller.form.AccountLoginForm;
@@ -16,7 +16,7 @@ import mayfly.sys.module.sys.entity.Account;
  */
 public interface AccountService extends BaseService<Account> {
 
-    Page<AccountVO> listByQuery(AccountQuery query, PageForm pageForm);
+    PageResult<AccountVO> listByQuery(AccountQuery query, PageQuery pageQuery);
 
     Account login(AccountLoginForm adminForm);
 

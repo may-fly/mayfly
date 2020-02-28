@@ -1,4 +1,4 @@
-package mayfly.sys.common.base.form;
+package mayfly.sys.common.base.model;
 
 import lombok.Data;
 import mayfly.core.validation.annotation.NotNull;
@@ -10,7 +10,7 @@ import mayfly.core.validation.annotation.Size;
  * @date 2018-11-23 5:55 PM
  */
 @Data
-public class PageForm {
+public class PageQuery {
     @NotNull
     private Integer pageNum;
 

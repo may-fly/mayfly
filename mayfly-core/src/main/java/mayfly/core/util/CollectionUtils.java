@@ -37,8 +37,8 @@ public class CollectionUtils {
      * @param newList    新list
      * @param oldList    旧list
      * @param comparator 集合对象比较器
-     * @param <T>
-     * @return
+     * @param <T>        集合元素泛型对象
+     * @return           比较结果 {@link CompareResult}
      */
     public static <T> CompareResult<T> compare(Collection<T> newList, Collection<T> oldList, Comparator<T> comparator) {
         Collection<T> unmodifiedValue = new ArrayList<>();

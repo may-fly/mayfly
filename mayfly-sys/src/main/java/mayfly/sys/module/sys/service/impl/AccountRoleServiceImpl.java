@@ -60,7 +60,7 @@ public class AccountRoleServiceImpl extends BaseServiceImpl<AccountRoleMapper, A
         for (Integer id : addIds) {
             BusinessAssert.notNull(roleService.getById(id), "角色不存在");
             AccountRole ru = AccountRole.builder().roleId(id).accountId(accountId).createTime(now).build();
-            save(ru);
+            insert(ru);
         }
     }
 }

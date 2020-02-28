@@ -1,8 +1,6 @@
 package mayfly.sys.aop.log;
 
 import mayfly.core.log.LogHandler;
-import mayfly.core.log.LogInfo;
-import mayfly.core.log.LogResult;
 import mayfly.core.log.MethodLog;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -18,9 +16,10 @@ import org.springframework.stereotype.Component;
 import java.lang.reflect.Method;
 
 /**
+ * 日志切面
+ *
  * @author hml
- * @version 1.0
- * @description: 日志切面
+ * @version 1.
  * @date 2018-09-19 上午9:16
  */
 @Aspect
@@ -42,22 +41,22 @@ public class LogAspect {
     public void doException(JoinPoint jp, Exception e) {
         Object[] args = jp.getArgs();
         Method method = ((MethodSignature) jp.getSignature()).getMethod();
-        LogInfo logInfo = handler.getLogInfo(method);
-        LOG.error(logInfo.getExceptionLogMsg(LogResult.exception(args, e)));
+        LogHandler.LogInfo logInfo = handler.getLogInfo(method);
+        LOG.error(logInfo.getExceptionLogMsg(LogHandler.LogResult.exception(args, e)));
     }
 
     @Around(value = "logPointcut()")
     private Object afterReturning(ProceedingJoinPoint pjp) throws Throwable {
         Object[] args = pjp.getArgs();
         Method method = ((MethodSignature) pjp.getSignature()).getMethod();
-        LogInfo logInfo = handler.getLogInfo(method);
+        LogHandler.LogInfo logInfo = handler.getLogInfo(method);
 
         long startTime = System.currentTimeMillis();
         Object result = pjp.proceed();
         long endTime = System.currentTimeMillis();
 
         MethodLog.LogLevel sysLogLevel = getSysLogLevel();
-        String logMsg = logInfo.fillLogMsg(sysLogLevel, new LogResult(args, result, endTime - startTime));
+        String logMsg = logInfo.fillLogMsg(sysLogLevel, new LogHandler.LogResult(args, result, endTime - startTime));
         if (logMsg == null) {
             return result;
         }
@@ -86,7 +85,7 @@ public class LogAspect {
     /**
      * 获取系统的日志级别
      *
-     * @return
+     * @return 系统日志级别
      */
     private MethodLog.LogLevel getSysLogLevel() {
         if (LOG.isDebugEnabled()) {

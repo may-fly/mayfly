@@ -3,103 +3,141 @@
     <el-form
       :model="form"
       ref="dynamicForm"
-      :label-width="formInfo.labelWidth ? formInfo.labelWidth : '80px'"
+      :label-width="formInfo.labelWidth ? formInfo.labelWidth : '100px'"
       :size="formInfo.size ? formInfo.size : 'small'"
     >
-      <el-form-item
-        v-for="item in formInfo.formItems"
-        :key="item.key"
-        :prop="item.name"
-        :label="item.label"
-        :required="item.required"
-        :rules="item.rules"
-      >
-        <el-input
-          v-if="item.type === 'input'"
-          v-model.trim="form[item.name]"
-          :placeholder="item.placeholder"
-          :type="item.inputType"
-          clearable
-          autocomplete="new-password"
-        ></el-input>
+      <el-row v-for="fr in formInfo.formRows" :key="fr.key">
+        <el-col v-for="item in fr" :key="item.key" :span="item.span ? item.span : 24/fr.length">
+          <el-form-item
+            :prop="item.name"
+            :label="item.label"
+            :label-width="item.labelWidth"
+            :required="item.required"
+            :rules="item.rules"
+          >
+            <!-- input输入框 -->
+            <el-input
+              v-if="item.type === 'input'"
+              v-model.trim="form[item.name]"
+              :placeholder="item.placeholder"
+              :type="item.inputType"
+              clearable
+              autocomplete="new-password"
+              @change="item.change ? item.change(form) : ''"
+            ></el-input>
 
-        <el-select
-          v-else-if="item.type === 'select'"
-          v-model.trim="form[item.name]"
-          :placeholder="item.placeholder"
-          clearable
-        >
-          <el-option v-for="i in item.enums" :key="i.value" :label="i.label" :value="i.value"></el-option>
-        </el-select>
-      </el-form-item>
+            <!-- 普通文本信息（可用于不可修改字段等） -->
+            <span v-else-if="item.type === 'text'">{{ form[item.name] }}</span>
 
-      <el-form-item size="large">
-        <el-button @click="cancel" size="mini">取 消</el-button>
-        <el-button type="primary" @click="submit" size="mini">确 定</el-button>
-      </el-form-item>
+            <!-- select选择框 -->
+            <!-- optionProps.label: 指定option中的label为options对象的某个属性值，默认就是label字段 -->
+            <!-- optionProps.value: 指定option中的value为options对象的某个属性值，默认就是value字段 -->
+            <el-select
+              v-else-if="item.type === 'select'"
+              v-model.trim="form[item.name]"
+              :placeholder="item.placeholder"
+              :filterable="item.filterable"
+              :remote="item.remote"
+              :remote-method="item.remoteMethod"
+              @focus="item.focus ? item.focus(form) : ''"
+              clearable
+              :disabled="item.updateDisabled && form.id != null"
+              style="width: 100%;"
+            >
+              <el-option
+                v-for="i in item.options"
+                :key="i.key"
+                :label="i[item.optionProps ? item.optionProps.label || 'label' : 'label']"
+                :value="i[item.optionProps ? item.optionProps.value || 'value' : 'value']"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+      </el-row>
+
+      <el-row type="flex" justify="center">
+        <slot name="btns" :submitDisabled="submitDisabled" :data="form" :submit="submit">
+          <el-button @click="reset" size="mini">重 置</el-button>
+          <el-button type="primary" @click="submit" size="mini">保 存</el-button>
+        </slot>
+      </el-row>
     </el-form>
   </div>
 </template>
 
 <script>
 export default {
-  name: "DynamicForm",
+  name: 'DynamicForm',
   props: {
     formInfo: Object,
     formData: [Object, Boolean]
   },
   data() {
     return {
-      form: {}
-    };
+      form: {},
+      submitDisabled: false
+    }
   },
   watch: {
     formData: {
       handler: function() {
         if (this.formData) {
-          this.form = { ...this.formData };
+          this.form = { ...this.formData }
         }
       },
       deep: true
     }
   },
   methods: {
+    // onInputEvent(value) {
+    //   this.$emit('update:formData', this.form)
+    // },
     submit() {
-      this.$refs["dynamicForm"].validate(valid => {
+      this.$refs['dynamicForm'].validate(valid => {
         if (valid) {
+          // 提交的表单数据
+          let subform = { ...this.form }
           let operation = this.form.id
             ? this.formInfo.updatePermission
-            : this.formInfo.addPermission;
+            : this.formInfo.addPermission
           if (operation) {
-            operation.request(this.form).then(res => {
-              this.$message.success("保存成功");
-              this.$emit("submitSuccess");
-              this.cancel();
-            });
+            this.submitDisabled = true
+            operation.request(this.form).then(
+              res => {
+                this.$message.success('保存成功')
+                this.$emit('submitSuccess', subform)
+                this.submitDisabled = false
+                // this.cancel()
+              },
+              e => {
+                this.submitDisabled = false
+              }
+            )
           } else {
-            this.$message.error("表单未设置对应的提交操作");
+            this.$message.error('表单未设置对应的提交权限')
           }
         } else {
-          return false;
+          return false
         }
-      });
-
-      // this.cancel();
+      })
     },
-    cancel() {
-      this.$emit("cancel");
-      setTimeout(() => {
-        this.$refs["dynamicForm"].resetFields();
-        //  重置对象属性为null
-        this.form = {};
-      }, 300);
+    reset() {
+      this.$emit('reset')
+      this.resetFieldsAndData()
+    },
+    /**
+     * 重置表单以及表单数据
+     */
+    resetFieldsAndData() {
+      // 对整个表单进行重置，将所有字段值重置为初始值并移除校验结果
+      this.$refs['dynamicForm'].resetFields()
+      // 重置表单数据
+      this.form = {}
     }
   },
   mounted() {
     // 组件可能还没有初始化，第一次初始化的时候无法watch对象
-    this.form = { ...this.formData };
+    this.form = { ...this.formData }
   }
-};
+}
 </script>
-<style lang="less">
-</style>

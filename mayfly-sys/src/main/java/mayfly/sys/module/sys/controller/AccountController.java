@@ -5,7 +5,7 @@ import mayfly.core.permission.Permission;
 import mayfly.core.result.Result;
 import mayfly.core.util.enums.EnumUtils;
 import mayfly.core.validation.annotation.Valid;
-import mayfly.sys.common.base.form.PageForm;
+import mayfly.sys.common.base.model.PageQuery;
 import mayfly.sys.common.enums.EnableDisableEnum;
 import mayfly.sys.module.sys.controller.form.AccountForm;
 import mayfly.sys.module.sys.controller.form.RoleUserForm;
@@ -44,8 +44,8 @@ public class AccountController {
     private AccountRoleService accountRoleService;
 
     @GetMapping()
-    public Result<?> list(@Valid PageForm pageForm, AccountQuery accountQuery) {
-        return Result.success(accountService.listByQuery(accountQuery, pageForm));
+    public Result<?> list(@Valid PageQuery pageQuery, AccountQuery accountQuery) {
+        return accountService.listByQuery(accountQuery, pageQuery).toResult();
     }
 
     @PostMapping()
@@ -63,8 +63,9 @@ public class AccountController {
     @PutMapping("/{id}/{status}")
     public Result<?> changeStatus(@PathVariable Integer id, @PathVariable Integer status) {
         BusinessAssert.state(EnumUtils.isExist(EnableDisableEnum.values(), status), "状态值错误");
-        Account build = Account.builder().id(id).status(status).build();
-        accountService.updateById(build);
+        Account a = new Account().setStatus(status);
+        a.setId(id);
+        accountService.updateByIdSelective(a);
         return Result.success();
     }
 

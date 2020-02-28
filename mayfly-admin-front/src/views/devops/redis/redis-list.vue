@@ -78,10 +78,11 @@
     <Info :visible="infoDialog.visible" :info="infoDialog.info" @close="infoDialog.visible = false"></Info>
 
     <dynamic-form-dialog
+      :dialog-width="formDialog.dialogWidth"
       :visible="formDialog.visible"
       :title="formDialog.title"
-      :formInfo="formDialog.formInfo"
-      :formData="formDialog.formData"
+      :form-info="formDialog.formInfo"
+      :form-data="formDialog.formData"
       @cancel="closeDialog"
       @submitSuccess="submitSuccess"
     ></dynamic-form-dialog>
@@ -93,21 +94,23 @@ import ToolBar from "~/components/tool-bar/tool-bar.vue";
 import Info from "./info.vue";
 import permission from "./permissions.js";
 import { DynamicFormDialog } from "~/components/dynamic-form";
-
+import { Enum } from "~/common/Enum.js";
 //
 export default {
   data() {
+    var validatePort = (rule, value, callback) => {
+      if (value > 65535 || value < 1) {
+        callback(new Error("端口号错误"));
+      }
+      callback();
+    };
+
     return {
       redisTable: [],
       permission: permission.redis,
       keyPermission: permission.redisKey,
       currentId: null,
       currentData: null,
-      form: {
-        host: "",
-        port: 6379,
-        password: ""
-      },
       params: {
         host: null,
         clusterId: null
@@ -137,48 +140,56 @@ export default {
         formInfo: {
           addPermission: permission.redis.save,
           updatePermission: permission.redis.update,
-          formItems: [
-            {
-              type: "input",
-              label: "主机：",
-              name: "host",
-              placeholder: "请输入节点ip",
-              rules: [
-                {
-                  required: true,
-                  message: "请输入节点ip",
-                  trigger: ["blur", "change"]
-                }
-              ]
-            },
-            {
-              type: "input",
-              label: "端口号：",
-              name: "port",
-              placeholder: "请输入节点端口号",
-              inputType: "number",
-              rules: [
-                {
-                  required: true,
-                  message: "请输入节点端口号",
-                  trigger: ["blur", "change"]
-                }
-              ]
-            },
-            {
-              type: "input",
-              label: "密码：",
-              name: "pwd",
-              placeholder: "请输入节点密码",
-              inputType: "password"
-            },
-            {
-              type: "input",
-              label: "描述：",
-              name: "description",
-              placeholder: "请输入节点描述",
-              inputType: "textarea"
-            }
+          formRows: [
+            [
+              {
+                type: "input",
+                label: "主机：",
+                name: "host",
+                placeholder: "请输入节点ip",
+                rules: [
+                  {
+                    required: true,
+                    message: "请输入节点ip",
+                    trigger: ["blur", "change"]
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                type: "input",
+                label: "端口号：",
+                name: "port",
+                placeholder: "请输入节点端口号",
+                inputType: "number",
+                rules: [
+                  {
+                    required: true,
+                    message: "请输入节点端口号",
+                    trigger: ["blur", "change"]
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                type: "input",
+                label: "密码：",
+                name: "pwd",
+                placeholder: "请输入节点密码",
+                inputType: "password"
+              }
+            ],
+            [
+              {
+                type: "input",
+                label: "描述：",
+                name: "description",
+                placeholder: "请输入节点描述",
+                inputType: "textarea"
+              }
+            ]
           ]
         },
         formData: null
@@ -237,7 +248,8 @@ export default {
     },
     submitSuccess() {
       this.currentId = null;
-      (this.currentData = null), this.search();
+      this.currentData = null;
+      this.search();
     }
   },
   mounted() {

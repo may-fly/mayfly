@@ -2,6 +2,7 @@ package mayfly.sys.module.sys.entity;
 
 import lombok.Data;
 import mayfly.sys.common.base.mapper.annotation.NoColumn;
+import mayfly.sys.common.base.model.BaseEntity;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -13,7 +14,7 @@ import java.util.List;
  * @date: 2018/6/27 下午2:03
  */
 @Data
-public class Role implements Serializable {
+public class Role extends BaseEntity implements Serializable {
 
     private Integer id;
 

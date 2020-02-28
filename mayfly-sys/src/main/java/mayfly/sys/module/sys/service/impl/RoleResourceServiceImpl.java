@@ -61,8 +61,9 @@ public class RoleResourceServiceImpl extends BaseServiceImpl<RoleResourceMapper,
             Resource r = resourceService.getById(id);
             BusinessAssert.notNull(r, "id : " + id + "的资源不存在！");
             RoleResource rr = RoleResource.builder().roleId(roleId).resourceId(id).createTime(now).build();
-            save(rr);
+            addValues.add(rr);
         }
+        batchInsert(addValues);
 
         return true;
     }

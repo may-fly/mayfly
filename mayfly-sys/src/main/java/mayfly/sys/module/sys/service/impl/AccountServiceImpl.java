@@ -2,9 +2,9 @@ package mayfly.sys.module.sys.service.impl;
 
 import mayfly.core.exception.BusinessAssert;
 import mayfly.core.permission.SessionLocal;
-import mayfly.core.result.Page;
 import mayfly.core.util.DigestUtils;
-import mayfly.sys.common.base.form.PageForm;
+import mayfly.sys.common.base.model.PageQuery;
+import mayfly.sys.common.base.model.PageResult;
 import mayfly.sys.common.base.service.impl.BaseServiceImpl;
 import mayfly.sys.common.enums.EnableDisableEnum;
 import mayfly.sys.common.utils.BeanUtils;
@@ -37,19 +37,19 @@ public class AccountServiceImpl extends BaseServiceImpl<AccountMapper, Account> 
     private PermissionService permissionService;
 
     @Override
-    public Page<AccountVO> listByQuery(AccountQuery query, PageForm pageForm) {
-        Page<Account> accountPage = listByCondition(BeanUtils.copyProperties(query, Account.class), pageForm);
+    public PageResult<AccountVO> listByQuery(AccountQuery query, PageQuery pageQuery) {
+        PageResult<Account> accountPage = listByCondition(BeanUtils.copyProperties(query, Account.class), pageQuery);
         List<AccountVO> accountVOS = BeanUtils.copyProperties(accountPage.getList(), AccountVO.class);
         accountVOS.forEach(a -> {
             a.setRoles(accountRoleService.listRoleByAccountId(a.getId()));
         });
-        return Page.with(accountPage.getTotal(), accountVOS);
+        return PageResult.with(accountPage.getTotal(), accountVOS);
     }
 
     @Override
     public Account login(AccountLoginForm adminForm) {
-        Account condition = Account.builder().username(adminForm.getUsername())
-                .password(DigestUtils.md5DigestAsHex(adminForm.getPassword())).build();
+        Account condition = new Account().setUsername(adminForm.getUsername())
+                .setPassword(DigestUtils.md5DigestAsHex(adminForm.getPassword()));
         Account account = getByCondition(condition);
         if (account != null) {
             BusinessAssert.equals(account.getStatus(), EnableDisableEnum.ENABLE.getValue(), "该账号已被禁用");
@@ -65,7 +65,7 @@ public class AccountServiceImpl extends BaseServiceImpl<AccountMapper, Account> 
 
     @Override
     public void saveAccount(AccountForm accountForm) {
-        BusinessAssert.isNull(getByCondition(Account.builder().username(accountForm.getUsername()).build()),
+        BusinessAssert.isNull(getByCondition(new Account().setUsername(accountForm.getUsername())),
                 "该用户名已存在");
         Account account = BeanUtils.copyProperties(accountForm, Account.class);
         account.setPassword(DigestUtils.md5DigestAsHex(accountForm.getPassword()));
@@ -74,6 +74,6 @@ public class AccountServiceImpl extends BaseServiceImpl<AccountMapper, Account> 
         account.setUpdateTime(now);
         // 默认启用状态
         account.setStatus(EnableDisableEnum.ENABLE.getValue());
-        save(account);
+        insert(account);
     }
 }

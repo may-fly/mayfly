@@ -1,24 +1,23 @@
 package mayfly.sys.module.sys.service.impl;
 
 import mayfly.core.exception.BusinessAssert;
-import mayfly.core.util.enums.EnumUtils;
 import mayfly.core.util.TreeUtils;
+import mayfly.core.util.enums.EnumUtils;
+import mayfly.sys.common.base.service.impl.BaseServiceImpl;
 import mayfly.sys.common.enums.EnableDisableEnum;
-import mayfly.sys.module.sys.mapper.ResourceMapper;
+import mayfly.sys.common.utils.BeanUtils;
+import mayfly.sys.module.sys.controller.vo.ResourceListVO;
 import mayfly.sys.module.sys.entity.Resource;
 import mayfly.sys.module.sys.entity.RoleResource;
 import mayfly.sys.module.sys.enums.ResourceTypeEnum;
-import mayfly.sys.common.utils.BeanUtils;
-import mayfly.sys.common.base.service.impl.BaseServiceImpl;
+import mayfly.sys.module.sys.mapper.ResourceMapper;
 import mayfly.sys.module.sys.service.PermissionService;
 import mayfly.sys.module.sys.service.ResourceService;
 import mayfly.sys.module.sys.service.RoleResourceService;
-import mayfly.sys.module.sys.controller.vo.ResourceListVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -45,7 +44,7 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourceMapper, Resourc
 
     @Override
     public List<ResourceListVO> listResource(Resource condition) {
-        List<Resource> resources = resourceMapper.selectAll("pid ASC, weight ASC");
+        List<Resource> resources = listAll("pid ASC, weight ASC");
         return TreeUtils.generateTrees(BeanUtils.copyProperties(resources, ResourceListVO.class));
     }
 
@@ -69,10 +68,8 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourceMapper, Resourc
         }
         //默认启用
         resource.setStatus(EnableDisableEnum.ENABLE.getValue());
-        LocalDateTime now = LocalDateTime.now();
-        resource.setCreateTime(now);
-        resource.setUpdateTime(now);
-        return save(resource);
+        insert(resource);
+        return resource;
     }
 
     @Override
@@ -82,14 +79,14 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourceMapper, Resourc
         BusinessAssert.equals(resource.getType(), old.getType(), "资源类型不可变更");
         // 禁止误传修改其父节点
         resource.setPid(null);
-        resource.setUpdateTime(LocalDateTime.now());
 
         if (Objects.equals(old.getType(), ResourceTypeEnum.MENU.getValue())) {
-            return updateById(resource);
+            updateByIdSelective(resource);
+            return resource;
         }
         // 权限类型需要校验code不能为空
         BusinessAssert.notEmpty(resource.getCode(), "权限code不能为空");
-        updateById(resource);
+        updateByIdSelective(resource);
         return resource;
     }
 
@@ -103,9 +100,8 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourceMapper, Resourc
             return resource;
         }
         resource.setStatus(status);
-        resource.setUpdateTime(LocalDateTime.now());
         // 更新数据库状态
-        updateById(resource);
+        updateByIdSelective(resource);
         return resource;
     }
 
@@ -113,7 +109,7 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourceMapper, Resourc
     @Override
     public void deleteResource(Integer id) {
         BusinessAssert.empty(listByCondition(Resource.builder().pid(id).build()), "请先删除该资源的子资源");
-        BusinessAssert.state(deleteById(id), "删除菜单失败！");
+        BusinessAssert.state(deleteById(id) == 1, "删除菜单失败！");
         // 删除角色资源表中该菜单所关联的所有信息
         roleResourceService.deleteByCondition(RoleResource.builder().resourceId(id).build());
     }

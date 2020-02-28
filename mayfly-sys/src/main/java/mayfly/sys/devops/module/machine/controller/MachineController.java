@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -35,6 +36,13 @@ public class MachineController {
 
     @PostMapping()
     public Result<?> save(@RequestBody @Valid MachineForm form) {
+        machineService.saveMachine(form);
+        return Result.success();
+    }
+
+    @PutMapping("/{id}")
+    public Result<?> save(@PathVariable Integer id, @RequestBody @Valid MachineForm form) {
+        form.setId(id);
         machineService.saveMachine(form);
         return Result.success();
     }

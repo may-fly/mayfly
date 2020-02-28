@@ -9,5 +9,5 @@ import mayfly.sys.module.sys.entity.Account;
  * @author hml
  * @date 2018/6/27 下午2:35
  */
-public interface AccountMapper extends BaseMapper<Account> {
+public interface AccountMapper extends BaseMapper<Integer, Account> {
 }

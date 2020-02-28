@@ -118,67 +118,77 @@ export default {
         formInfo: {
           addPermission: permission.save,
           updatePermission: permission.update,
-          formItems: [
-            {
-              type: "input",
-              label: "名称：",
-              name: "name",
-              placeholder: "请输入名称",
-              rules: [
-                {
-                  required: true,
-                  message: "请输入名称",
-                  trigger: ["blur", "change"]
-                }
-              ]
-            },
-            {
-              type: "input",
-              label: "ip：",
-              name: "ip",
-              placeholder: "请输入ip",
-              rules: [
-                {
-                  required: true,
-                  message: "请输入ip",
-                  trigger: ["blur", "change"]
-                }
-              ]
-            },
-            {
-              type: "input",
-              label: "端口号：",
-              name: "port",
-              placeholder: "请输入端口号",
-              inputType: "number",
-              rules: [
-                {
-                  required: true,
-                  message: "请输入ip",
-                  trigger: ["blur", "change"]
-                }
-              ]
-            },
-            {
-              type: "input",
-              label: "用户名：",
-              name: "username",
-              placeholder: "请输入用户名",
-              rules: [
-                {
-                  required: true,
-                  message: "请输入用户名",
-                  trigger: ["blur", "change"]
-                }
-              ]
-            },
-            {
-              type: "input",
-              label: "密码：",
-              name: "password",
-              placeholder: "请输入密码",
-              inputType: "password"
-            }
+          formRows: [
+            [
+              {
+                type: "input",
+                label: "名称：",
+                name: "name",
+                placeholder: "请输入名称",
+                rules: [
+                  {
+                    required: true,
+                    message: "请输入名称",
+                    trigger: ["blur", "change"]
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                type: "input",
+                label: "ip：",
+                name: "ip",
+                placeholder: "请输入ip",
+                rules: [
+                  {
+                    required: true,
+                    message: "请输入ip",
+                    trigger: ["blur", "change"]
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                type: "input",
+                label: "端口号：",
+                name: "port",
+                placeholder: "请输入端口号",
+                inputType: "number",
+                rules: [
+                  {
+                    required: true,
+                    message: "请输入ip",
+                    trigger: ["blur", "change"]
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                type: "input",
+                label: "用户名：",
+                name: "username",
+                placeholder: "请输入用户名",
+                rules: [
+                  {
+                    required: true,
+                    message: "请输入用户名",
+                    trigger: ["blur", "change"]
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                type: "input",
+                label: "密码：",
+                name: "password",
+                placeholder: "请输入密码",
+                inputType: "password"
+              }
+            ]
           ]
         },
         formData: null

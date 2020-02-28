@@ -76,7 +76,7 @@ public class MachineFileServiceImpl extends BaseServiceImpl<MachineFileMapper, M
         MachineFile file = BeanUtils.copyProperties(form, MachineFile.class);
         file.setMachineId(machineId);
         file.setCreateTime(LocalDateTime.now());
-        save(file);
+        insert(file);
         return file;
     }
 

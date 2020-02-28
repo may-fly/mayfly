@@ -4,8 +4,8 @@ import java.lang.annotation.*;
 
 /**
  * 可用于类和方法，用于类则该类的方法都会记录日志 <br/>
- * 如果方法和类都有该注解，result和time属性则使用方法级的注解属性描述，而value信息则为两则相加
- *
+ * 如果方法和类都有该注解，result和time属性则使用方法级的注解属性描述，而value信息则为两则相加 </br>
+ * 如果方法的返回值为void则不记录返回结果
  * @author meilin.huang
  * @version 1.0
  * @date 2018-11-06 10:41 AM

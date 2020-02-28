@@ -55,7 +55,7 @@ public class RoleController {
         role.setCreateTime(now);
         role.setUpdateTime(now);
         role.setStatus(EnableDisableEnum.ENABLE.getValue());
-        return Result.success(roleService.save(role));
+        return Result.success(roleService.insert(role));
     }
 
     @PutMapping("/{id}")

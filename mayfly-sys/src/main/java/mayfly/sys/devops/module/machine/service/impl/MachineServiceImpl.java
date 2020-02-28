@@ -43,7 +43,7 @@ public class MachineServiceImpl extends BaseServiceImpl<MachineMapper, Machine> 
         LocalDateTime now = LocalDateTime.now();
         machine.setCreateTime(now);
         machine.setUpdateTime(now);
-        save(machine);
+        insert(machine);
     }
 
 

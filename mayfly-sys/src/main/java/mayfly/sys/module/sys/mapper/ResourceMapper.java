@@ -12,7 +12,7 @@ import java.util.List;
  * @author hml
  * @date 2018/6/27 下午2:36
  */
-public interface ResourceMapper extends BaseMapper<Resource> {
+public interface ResourceMapper extends BaseMapper<Integer, Resource> {
 
 //    @Select("SELECT m.id, m.pid, m.weight, m.name, m.type, m.code, " +
 //            "m.api_id AS 'permission.id', a.method AS 'permission.method', a.status As 'permission.status', a.uri_pattern AS 'permission.uriPattern' " +

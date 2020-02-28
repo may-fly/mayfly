@@ -209,7 +209,7 @@ public final class ReflectionUtils {
     /**
      * 设置方法可见性
      *
-     * @param method
+     * @param method  方法
      */
     public static void makeAccessible(Method method) {
         if ((!Modifier.isPublic(method.getModifiers()) ||
@@ -224,7 +224,7 @@ public final class ReflectionUtils {
      * @see java.lang.Object#equals(Object)
      */
     public static boolean isEqualsMethod(Method method) {
-        if (method == null || !method.getName().equals("equals")) {
+        if (!"equals".equals(method.getName())) {
             return false;
         }
         Class<?>[] paramTypes = method.getParameterTypes();
@@ -237,7 +237,7 @@ public final class ReflectionUtils {
      * @see java.lang.Object#hashCode()
      */
     public static boolean isHashCodeMethod(Method method) {
-        return (method != null && method.getName().equals("hashCode") && method.getParameterCount() == 0);
+        return "hashCode".equals(method.getName()) && method.getParameterCount() == 0;
     }
 
     /**
@@ -246,6 +246,6 @@ public final class ReflectionUtils {
      * @see java.lang.Object#toString()
      */
     public static boolean isToStringMethod(Method method) {
-        return (method != null && method.getName().equals("toString") && method.getParameterCount() == 0);
+        return "toString".equals(method.getName()) && method.getParameterCount() == 0;
     }
 }

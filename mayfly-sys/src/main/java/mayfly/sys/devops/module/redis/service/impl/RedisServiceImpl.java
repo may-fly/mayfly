@@ -67,7 +67,7 @@ public class RedisServiceImpl extends BaseServiceImpl<RedisMapper, Redis> implem
         redis.setCreateTime(now);
         redis.setUpdateTime(now);
         if (redisForm.getId() == null) {
-            save(redis);
+            insert(redis);
         } else {
             updateById(redis);
         }

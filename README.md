@@ -32,7 +32,7 @@ mayfly前后端分离的后台系统(包含按钮级别的权限管理，以及�
 */
 @MethodLog(value = "获取权限列表", time = true)
 @GetMapping("/v1/permissions")
-public Result list(PermissionForm condition, @Valid PageForm pageForm){}
+public Result list(PermissionForm condition, @Valid PageForm pageQuery){}
 
 
 /**

@@ -8,5 +8,5 @@ import mayfly.sys.devops.module.redis.entity.Redis;
  * @version 1.0
  * @date 2019-01-07 4:07 PM
  */
-public interface RedisMapper extends BaseMapper<Redis> {
+public interface RedisMapper extends BaseMapper<Integer, Redis> {
 }

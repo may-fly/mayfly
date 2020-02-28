@@ -3,7 +3,7 @@ package mayfly.sys.common.base.mapper.annotation;
 import java.lang.annotation.*;
 
 /**
- * 数据库对象不映射注解
+ * 对象属性不映射到数据库注解（可作用于字段上，或类型指定哪些字段不映射）
  *
  * @author hml
  */
@@ -11,5 +11,8 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface NoColumn {
-
+    /**
+     * 作用于类型指定不需要映射的字段名数组
+     */
+    String[] fields() default {};
 }

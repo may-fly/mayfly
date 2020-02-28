@@ -3,24 +3,35 @@
     <el-dialog
       :title="title"
       :visible="visible"
-      :show-close="false"
       :width="dialogWidth ? dialogWidth : '500px'"
     >
       <dynamic-form
+        ref="df"
         :form-info="formInfo"
         :form-data="formData"
-        @submit-success="submitSuccess"
-        @cancel="cancel"
-      ></dynamic-form>
+        @submitSuccess="submitSuccess"
+      >
+        <template slot="btns" slot-scope="props">
+          <slot name="btns">
+            <el-button
+              :disabled="props.submitDisabled"
+              type="primary"
+              @click="props.submit"
+              size="mini"
+            >保 存</el-button>
+            <el-button :disabled="props.submitDisabled" @click="cancel()" size="mini">取 消</el-button>
+          </slot>
+        </template>
+      </dynamic-form>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import DynamicForm from "./dynamic-form.vue";
+import DynamicForm from './dynamic-form.vue'
 
 export default {
-  name: "DynamicFormDialog",
+  name: 'DynamicFormDialog',
   props: {
     visible: Boolean,
     dialogWidth: String,
@@ -30,18 +41,20 @@ export default {
   },
   methods: {
     cancel() {
-      this.$emit("cancel");
+      this.$emit('cancel')
+      // 取消动态表单的校验以及form数据
+      setTimeout(() => {
+        this.$refs.df.resetFieldsAndData()
+      }, 200)
     },
-    submitSuccess() {
-      this.$emit("submitSuccess");
+    submitSuccess(form) {
+      this.$emit('submitSuccess', form)
+      this.cancel()
     }
   },
-
   mounted() {},
   components: {
     DynamicForm
   }
-};
+}
 </script>
-<style lang="less">
-</style>

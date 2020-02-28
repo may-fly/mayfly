@@ -5,14 +5,17 @@ import org.junit.Test;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.Assert.*;
-
 public class BracePlaceholderTest {
 
-    private static final String placeholder = "user:{userId}:name:{name}";
+    private static final String placeholder = "user:{userId}:name:{name}:{name}:{name}";
 
     @Test
     public void resolve() {
+        System.out.println(BracePlaceholder.resolve(placeholder, 1, "哈哈哈"));
+    }
+
+    @Test
+    public void resolveAll() {
         System.out.println(BracePlaceholder.resolve(placeholder, 1, "哈哈哈"));
     }
 
