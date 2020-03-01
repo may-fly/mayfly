@@ -4,11 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import mayfly.sys.common.base.mapper.annotation.NoColumn;
-import mayfly.sys.common.base.model.BaseEntity;
+import mayfly.core.base.mapper.annotation.NoColumn;
+import mayfly.core.base.model.BaseEntity;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -25,8 +24,6 @@ public class Resource extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 6346288647519202567L;
 
-    private Integer id;
-
     private Integer pid;
 
     private Integer type;
@@ -42,10 +39,6 @@ public class Resource extends BaseEntity implements Serializable {
     private String code;
 
     private Integer status;
-
-    private LocalDateTime createTime;
-
-    private LocalDateTime updateTime;
 
     @NoColumn
     private List<Resource> children;

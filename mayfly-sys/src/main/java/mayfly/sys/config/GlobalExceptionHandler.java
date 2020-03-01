@@ -20,7 +20,7 @@ public class GlobalExceptionHandler {
     private static Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(Exception.class)
-    public Result handleException(Exception e) {
+    public Result<?> handleException(Exception e) {
         // 如果是业务逻辑异常则无需记录日志，错误提示即可
         if (e instanceof BusinessException || e instanceof BusinessRuntimeException) {
             return Result.error(e.getMessage());

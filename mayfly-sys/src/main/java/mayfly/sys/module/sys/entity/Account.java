@@ -3,7 +3,7 @@ package mayfly.sys.module.sys.entity;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import mayfly.sys.common.base.model.BaseEntity;
+import mayfly.core.base.model.BaseEntity;
 
 import java.io.Serializable;
 

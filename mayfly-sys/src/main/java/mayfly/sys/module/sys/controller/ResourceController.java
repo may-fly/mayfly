@@ -3,10 +3,10 @@ package mayfly.sys.module.sys.controller;
 import mayfly.core.log.MethodLog;
 import mayfly.core.permission.Permission;
 import mayfly.core.result.Result;
+import mayfly.core.util.bean.BeanUtils;
 import mayfly.core.validation.annotation.Valid;
-import mayfly.sys.common.utils.BeanUtils;
 import mayfly.sys.module.sys.controller.form.ResourceForm;
-import mayfly.sys.module.sys.controller.query.MenuQuery;
+import mayfly.sys.module.sys.controller.query.ResourceQuery;
 import mayfly.sys.module.sys.controller.vo.ResourceDetailVO;
 import mayfly.sys.module.sys.entity.Resource;
 import mayfly.sys.module.sys.service.ResourceService;
@@ -35,9 +35,9 @@ public class ResourceController {
     private ResourceService resourceService;
 
     @Permission(code = "list")
-    @MethodLog(value = "获取菜单列表", resultLevel = MethodLog.LogLevel.DEBUG)
+    @MethodLog(value = "获取资源列表", level = MethodLog.LogLevel.DEBUG)
     @GetMapping()
-    public Result<?> getAllMenus(MenuQuery queryForm) {
+    public Result<?> list(ResourceQuery queryForm) {
         return Result.success(resourceService.listResource(BeanUtils.copyProperties(queryForm, Resource.class)));
     }
 

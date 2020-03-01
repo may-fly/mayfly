@@ -1,12 +1,12 @@
 package mayfly.sys.module.sys.service.impl;
 
-import mayfly.core.exception.BusinessException;
+import mayfly.core.base.service.impl.BaseServiceImpl;
 import mayfly.core.exception.BusinessAssert;
+import mayfly.core.exception.BusinessException;
 import mayfly.core.util.CollectionUtils;
-import mayfly.sys.module.sys.mapper.RoleResourceMapper;
 import mayfly.sys.module.sys.entity.Resource;
 import mayfly.sys.module.sys.entity.RoleResource;
-import mayfly.sys.common.base.service.impl.BaseServiceImpl;
+import mayfly.sys.module.sys.mapper.RoleResourceMapper;
 import mayfly.sys.module.sys.service.PermissionService;
 import mayfly.sys.module.sys.service.ResourceService;
 import mayfly.sys.module.sys.service.RoleResourceService;
@@ -29,9 +29,17 @@ import java.util.stream.Collectors;
 public class RoleResourceServiceImpl extends BaseServiceImpl<RoleResourceMapper, RoleResource> implements RoleResourceService {
 
     @Autowired
+    private RoleResourceMapper roleResourceMapper;
+    @Autowired
     private PermissionService permissionService;
     @Autowired
     private ResourceService resourceService;
+
+    @Autowired
+    @Override
+    protected void setBaseMapper() {
+        super.baseMapper = roleResourceMapper;
+    }
 
     @Override
     public List<Integer> listResourceId(Integer roleId) {
@@ -60,7 +68,7 @@ public class RoleResourceServiceImpl extends BaseServiceImpl<RoleResourceMapper,
         for (Integer id : addIds) {
             Resource r = resourceService.getById(id);
             BusinessAssert.notNull(r, "id : " + id + "的资源不存在！");
-            RoleResource rr = RoleResource.builder().roleId(roleId).resourceId(id).createTime(now).build();
+            RoleResource rr = RoleResource.builder().roleId(roleId).resourceId(id).build();
             addValues.add(rr);
         }
         batchInsert(addValues);

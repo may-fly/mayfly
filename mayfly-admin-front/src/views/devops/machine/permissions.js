@@ -8,6 +8,7 @@ const machine = {
   list: Permission.url("/devops/machines").method('get').code("machines:list"),
   // 保存按钮
   save: Permission.url("/devops/machines").method('post').code("machine:save"),
+  update: Permission.url("/devops/machines/{id}").method('put').code("machine:update"),
   // 删除机器
   del: Permission.url("/devops/machines/{id}").method('delete').code("machine:delete"),
   // 服务管理按钮

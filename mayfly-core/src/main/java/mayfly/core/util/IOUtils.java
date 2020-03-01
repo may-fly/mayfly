@@ -125,10 +125,10 @@ public class IOUtils {
     /**
      * 获取流的字节数组
      *
-     * @param inputStream   输入流
-     * @param close         是否关闭
-     * @return              字节数组
-     * @throws IOException  io异常
+     * @param inputStream 输入流
+     * @param close       是否关闭
+     * @return 字节数组
+     * @throws IOException io异常
      */
     public static byte[] readByte(final InputStream inputStream, final boolean close) throws IOException {
         Assert.notNull(inputStream, "inputStream must not be null");

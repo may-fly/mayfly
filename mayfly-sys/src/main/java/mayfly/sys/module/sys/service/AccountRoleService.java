@@ -1,6 +1,6 @@
 package mayfly.sys.module.sys.service;
 
-import mayfly.sys.common.base.service.BaseService;
+import mayfly.core.base.service.BaseService;
 import mayfly.sys.module.sys.entity.AccountRole;
 import mayfly.sys.module.sys.entity.Role;
 

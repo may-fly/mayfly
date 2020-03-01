@@ -1,8 +1,8 @@
 package mayfly.sys.module.sys.service;
 
-import mayfly.sys.module.sys.entity.Resource;
-import mayfly.sys.common.base.service.BaseService;
+import mayfly.core.base.service.BaseService;
 import mayfly.sys.module.sys.controller.vo.ResourceListVO;
+import mayfly.sys.module.sys.entity.Resource;
 
 import java.util.List;
 

@@ -18,7 +18,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class AopParamValidator {
 
     /**
-     * 带有@Valid参数的索引位置, key:方法全路径  value:索引列表（即参数可以含有多个@Valid注解）
+     * 带有@Valid参数的索引位置, key:方法  value:索引列表（即参数可以含有多个@Valid注解）
      */
     private static Map<Method, List<Integer>> indexCache = new ConcurrentHashMap<>(64);
 

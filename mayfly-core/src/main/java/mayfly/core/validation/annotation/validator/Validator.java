@@ -2,8 +2,6 @@ package mayfly.core.validation.annotation.validator;
 
 import java.lang.annotation.Annotation;
 
-;
-
 /**
  * 校验器接口
  *

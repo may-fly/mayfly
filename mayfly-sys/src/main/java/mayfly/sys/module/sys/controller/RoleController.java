@@ -5,9 +5,9 @@ import mayfly.core.exception.BusinessException;
 import mayfly.core.log.MethodLog;
 import mayfly.core.permission.Permission;
 import mayfly.core.result.Result;
+import mayfly.core.util.bean.BeanUtils;
 import mayfly.core.validation.annotation.Valid;
 import mayfly.sys.common.enums.EnableDisableEnum;
-import mayfly.sys.common.utils.BeanUtils;
 import mayfly.sys.module.sys.controller.form.RoleForm;
 import mayfly.sys.module.sys.entity.Role;
 import mayfly.sys.module.sys.service.RoleResourceService;
@@ -43,6 +43,7 @@ public class RoleController {
     @Autowired
     private RoleResourceService roleResourceService;
 
+    @MethodLog(value = "获取角色列表", level = MethodLog.LogLevel.DEBUG)
     @GetMapping()
     public Result<?> list() {
         return Result.success().with(roleService.listAll("create_time DESC"));

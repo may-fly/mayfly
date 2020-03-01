@@ -1,6 +1,6 @@
 package mayfly.sys.module.sys.mapper;
 
-import mayfly.sys.common.base.mapper.BaseMapper;
+import mayfly.core.base.mapper.BaseMapper;
 import mayfly.sys.module.sys.entity.AccountRole;
 import mayfly.sys.module.sys.entity.Role;
 import org.apache.ibatis.annotations.Select;

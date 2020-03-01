@@ -14,19 +14,19 @@ public class BusinessRuntimeException extends RuntimeException {
     /**
      * 异常结果
      */
-    private Result result;
+    private Result<?> result;
 
     public BusinessRuntimeException(String msg) {
         super(msg);
     }
 
 
-    public BusinessRuntimeException(Result result) {
+    public BusinessRuntimeException(Result<?> result) {
         super(result.getMsg());
         this.result = result;
     }
 
-    public Result getResult() {
+    public Result<?> getResult() {
         return result;
     }
 }

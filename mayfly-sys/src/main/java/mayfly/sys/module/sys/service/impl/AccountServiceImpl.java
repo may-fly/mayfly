@@ -1,13 +1,13 @@
 package mayfly.sys.module.sys.service.impl;
 
+import mayfly.core.base.model.PageQuery;
+import mayfly.core.base.model.PageResult;
+import mayfly.core.base.service.impl.BaseServiceImpl;
 import mayfly.core.exception.BusinessAssert;
 import mayfly.core.permission.SessionLocal;
 import mayfly.core.util.DigestUtils;
-import mayfly.sys.common.base.model.PageQuery;
-import mayfly.sys.common.base.model.PageResult;
-import mayfly.sys.common.base.service.impl.BaseServiceImpl;
+import mayfly.core.util.bean.BeanUtils;
 import mayfly.sys.common.enums.EnableDisableEnum;
-import mayfly.sys.common.utils.BeanUtils;
 import mayfly.sys.module.open.controller.form.AccountLoginForm;
 import mayfly.sys.module.sys.controller.form.AccountForm;
 import mayfly.sys.module.sys.controller.query.AccountQuery;
@@ -32,9 +32,17 @@ import java.util.List;
 public class AccountServiceImpl extends BaseServiceImpl<AccountMapper, Account> implements AccountService {
 
     @Autowired
+    private AccountMapper accountMapper;
+    @Autowired
     private AccountRoleService accountRoleService;
     @Autowired
     private PermissionService permissionService;
+
+    @Autowired
+    @Override
+    protected void setBaseMapper() {
+        super.baseMapper = accountMapper;
+    }
 
     @Override
     public PageResult<AccountVO> listByQuery(AccountQuery query, PageQuery pageQuery) {

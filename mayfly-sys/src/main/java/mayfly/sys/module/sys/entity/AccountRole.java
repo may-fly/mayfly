@@ -4,9 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import mayfly.sys.common.base.model.BaseEntity;
-
-import java.time.LocalDateTime;
+import mayfly.core.base.model.BaseEntity;
 
 /**
  *  权限
@@ -19,12 +17,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AccountRole extends BaseEntity {
-
-    private Integer id;
-
     private Integer accountId;
 
     private Integer roleId;
-
-    private LocalDateTime createTime;
 }

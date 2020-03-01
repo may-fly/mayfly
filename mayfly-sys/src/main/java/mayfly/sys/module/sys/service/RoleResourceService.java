@@ -1,8 +1,8 @@
 package mayfly.sys.module.sys.service;
 
+import mayfly.core.base.service.BaseService;
 import mayfly.core.exception.BusinessException;
 import mayfly.sys.module.sys.entity.RoleResource;
-import mayfly.sys.common.base.service.BaseService;
 
 import java.util.List;
 

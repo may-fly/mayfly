@@ -1,10 +1,11 @@
 package mayfly.sys.module.sys.service;
 
-import mayfly.sys.common.base.model.PageQuery;
-import mayfly.sys.common.base.model.PageResult;
-import mayfly.sys.common.base.service.BaseService;
-import mayfly.sys.module.sys.controller.form.AccountForm;
+
+import mayfly.core.base.model.PageQuery;
+import mayfly.core.base.model.PageResult;
+import mayfly.core.base.service.BaseService;
 import mayfly.sys.module.open.controller.form.AccountLoginForm;
+import mayfly.sys.module.sys.controller.form.AccountForm;
 import mayfly.sys.module.sys.controller.query.AccountQuery;
 import mayfly.sys.module.sys.controller.vo.AccountVO;
 import mayfly.sys.module.sys.entity.Account;

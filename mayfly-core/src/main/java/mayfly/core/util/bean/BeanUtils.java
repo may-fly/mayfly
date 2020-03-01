@@ -1,6 +1,7 @@
 package mayfly.core.util.bean;
 
 import mayfly.core.util.Assert;
+import mayfly.core.util.CollectionUtils;
 import mayfly.core.util.ObjectUtils;
 import mayfly.core.util.ReflectionUtils;
 import mayfly.core.util.annotation.AnnotationUtils;
@@ -33,6 +34,7 @@ public class BeanUtils {
     /**
      * 转换器缓存
      */
+    @SuppressWarnings("all")
     private static Map<Class<? extends FieldValueConverter>, FieldValueConverter> converterCache = Collections.synchronizedMap(new WeakHashMap<>(8));
 
     /**
@@ -66,11 +68,36 @@ public class BeanUtils {
         }
     }
 
+    public static void copyProperties(Object source, Object target) {
+        org.springframework.beans.BeanUtils.copyProperties(source, target);
+    }
+
+    public static <T> T copyProperties(Object source, Class<T> targetClass) {
+        if (source == null) {
+            return null;
+        }
+        T target;
+        try {
+            target = targetClass.newInstance();
+            copyProperties(source, target);
+        } catch (Exception e) {
+            throw new IllegalArgumentException(e);
+        }
+        return target;
+    }
+
+    public static <T> List<T> copyProperties(List<?> source, Class<T> targetClass) {
+        if (CollectionUtils.isEmpty(source)) {
+            return Collections.emptyList();
+        }
+        return source.stream().map(s -> copyProperties(s, targetClass)).collect(Collectors.toList());
+    }
+
     /**
      * 获取bean的属性描述器
      *
      * @param clazz bean类型
-     * @return
+     * @return      PropertyDescriptor
      */
     public static PropertyDescriptor[] getPropertyDescriptors(Class<?> clazz) {
         try {
@@ -118,8 +145,8 @@ public class BeanUtils {
      * 将的bean转为map, key:fieldName, value:fieldValue  <br/> <br/>
      * 如果bean的属性中还有bean，则key为以前一个beanName.fieldName
      *
-     * @param bean
-     * @return
+     * @param bean  bean
+     * @return      map
      */
     public static Map<String, Object> bean2Map(Object bean) {
         return doBean2Map(null, bean);
@@ -129,8 +156,8 @@ public class BeanUtils {
      * 将list中的bean转为map, key:fieldName, value:fieldValue  <br/> </br/>
      * 如果bean的属性中还有bean，则key为以前一个beanName.fieldName
      *
-     * @param beans
-     * @return
+     * @param beans  beans
+     * @return       maps
      */
     public static List<Map<String, Object>> beans2Maps(Collection<?> beans) {
         return beans.stream().map(BeanUtils::bean2Map).collect(Collectors.toList());
@@ -163,8 +190,8 @@ public class BeanUtils {
      * 将bean转为map,递归转换bean中非常用基本类型
      *
      * @param prefix map中key字段的前缀，即map中key为perfix + "." + fieldName
-     * @param bean
-     * @return
+     * @param bean   bean
+     * @return       map
      */
     private static Map<String, Object> doBean2Map(String prefix, Object bean) {
         if (bean == null) {
@@ -242,8 +269,8 @@ public class BeanUtils {
     /**
      * 判断对象是否为简单基本类型
      *
-     * @param res
-     * @return
+     * @param res  object
+     * @return     true or false
      */
     public static boolean isSimpleValue(Object res) {
         return ObjectUtils.isWrapperOrPrimitive(res) || ObjectUtils.isEnum(res) || ObjectUtils.isDate(res);

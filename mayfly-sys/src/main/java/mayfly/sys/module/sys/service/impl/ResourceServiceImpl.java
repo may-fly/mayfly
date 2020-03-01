@@ -1,11 +1,11 @@
 package mayfly.sys.module.sys.service.impl;
 
+import mayfly.core.base.service.impl.BaseServiceImpl;
 import mayfly.core.exception.BusinessAssert;
 import mayfly.core.util.TreeUtils;
+import mayfly.core.util.bean.BeanUtils;
 import mayfly.core.util.enums.EnumUtils;
-import mayfly.sys.common.base.service.impl.BaseServiceImpl;
 import mayfly.sys.common.enums.EnableDisableEnum;
-import mayfly.sys.common.utils.BeanUtils;
 import mayfly.sys.module.sys.controller.vo.ResourceListVO;
 import mayfly.sys.module.sys.entity.Resource;
 import mayfly.sys.module.sys.entity.RoleResource;
@@ -36,6 +36,12 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourceMapper, Resourc
     private RoleResourceService roleResourceService;
     @Autowired
     private PermissionService permissionService;
+
+    @Autowired
+    @Override
+    protected void setBaseMapper() {
+        super.baseMapper = resourceMapper;
+    }
 
     @Override
     public List<ResourceListVO> listByUserId(Integer userId) {

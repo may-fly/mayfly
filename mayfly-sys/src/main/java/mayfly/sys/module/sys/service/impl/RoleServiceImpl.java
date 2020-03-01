@@ -1,14 +1,14 @@
 package mayfly.sys.module.sys.service.impl;
 
+import mayfly.core.base.service.impl.BaseServiceImpl;
 import mayfly.core.exception.BusinessAssert;
-import mayfly.sys.module.sys.mapper.RoleMapper;
+import mayfly.sys.module.sys.entity.AccountRole;
 import mayfly.sys.module.sys.entity.Role;
 import mayfly.sys.module.sys.entity.RoleResource;
-import mayfly.sys.module.sys.entity.AccountRole;
-import mayfly.sys.common.base.service.impl.BaseServiceImpl;
+import mayfly.sys.module.sys.mapper.RoleMapper;
+import mayfly.sys.module.sys.service.AccountRoleService;
 import mayfly.sys.module.sys.service.RoleResourceService;
 import mayfly.sys.module.sys.service.RoleService;
-import mayfly.sys.module.sys.service.AccountRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,9 +22,17 @@ import org.springframework.transaction.annotation.Transactional;
 public class RoleServiceImpl extends BaseServiceImpl<RoleMapper, Role> implements RoleService {
 
     @Autowired
+    private RoleMapper roleMapper;
+    @Autowired
     private RoleResourceService roleResourceService;
     @Autowired
     private AccountRoleService accountRoleService;
+
+    @Autowired
+    @Override
+    protected void setBaseMapper() {
+        super.baseMapper = roleMapper;
+    }
 
     @Transactional(rollbackFor = Exception.class)
     @Override

@@ -1,11 +1,10 @@
 package mayfly.sys.module.sys.entity;
 
 import lombok.Data;
-import mayfly.sys.common.base.mapper.annotation.NoColumn;
-import mayfly.sys.common.base.model.BaseEntity;
+import mayfly.core.base.mapper.annotation.NoColumn;
+import mayfly.core.base.model.BaseEntity;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -15,18 +14,11 @@ import java.util.List;
  */
 @Data
 public class Role extends BaseEntity implements Serializable {
-
-    private Integer id;
-
     private String name;
 
     private String remark;
 
     private Integer status;
-
-    private LocalDateTime createTime;
-
-    private LocalDateTime updateTime;
 
     @NoColumn
     private List<Resource> resources;

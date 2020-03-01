@@ -1,11 +1,12 @@
 package mayfly.sys.module.sys.controller;
 
+import mayfly.core.base.model.PageQuery;
 import mayfly.core.exception.BusinessAssert;
+import mayfly.core.log.MethodLog;
 import mayfly.core.permission.Permission;
 import mayfly.core.result.Result;
 import mayfly.core.util.enums.EnumUtils;
 import mayfly.core.validation.annotation.Valid;
-import mayfly.sys.common.base.model.PageQuery;
 import mayfly.sys.common.enums.EnableDisableEnum;
 import mayfly.sys.module.sys.controller.form.AccountForm;
 import mayfly.sys.module.sys.controller.form.RoleUserForm;
@@ -43,6 +44,7 @@ public class AccountController {
     @Autowired
     private AccountRoleService accountRoleService;
 
+    @MethodLog(value = "获取账号列表", level = MethodLog.LogLevel.DEBUG)
     @GetMapping()
     public Result<?> list(@Valid PageQuery pageQuery, AccountQuery accountQuery) {
         return accountService.listByQuery(accountQuery, pageQuery).toResult();

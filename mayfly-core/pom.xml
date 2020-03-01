@@ -18,12 +18,10 @@
     <properties>
         <alibaba.fastjson.version>1.2.58</alibaba.fastjson.version>
         <junit.version>4.12</junit.version>
-        <jsch.version>0.1.55</jsch.version>
         <okhttp.version>3.11.0</okhttp.version>
     </properties>
 
     <dependencies>
-
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -38,6 +36,12 @@
             <version>${alibaba.fastjson.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <scope>provided</scope>
+            <optional>true</optional>
+        </dependency>
 
         <!--okhttp-->
         <dependency>
@@ -47,19 +51,33 @@
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
-        <!--  ssh  -->
+
+        <!-- Spring框架基本的核心工具 -->
         <dependency>
-            <groupId>com.jcraft</groupId>
-            <artifactId>jsch</artifactId>
-            <version>${jsch.version}</version>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context-support</artifactId>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
-        <!-- websocket -->
+
         <dependency>
-            <groupId>javax.websocket</groupId>
-            <artifactId>javax.websocket-api</artifactId>
-            <version>1.1</version>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <scope>provided</scope>
+            <optional>true</optional>
+        </dependency>
+
+<!--        mybatis-->
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis</artifactId>
+            <scope>provided</scope>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>com.github.pagehelper</groupId>
+            <artifactId>pagehelper</artifactId>
+            <version>5.1.2</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>

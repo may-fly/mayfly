@@ -2,9 +2,9 @@ package mayfly.sys.module.websocket;
 
 import lombok.extern.slf4j.Slf4j;
 import mayfly.core.result.ResultEnum;
-import mayfly.core.util.websocket.WebSocketUtils;
 import mayfly.sys.common.utils.SpringUtils;
 import mayfly.sys.common.websocket.MessageTypeEnum;
+import mayfly.sys.common.websocket.WebSocketUtils;
 import mayfly.sys.module.sys.service.PermissionService;
 import org.springframework.stereotype.Component;
 

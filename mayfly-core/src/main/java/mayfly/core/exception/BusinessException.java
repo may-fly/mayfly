@@ -1,5 +1,7 @@
 package mayfly.core.exception;
 
+import mayfly.core.result.Result;
+
 /**
  * @author meilin.huang
  * @version 1.0
@@ -21,6 +23,11 @@ public class BusinessException extends Exception {
     public BusinessException(Integer code, String msg) {
         super(msg);
         this.code = code;
+    }
+
+    public BusinessException(Result<?> result) {
+        super(result.getMsg());
+        this.code = result.getCode();
     }
 
     public Integer getCode() {

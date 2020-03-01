@@ -1,6 +1,6 @@
 package mayfly.sys.module.sys.mapper;
 
-import mayfly.sys.common.base.mapper.BaseMapper;
+import mayfly.core.base.mapper.BaseMapper;
 import mayfly.sys.module.sys.entity.Resource;
 import org.apache.ibatis.annotations.Select;
 

@@ -26,7 +26,7 @@ public final class DateUtils {
      *
      * @param temporal  可以是LocalDateTime, LocalDate以及LocalTime等常用日期时间类
      * @param formatter 格式器
-     * @return
+     * @return          格式化后日期字符串
      */
     public static String formatDate(TemporalAccessor temporal, DateTimeFormatter formatter) {
         return formatter.format(temporal);
@@ -39,7 +39,7 @@ public final class DateUtils {
      * localDateTime格式为 yyyy-MM-dd HH:mm:ss <br/>
      *
      * @param temporalAccessor 可以是LocalDateTime, LocalDate以及LocalTime等常用日期时间类
-     * @return
+     * @return   格式化后日期字符串
      */
     public static String defaultFormat(TemporalAccessor temporalAccessor) {
         if (temporalAccessor instanceof LocalDate) {
@@ -59,7 +59,7 @@ public final class DateUtils {
      *
      * @param temporal 可以是LocalDateTime, LocalDate以及LocalTime等常用日期时间类
      * @param pattern  yyyy:年 MM:月 dd:日 HH:小时 mm:分钟 ss:秒
-     * @return
+     * @return 格式化后日期字符串
      */
     public static String formatDate(TemporalAccessor temporal, String pattern) {
         return formatDate(temporal, DateTimeFormatter.ofPattern(pattern));
@@ -68,8 +68,8 @@ public final class DateUtils {
     /**
      * 默认解析字符串日期时间
      *
-     * @param dateTime
-     * @return
+     * @param dateTime  字符串日期
+     * @return  LocalDateTime
      */
     public static LocalDateTime defaultParse(String dateTime) {
         return LocalDateTime.parse(dateTime, defaultDateTimeFormatter);

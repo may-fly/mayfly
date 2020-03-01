@@ -36,7 +36,7 @@ public class ThreadFactoryBuilder {
      *
      * @param name 线程名（会自动在线程名后面加上-%d以标识线程，如name = rpc-thread；<br/>
      *             那么创建出来的线程名就类似rpc-thread-1，rpc-thread-2等）
-     * @return
+     * @return thread factory builder
      */
     public static ThreadFactoryBuilder newBuilder(String name) {
         return new ThreadFactoryBuilder(name);
