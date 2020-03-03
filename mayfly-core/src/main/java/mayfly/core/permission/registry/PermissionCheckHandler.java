@@ -1,16 +1,14 @@
-package mayfly.core.permission.checker;
+package mayfly.core.permission.registry;
 
 import mayfly.core.exception.BusinessException;
+import mayfly.core.permission.LoginAccount;
 import mayfly.core.permission.Permission;
 import mayfly.core.permission.PermissionDisabledException;
 import mayfly.core.permission.PermissionInfo;
-import mayfly.core.permission.SessionLocal;
-import mayfly.core.permission.registry.PermissionCacheHandler;
 import mayfly.core.util.StringUtils;
 import mayfly.core.util.annotation.AnnotationUtils;
 
 import java.lang.reflect.Method;
-import java.util.Collection;
 
 /**
  * 权限校验处理器
@@ -20,26 +18,32 @@ import java.util.Collection;
  * @date 2019-03-28 2:03 PM
  */
 public class PermissionCheckHandler<I> {
+
+    /**
+     * 权限码与状态分割符号
+     */
+    public static final String CODE_STATUS_SEPARATOR = ":";
+
     /**
      * 用户权限校验
      */
-    private UserPermissionChecker<I> userPermissionChecker;
+    private LoginAccountRegistry<I> loginAccountRegistry;
 
-    private PermissionCheckHandler(UserPermissionChecker<I> userPermissionChecker) {
-        this.userPermissionChecker = userPermissionChecker;
+    private PermissionCheckHandler(LoginAccountRegistry<I> loginAccountRegistry) {
+        this.loginAccountRegistry = loginAccountRegistry;
     }
 
     /**
      * 权限检查器工厂方法
      *
-     * @param userPermissionChecker 用户权限检查（为null则使用默认检查器 {@link DefaultUserPermissionChecker}）
-     * @return
+     * @param loginAccountRegistry login account registry
+     * @return PermissionCheckHandler
      */
-    public static <T> PermissionCheckHandler<T> of(UserPermissionChecker<T> userPermissionChecker) {
-        if (userPermissionChecker == null) {
-            userPermissionChecker = new DefaultUserPermissionChecker<T>();
+    public static <T> PermissionCheckHandler<T> of(LoginAccountRegistry<T> loginAccountRegistry) {
+        if (loginAccountRegistry == null) {
+            loginAccountRegistry = DefaultLoginAccountRegistry.getInstance();
         }
-        return new PermissionCheckHandler<T>(userPermissionChecker);
+        return new PermissionCheckHandler<T>(loginAccountRegistry);
     }
 
     /**
@@ -47,80 +51,49 @@ public class PermissionCheckHandler<I> {
      *
      * @param token  请求token
      * @param method 用户访问的方法
-     * @return
-     * @throws PermissionDisabledException
+     * @return true 拥有该权限
+     * @throws PermissionDisabledException 权限禁用异常
      */
     public boolean hasPermission(String token, Method method) throws BusinessException {
-        I userId;
-        if (StringUtils.isEmpty(token) || (userId = userPermissionChecker.getUserIdByToken(token)) == null) {
+        LoginAccount<I> loginAccount;
+        if (StringUtils.isEmpty(token) || (loginAccount = loginAccountRegistry.getLoginAccount(token)) == null) {
             return false;
         }
-        SessionLocal.setUserId(userId);
+        LoginAccount.set(loginAccount);
         PermissionInfo pi = getPermissionInfo(method);
         if (pi == null) {
             return true;
         }
-        return hasPermission(userId, pi.getPermissionCode());
+
+        return hasPermission(loginAccount, pi.getPermissionCode());
     }
 
     /**
      * 判断用户是否拥有指定权限code
      *
-     * @param userId         用户id
+     * @param loginAccount   登录账号
      * @param permissionCode 权限code
-     * @return
+     * @return true：拥有该权限
      * @throws PermissionDisabledException 若不存在权限code,而存在与之对应的禁用权限code,抛出此异常
      */
-    public boolean hasPermission(I userId, String permissionCode) throws BusinessException {
+    public boolean hasPermission(LoginAccount<I> loginAccount, String permissionCode) throws BusinessException {
         //判断code注册器是否含有该用户的权限code
-        if (userPermissionChecker.has(userId, permissionCode)) {
+        if (loginAccount.hasPermission(permissionCode)) {
             return true;
         }
         // 判断该权限是否有被禁用
-        if (userPermissionChecker.has(userId, PermissionCacheHandler.getDisablePermissionCode(permissionCode))) {
+        if (loginAccount.hasPermission(getDisablePermissionCode(permissionCode))) {
             throw new PermissionDisabledException();
         }
         throw new BusinessException("没有该权限");
     }
 
     /**
-     * 判断指定方法是否需要权限校验，需要则校验用户是否具有该方法@Permisison注解对应的code
-     *
-     * @param userId 用户id
-     * @param method 用户访问的方法
-     * @return
-     * @throws PermissionDisabledException
-     */
-    public boolean hasPermission(I userId, Method method) throws BusinessException {
-        PermissionInfo pi = getPermissionInfo(method);
-        if (pi == null) {
-            return true;
-        }
-        return hasPermission(userId, pi.getPermissionCode());
-    }
-
-    /**
-     * 从用户拥有的权限列表中判断用户是否含有该方法权限code
-     *
-     * @param method
-     * @param permissionCodes
-     * @return
-     */
-    public boolean hasPermission(Method method, Collection<String> permissionCodes) {
-        PermissionInfo pi = getPermissionInfo(method);
-        if (pi == null) {
-            return true;
-        }
-
-        return permissionCodes.contains(pi.getPermissionCode());
-    }
-
-    /**
      * 根据方法获取对应的权限信息,如果方法声明类上有@{@linkplain Permission}注解则为类名权限code + 方法权限code(方法权限code不存在，则为方法名)<br/>
      * 如果声明类没有@{@linkplain Permission}注解则只返回方法上权限code
      *
-     * @param method  方法
-     * @return        权限信息
+     * @param method 方法
+     * @return 权限信息
      */
     public PermissionInfo getPermissionInfo(Method method) {
         Permission permission = AnnotationUtils.getAnnotation(method.getDeclaringClass(), Permission.class);
@@ -143,5 +116,15 @@ public class PermissionCheckHandler<I> {
         } else {
             return new PermissionInfo(classCode + method.getName());
         }
+    }
+
+    /**
+     * 获取权限code对应的禁用code,即code + ":" + 0
+     *
+     * @param code code
+     * @return 禁用code
+     */
+    public static String getDisablePermissionCode(String code) {
+        return code + CODE_STATUS_SEPARATOR + 0;
     }
 }

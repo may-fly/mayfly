@@ -15,8 +15,6 @@ import mayfly.sys.module.machine.service.MachineService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-
 /**
  * @author meilin.huang
  * @version 1.0
@@ -48,9 +46,6 @@ public class MachineServiceImpl extends BaseServiceImpl<MachineMapper, Machine> 
         }
 
         Machine machine = BeanUtils.copyProperties(form, Machine.class);
-        LocalDateTime now = LocalDateTime.now();
-        machine.setCreateTime(now);
-        machine.setUpdateTime(now);
         insert(machine);
     }
 

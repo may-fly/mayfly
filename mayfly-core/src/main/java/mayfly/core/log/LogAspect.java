@@ -50,10 +50,9 @@ public class LogAspect {
 
         long startTime = System.currentTimeMillis();
         Object result = pjp.proceed();
-        long endTime = System.currentTimeMillis();
 
-        MethodLog.LogLevel sysLogLevel = getSysLogLevel();
-        String logMsg = logInfo.fillLogMsg(sysLogLevel, new LogHandler.LogResult(args, result, endTime - startTime));
+        String logMsg = logInfo.fillLogMsg(getSysLogLevel(), new LogHandler.LogResult(args, result,
+                System.currentTimeMillis() - startTime));
         if (logMsg == null) {
             return result;
         }

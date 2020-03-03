@@ -70,7 +70,9 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourceMapper, Resourc
             Resource condition = Resource.builder().pid(resource.getPid()).type(ResourceTypeEnum.PERMISSION.getValue()).build();
             BusinessAssert.state(countByCondition(condition) == 0, "该菜单已有权限资源子节点，不能再添加菜单");
         } else {
-            BusinessAssert.notEmpty(resource.getCode(), "权限code不能为空");
+            String code = resource.getCode();
+            BusinessAssert.notEmpty(code, "权限code不能为空");
+            BusinessAssert.state(!code.contains(","), "权限code不能包含','");
         }
         //默认启用
         resource.setStatus(EnableDisableEnum.ENABLE.getValue());
@@ -91,7 +93,9 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourceMapper, Resourc
             return resource;
         }
         // 权限类型需要校验code不能为空
-        BusinessAssert.notEmpty(resource.getCode(), "权限code不能为空");
+        String code = resource.getCode();
+        BusinessAssert.notEmpty(code, "权限code不能为空");
+        BusinessAssert.state(!code.contains(","), "权限code不能包含','");
         updateByIdSelective(resource);
         return resource;
     }

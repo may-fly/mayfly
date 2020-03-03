@@ -4,7 +4,6 @@ import mayfly.core.base.model.PageQuery;
 import mayfly.core.base.model.PageResult;
 import mayfly.core.base.service.impl.BaseServiceImpl;
 import mayfly.core.exception.BusinessAssert;
-import mayfly.core.permission.SessionLocal;
 import mayfly.core.util.DigestUtils;
 import mayfly.core.util.bean.BeanUtils;
 import mayfly.sys.common.enums.EnableDisableEnum;
@@ -68,7 +67,6 @@ public class AccountServiceImpl extends BaseServiceImpl<AccountMapper, Account> 
     @Override
     public void logout(String token) {
         permissionService.removeToken(token);
-        permissionService.removePermissions(SessionLocal.getUserId());
     }
 
     @Override

@@ -394,7 +394,7 @@ public interface BaseMapper<I, E> {
     class SelectByPrimaryKeyInSqlProvider extends BaseSqlProviderSupport {
         public String sql(Map<String, Object> params, ProviderContext context) {
             @SuppressWarnings("unchecked")
-            List<Long> ids = (List<Long>)params.get("ids");
+            List<Object> ids = (List<Object>)params.get("ids");
             TableInfo table = tableInfo(context);
             return new SQL()
                     .SELECT(table.selectColumns)

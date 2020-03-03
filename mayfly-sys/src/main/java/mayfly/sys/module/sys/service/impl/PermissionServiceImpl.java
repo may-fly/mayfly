@@ -1,8 +1,9 @@
 package mayfly.sys.module.sys.service.impl;
 
-import mayfly.core.permission.registry.PermissionCacheHandler;
+import mayfly.core.permission.LoginAccount;
+import mayfly.core.permission.registry.LoginAccountRegistryHandler;
+import mayfly.core.permission.registry.PermissionCheckHandler;
 import mayfly.core.util.BracePlaceholder;
-import mayfly.core.util.CollectionUtils;
 import mayfly.core.util.TreeUtils;
 import mayfly.core.util.UUIDUtils;
 import mayfly.core.util.bean.BeanUtils;
@@ -20,7 +21,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
@@ -43,7 +43,7 @@ public class PermissionServiceImpl implements PermissionService  {
     /**
      * 权限缓存处理器
      */
-    private PermissionCacheHandler<Integer> permissionCacheHandler = PermissionCacheHandler.of(this);
+    private LoginAccountRegistryHandler<Integer> loginAccountRegistryHandler = LoginAccountRegistryHandler.of(this);
 
 
     @Override
@@ -58,57 +58,42 @@ public class PermissionServiceImpl implements PermissionService  {
         }
         // 如果权限被禁用，将会在code后加上:0标志
         List<String> permissionCodes = permissions.stream().filter(p -> Objects.equals(p.getType(), ResourceTypeEnum.PERMISSION.getValue()))
-                .map(p -> p.getStatus().equals(EnableDisableEnum.DISABLE.getValue()) ? PermissionCacheHandler.getDisablePermissionCode(p.getCode()) : p.getCode())
+                .map(p -> p.getStatus().equals(EnableDisableEnum.DISABLE.getValue()) ? PermissionCheckHandler.getDisablePermissionCode(p.getCode()) : p.getCode())
                 .collect(Collectors.toList());
-        // 缓存用户id
-        redisTemplate.opsForValue().set(BracePlaceholder.resolveByObject(UserCacheKey.USER_ID_KEY, token), id, UserCacheKey.EXPIRE_TIME, TimeUnit.MINUTES);
-        // 保存用户权限code
-        if (!CollectionUtils.isEmpty(permissionCodes)) {
-            permissionCacheHandler.savePermission(id, permissionCodes, UserCacheKey.EXPIRE_TIME, TimeUnit.MINUTES);
-        }
+        // 保存登录账号信息
+        LoginAccount<Integer> loginAccount = new LoginAccount<Integer>().setId(account.getId()).setUsername(account.getUsername())
+                .setPermissions(permissionCodes);
+        loginAccountRegistryHandler.saveLoginAccount(token, loginAccount, UserCacheKey.EXPIRE_TIME, TimeUnit.MINUTES);
+
         return LoginSuccessVO.builder().admin(BeanUtils.copyProperties(account, AccountVO.class))
                 .token(token).resources(resources).build();
     }
 
     @Override
     public void removeToken(String token) {
-        redisTemplate.delete(BracePlaceholder.resolveByObject(UserCacheKey.USER_ID_KEY, token));
-    }
-
-    @Override
-    public void removePermissions(Integer userId) {
-        permissionCacheHandler.deletePermissions(userId);
+        loginAccountRegistryHandler.removeLoginAccount(token);
     }
 
 
     //------------------------------------------------------------
-    //  UserPermissionRegistry  接口实现类
+    //  LoginAccountRegistry  接口实现类
     //------------------------------------------------------------
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("all")
     @Override
-    public void save(Integer userId, Collection<String> permissionCodes, long time, TimeUnit timeUnit) {
-        // 给权限code key添加用户id
-        String permissionKey = BracePlaceholder.resolveByObject(UserCacheKey.USER_PERMISSION_KEY, userId);
-        redisTemplate.delete(permissionKey);
-        redisTemplate.boundSetOps(permissionKey).add(permissionCodes.toArray());
-        redisTemplate.boundSetOps(permissionKey).expire(time, timeUnit);
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public void delete(Integer userId) {
-        redisTemplate.delete(BracePlaceholder.resolveByObject(UserCacheKey.USER_PERMISSION_KEY, userId));
+    public void save(String token, LoginAccount loginAccount, long time, TimeUnit timeUnit) {
+        redisTemplate.opsForValue().set(BracePlaceholder.resolveByObject(UserCacheKey.ACCOUNT_TOKEN_KEY, token), loginAccount, time, timeUnit);
     }
 
     @SuppressWarnings("all")
     @Override
-    public boolean has(Integer userId, String permissionCode) {
-        return redisTemplate.opsForSet().isMember(BracePlaceholder.resolveByObject(UserCacheKey.USER_PERMISSION_KEY, userId), permissionCode);
+    public LoginAccount<Integer> getLoginAccount(String token) {
+        return (LoginAccount<Integer>) redisTemplate.opsForValue().get(BracePlaceholder.resolveByObject(UserCacheKey.ACCOUNT_TOKEN_KEY, token));
     }
 
+    @SuppressWarnings("all")
     @Override
-    public Integer getUserIdByToken(String token) {
-        return (Integer) redisTemplate.opsForValue().get(BracePlaceholder.resolveByObject(UserCacheKey.USER_ID_KEY, token));
+    public void delete(String token) {
+        redisTemplate.delete(BracePlaceholder.resolveByObject(UserCacheKey.ACCOUNT_TOKEN_KEY, token));
     }
 }

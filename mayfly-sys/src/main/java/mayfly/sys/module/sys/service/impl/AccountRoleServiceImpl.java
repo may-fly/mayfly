@@ -62,6 +62,9 @@ public class AccountRoleServiceImpl extends BaseServiceImpl<AccountRoleMapper, A
             deleteByCondition(AccountRole.builder().accountId(accountId).roleId(r).build());
         });
 
+        if (CollectionUtils.isEmpty(addIds)) {
+            return;
+        }
         List<AccountRole> ars = new ArrayList<>(addIds.size());
         for (Integer id : addIds) {
             BusinessAssert.notNull(roleService.getById(id), "角色不存在");

@@ -1,43 +1,24 @@
 package mayfly.core.util;
 
-import mayfly.core.util.http.HttpRequest;
-import mayfly.core.util.http.HttpUtils;
-import org.junit.Test;
 
-import java.util.HashMap;
-import java.util.Map;
+import org.junit.Test;
 
 public class HttpUtilsTest {
 
-    private static String url = "http://localhost:8080/mayfly/";
+    private static String url = "http://localhost:8080/";
 
     @Test
-    public void get() throws Exception {
-        Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("userId", 11);
-        queryParams.put("username", "admin");
-        queryParams.put("password", "11111");
-        String s = HttpUtils.get(url + "sys/v1/admins", queryParams);
-        System.out.println();
-    }
+    public void testGet() {
+        System.out.println(HttpUtils.get(url + "sys/resources",
+                MapUtils.hashMapBuilder(2).put("status", 1).build()));
 
-
-    @Test
-    public void get2() {
-        try {
-            System.out.println(HttpRequest.create("https://www.baidu.com").get());
-        } catch (Exception e) {
-            System.out.println(e);
-        }
+        System.out.println(HttpUtils.get(url + "sys/accounts",
+                MapUtils.hashMapBuilder(2).put("pageNum", 1).put("pageSize", 1).build()));
     }
 
     @Test
-    public void post() throws Exception {
-        Map<String, String> queryParams = new HashMap<>();
-        queryParams.put("userId", "11");
-        queryParams.put("username", "admin");
-        queryParams.put("password", "123456");
-        String s = HttpRequest.create(url + "open/v1/login11").body(queryParams).postJson();
-        System.out.println();
+    public void testPost() {
+        System.out.println( HttpUtils.postJson(url + "sys/resources",
+                MapUtils.hashMapBuilder(2).put("name", "teest").put("pageSize", 1).build()));;
     }
 }

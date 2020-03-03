@@ -1,6 +1,6 @@
 package mayfly.sys.module.sys.service;
 
-import mayfly.core.permission.registry.UserPermissionRegistry;
+import mayfly.core.permission.registry.LoginAccountRegistry;
 import mayfly.sys.module.sys.controller.vo.LoginSuccessVO;
 import mayfly.sys.module.sys.entity.Account;
 
@@ -10,7 +10,7 @@ import mayfly.sys.module.sys.entity.Account;
  * @author: meilin.huang
  * @date: 2018/6/26 上午9:48
  */
-public interface PermissionService extends UserPermissionRegistry<Integer> {
+public interface PermissionService extends LoginAccountRegistry<Integer> {
     /**
      * 保存id以及对应的权限
      *
@@ -31,6 +31,6 @@ public interface PermissionService extends UserPermissionRegistry<Integer> {
      *
      * @param userId  user id
      */
-    void removePermissions(Integer userId);
+//    void removePermissions(Integer userId);
 
 }

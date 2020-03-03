@@ -18,7 +18,6 @@
     <properties>
         <alibaba.fastjson.version>1.2.58</alibaba.fastjson.version>
         <junit.version>4.12</junit.version>
-        <okhttp.version>3.11.0</okhttp.version>
     </properties>
 
     <dependencies>
@@ -43,15 +42,6 @@
             <optional>true</optional>
         </dependency>
 
-        <!--okhttp-->
-        <dependency>
-            <groupId>com.squareup.okhttp3</groupId>
-            <artifactId>okhttp</artifactId>
-            <version>${okhttp.version}</version>
-            <scope>provided</scope>
-            <optional>true</optional>
-        </dependency>
-
         <!-- Spring框架基本的核心工具 -->
         <dependency>
             <groupId>org.springframework</groupId>
@@ -67,7 +57,7 @@
             <optional>true</optional>
         </dependency>
 
-<!--        mybatis-->
+        <!-- mybatis  -->
         <dependency>
             <groupId>org.mybatis</groupId>
             <artifactId>mybatis</artifactId>

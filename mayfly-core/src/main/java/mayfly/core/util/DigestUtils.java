@@ -42,8 +42,8 @@ public class DigestUtils {
     /**
      * 获取消息摘要
      *
-     * @param algorithm
-     * @return
+     * @param algorithm 算法摘要
+     * @return message digest
      */
     private static MessageDigest getDigest(String algorithm) {
         try {

@@ -9,15 +9,8 @@ public class UserCacheKey {
 
     public static final Integer EXPIRE_TIME = 30;
 
-    public static final String ALL_PERMISSION_KEY = "permissions";
-
     /**
-     * 用户id
+     * 账号token key
      */
-    public static final String USER_ID_KEY = "user:token:{token}:id";
-
-    /**
-     * 用户权限
-     */
-    public static final String USER_PERMISSION_KEY = "user:id:{id}:permissions";
+    public static final String ACCOUNT_TOKEN_KEY = "account:token:{token}";
 }

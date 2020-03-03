@@ -3,7 +3,7 @@ package mayfly.sys.config;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
-import mayfly.core.permission.checker.PermissionCheckHandler;
+import mayfly.core.permission.registry.PermissionCheckHandler;
 import mayfly.sys.interceptor.PermissionInterceptor;
 import mayfly.sys.module.sys.service.PermissionService;
 import org.springframework.beans.factory.annotation.Autowired;

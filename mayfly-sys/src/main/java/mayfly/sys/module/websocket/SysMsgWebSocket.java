@@ -41,7 +41,7 @@ public class SysMsgWebSocket {
      */
     @OnOpen
     public void onOpen(@PathParam("token") String token, Session session) {
-        Integer userId = SpringUtils.getBean(PermissionService.class).getUserIdByToken(token);
+        Integer userId = SpringUtils.getBean(PermissionService.class).getLoginAccount(token).getId();
         if (userId == null) {
             WebSocketUtils.sendText(session, MessageTypeEnum.ERROR.toMsg(ResultEnum.NO_PERMISSION.getName()));
             return;

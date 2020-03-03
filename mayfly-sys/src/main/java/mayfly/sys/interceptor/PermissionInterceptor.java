@@ -1,8 +1,8 @@
 package mayfly.sys.interceptor;
 
 import mayfly.core.exception.BusinessException;
-import mayfly.core.permission.SessionLocal;
-import mayfly.core.permission.checker.PermissionCheckHandler;
+import mayfly.core.permission.LoginAccount;
+import mayfly.core.permission.registry.PermissionCheckHandler;
 import mayfly.core.result.Result;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.method.HandlerMethod;
@@ -50,7 +50,7 @@ public class PermissionInterceptor implements HandlerInterceptor {
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
         // 移除ThreadLocal值
-        SessionLocal.remove();
+        LoginAccount.remove();
     }
 
 

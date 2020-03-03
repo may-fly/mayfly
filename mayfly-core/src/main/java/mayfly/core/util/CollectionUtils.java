@@ -20,6 +20,16 @@ public class CollectionUtils {
     }
 
     /**
+     * 判断集合不为空
+     *
+     * @param collection 集合
+     * @return 不为空 ture
+     */
+    public static boolean isNotEmpty(Collection<?> collection) {
+        return !isEmpty(collection);
+    }
+
+    /**
      * 判断一个集合中是否存在指定元素
      *
      * @param collection 集合对象
@@ -38,7 +48,7 @@ public class CollectionUtils {
      * @param oldList    旧list
      * @param comparator 集合对象比较器
      * @param <T>        集合元素泛型对象
-     * @return           比较结果 {@link CompareResult}
+     * @return 比较结果 {@link CompareResult}
      */
     public static <T> CompareResult<T> compare(Collection<T> newList, Collection<T> oldList, Comparator<T> comparator) {
         Collection<T> unmodifiedValue = new ArrayList<>();

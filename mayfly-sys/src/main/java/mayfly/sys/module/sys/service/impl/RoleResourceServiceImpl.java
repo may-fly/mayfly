@@ -4,7 +4,6 @@ import mayfly.core.base.service.impl.BaseServiceImpl;
 import mayfly.core.exception.BusinessAssert;
 import mayfly.core.exception.BusinessException;
 import mayfly.core.util.CollectionUtils;
-import mayfly.sys.module.sys.entity.Resource;
 import mayfly.sys.module.sys.entity.RoleResource;
 import mayfly.sys.module.sys.mapper.RoleResourceMapper;
 import mayfly.sys.module.sys.service.PermissionService;
@@ -14,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -63,11 +61,9 @@ public class RoleResourceServiceImpl extends BaseServiceImpl<RoleResourceMapper,
                     .roleId(roleId).resourceId(id).build());
         });
 
-        LocalDateTime now = LocalDateTime.now();
+        BusinessAssert.equals(resourceService.listByIdIn((List<Integer>) addIds).size(), addIds.size(), "资源id错误");
         List<RoleResource> addValues = new ArrayList<>(addIds.size());
         for (Integer id : addIds) {
-            Resource r = resourceService.getById(id);
-            BusinessAssert.notNull(r, "id : " + id + "的资源不存在！");
             RoleResource rr = RoleResource.builder().roleId(roleId).resourceId(id).build();
             addValues.add(rr);
         }

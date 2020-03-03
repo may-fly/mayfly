@@ -2,7 +2,7 @@ package mayfly.sys.module.machine.service.impl;
 
 import mayfly.core.base.service.impl.BaseServiceImpl;
 import mayfly.core.exception.BusinessAssert;
-import mayfly.core.permission.SessionLocal;
+import mayfly.core.permission.LoginAccount;
 import mayfly.core.thread.GlobalThreadPool;
 import mayfly.core.util.bean.BeanUtils;
 import mayfly.sys.common.utils.ssh.ShellCmd;
@@ -123,7 +123,7 @@ public class MachineFileServiceImpl extends BaseServiceImpl<MachineFileMapper, M
         MachineFile file = getById(fileId);
         checkPath(filePath, file);
 
-        Integer userId = SessionLocal.getUserId();
+        Integer userId = LoginAccount.<Integer>get().getId();
         // 异步上传，成功与否都webscoket通知上传者
         GlobalThreadPool.execute(() -> {
             machineService.sftpOperate(file.getMachineId(), sftp -> {
