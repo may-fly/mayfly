@@ -10,7 +10,7 @@ import mayfly.sys.common.utils.ssh.SSHException;
 import mayfly.sys.common.utils.ssh.SSHUtils;
 import mayfly.sys.common.utils.ssh.SessionInfo;
 import mayfly.sys.module.machine.controller.form.MachineForm;
-import mayfly.sys.module.machine.entity.Machine;
+import mayfly.sys.module.machine.entity.MachineDO;
 
 import java.util.Objects;
 import java.util.function.Function;
@@ -20,7 +20,7 @@ import java.util.function.Function;
  * @version 1.0
  * @date 2019-11-04 3:04 下午
  */
-public interface MachineService extends BaseService<Machine> {
+public interface MachineService extends BaseService<MachineDO> {
 
     /**
      * 保存新增的机器信息
@@ -80,7 +80,7 @@ public interface MachineService extends BaseService<Machine> {
      */
     default Session getSession(Integer machineId) {
         return SSHUtils.getSession(Objects.toString(machineId), () -> {
-            Machine machine = getById(machineId);
+            MachineDO machine = getById(machineId);
             BusinessAssert.notNull(machine, "机器不存在");
             return SessionInfo.builder(machine.getIp()).port(machine.getPort())
                     .password(machine.getPassword()).username(machine.getUsername()).build();

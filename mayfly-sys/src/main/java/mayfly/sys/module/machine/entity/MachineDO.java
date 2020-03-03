@@ -2,7 +2,8 @@ package mayfly.sys.module.machine.entity;
 
 import lombok.Getter;
 import lombok.Setter;
-import mayfly.core.base.model.BaseEntity;
+import mayfly.core.base.mapper.annotation.Table;
+import mayfly.core.base.model.BaseDO;
 
 /**
  * @author meilin.huang
@@ -11,7 +12,8 @@ import mayfly.core.base.model.BaseEntity;
  */
 @Getter
 @Setter
-public class Machine extends BaseEntity {
+@Table("tb_machine")
+public class MachineDO extends BaseDO {
     private String name;
 
     private String ip;

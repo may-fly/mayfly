@@ -2,9 +2,9 @@ package mayfly.sys.module.sys.service.impl;
 
 import mayfly.core.base.service.impl.BaseServiceImpl;
 import mayfly.core.exception.BusinessAssert;
-import mayfly.sys.module.sys.entity.AccountRole;
-import mayfly.sys.module.sys.entity.Role;
-import mayfly.sys.module.sys.entity.RoleResource;
+import mayfly.sys.module.sys.entity.AccountRoleDO;
+import mayfly.sys.module.sys.entity.RoleDO;
+import mayfly.sys.module.sys.entity.RoleResourceDO;
 import mayfly.sys.module.sys.mapper.RoleMapper;
 import mayfly.sys.module.sys.service.AccountRoleService;
 import mayfly.sys.module.sys.service.RoleResourceService;
@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @date 2018-12-07 4:13 PM
  */
 @Service
-public class RoleServiceImpl extends BaseServiceImpl<RoleMapper, Role> implements RoleService {
+public class RoleServiceImpl extends BaseServiceImpl<RoleMapper, RoleDO> implements RoleService {
 
     @Autowired
     private RoleMapper roleMapper;
@@ -37,12 +37,12 @@ public class RoleServiceImpl extends BaseServiceImpl<RoleMapper, Role> implement
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void deleteRole(Integer id) {
-        Role role = getById(id);
+        RoleDO role = getById(id);
         BusinessAssert.notNull(role, "角色不存在");
         // 删除角色关联的用户角色信息
-        accountRoleService.deleteByCondition(AccountRole.builder().roleId(id).build());
+        accountRoleService.deleteByCondition(AccountRoleDO.builder().roleId(id).build());
         // 删除角色关联的资源信息
-        roleResourceService.deleteByCondition(RoleResource.builder().roleId(id).build());
+        roleResourceService.deleteByCondition(RoleResourceDO.builder().roleId(id).build());
         deleteById(id);
     }
 }

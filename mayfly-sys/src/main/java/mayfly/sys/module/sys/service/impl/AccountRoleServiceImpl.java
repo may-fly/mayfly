@@ -3,8 +3,8 @@ package mayfly.sys.module.sys.service.impl;
 import mayfly.core.base.service.impl.BaseServiceImpl;
 import mayfly.core.exception.BusinessAssert;
 import mayfly.core.util.CollectionUtils;
-import mayfly.sys.module.sys.entity.AccountRole;
-import mayfly.sys.module.sys.entity.Role;
+import mayfly.sys.module.sys.entity.AccountRoleDO;
+import mayfly.sys.module.sys.entity.RoleDO;
 import mayfly.sys.module.sys.mapper.AccountRoleMapper;
 import mayfly.sys.module.sys.service.AccountRoleService;
 import mayfly.sys.module.sys.service.RoleService;
@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
  * @date 2019-08-19 20:13
  */
 @Service
-public class AccountRoleServiceImpl extends BaseServiceImpl<AccountRoleMapper, AccountRole> implements AccountRoleService {
+public class AccountRoleServiceImpl extends BaseServiceImpl<AccountRoleMapper, AccountRoleDO> implements AccountRoleService {
 
     @Autowired
     private RoleService roleService;
@@ -37,13 +37,13 @@ public class AccountRoleServiceImpl extends BaseServiceImpl<AccountRoleMapper, A
     }
 
     @Override
-    public List<Role> listRoleByAccountId(Integer accountId) {
+    public List<RoleDO> listRoleByAccountId(Integer accountId) {
         return accountRoleMapper.selectRoleByAccountId(accountId);
     }
 
     @Override
     public List<Integer> listRoleIdByAccountId(Integer accountId) {
-        return listByCondition(AccountRole.builder().accountId(accountId).build()).stream().map(AccountRole::getRoleId).collect(Collectors.toList());
+        return listByCondition(AccountRoleDO.builder().accountId(accountId).build()).stream().map(AccountRoleDO::getRoleId).collect(Collectors.toList());
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -59,16 +59,16 @@ public class AccountRoleServiceImpl extends BaseServiceImpl<AccountRoleMapper, A
         Collection<Integer> addIds = compareResult.getAddValue();
 
         delIds.forEach(r -> {
-            deleteByCondition(AccountRole.builder().accountId(accountId).roleId(r).build());
+            deleteByCondition(AccountRoleDO.builder().accountId(accountId).roleId(r).build());
         });
 
         if (CollectionUtils.isEmpty(addIds)) {
             return;
         }
-        List<AccountRole> ars = new ArrayList<>(addIds.size());
+        List<AccountRoleDO> ars = new ArrayList<>(addIds.size());
         for (Integer id : addIds) {
             BusinessAssert.notNull(roleService.getById(id), "角色不存在");
-            AccountRole ru = AccountRole.builder().roleId(id).accountId(accountId).build();
+            AccountRoleDO ru = AccountRoleDO.builder().roleId(id).accountId(accountId).build();
             ars.add(ru);
         }
         batchInsert(ars);

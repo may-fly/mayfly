@@ -5,7 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import mayfly.core.base.mapper.annotation.NoColumn;
-import mayfly.core.base.model.BaseEntity;
+import mayfly.core.base.mapper.annotation.Table;
+import mayfly.core.base.model.BaseDO;
 
 /**
  * 机器上配置文件位置
@@ -18,8 +19,9 @@ import mayfly.core.base.model.BaseEntity;
 @AllArgsConstructor
 @Data
 @Builder
-@NoColumn(fields = {"updateTime"})
-public class MachineFile extends BaseEntity {
+@Table("tb_machine_file")
+@NoColumn(fields = {"updateTime", "update_account", "update_account_id"})
+public class MachineFileDO extends BaseDO {
     private Integer machineId;
 
     private String name;

@@ -4,7 +4,7 @@ import mayfly.core.base.service.impl.BaseServiceImpl;
 import mayfly.core.exception.BusinessAssert;
 import mayfly.core.exception.BusinessException;
 import mayfly.core.util.CollectionUtils;
-import mayfly.sys.module.sys.entity.RoleResource;
+import mayfly.sys.module.sys.entity.RoleResourceDO;
 import mayfly.sys.module.sys.mapper.RoleResourceMapper;
 import mayfly.sys.module.sys.service.PermissionService;
 import mayfly.sys.module.sys.service.ResourceService;
@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
  * @date 2019-06-30 11:59
  */
 @Service
-public class RoleResourceServiceImpl extends BaseServiceImpl<RoleResourceMapper, RoleResource> implements RoleResourceService {
+public class RoleResourceServiceImpl extends BaseServiceImpl<RoleResourceMapper, RoleResourceDO> implements RoleResourceService {
 
     @Autowired
     private RoleResourceMapper roleResourceMapper;
@@ -41,8 +41,8 @@ public class RoleResourceServiceImpl extends BaseServiceImpl<RoleResourceMapper,
 
     @Override
     public List<Integer> listResourceId(Integer roleId) {
-        RoleResource condition = RoleResource.builder().roleId(roleId).build();
-        return listByCondition(condition).stream().map(RoleResource::getResourceId).collect(Collectors.toList());
+        RoleResourceDO condition = RoleResourceDO.builder().roleId(roleId).build();
+        return listByCondition(condition).stream().map(RoleResourceDO::getResourceId).collect(Collectors.toList());
     }
 
     @Transactional
@@ -57,14 +57,14 @@ public class RoleResourceServiceImpl extends BaseServiceImpl<RoleResourceMapper,
         Collection<Integer> addIds = compareResult.getAddValue();
 
         delIds.forEach(id -> {
-            deleteByCondition(RoleResource.builder()
+            deleteByCondition(RoleResourceDO.builder()
                     .roleId(roleId).resourceId(id).build());
         });
 
         BusinessAssert.equals(resourceService.listByIdIn((List<Integer>) addIds).size(), addIds.size(), "资源id错误");
-        List<RoleResource> addValues = new ArrayList<>(addIds.size());
+        List<RoleResourceDO> addValues = new ArrayList<>(addIds.size());
         for (Integer id : addIds) {
-            RoleResource rr = RoleResource.builder().roleId(roleId).resourceId(id).build();
+            RoleResourceDO rr = RoleResourceDO.builder().roleId(roleId).resourceId(id).build();
             addValues.add(rr);
         }
         batchInsert(addValues);

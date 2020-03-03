@@ -2,7 +2,7 @@ package mayfly.sys.module.sys.service;
 
 import mayfly.core.base.service.BaseService;
 import mayfly.core.exception.BusinessException;
-import mayfly.sys.module.sys.entity.RoleResource;
+import mayfly.sys.module.sys.entity.RoleResourceDO;
 
 import java.util.List;
 
@@ -11,7 +11,7 @@ import java.util.List;
  * @version 1.0
  * @date 2019-06-30 11:58
  */
-public interface RoleResourceService extends BaseService<RoleResource> {
+public interface RoleResourceService extends BaseService<RoleResourceDO> {
 
     /**
      * 获取角色拥有的资源id列表

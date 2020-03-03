@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
  * @date 2020-01-15 4:27 下午
  */
 @Data
-public class MachineScript {
+public class MachineScriptDO {
 
     private Integer id;
 

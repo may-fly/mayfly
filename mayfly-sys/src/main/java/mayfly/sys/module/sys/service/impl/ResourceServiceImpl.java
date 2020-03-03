@@ -7,8 +7,8 @@ import mayfly.core.util.bean.BeanUtils;
 import mayfly.core.util.enums.EnumUtils;
 import mayfly.sys.common.enums.EnableDisableEnum;
 import mayfly.sys.module.sys.controller.vo.ResourceListVO;
-import mayfly.sys.module.sys.entity.Resource;
-import mayfly.sys.module.sys.entity.RoleResource;
+import mayfly.sys.module.sys.entity.ResourceDO;
+import mayfly.sys.module.sys.entity.RoleResourceDO;
 import mayfly.sys.module.sys.enums.ResourceTypeEnum;
 import mayfly.sys.module.sys.mapper.ResourceMapper;
 import mayfly.sys.module.sys.service.PermissionService;
@@ -28,7 +28,7 @@ import java.util.Objects;
  * @date 2018/6/27 下午4:09
  */
 @Service
-public class ResourceServiceImpl extends BaseServiceImpl<ResourceMapper, Resource> implements ResourceService {
+public class ResourceServiceImpl extends BaseServiceImpl<ResourceMapper, ResourceDO> implements ResourceService {
 
     @Autowired
     private ResourceMapper resourceMapper;
@@ -49,25 +49,25 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourceMapper, Resourc
     }
 
     @Override
-    public List<ResourceListVO> listResource(Resource condition) {
-        List<Resource> resources = listAll("pid ASC, weight ASC");
+    public List<ResourceListVO> listResource(ResourceDO condition) {
+        List<ResourceDO> resources = listAll("pid ASC, weight ASC");
         return TreeUtils.generateTrees(BeanUtils.copyProperties(resources, ResourceListVO.class));
     }
 
     @Override
-    public Resource saveResource(Resource resource) {
+    public ResourceDO saveResource(ResourceDO resource) {
         if (resource.getPid() == null || resource.getPid().equals(0)) {
             resource.setPid(0);
             BusinessAssert.equals(resource.getType(), ResourceTypeEnum.MENU.getValue(), "权限资源不能为根节点");
         } else {
-            Resource pResource = getById(resource.getPid());
+            ResourceDO pResource = getById(resource.getPid());
             BusinessAssert.notNull(pResource, "pid不存在！");
             BusinessAssert.equals(pResource.getType(), ResourceTypeEnum.MENU.getValue(), "权限资源不能添加子节点");
         }
         // 如果是添加菜单，则该父节点不能存在有权限节点
         if (resource.getType().equals(ResourceTypeEnum.MENU.getValue())) {
             // 查询指定pid节点下是否有权限节点
-            Resource condition = Resource.builder().pid(resource.getPid()).type(ResourceTypeEnum.PERMISSION.getValue()).build();
+            ResourceDO condition = ResourceDO.builder().pid(resource.getPid()).type(ResourceTypeEnum.PERMISSION.getValue()).build();
             BusinessAssert.state(countByCondition(condition) == 0, "该菜单已有权限资源子节点，不能再添加菜单");
         } else {
             String code = resource.getCode();
@@ -81,8 +81,8 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourceMapper, Resourc
     }
 
     @Override
-    public Resource updateResource(Resource resource) {
-        Resource old = getById(resource.getId());
+    public ResourceDO updateResource(ResourceDO resource) {
+        ResourceDO old = getById(resource.getId());
         BusinessAssert.notNull(old, "资源不存在");
         BusinessAssert.equals(resource.getType(), old.getType(), "资源类型不可变更");
         // 禁止误传修改其父节点
@@ -101,9 +101,9 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourceMapper, Resourc
     }
 
     @Override
-    public Resource changeStatus(Integer id, Integer status) {
+    public ResourceDO changeStatus(Integer id, Integer status) {
         BusinessAssert.state(EnumUtils.isExist(EnableDisableEnum.values(), status), "状态值错误");
-        Resource resource = getById(id);
+        ResourceDO resource = getById(id);
         BusinessAssert.notNull(resource, "该资源不存在");
         // 状态不变直接返回
         if (Objects.equals(status, resource.getStatus())) {
@@ -118,9 +118,9 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourceMapper, Resourc
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void deleteResource(Integer id) {
-        BusinessAssert.empty(listByCondition(Resource.builder().pid(id).build()), "请先删除该资源的子资源");
+        BusinessAssert.empty(listByCondition(ResourceDO.builder().pid(id).build()), "请先删除该资源的子资源");
         BusinessAssert.state(deleteById(id) == 1, "删除菜单失败！");
         // 删除角色资源表中该菜单所关联的所有信息
-        roleResourceService.deleteByCondition(RoleResource.builder().resourceId(id).build());
+        roleResourceService.deleteByCondition(RoleResourceDO.builder().resourceId(id).build());
     }
 }

@@ -5,7 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import mayfly.core.base.mapper.annotation.NoColumn;
-import mayfly.core.base.model.BaseEntity;
+import mayfly.core.base.mapper.annotation.Table;
+import mayfly.core.base.model.BaseDO;
 
 /**
  * @author meilin.huang
@@ -16,8 +17,10 @@ import mayfly.core.base.model.BaseEntity;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@NoColumn(fields = {"updateTime"})
-public class RoleResource extends BaseEntity {
+@Table("tb_role_resource")
+@NoColumn(fields = {"updateTime", "update_account", "update_account_id"})
+public class RoleResourceDO extends BaseDO {
+
     private Integer roleId;
 
     private Integer resourceId;

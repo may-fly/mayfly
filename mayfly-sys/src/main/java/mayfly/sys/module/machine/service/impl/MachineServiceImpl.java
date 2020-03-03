@@ -8,7 +8,7 @@ import mayfly.sys.common.utils.ssh.SSHException;
 import mayfly.sys.common.utils.ssh.SSHUtils;
 import mayfly.sys.common.utils.ssh.SessionInfo;
 import mayfly.sys.module.machine.controller.form.MachineForm;
-import mayfly.sys.module.machine.entity.Machine;
+import mayfly.sys.module.machine.entity.MachineDO;
 import mayfly.sys.module.machine.mapper.MachineMapper;
 import mayfly.sys.module.machine.service.MachineFileService;
 import mayfly.sys.module.machine.service.MachineService;
@@ -21,7 +21,7 @@ import org.springframework.stereotype.Service;
  * @date 2019-11-04 3:04 下午
  */
 @Service
-public class MachineServiceImpl extends BaseServiceImpl<MachineMapper, Machine> implements MachineService {
+public class MachineServiceImpl extends BaseServiceImpl<MachineMapper, MachineDO> implements MachineService {
 
     @Autowired
     private MachineMapper machineMapper;
@@ -45,7 +45,7 @@ public class MachineServiceImpl extends BaseServiceImpl<MachineMapper, Machine> 
             throw new BusinessRuntimeException("信息不正确：" + e.getMessage());
         }
 
-        Machine machine = BeanUtils.copyProperties(form, Machine.class);
+        MachineDO machine = BeanUtils.copyProperties(form, MachineDO.class);
         insert(machine);
     }
 

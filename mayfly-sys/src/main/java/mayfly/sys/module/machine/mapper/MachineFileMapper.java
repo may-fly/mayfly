@@ -1,7 +1,7 @@
 package mayfly.sys.module.machine.mapper;
 
 import mayfly.core.base.mapper.BaseMapper;
-import mayfly.sys.module.machine.entity.MachineFile;
+import mayfly.sys.module.machine.entity.MachineFileDO;
 
 
 /**
@@ -9,5 +9,5 @@ import mayfly.sys.module.machine.entity.MachineFile;
  * @version 1.0
  * @date 2019-11-04 3:03 下午
  */
-public interface MachineFileMapper extends BaseMapper<Integer, MachineFile> {
+public interface MachineFileMapper extends BaseMapper<Integer, MachineFileDO> {
 }

@@ -1,8 +1,8 @@
 package mayfly.sys.module.sys.service;
 
 import mayfly.core.base.service.BaseService;
-import mayfly.sys.module.sys.entity.AccountRole;
-import mayfly.sys.module.sys.entity.Role;
+import mayfly.sys.module.sys.entity.AccountRoleDO;
+import mayfly.sys.module.sys.entity.RoleDO;
 
 import java.util.List;
 
@@ -11,7 +11,7 @@ import java.util.List;
  * @version 1.0
  * @date 2019-08-19 20:12
  */
-public interface AccountRoleService extends BaseService<AccountRole> {
+public interface AccountRoleService extends BaseService<AccountRoleDO> {
 
     /**
      * 获取账号角色列表
@@ -19,7 +19,7 @@ public interface AccountRoleService extends BaseService<AccountRole> {
      * @param accountId 账号id
      * @return  角色列表
      */
-    List<Role> listRoleByAccountId(Integer accountId);
+    List<RoleDO> listRoleByAccountId(Integer accountId);
 
     /**
      * 获取指定账号的角色id列表

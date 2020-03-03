@@ -9,7 +9,7 @@ import mayfly.core.util.bean.BeanUtils;
 import mayfly.core.validation.annotation.Valid;
 import mayfly.sys.common.enums.EnableDisableEnum;
 import mayfly.sys.module.sys.controller.form.RoleForm;
-import mayfly.sys.module.sys.entity.Role;
+import mayfly.sys.module.sys.entity.RoleDO;
 import mayfly.sys.module.sys.service.RoleResourceService;
 import mayfly.sys.module.sys.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +51,7 @@ public class RoleController {
 
     @PostMapping()
     public Result<?> save(@Valid @RequestBody RoleForm roleForm) {
-        Role role = BeanUtils.copyProperties(roleForm, Role.class);
+        RoleDO role = BeanUtils.copyProperties(roleForm, RoleDO.class);
         LocalDateTime now = LocalDateTime.now();
         role.setCreateTime(now);
         role.setUpdateTime(now);
@@ -61,7 +61,7 @@ public class RoleController {
 
     @PutMapping("/{id}")
     public Result<?> update(@PathVariable Integer id, @Valid @RequestBody RoleForm roleForm) {
-        Role role = roleService.getById(id);
+        RoleDO role = roleService.getById(id);
         BusinessAssert.notNull(role, "角色不存在");
         BeanUtils.copyProperties(roleForm, role);
         LocalDateTime now = LocalDateTime.now();

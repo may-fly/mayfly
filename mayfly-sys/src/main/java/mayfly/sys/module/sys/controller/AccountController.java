@@ -11,7 +11,7 @@ import mayfly.sys.common.enums.EnableDisableEnum;
 import mayfly.sys.module.sys.controller.form.AccountForm;
 import mayfly.sys.module.sys.controller.form.RoleUserForm;
 import mayfly.sys.module.sys.controller.query.AccountQuery;
-import mayfly.sys.module.sys.entity.Account;
+import mayfly.sys.module.sys.entity.AccountDO;
 import mayfly.sys.module.sys.service.AccountRoleService;
 import mayfly.sys.module.sys.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,7 +65,7 @@ public class AccountController {
     @PutMapping("/{id}/{status}")
     public Result<?> changeStatus(@PathVariable Integer id, @PathVariable Integer status) {
         BusinessAssert.state(EnumUtils.isExist(EnableDisableEnum.values(), status), "状态值错误");
-        Account a = new Account().setStatus(status);
+        AccountDO a = new AccountDO().setStatus(status);
         a.setId(id);
         accountService.updateByIdSelective(a);
         return Result.success();

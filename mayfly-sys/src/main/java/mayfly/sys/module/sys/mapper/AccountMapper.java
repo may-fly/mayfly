@@ -1,7 +1,7 @@
 package mayfly.sys.module.sys.mapper;
 
 import mayfly.core.base.mapper.BaseMapper;
-import mayfly.sys.module.sys.entity.Account;
+import mayfly.sys.module.sys.entity.AccountDO;
 
 /**
  * 管理员Mapper
@@ -9,5 +9,5 @@ import mayfly.sys.module.sys.entity.Account;
  * @author hml
  * @date 2018/6/27 下午2:35
  */
-public interface AccountMapper extends BaseMapper<Integer, Account> {
+public interface AccountMapper extends BaseMapper<Integer, AccountDO> {
 }

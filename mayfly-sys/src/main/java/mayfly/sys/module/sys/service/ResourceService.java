@@ -2,7 +2,7 @@ package mayfly.sys.module.sys.service;
 
 import mayfly.core.base.service.BaseService;
 import mayfly.sys.module.sys.controller.vo.ResourceListVO;
-import mayfly.sys.module.sys.entity.Resource;
+import mayfly.sys.module.sys.entity.ResourceDO;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ import java.util.List;
  * @author hml
  * @date 2018/6/27 下午3:14
  */
-public interface ResourceService extends BaseService<Resource> {
+public interface ResourceService extends BaseService<ResourceDO> {
 
     /**
      * 根据用户id获取用户的所有菜单权限
@@ -27,7 +27,7 @@ public interface ResourceService extends BaseService<Resource> {
      *
      * @return
      */
-    List<ResourceListVO> listResource(Resource condition);
+    List<ResourceListVO> listResource(ResourceDO condition);
 
     /**
      * 删除指定菜单，如果是有子节点，也删除
@@ -43,9 +43,9 @@ public interface ResourceService extends BaseService<Resource> {
      * @param resource
      * @return
      */
-    Resource saveResource(Resource resource);
+    ResourceDO saveResource(ResourceDO resource);
 
-    Resource updateResource(Resource resource);
+    ResourceDO updateResource(ResourceDO resource);
 
     /**
      * 改变菜单的权限
@@ -54,5 +54,5 @@ public interface ResourceService extends BaseService<Resource> {
      * @param status
      * @return
      */
-    Resource changeStatus(Integer id, Integer status);
+    ResourceDO changeStatus(Integer id, Integer status);
 }

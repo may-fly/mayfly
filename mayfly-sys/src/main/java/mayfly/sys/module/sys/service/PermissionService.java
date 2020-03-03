@@ -2,7 +2,7 @@ package mayfly.sys.module.sys.service;
 
 import mayfly.core.permission.registry.LoginAccountRegistry;
 import mayfly.sys.module.sys.controller.vo.LoginSuccessVO;
-import mayfly.sys.module.sys.entity.Account;
+import mayfly.sys.module.sys.entity.AccountDO;
 
 /**
  * 权限服务
@@ -17,7 +17,7 @@ public interface PermissionService extends LoginAccountRegistry<Integer> {
      * @param account 管理员信息
      * @return token
      */
-    LoginSuccessVO saveIdAndPermission(Account account);
+    LoginSuccessVO saveIdAndPermission(AccountDO account);
 
     /**
      * 移除token

@@ -12,7 +12,7 @@ import mayfly.sys.common.enums.EnableDisableEnum;
 import mayfly.sys.module.sys.controller.vo.AccountVO;
 import mayfly.sys.module.sys.controller.vo.LoginSuccessVO;
 import mayfly.sys.module.sys.controller.vo.ResourceListVO;
-import mayfly.sys.module.sys.entity.Account;
+import mayfly.sys.module.sys.entity.AccountDO;
 import mayfly.sys.module.sys.enums.ResourceTypeEnum;
 import mayfly.sys.module.sys.service.PermissionService;
 import mayfly.sys.module.sys.service.ResourceService;
@@ -47,7 +47,7 @@ public class PermissionServiceImpl implements PermissionService  {
 
 
     @Override
-    public LoginSuccessVO saveIdAndPermission(Account account) {
+    public LoginSuccessVO saveIdAndPermission(AccountDO account) {
         Integer id = account.getId();
         String token = UUIDUtils.generateUUID();
         List<ResourceListVO> resources = resourceService.listByUserId(id);

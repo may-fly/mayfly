@@ -1,7 +1,7 @@
 package mayfly.sys.module.sys.mapper;
 
 import mayfly.core.base.mapper.BaseMapper;
-import mayfly.sys.module.sys.entity.Resource;
+import mayfly.sys.module.sys.entity.ResourceDO;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
@@ -12,7 +12,7 @@ import java.util.List;
  * @author hml
  * @date 2018/6/27 下午2:36
  */
-public interface ResourceMapper extends BaseMapper<Integer, Resource> {
+public interface ResourceMapper extends BaseMapper<Integer, ResourceDO> {
 
 //    @Select("SELECT m.id, m.pid, m.weight, m.name, m.type, m.code, " +
 //            "m.api_id AS 'permission.id', a.method AS 'permission.method', a.status As 'permission.status', a.uri_pattern AS 'permission.uriPattern' " +
@@ -30,5 +30,5 @@ public interface ResourceMapper extends BaseMapper<Integer, Resource> {
             "FROM tb_account_role p JOIN tb_role r ON p.role_Id = r.id AND p.account_id = #{accountId} AND r.status = 1 " +
             "JOIN tb_role_resource rmb ON rmb.role_id = r.id)" +
             "ORDER BY m.pid ASC, m.weight ASC")
-    List<Resource> selectByUserId(Integer accountId);
+    List<ResourceDO> selectByUserId(Integer accountId);
 }

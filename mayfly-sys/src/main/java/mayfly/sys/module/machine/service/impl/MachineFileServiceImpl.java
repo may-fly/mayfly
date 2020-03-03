@@ -11,7 +11,7 @@ import mayfly.sys.common.websocket.SessionNoFoundException;
 import mayfly.sys.common.websocket.WebSocketUtils;
 import mayfly.sys.module.machine.controller.form.MachineFileForm;
 import mayfly.sys.module.machine.controller.vo.LsVO;
-import mayfly.sys.module.machine.entity.MachineFile;
+import mayfly.sys.module.machine.entity.MachineFileDO;
 import mayfly.sys.module.machine.enums.MachineFileTypeEnum;
 import mayfly.sys.module.machine.mapper.MachineFileMapper;
 import mayfly.sys.module.machine.service.MachineFileService;
@@ -32,7 +32,7 @@ import java.util.Objects;
  * @date 2019-11-04 3:04 下午
  */
 @Service
-public class MachineFileServiceImpl extends BaseServiceImpl<MachineFileMapper, MachineFile> implements MachineFileService {
+public class MachineFileServiceImpl extends BaseServiceImpl<MachineFileMapper, MachineFileDO> implements MachineFileService {
 
     public static char file = '-';
     public static char directory = 'd';
@@ -51,13 +51,13 @@ public class MachineFileServiceImpl extends BaseServiceImpl<MachineFileMapper, M
     }
 
     @Override
-    public List<MachineFile> listByMachineId(Integer machineId) {
-        return this.listByCondition(MachineFile.builder().machineId(machineId).build());
+    public List<MachineFileDO> listByMachineId(Integer machineId) {
+        return this.listByCondition(MachineFileDO.builder().machineId(machineId).build());
     }
 
     @Override
     public String getFileContent(Integer fileId, String path) {
-        MachineFile file = getById(fileId);
+        MachineFileDO file = getById(fileId);
         checkPath(path, file);
 
         return machineService.exec(file.getMachineId(), "cat " + path);
@@ -67,19 +67,19 @@ public class MachineFileServiceImpl extends BaseServiceImpl<MachineFileMapper, M
     @Override
     public void updateFileContent(Integer confId, String path, String content) {
         BusinessAssert.notEmpty(content, "内容不能为空");
-        MachineFile file = getById(confId);
+        MachineFileDO file = getById(confId);
         checkPath(path, file);
 
         machineService.exec(file.getMachineId(), "echo '" + content + "' >" + path);
     }
 
     @Override
-    public MachineFile addFile(Integer machineId, MachineFileForm form) {
+    public MachineFileDO addFile(Integer machineId, MachineFileForm form) {
         boolean isFile = Objects.equals(form.getType(), MachineFileTypeEnum.FILE.getValue());
         String res = machineService.exec(machineId, isFile ? ShellCmd.fileExist(form.getPath()) : ShellCmd.directoryExist(form.getPath()));
         BusinessAssert.equals(res, "1\n", () -> isFile ? "该文件不存在" : "该目录不存在");
 
-        MachineFile file = BeanUtils.copyProperties(form, MachineFile.class);
+        MachineFileDO file = BeanUtils.copyProperties(form, MachineFileDO.class);
         file.setMachineId(machineId);
         file.setCreateTime(LocalDateTime.now());
         insert(file);
@@ -88,7 +88,7 @@ public class MachineFileServiceImpl extends BaseServiceImpl<MachineFileMapper, M
 
     @Override
     public List<LsVO> ls(Integer fileId, String path) {
-        MachineFile machineFile = getById(fileId);
+        MachineFileDO machineFile = getById(fileId);
         checkPath(path, machineFile);
 
         List<LsVO> ls = new ArrayList<>(16);
@@ -120,7 +120,7 @@ public class MachineFileServiceImpl extends BaseServiceImpl<MachineFileMapper, M
 
     @Override
     public void uploadFile(Integer fileId, String filePath, InputStream inputStream) {
-        MachineFile file = getById(fileId);
+        MachineFileDO file = getById(fileId);
         checkPath(filePath, file);
 
         Integer userId = LoginAccount.<Integer>get().getId();
@@ -144,18 +144,18 @@ public class MachineFileServiceImpl extends BaseServiceImpl<MachineFileMapper, M
 
     @Override
     public void rmFile(Integer fileId, String path) {
-        MachineFile file = getById(fileId);
+        MachineFileDO file = getById(fileId);
         checkPath(path, file);
 
         machineService.exec(file.getMachineId(), "rm -rf " + path);
     }
 
 
-    private boolean isFile(MachineFile file) {
+    private boolean isFile(MachineFileDO file) {
         return Objects.equals(file.getType(), MachineFileTypeEnum.FILE.getValue());
     }
 
-    private boolean isDirectory(MachineFile file) {
+    private boolean isDirectory(MachineFileDO file) {
         return Objects.equals(file.getType(), MachineFileTypeEnum.DIRECTORY.getValue());
     }
 
@@ -165,7 +165,7 @@ public class MachineFileServiceImpl extends BaseServiceImpl<MachineFileMapper, M
      * @param path
      * @param file
      */
-    private void checkPath(String path, MachineFile file) {
+    private void checkPath(String path, MachineFileDO file) {
         BusinessAssert.notNull(file, "配置信息不存在");
         if (isDirectory(file)) {
             // 访问的文件路径必须是在配置的子目录下

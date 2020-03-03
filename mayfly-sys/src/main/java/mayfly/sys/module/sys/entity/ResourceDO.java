@@ -5,7 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import mayfly.core.base.mapper.annotation.NoColumn;
-import mayfly.core.base.model.BaseEntity;
+import mayfly.core.base.mapper.annotation.Table;
+import mayfly.core.base.model.BaseDO;
 
 import java.io.Serializable;
 import java.util.List;
@@ -20,7 +21,8 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Resource extends BaseEntity implements Serializable {
+@Table("tb_resource")
+public class ResourceDO extends BaseDO implements Serializable {
 
     private static final long serialVersionUID = 6346288647519202567L;
 
@@ -41,6 +43,6 @@ public class Resource extends BaseEntity implements Serializable {
     private Integer status;
 
     @NoColumn
-    private List<Resource> children;
+    private List<ResourceDO> children;
 
 }

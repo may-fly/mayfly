@@ -4,14 +4,14 @@ import io.lettuce.core.api.sync.RedisCommands;
 import io.lettuce.core.cluster.api.sync.RedisClusterCommands;
 import mayfly.core.base.service.BaseService;
 import mayfly.sys.module.redis.controller.form.RedisForm;
-import mayfly.sys.module.redis.entity.Redis;
+import mayfly.sys.module.redis.entity.RedisDO;
 
 /**
  * @author meilin.huang
  * @version 1.0
  * @date 2019-01-07 4:07 PM
  */
-public interface RedisService extends BaseService<Redis> {
+public interface RedisService extends BaseService<RedisDO> {
 
     /**
      * 获取单台机器的redis命令操作对象，可以是单机版也可以是集群版

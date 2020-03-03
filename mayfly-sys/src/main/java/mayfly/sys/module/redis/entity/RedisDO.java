@@ -4,7 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import mayfly.core.base.model.BaseEntity;
+import mayfly.core.base.mapper.annotation.Table;
+import mayfly.core.base.model.BaseDO;
 
 /**
  * @author meilin.huang
@@ -15,7 +16,8 @@ import mayfly.core.base.model.BaseEntity;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Redis extends BaseEntity {
+@Table("tb_redis")
+public class RedisDO extends BaseDO {
     private String host;
 
     private Integer port;

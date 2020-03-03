@@ -3,7 +3,7 @@ package mayfly.sys.module.machine.service;
 import mayfly.core.base.service.BaseService;
 import mayfly.sys.module.machine.controller.form.MachineFileForm;
 import mayfly.sys.module.machine.controller.vo.LsVO;
-import mayfly.sys.module.machine.entity.MachineFile;
+import mayfly.sys.module.machine.entity.MachineFileDO;
 
 import java.io.InputStream;
 import java.util.List;
@@ -13,7 +13,7 @@ import java.util.List;
  * @version 1.0
  * @date 2019-11-04 3:04 下午
  */
-public interface MachineFileService extends BaseService<MachineFile> {
+public interface MachineFileService extends BaseService<MachineFileDO> {
 
     /**
      * 获取指定机器上已保存的配置文件信息
@@ -21,7 +21,7 @@ public interface MachineFileService extends BaseService<MachineFile> {
      * @param machineId 机器id
      * @return 配置文件信息
      */
-    List<MachineFile> listByMachineId(Integer machineId);
+    List<MachineFileDO> listByMachineId(Integer machineId);
 
     /**
      * 获取配置文件内容
@@ -47,7 +47,7 @@ public interface MachineFileService extends BaseService<MachineFile> {
      * @param machineId 机器id
      * @param form      表单
      */
-    MachineFile addFile(Integer machineId, MachineFileForm form);
+    MachineFileDO addFile(Integer machineId, MachineFileForm form);
 
     /**
      * 文件上传

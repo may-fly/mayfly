@@ -8,7 +8,7 @@ import mayfly.core.validation.annotation.Valid;
 import mayfly.sys.module.sys.controller.form.ResourceForm;
 import mayfly.sys.module.sys.controller.query.ResourceQuery;
 import mayfly.sys.module.sys.controller.vo.ResourceDetailVO;
-import mayfly.sys.module.sys.entity.Resource;
+import mayfly.sys.module.sys.entity.ResourceDO;
 import mayfly.sys.module.sys.service.ResourceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -38,7 +38,7 @@ public class ResourceController {
     @MethodLog(value = "获取资源列表", level = MethodLog.LogLevel.DEBUG)
     @GetMapping()
     public Result<?> list(ResourceQuery queryForm) {
-        return Result.success(resourceService.listResource(BeanUtils.copyProperties(queryForm, Resource.class)));
+        return Result.success(resourceService.listResource(BeanUtils.copyProperties(queryForm, ResourceDO.class)));
     }
 
     @GetMapping("/{id}")
@@ -48,12 +48,12 @@ public class ResourceController {
 
     @PostMapping()
     public Result<?> save(@RequestBody @Valid ResourceForm resourceForm) {
-        return Result.success(resourceService.saveResource(BeanUtils.copyProperties(resourceForm, Resource.class)));
+        return Result.success(resourceService.saveResource(BeanUtils.copyProperties(resourceForm, ResourceDO.class)));
     }
 
     @PutMapping("/{id}")
     public Result<?> update(@PathVariable Integer id, @RequestBody @Valid ResourceForm resourceForm) {
-        Resource resource = BeanUtils.copyProperties(resourceForm, Resource.class);
+        ResourceDO resource = BeanUtils.copyProperties(resourceForm, ResourceDO.class);
         resource.setId(id);
         return Result.success(resourceService.updateResource(resource));
     }

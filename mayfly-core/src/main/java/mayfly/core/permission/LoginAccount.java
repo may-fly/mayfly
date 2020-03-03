@@ -66,7 +66,7 @@ public class LoginAccount<I> implements Serializable {
      */
     @SuppressWarnings("unchecked")
     public static <I> LoginAccount<I> get() {
-        return (LoginAccount<I>)CONTEXT.get();
+        return (LoginAccount<I>) CONTEXT.get();
     }
 
     /**

@@ -2,7 +2,7 @@ package mayfly.core.base.service.impl;
 
 
 import mayfly.core.base.mapper.BaseMapper;
-import mayfly.core.base.model.BaseEntity;
+import mayfly.core.base.model.BaseDO;
 import mayfly.core.base.model.PageQuery;
 import mayfly.core.base.model.PageResult;
 import mayfly.core.base.service.BaseService;
@@ -16,7 +16,7 @@ import java.util.List;
  * @version 1.0
  * @date 2018-12-06 2:21 PM
  */
-public class BaseServiceImpl<M extends BaseMapper<Integer, E>, E extends BaseEntity> implements BaseService<E> {
+public class BaseServiceImpl<M extends BaseMapper<Integer, E>, E extends BaseDO> implements BaseService<E> {
 
     /**
      * 通用Mapper

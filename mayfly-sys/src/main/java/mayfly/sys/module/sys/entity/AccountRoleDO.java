@@ -4,7 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import mayfly.core.base.model.BaseEntity;
+import mayfly.core.base.mapper.annotation.Table;
+import mayfly.core.base.model.BaseDO;
 
 /**
  *  权限
@@ -16,7 +17,8 @@ import mayfly.core.base.model.BaseEntity;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AccountRole extends BaseEntity {
+@Table("tb_account_role")
+public class AccountRoleDO extends BaseDO {
     private Integer accountId;
 
     private Integer roleId;

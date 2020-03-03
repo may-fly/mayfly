@@ -7,7 +7,7 @@ import mayfly.core.util.bean.BeanUtils;
 import mayfly.core.validation.annotation.Valid;
 import mayfly.sys.module.redis.controller.form.RedisForm;
 import mayfly.sys.module.redis.controller.vo.RedisConfParamVO;
-import mayfly.sys.module.redis.entity.Redis;
+import mayfly.sys.module.redis.entity.RedisDO;
 import mayfly.sys.module.redis.service.RedisService;
 import mayfly.sys.module.redis.commands.ServerCommand;
 import mayfly.sys.module.redis.enums.RedisConfEnum;
@@ -41,7 +41,7 @@ public class ServerController {
     @MethodLog(value = "获取redis列表", level = MethodLog.LogLevel.DEBUG)
     @GetMapping()
     public Result<?> list(RedisForm query) {
-        return Result.success(redisService.listByCondition(BeanUtils.copyProperties(query, Redis.class)));
+        return Result.success(redisService.listByCondition(BeanUtils.copyProperties(query, RedisDO.class)));
     }
 
     @PostMapping()

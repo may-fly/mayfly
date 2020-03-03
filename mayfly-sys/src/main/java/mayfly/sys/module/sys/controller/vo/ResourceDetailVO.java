@@ -28,4 +28,8 @@ public class ResourceDetailVO {
     private LocalDateTime createTime;
 
     private LocalDateTime updateTime;
+
+    private String createAccount;
+
+    private String updateAccount;
 }

@@ -1,7 +1,7 @@
 package mayfly.core.base.service;
 
 
-import mayfly.core.base.model.BaseEntity;
+import mayfly.core.base.model.BaseDO;
 import mayfly.core.base.model.PageQuery;
 import mayfly.core.base.model.PageResult;
 
@@ -12,7 +12,7 @@ import java.util.List;
  * @version 1.0
  * @date 2018-12-06 2:19 PM
  */
-public interface BaseService<E extends BaseEntity> {
+public interface BaseService<E extends BaseDO> {
 
     /**
      * 根据主键查询数据

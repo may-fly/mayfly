@@ -1,7 +1,7 @@
 package mayfly.sys.module.sys.controller.vo;
 
 import lombok.Data;
-import mayfly.sys.module.sys.entity.Role;
+import mayfly.sys.module.sys.entity.RoleDO;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -24,5 +24,5 @@ public class AccountVO {
 
     private LocalDateTime updateTime;
 
-    private List<Role> roles;
+    private List<RoleDO> roles;
 }
