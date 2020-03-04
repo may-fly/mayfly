@@ -27,7 +27,7 @@ public interface MachineService extends BaseService<MachineDO> {
      *
      * @param form 机器信息
      */
-    void saveMachine(MachineForm form);
+    void create(MachineForm form);
 
 
     /**

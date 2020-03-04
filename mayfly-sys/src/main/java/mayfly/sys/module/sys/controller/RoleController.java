@@ -43,6 +43,7 @@ public class RoleController {
     @Autowired
     private RoleResourceService roleResourceService;
 
+    @Permission(requireCode = false)
     @MethodLog(value = "获取角色列表", level = MethodLog.LogLevel.DEBUG)
     @GetMapping()
     public Result<?> list() {

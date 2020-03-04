@@ -1,7 +1,6 @@
 package mayfly.sys.module.sys.service;
 
 
-import mayfly.core.base.model.PageQuery;
 import mayfly.core.base.model.PageResult;
 import mayfly.core.base.service.BaseService;
 import mayfly.sys.module.open.controller.form.AccountLoginForm;
@@ -17,11 +16,11 @@ import mayfly.sys.module.sys.entity.AccountDO;
  */
 public interface AccountService extends BaseService<AccountDO> {
 
-    PageResult<AccountVO> listByQuery(AccountQuery query, PageQuery pageQuery);
+    PageResult<AccountVO> listByQuery(AccountQuery query);
 
     AccountDO login(AccountLoginForm adminForm);
 
     void logout(String token);
 
-    void saveAccount(AccountForm accountForm);
+    void create(AccountForm accountForm);
 }

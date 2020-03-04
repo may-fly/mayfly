@@ -1,6 +1,5 @@
 package mayfly.sys.module.sys.controller;
 
-import mayfly.core.base.model.PageQuery;
 import mayfly.core.exception.BusinessAssert;
 import mayfly.core.log.MethodLog;
 import mayfly.core.permission.Permission;
@@ -44,21 +43,22 @@ public class AccountController {
     @Autowired
     private AccountRoleService accountRoleService;
 
+    @Permission(requireCode = false)
     @MethodLog(value = "获取账号列表", level = MethodLog.LogLevel.DEBUG)
     @GetMapping()
-    public Result<?> list(@Valid PageQuery pageQuery, AccountQuery accountQuery) {
-        return accountService.listByQuery(accountQuery, pageQuery).toResult();
+    public Result<?> list(AccountQuery accountQuery) {
+        return accountService.listByQuery(accountQuery).toResult();
     }
 
     @PostMapping()
     public Result<?> save(@Valid @RequestBody AccountForm accountForm) {
-        accountService.saveAccount(accountForm);
+        accountService.create(accountForm);
         return Result.success();
     }
 
     @PutMapping("/{id}")
     public Result<?> update(@PathVariable Integer id, @Valid @RequestBody AccountForm accountForm) {
-        accountService.saveAccount(accountForm);
+        accountService.create(accountForm);
         return Result.success();
     }
 

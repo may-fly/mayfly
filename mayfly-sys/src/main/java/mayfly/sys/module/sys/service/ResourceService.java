@@ -35,7 +35,7 @@ public interface ResourceService extends BaseService<ResourceDO> {
      * @param id
      * @return
      */
-    void deleteResource(Integer id);
+    void delete(Integer id);
 
     /**
      * 保存菜单
@@ -43,9 +43,9 @@ public interface ResourceService extends BaseService<ResourceDO> {
      * @param resource
      * @return
      */
-    ResourceDO saveResource(ResourceDO resource);
+    ResourceDO create(ResourceDO resource);
 
-    ResourceDO updateResource(ResourceDO resource);
+    ResourceDO update(ResourceDO resource);
 
     /**
      * 改变菜单的权限

@@ -61,7 +61,7 @@ public class SSHUtils {
             try {
                 return openSession(sessionInfoSupplier.get());
             } catch (SSHException e) {
-                throw new BusinessRuntimeException("连接失败，请重试");
+                throw new BusinessRuntimeException("连接失败，请重试：" + e.getMessage());
             }
         }, true);
     }

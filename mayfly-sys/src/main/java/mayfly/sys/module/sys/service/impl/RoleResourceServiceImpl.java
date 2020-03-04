@@ -41,7 +41,7 @@ public class RoleResourceServiceImpl extends BaseServiceImpl<RoleResourceMapper,
 
     @Override
     public List<Integer> listResourceId(Integer roleId) {
-        RoleResourceDO condition = RoleResourceDO.builder().roleId(roleId).build();
+        RoleResourceDO condition = new RoleResourceDO().setRoleId(roleId);
         return listByCondition(condition).stream().map(RoleResourceDO::getResourceId).collect(Collectors.toList());
     }
 
@@ -57,14 +57,14 @@ public class RoleResourceServiceImpl extends BaseServiceImpl<RoleResourceMapper,
         Collection<Integer> addIds = compareResult.getAddValue();
 
         delIds.forEach(id -> {
-            deleteByCondition(RoleResourceDO.builder()
-                    .roleId(roleId).resourceId(id).build());
+            deleteByCondition(new RoleResourceDO()
+                    .setRoleId(roleId).setResourceId(id));
         });
 
         BusinessAssert.equals(resourceService.listByIdIn((List<Integer>) addIds).size(), addIds.size(), "资源id错误");
         List<RoleResourceDO> addValues = new ArrayList<>(addIds.size());
         for (Integer id : addIds) {
-            RoleResourceDO rr = RoleResourceDO.builder().roleId(roleId).resourceId(id).build();
+            RoleResourceDO rr = new RoleResourceDO().setRoleId(roleId).setResourceId(id);
             addValues.add(rr);
         }
         batchInsert(addValues);

@@ -65,7 +65,7 @@ public class MachineFileController {
     @MethodLog("新增文件配置")
     @PostMapping("/{machineId}/files")
     public Result<?> addConf(@PathVariable Integer machineId, @RequestBody @Valid MachineFileForm form) {
-        return Result.success(machineFileService.addFile(machineId, form));
+        return Result.success(machineFileService.create(machineId, form));
     }
 
     @MethodLog("删除文件配置")

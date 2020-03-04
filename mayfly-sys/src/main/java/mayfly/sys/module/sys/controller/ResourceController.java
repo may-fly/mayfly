@@ -34,7 +34,7 @@ public class ResourceController {
     @Autowired
     private ResourceService resourceService;
 
-    @Permission(code = "list")
+    @Permission(requireCode = false)
     @MethodLog(value = "获取资源列表", level = MethodLog.LogLevel.DEBUG)
     @GetMapping()
     public Result<?> list(ResourceQuery queryForm) {
@@ -48,14 +48,14 @@ public class ResourceController {
 
     @PostMapping()
     public Result<?> save(@RequestBody @Valid ResourceForm resourceForm) {
-        return Result.success(resourceService.saveResource(BeanUtils.copyProperties(resourceForm, ResourceDO.class)));
+        return Result.success(resourceService.create(BeanUtils.copyProperties(resourceForm, ResourceDO.class)));
     }
 
     @PutMapping("/{id}")
     public Result<?> update(@PathVariable Integer id, @RequestBody @Valid ResourceForm resourceForm) {
         ResourceDO resource = BeanUtils.copyProperties(resourceForm, ResourceDO.class);
         resource.setId(id);
-        return Result.success(resourceService.updateResource(resource));
+        return Result.success(resourceService.update(resource));
     }
 
     @PutMapping("/{id}/{status}")
@@ -65,7 +65,7 @@ public class ResourceController {
 
     @DeleteMapping("/{id}")
     public Result<?> delete(@PathVariable Integer id) {
-        resourceService.deleteResource(id);
+        resourceService.delete(id);
         return Result.success();
     }
 }

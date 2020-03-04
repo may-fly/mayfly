@@ -11,6 +11,27 @@ import java.time.LocalDateTime;
 public class BaseDO {
 
     /**
+     * 创建账号字段名
+     */
+    public static final String CREATE_ACCOUNT = "createAccount";
+    /**
+     * 创建账号id字段名
+     */
+    public static final String CREATE_ACCOUNT_ID = "createAccountId";
+    /**
+     * 最后更新时间字段名
+     */
+    public static final String UPDATE_TIME = "updateTime";
+    /**
+     * 最后更新账号名字段名
+     */
+    public static final String UPDATE_ACCOUNT = "updateAccount";
+    /**
+     * 最后更新账号id字段名
+     */
+    public static final String UPDATE_ACCOUNT_ID = "updateAccountId";
+
+    /**
      * id
      */
     private Integer id;

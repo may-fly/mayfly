@@ -114,6 +114,7 @@
               p.request(this.form).then(res => {
                 this.$emit('val-change', this.form);
                 this.btnLoading = true;
+                this.$message.success('保存成功')
                 setTimeout(() => {
                   this.btnLoading = false;
                 }, 1000);

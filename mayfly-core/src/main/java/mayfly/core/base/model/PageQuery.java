@@ -1,20 +1,27 @@
 package mayfly.core.base.model;
 
-import mayfly.core.validation.annotation.NotNull;
-import mayfly.core.validation.annotation.Size;
-
 /**
  * @author meilin.huang
  * @version 1.0
  * @date 2018-11-23 5:55 PM
  */
 public class PageQuery {
-    @NotNull
-    private Integer pageNum;
 
-    @NotNull
-    @Size(min = 1, max = 20)
-    private Integer pageSize;
+    /**
+     * 每页允许显示的最大记录数
+     */
+    public static final int MAX_PAGE_SIZE = 50;
+
+    /**
+     * 默认页数为1
+     */
+    private Integer pageNum = 1;
+
+    /**
+     * 默认每页显示10条
+     */
+    private Integer pageSize = 10;
+
 
     public Integer getPageNum() {
         return pageNum;

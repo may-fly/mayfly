@@ -6,16 +6,15 @@ import mayfly.core.base.service.impl.BaseServiceImpl;
 import mayfly.core.exception.BusinessAssert;
 import mayfly.core.util.Assert;
 import mayfly.core.util.bean.BeanUtils;
+import mayfly.sys.module.redis.connection.RedisConnectionRegistry;
+import mayfly.sys.module.redis.connection.RedisInfo;
 import mayfly.sys.module.redis.controller.form.RedisForm;
 import mayfly.sys.module.redis.entity.RedisDO;
 import mayfly.sys.module.redis.mapper.RedisMapper;
 import mayfly.sys.module.redis.service.RedisService;
-import mayfly.sys.module.redis.connection.RedisConnectionRegistry;
-import mayfly.sys.module.redis.connection.RedisInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -69,9 +68,6 @@ public class RedisServiceImpl extends BaseServiceImpl<RedisMapper, RedisDO> impl
         // 测试连接
         RedisConnectionRegistry.RedisConnection redisConnection = RedisConnectionRegistry.RedisConnection.connectStandalone(toRedisInfo(redis));
         redisConnection.close();
-        LocalDateTime now = LocalDateTime.now();
-        redis.setCreateTime(now);
-        redis.setUpdateTime(now);
         if (redisForm.getId() == null) {
             insert(redis);
         } else {

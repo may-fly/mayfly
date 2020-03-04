@@ -47,7 +47,7 @@ public interface MachineFileService extends BaseService<MachineFileDO> {
      * @param machineId 机器id
      * @param form      表单
      */
-    MachineFileDO addFile(Integer machineId, MachineFileForm form);
+    MachineFileDO create(Integer machineId, MachineFileForm form);
 
     /**
      * 文件上传

@@ -35,7 +35,7 @@ public class MachineServiceImpl extends BaseServiceImpl<MachineMapper, MachineDO
     }
 
     @Override
-    public void saveMachine(MachineForm form) {
+    public void create(MachineForm form) {
         // 校验机器是否存在以及是否可以登录
         try {
             Session session = SSHUtils.openSession(SessionInfo.builder(form.getIp()).port(form.getPort())

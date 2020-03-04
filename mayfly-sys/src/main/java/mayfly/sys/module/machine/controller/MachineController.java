@@ -39,14 +39,14 @@ public class MachineController {
 
     @PostMapping()
     public Result<?> save(@RequestBody @Valid MachineForm form) {
-        machineService.saveMachine(form);
+        machineService.create(form);
         return Result.success();
     }
 
     @PutMapping("/{id}")
     public Result<?> save(@PathVariable Integer id, @RequestBody @Valid MachineForm form) {
         form.setId(id);
-        machineService.saveMachine(form);
+        machineService.create(form);
         return Result.success();
     }
 

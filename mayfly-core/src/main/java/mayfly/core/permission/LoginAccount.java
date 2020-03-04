@@ -12,14 +12,12 @@ import java.util.Collection;
  */
 public class LoginAccount<I> implements Serializable {
 
-
     private static final long serialVersionUID = -8397728352145291302L;
 
     /**
      * 权限码分隔符
      */
     public static final String PERMISSION_CODE_SPLIT = ",";
-
     /**
      * 线程上下文，用户保存到登录账号信息
      */

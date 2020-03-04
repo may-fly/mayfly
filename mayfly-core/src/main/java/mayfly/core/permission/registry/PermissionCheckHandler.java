@@ -2,11 +2,9 @@ package mayfly.core.permission.registry;
 
 import mayfly.core.exception.BusinessException;
 import mayfly.core.permission.LoginAccount;
-import mayfly.core.permission.Permission;
 import mayfly.core.permission.PermissionDisabledException;
 import mayfly.core.permission.PermissionInfo;
 import mayfly.core.util.StringUtils;
-import mayfly.core.util.annotation.AnnotationUtils;
 
 import java.lang.reflect.Method;
 
@@ -60,8 +58,8 @@ public class PermissionCheckHandler<I> {
             return false;
         }
         LoginAccount.set(loginAccount);
-        PermissionInfo pi = getPermissionInfo(method);
-        if (pi == null) {
+        PermissionInfo pi = PermissionInfo.parse(method);
+        if (pi == null || !pi.isRequireCode()) {
             return true;
         }
 
@@ -86,36 +84,6 @@ public class PermissionCheckHandler<I> {
             throw new PermissionDisabledException();
         }
         throw new BusinessException("没有该权限");
-    }
-
-    /**
-     * 根据方法获取对应的权限信息,如果方法声明类上有@{@linkplain Permission}注解则为类名权限code + 方法权限code(方法权限code不存在，则为方法名)<br/>
-     * 如果声明类没有@{@linkplain Permission}注解则只返回方法上权限code
-     *
-     * @param method 方法
-     * @return 权限信息
-     */
-    public PermissionInfo getPermissionInfo(Method method) {
-        Permission permission = AnnotationUtils.getAnnotation(method.getDeclaringClass(), Permission.class);
-        if (permission == null) {
-            permission = AnnotationUtils.getAnnotation(method, Permission.class);
-            if (permission == null || !permission.requireCode()) {
-                return null;
-            }
-
-            return new PermissionInfo(permission.code());
-        }
-
-        String classCode = permission.code();
-        Permission methodCodeAnno = AnnotationUtils.getAnnotation(method, Permission.class);
-        if (methodCodeAnno != null) {
-            if (!methodCodeAnno.requireCode()) {
-                return null;
-            }
-            return new PermissionInfo(classCode + methodCodeAnno.code());
-        } else {
-            return new PermissionInfo(classCode + method.getName());
-        }
     }
 
     /**

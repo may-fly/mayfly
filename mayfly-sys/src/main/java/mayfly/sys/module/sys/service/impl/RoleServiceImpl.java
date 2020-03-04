@@ -40,9 +40,9 @@ public class RoleServiceImpl extends BaseServiceImpl<RoleMapper, RoleDO> impleme
         RoleDO role = getById(id);
         BusinessAssert.notNull(role, "角色不存在");
         // 删除角色关联的用户角色信息
-        accountRoleService.deleteByCondition(AccountRoleDO.builder().roleId(id).build());
+        accountRoleService.deleteByCondition(new AccountRoleDO().setRoleId(id));
         // 删除角色关联的资源信息
-        roleResourceService.deleteByCondition(RoleResourceDO.builder().roleId(id).build());
+        roleResourceService.deleteByCondition(new RoleResourceDO().setRoleId(id));
         deleteById(id);
     }
 }

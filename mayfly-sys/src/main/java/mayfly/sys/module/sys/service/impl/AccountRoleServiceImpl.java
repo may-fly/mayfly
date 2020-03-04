@@ -43,7 +43,8 @@ public class AccountRoleServiceImpl extends BaseServiceImpl<AccountRoleMapper, A
 
     @Override
     public List<Integer> listRoleIdByAccountId(Integer accountId) {
-        return listByCondition(AccountRoleDO.builder().accountId(accountId).build()).stream().map(AccountRoleDO::getRoleId).collect(Collectors.toList());
+        return listByCondition(new AccountRoleDO().setAccountId(accountId)).stream().map(AccountRoleDO::getRoleId)
+                .collect(Collectors.toList());
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -59,7 +60,7 @@ public class AccountRoleServiceImpl extends BaseServiceImpl<AccountRoleMapper, A
         Collection<Integer> addIds = compareResult.getAddValue();
 
         delIds.forEach(r -> {
-            deleteByCondition(AccountRoleDO.builder().accountId(accountId).roleId(r).build());
+            deleteByCondition(new AccountRoleDO().setAccountId(accountId).setRoleId(r));
         });
 
         if (CollectionUtils.isEmpty(addIds)) {
@@ -68,7 +69,7 @@ public class AccountRoleServiceImpl extends BaseServiceImpl<AccountRoleMapper, A
         List<AccountRoleDO> ars = new ArrayList<>(addIds.size());
         for (Integer id : addIds) {
             BusinessAssert.notNull(roleService.getById(id), "角色不存在");
-            AccountRoleDO ru = AccountRoleDO.builder().roleId(id).accountId(accountId).build();
+            AccountRoleDO ru = new AccountRoleDO().setRoleId(id).setAccountId(accountId);
             ars.add(ru);
         }
         batchInsert(ars);

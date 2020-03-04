@@ -52,7 +52,7 @@ public class MachineFileServiceImpl extends BaseServiceImpl<MachineFileMapper, M
 
     @Override
     public List<MachineFileDO> listByMachineId(Integer machineId) {
-        return this.listByCondition(MachineFileDO.builder().machineId(machineId).build());
+        return this.listByCondition(new MachineFileDO().setMachineId(machineId));
     }
 
     @Override
@@ -74,7 +74,7 @@ public class MachineFileServiceImpl extends BaseServiceImpl<MachineFileMapper, M
     }
 
     @Override
-    public MachineFileDO addFile(Integer machineId, MachineFileForm form) {
+    public MachineFileDO create(Integer machineId, MachineFileForm form) {
         boolean isFile = Objects.equals(form.getType(), MachineFileTypeEnum.FILE.getValue());
         String res = machineService.exec(machineId, isFile ? ShellCmd.fileExist(form.getPath()) : ShellCmd.directoryExist(form.getPath()));
         BusinessAssert.equals(res, "1\n", () -> isFile ? "该文件不存在" : "该目录不存在");

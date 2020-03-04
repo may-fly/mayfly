@@ -55,8 +55,8 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourceMapper, Resourc
     }
 
     @Override
-    public ResourceDO saveResource(ResourceDO resource) {
-        if (resource.getPid() == null || resource.getPid().equals(0)) {
+    public ResourceDO create(ResourceDO resource) {
+        if (resource.getPid() == null || Objects.equals(resource.getPid(), 0)) {
             resource.setPid(0);
             BusinessAssert.equals(resource.getType(), ResourceTypeEnum.MENU.getValue(), "权限资源不能为根节点");
         } else {
@@ -65,14 +65,12 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourceMapper, Resourc
             BusinessAssert.equals(pResource.getType(), ResourceTypeEnum.MENU.getValue(), "权限资源不能添加子节点");
         }
         // 如果是添加菜单，则该父节点不能存在有权限节点
-        if (resource.getType().equals(ResourceTypeEnum.MENU.getValue())) {
+        if (Objects.equals(resource.getType(), ResourceTypeEnum.MENU.getValue())) {
             // 查询指定pid节点下是否有权限节点
-            ResourceDO condition = ResourceDO.builder().pid(resource.getPid()).type(ResourceTypeEnum.PERMISSION.getValue()).build();
+            ResourceDO condition = new ResourceDO().setPid(resource.getPid()).setType(ResourceTypeEnum.PERMISSION.getValue());
             BusinessAssert.state(countByCondition(condition) == 0, "该菜单已有权限资源子节点，不能再添加菜单");
         } else {
-            String code = resource.getCode();
-            BusinessAssert.notEmpty(code, "权限code不能为空");
-            BusinessAssert.state(!code.contains(","), "权限code不能包含','");
+            checkPermissionCode(resource.getCode());
         }
         //默认启用
         resource.setStatus(EnableDisableEnum.ENABLE.getValue());
@@ -81,21 +79,23 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourceMapper, Resourc
     }
 
     @Override
-    public ResourceDO updateResource(ResourceDO resource) {
+    public ResourceDO update(ResourceDO resource) {
         ResourceDO old = getById(resource.getId());
         BusinessAssert.notNull(old, "资源不存在");
         BusinessAssert.equals(resource.getType(), old.getType(), "资源类型不可变更");
         // 禁止误传修改其父节点
         resource.setPid(null);
-
+        // 是菜单直接 更新即可
         if (Objects.equals(old.getType(), ResourceTypeEnum.MENU.getValue())) {
             updateByIdSelective(resource);
             return resource;
         }
         // 权限类型需要校验code不能为空
         String code = resource.getCode();
-        BusinessAssert.notEmpty(code, "权限code不能为空");
-        BusinessAssert.state(!code.contains(","), "权限code不能包含','");
+        // 如果修改了权限code，则需要校验
+        if (!Objects.equals(old.getCode(), code)) {
+            checkPermissionCode(code);
+        }
         updateByIdSelective(resource);
         return resource;
     }
@@ -117,10 +117,21 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourceMapper, Resourc
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void deleteResource(Integer id) {
-        BusinessAssert.empty(listByCondition(ResourceDO.builder().pid(id).build()), "请先删除该资源的子资源");
-        BusinessAssert.state(deleteById(id) == 1, "删除菜单失败！");
+    public void delete(Integer id) {
+        BusinessAssert.empty(listByCondition(new ResourceDO().setPid(id)), "请先删除该资源的子资源");
+        BusinessAssert.equals(deleteById(id), 1, "删除菜单失败！");
         // 删除角色资源表中该菜单所关联的所有信息
-        roleResourceService.deleteByCondition(RoleResourceDO.builder().resourceId(id).build());
+        roleResourceService.deleteByCondition(new RoleResourceDO().setResourceId(id));
+    }
+
+    /**
+     * 校验权限code
+     *
+     * @param code code
+     */
+    private void checkPermissionCode(String code) {
+        BusinessAssert.notEmpty(code, "权限code不能为空");
+        BusinessAssert.state(!code.contains(","), "权限code不能包含','");
+        BusinessAssert.equals(countByCondition(new ResourceDO().setCode(code)), 0L, "该权限code已存在");
     }
 }

@@ -1,9 +1,8 @@
 package mayfly.sys.module.sys.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 import mayfly.core.base.mapper.annotation.NoColumn;
 import mayfly.core.base.mapper.annotation.Table;
 import mayfly.core.base.model.BaseDO;
@@ -17,10 +16,9 @@ import java.util.List;
  * @author hml
  * @date 2018/6/27 下午2:01
  */
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@Getter
+@Setter
+@Accessors(chain = true)
 @Table("tb_resource")
 public class ResourceDO extends BaseDO implements Serializable {
 
@@ -35,8 +33,6 @@ public class ResourceDO extends BaseDO implements Serializable {
     private String name;
 
     private String icon;
-
-//    private String path;
 
     private String code;
 

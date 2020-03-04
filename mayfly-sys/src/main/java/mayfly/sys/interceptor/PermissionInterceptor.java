@@ -11,6 +11,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
+import java.util.Optional;
 
 /**
  * 权限拦截器
@@ -19,6 +20,8 @@ import java.io.PrintWriter;
  * @date 2018/6/14 下午3:23
  */
 public class PermissionInterceptor implements HandlerInterceptor {
+
+    private static final String TOKEN_PARAM_NAME = "token";
 
     private PermissionCheckHandler<Integer> checkHandler;
 
@@ -31,10 +34,10 @@ public class PermissionInterceptor implements HandlerInterceptor {
         if (request.getMethod().equals(RequestMethod.OPTIONS.name())) {
             return true;
         }
-        String token = request.getHeader("token");
-        // 判断该用户是否有执行该方法的权限
+        String token = Optional.ofNullable(request.getHeader(TOKEN_PARAM_NAME))
+                .orElse(request.getParameter(TOKEN_PARAM_NAME));
         try {
-            //如果校验通过，返回true
+            // 判断该用户是否有执行该方法的权限，如果校验通过，返回true
             if (!(handler instanceof HandlerMethod) || checkHandler.hasPermission(token, ((HandlerMethod) handler).getMethod())) {
                 return true;
             }

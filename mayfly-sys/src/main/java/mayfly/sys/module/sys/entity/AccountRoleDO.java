@@ -1,9 +1,9 @@
 package mayfly.sys.module.sys.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
+import mayfly.core.base.mapper.annotation.NoColumn;
 import mayfly.core.base.mapper.annotation.Table;
 import mayfly.core.base.model.BaseDO;
 
@@ -13,11 +13,11 @@ import mayfly.core.base.model.BaseDO;
  * @author  hml
  * @date 2018/6/27 下午2:35
  */
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@Getter
+@Setter
+@Accessors(chain = true)
 @Table("tb_account_role")
+@NoColumn(fields = {BaseDO.UPDATE_TIME, BaseDO.UPDATE_ACCOUNT, BaseDO.UPDATE_ACCOUNT_ID})
 public class AccountRoleDO extends BaseDO {
     private Integer accountId;
 

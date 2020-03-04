@@ -1,6 +1,5 @@
 package mayfly.sys.module.sys.service.impl;
 
-import mayfly.core.base.model.PageQuery;
 import mayfly.core.base.model.PageResult;
 import mayfly.core.base.service.impl.BaseServiceImpl;
 import mayfly.core.exception.BusinessAssert;
@@ -20,7 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 /**
  * @author meilin.huang
@@ -44,13 +42,14 @@ public class AccountServiceImpl extends BaseServiceImpl<AccountMapper, AccountDO
     }
 
     @Override
-    public PageResult<AccountVO> listByQuery(AccountQuery query, PageQuery pageQuery) {
-        PageResult<AccountDO> accountPage = listByCondition(BeanUtils.copyProperties(query, AccountDO.class), pageQuery);
-        List<AccountVO> accountVOS = BeanUtils.copyProperties(accountPage.getList(), AccountVO.class);
-        accountVOS.forEach(a -> {
+    public PageResult<AccountVO> listByQuery(AccountQuery query) {
+        PageResult<AccountVO> vos = PageResult.withPageHelper(query,
+                () -> listByCondition(BeanUtils.copyProperties(query, AccountDO.class)), AccountVO.class);
+        // 赋值角色信息
+        vos.getList().forEach(a -> {
             a.setRoles(accountRoleService.listRoleByAccountId(a.getId()));
         });
-        return PageResult.with(accountPage.getTotal(), accountVOS);
+        return vos;
     }
 
     @Override
@@ -70,7 +69,7 @@ public class AccountServiceImpl extends BaseServiceImpl<AccountMapper, AccountDO
     }
 
     @Override
-    public void saveAccount(AccountForm accountForm) {
+    public void create(AccountForm accountForm) {
         BusinessAssert.isNull(getByCondition(new AccountDO().setUsername(accountForm.getUsername())),
                 "该用户名已存在");
         AccountDO account = BeanUtils.copyProperties(accountForm, AccountDO.class);
