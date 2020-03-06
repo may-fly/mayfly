@@ -30,9 +30,9 @@
       </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-button v-permission="permission.value.code" @click="getValue(scope.row.key)" type="success" icon="el-icon-search"
+          <el-button v-permission="permission.redisKey.code" @click="getValue(scope.row.key)" type="success" icon="el-icon-search"
             size="mini" plain>查看</el-button>
-          <el-button v-permission="permission.update.code" @click="update(scope.row.key)" type="primary" icon="el-icon-edit"
+          <el-button v-permission="permission.redisKey.code" @click="update(scope.row.key)" type="primary" icon="el-icon-edit"
             size="mini" plain>修改</el-button>
           <el-button v-permission="permission.del.code" @click="del(scope.row.key)" type="danger" size="mini" icon="el-icon-delete"
             plain>删除</el-button>
@@ -58,6 +58,7 @@
   import enums from './enums'
   import permission from './permissions.js'
   import ValueDialog from './value-dialog.vue';
+  import { redisKeyApi } from './api'
 
   export default {
     data() {
@@ -90,7 +91,7 @@
         this.loading = true;
         this.scanParam.id = this.cluster == 0 ? this.redis.id : this.cluster;
         this.scanParam.cluster = this.cluster == 0 ? 0 : 1;
-        this.permission.scan.request(this.scanParam).then(res => {
+        redisKeyApi.scan.request(this.scanParam).then(res => {
           // console.log(res)
           this.keys = res.keys;
           this.dbsize = res.dbsize;
@@ -122,7 +123,7 @@
       },
       async getValue(key) {
         let id = this.cluster == 0 ? this.redis.id : this.cluster;
-        let res = await this.permission.value.request({
+        let res = await redisKeyApi.value.request({
           cluster: this.cluster,
           key,
           id
@@ -144,7 +145,7 @@
           type: 'warning'
         }).then(() => {
           let id = this.cluster == 0 ? this.redis.id : this.cluster;
-          this.permission.del.request({
+          redisKeyApi.del.request({
             cluster: this.cluster,
             key,
             id

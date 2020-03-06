@@ -18,7 +18,7 @@
 </template>
 
 <script>
-  import permission from '../permissions.js'
+  import { roleApi } from '../api'
   export default {
     name: 'RoleEdit',
     props: {
@@ -28,7 +28,6 @@
     },
     data() {
       return {
-        permission: permission.role,
         form: {
           id: null,
           name: '',
@@ -58,7 +57,7 @@
       },
       async btnOk() {
         let formData = this.form;
-        let p = this.form.id ? this.permission.update : this.permission.save;
+        let p = this.form.id ? roleApi.update : roleApi.save;
         await p.request(this.form)
         this.$emit('val-change', this.form);
         this.btnLoading = true;

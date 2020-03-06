@@ -17,8 +17,9 @@
 </template>
 
 <script>
-  import permission from '../permissions.js'
+  import { roleApi } from '../api'
   import enums from '../enums.js'
+  
   export default {
     props: {
       visible: Boolean,
@@ -35,7 +36,6 @@
         btns: {
           menuList: {}
         },
-        permission: permission.role,
         menus: [],
         defaultProps: {
           children: 'children',
@@ -65,16 +65,10 @@
         }
       },
       async btnOk() {
-        let saveMenu = this.permission.saveResources;
-        let permission = this.$Permission.getPermission(saveMenu.code);
-        if (!permission.show) {
-          this.$message.error('您没有该权限!');
-          return;
-        }
         let menuIds = this.$refs.menuTree.getCheckedKeys();
         let halfMenuIds = this.$refs.menuTree.getHalfCheckedKeys();
         let resources = [].concat(menuIds, halfMenuIds).join(",");
-        await saveMenu.request({
+        await roleApi.saveResources.request({
           id: this.role.id,
           resourceIds: resources
         });

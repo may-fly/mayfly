@@ -3,7 +3,7 @@
 
     <el-dialog :title="title" :visible.sync="visible" :show-close="true" :before-close="handleClose" width="800px">
       <div style="float: right;">
-        <el-button v-permission="addFile.code" type="primary" @click="add" icon="el-icon-plus" size="mini" plain>添加</el-button>
+        <el-button v-permission="permission.addConf.code" type="primary" @click="add" icon="el-icon-plus" size="mini" plain>添加</el-button>
       </div>
       <el-table :data="fileTable" stripe style="width: 100%">
         <el-table-column prop="name" label="名称" width="">
@@ -31,7 +31,7 @@
               icon="el-icon-success" size="mini" plain>确定</el-button>
             <el-button v-if="scope.row.id != null" @click="getConf(scope.row)" type="primary" :ref="scope.row" icon="el-icon-tickets"
               size="mini" plain>查看</el-button>
-            <el-button v-permission="delFile.code" type="danger" :ref="scope.row" @click="deleteRow(scope.$index, scope.row)"
+            <el-button v-permission="permission.machineFile.code" type="danger" :ref="scope.row" @click="deleteRow(scope.$index, scope.row)"
               icon="el-icon-delete" size="mini" plain>删除</el-button>
           </template>
         </el-table-column>
@@ -60,11 +60,11 @@
             </span>
 
             <span>
-              <el-link v-permission="permission.fileContent.code" @click="getFileContent(tree.folder.id, data.path)" v-if="data.type == '-'" type="info" icon="el-icon-view"
+              <el-link v-permission="permission.machineFile.code" @click="getFileContent(tree.folder.id, data.path)" v-if="data.type == '-'" type="info" icon="el-icon-view"
                 :underline="false" />
 
               <el-upload v-permission="permission.uploadFile.code" :on-success="uploadSuccess" :headers="{token}" :data="{fileId: tree.folder.id, path: data.path}"
-                :action="permission.uploadFile.getUrl()" :show-file-list="false" name="file"
+                :action="uploadFile.getUrl()" :show-file-list="false" name="file"
                 multiple :limit="100" style="display: inline-block;">
                 <el-link v-if="data.type == 'd'" icon="el-icon-upload" :underline="false" />
               </el-upload>
@@ -94,7 +94,8 @@
 <script>
   import permission from './permissions.js'
   import enums from './enums.js'
-  import Req from "~/common/request"
+  import { machineApi } from './api'
+
   export default {
     name: 'FileManage',
     props: {
@@ -105,10 +106,11 @@
     data() {
       return {
         permission: permission,
-        addFile: permission.addConf,
-        delFile: permission.delConf,
-        updateFileContent: permission.updateFileContent,
-        files: permission.files,
+        addFile: machineApi.addConf,
+        delFile: machineApi.delConf,
+        updateFileContent: machineApi.updateFileContent,
+        uploadFile: machineApi.uploadFile,
+        files: machineApi.files,
         enums: enums,
         activeName: "conf-file",
         token: sessionStorage.getItem("token"),
@@ -208,7 +210,7 @@
         this.getFileContent(row.id, row.path);
       },
       async getFileContent(fileId, path) {
-        let res = await this.permission.fileContent.request({
+        let res = await machineApi.fileContent.request({
           fileId, path
         });
         this.fileContent.content = res;
@@ -268,7 +270,7 @@
           path = data.path;
         }
 
-        let res = await this.permission.lsFile.request({fileId: this.tree.folder.id, path});
+        let res = await machineApi.lsFile.request({fileId: this.tree.folder.id, path});
         for (let file of res) {
           let type = file.type;
           if (type != 'd') {
@@ -285,7 +287,7 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.permission.rmFile.request({fileId: this.tree.folder.id, path: file}).then(res => {
+          machineApi.rmFile.request({fileId: this.tree.folder.id, path: file}).then(res => {
             this.$message.success("删除成功");
             this.$refs.fileTree.remove(node);
           })

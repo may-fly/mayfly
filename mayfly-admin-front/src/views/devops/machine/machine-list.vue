@@ -2,7 +2,7 @@
   <div>
     <ToolBar>
       <el-button
-        v-permission="permission.save.code"
+        v-permission="permission.machine.code"
         type="primary"
         icon="el-icon-plus"
         size="mini"
@@ -10,7 +10,7 @@
         plain
       >添加</el-button>
       <el-button
-        v-permission="permission.save.code"
+        v-permission="permission.machine.code"
         type="primary"
         icon="el-icon-edit"
         size="mini"
@@ -19,7 +19,7 @@
         plain
       >编辑</el-button>
       <el-button
-        v-permission="permission.del.code"
+        v-permission="permission.machine.code"
         :disabled="currentId == null"
         @click="deleteMachine(currentId)"
         type="danger"
@@ -27,7 +27,7 @@
         size="mini"
       >删除</el-button>
       <el-button
-        v-permission="permission.serviceManage.code"
+        v-permission="permission.machine.code"
         type="success"
         :disabled="currentId == null"
         @click="fileManage(currentData)"
@@ -91,10 +91,11 @@
 </template>
 
 <script>
-import ToolBar from "~/components/tool-bar/tool-bar.vue";
-import { DynamicFormDialog } from "~/components/dynamic-form";
-import FileManage from "./file-manage.vue";
-import permission from "./permissions.js";
+import ToolBar from '~/components/tool-bar/tool-bar.vue'
+import { DynamicFormDialog } from '~/components/dynamic-form'
+import FileManage from './file-manage.vue'
+import permission from './permissions.js'
+import { machineApi } from './api'
 
 export default {
   data() {
@@ -116,142 +117,142 @@ export default {
         visible: false,
         title: null,
         formInfo: {
-          addPermission: permission.save,
-          updatePermission: permission.update,
+          addPermission: machineApi.save,
+          updatePermission: machineApi.update,
           formRows: [
             [
               {
-                type: "input",
-                label: "名称：",
-                name: "name",
-                placeholder: "请输入名称",
+                type: 'input',
+                label: '名称：',
+                name: 'name',
+                placeholder: '请输入名称',
                 rules: [
                   {
                     required: true,
-                    message: "请输入名称",
-                    trigger: ["blur", "change"]
+                    message: '请输入名称',
+                    trigger: ['blur', 'change']
                   }
                 ]
               }
             ],
             [
               {
-                type: "input",
-                label: "ip：",
-                name: "ip",
-                placeholder: "请输入ip",
+                type: 'input',
+                label: 'ip：',
+                name: 'ip',
+                placeholder: '请输入ip',
                 rules: [
                   {
                     required: true,
-                    message: "请输入ip",
-                    trigger: ["blur", "change"]
+                    message: '请输入ip',
+                    trigger: ['blur', 'change']
                   }
                 ]
               }
             ],
             [
               {
-                type: "input",
-                label: "端口号：",
-                name: "port",
-                placeholder: "请输入端口号",
-                inputType: "number",
+                type: 'input',
+                label: '端口号：',
+                name: 'port',
+                placeholder: '请输入端口号',
+                inputType: 'number',
                 rules: [
                   {
                     required: true,
-                    message: "请输入ip",
-                    trigger: ["blur", "change"]
+                    message: '请输入ip',
+                    trigger: ['blur', 'change']
                   }
                 ]
               }
             ],
             [
               {
-                type: "input",
-                label: "用户名：",
-                name: "username",
-                placeholder: "请输入用户名",
+                type: 'input',
+                label: '用户名：',
+                name: 'username',
+                placeholder: '请输入用户名',
                 rules: [
                   {
                     required: true,
-                    message: "请输入用户名",
-                    trigger: ["blur", "change"]
+                    message: '请输入用户名',
+                    trigger: ['blur', 'change']
                   }
                 ]
               }
             ],
             [
               {
-                type: "input",
-                label: "密码：",
-                name: "password",
-                placeholder: "请输入密码",
-                inputType: "password"
+                type: 'input',
+                label: '密码：',
+                name: 'password',
+                placeholder: '请输入密码',
+                inputType: 'password'
               }
             ]
           ]
         },
         formData: null
       }
-    };
+    }
   },
   methods: {
     choose(item) {
       if (!item) {
-        return;
+        return
       }
-      this.currentId = item.id;
-      this.currentData = item;
+      this.currentId = item.id
+      this.currentData = item
     },
     openFormDialog(redis) {
-      let dialogTitle;
+      let dialogTitle
       if (redis) {
-        this.formDialog.formData = this.currentData;
-        dialogTitle = "编辑机器";
+        this.formDialog.formData = this.currentData
+        dialogTitle = '编辑机器'
       } else {
-        this.formDialog.formData = { port: 22 };
-        dialogTitle = "添加机器";
+        this.formDialog.formData = { port: 22 }
+        dialogTitle = '添加机器'
       }
 
-      this.formDialog.title = dialogTitle;
-      this.formDialog.visible = true;
+      this.formDialog.title = dialogTitle
+      this.formDialog.visible = true
     },
     async deleteMachine(id) {
-      await this.permission.del.request({ id });
-      this.$message.success("操作成功");
-      this.search();
+      await machineApi.del.request({ id })
+      this.$message.success('操作成功')
+      this.search()
     },
     fileManage(row) {
-      this.dialog.machineId = row.id;
-      this.dialog.visible = true;
-      this.dialog.title = `${row.name} => ${row.ip}`;
+      this.dialog.machineId = row.id
+      this.dialog.visible = true
+      this.dialog.title = `${row.name} => ${row.ip}`
     },
     cancel() {
-      this.dialog.visible = false;
-      this.dialog.machineId = null;
+      this.dialog.visible = false
+      this.dialog.machineId = null
     },
     closeDialog() {
-      this.formDialog.visible = false;
-      this.formDialog.formData = null;
+      this.formDialog.visible = false
+      this.formDialog.formData = null
     },
     submitSuccess() {
-      this.currentId = null;
-      (this.currentData = null), this.search();
+      this.currentId = null
+      ;(this.currentData = null), this.search()
     },
     async search() {
-      let res = await this.permission.list.request(this.params);
-      this.table = res;
+      let res = await machineApi.list.request(this.params)
+      this.table = res
     }
   },
   mounted() {
-    this.search();
+    this.search()
   },
   components: {
     ToolBar,
     FileManage,
     DynamicFormDialog
   }
-};
+}
 </script>
 
 <style>

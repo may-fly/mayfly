@@ -36,7 +36,7 @@
 
 <script>
   import AllRouter from '~/router/'
-  import permission from '../permissions.js'
+  import { roleApi, accountApi } from '../api'
   import ToolBar from '~/components/tool-bar/tool-bar.vue';
 
   export default {
@@ -47,7 +47,6 @@
     },
     data() {
       return {
-        permission: permission.account,
         btnLoading: false,
         // 所有角色
         allRole: [],
@@ -69,7 +68,7 @@
         handler: function() {
           if (!this.account)
             return;
-          this.permission.roles.request({
+          accountApi.roles.request({
             id: this.account.id
           }).then(res => {
             this.roles = res;
@@ -114,7 +113,7 @@
       },
       async btnOk() {
         let roleIds = this.roles.join(",");
-        await this.permission.saveRoles.request({
+        await accountApi.saveRoles.request({
           id: this.account.id,
           roleIds: roleIds
         })
@@ -138,7 +137,7 @@
         this.search();
       },
       async search() {
-        let res = await permission.role.list.request();
+        let res = await roleApi.list.request();
         this.allRole = res;
         this.total = res.total;
         this.checkSelected();

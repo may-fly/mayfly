@@ -55,7 +55,7 @@
       <el-table-column label="操作" width>
         <template slot-scope="scope">
           <el-button
-            v-permission="permission.info.code"
+            v-permission="permission.redis.code"
             type="primary"
             @click="info(scope.row.id)"
             :ref="scope.row"
@@ -64,7 +64,7 @@
             plain
           >info</el-button>
           <el-button
-            v-permission="keyPermission.scan.code"
+            v-permission="keyPermission.redisKey.code"
             type="success"
             @click="manage(scope.row)"
             :ref="scope.row"
@@ -93,6 +93,7 @@
 import ToolBar from "~/components/tool-bar/tool-bar.vue";
 import Info from "./info.vue";
 import permission from "./permissions.js";
+import { redisApi, redisKeyApi } from './api'
 import { DynamicFormDialog } from "~/components/dynamic-form";
 import { Enum } from "~/common/Enum.js";
 //
@@ -138,8 +139,8 @@ export default {
         visible: false,
         title: null,
         formInfo: {
-          addPermission: permission.redis.save,
-          updatePermission: permission.redis.update,
+          addPermission: redisApi.save,
+          updatePermission: redisApi.update,
           formRows: [
             [
               {
@@ -210,7 +211,7 @@ export default {
       });
     },
     async deleteNode() {
-      await this.permission.del.request({ id: this.currentId });
+      await redisApi.del.request({ id: this.currentId });
       this.$message.success("删除成功");
       this.search();
     },
@@ -218,14 +219,14 @@ export default {
       this.$router.push(`/redis_operation/${row.clusterId}/${row.id}`);
     },
     info(id) {
-      this.permission.info.request({ id }).then(res => {
+      redisApi.info.request({ id }).then(res => {
         this.infoDialog.info = res;
         this.infoDialog.id = id;
         this.infoDialog.visible = true;
       });
     },
     search() {
-      this.permission.list.request(this.params).then(res => {
+      redisApi.list.request(this.params).then(res => {
         this.redisTable = res;
       });
     },
