@@ -11,9 +11,16 @@ import mayfly.sys.module.sys.entity.RoleDO;
 public interface RoleService extends BaseService<RoleDO> {
 
     /**
+     * 更新角色
+     *
+     * @param role 角色
+     */
+    void update(RoleDO role);
+
+    /**
      * 删除角色
      *
      * @param id 角色id
      */
-    void deleteRole(Integer id);
+    void delete(Integer id);
 }

@@ -6,12 +6,13 @@ import mayfly.core.base.model.PageQuery;
 
 /**
  * @author meilin.huang
- * @version 1.0
- * @date 2019-07-06 14:59
+ * @date 2020-03-05 4:06 下午
  */
 @Getter
 @Setter
-public class AccountQuery extends PageQuery {
+public class OperationLogQuery extends PageQuery {
 
-    private String username;
+    private String createAccount;
+
+    private Integer type;
 }

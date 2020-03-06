@@ -1,8 +1,8 @@
-package mayfly.sys.interceptor;
+package mayfly.core.permission;
 
 import mayfly.core.exception.BusinessException;
-import mayfly.core.permission.LoginAccount;
 import mayfly.core.permission.registry.PermissionCheckHandler;
+import mayfly.core.permission.registry.SimpleLoginAccountRegistry;
 import mayfly.core.result.Result;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.method.HandlerMethod;
@@ -23,10 +23,10 @@ public class PermissionInterceptor implements HandlerInterceptor {
 
     private static final String TOKEN_PARAM_NAME = "token";
 
-    private PermissionCheckHandler<Integer> checkHandler;
+    private PermissionCheckHandler<?> checkHandler;
 
-    public PermissionInterceptor(PermissionCheckHandler<Integer> permissionCheckHandler) {
-        this.checkHandler = permissionCheckHandler;
+    public <I> PermissionInterceptor(SimpleLoginAccountRegistry<I> loginAccountRegistry) {
+        this.checkHandler = PermissionCheckHandler.<I>of(loginAccountRegistry);
     }
 
     @Override

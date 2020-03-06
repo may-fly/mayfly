@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit;
  * @version 1.0
  * @date 2019-03-23 8:17 PM
  */
-public interface LoginAccountRegistry<I> {
+public interface LoginAccountRegistry<I> extends SimpleLoginAccountRegistry<I> {
 
     /**
      * 保存登录账号信息
@@ -22,14 +22,6 @@ public interface LoginAccountRegistry<I> {
      * @param timeUnit     时间单位
      */
     void save(String token, LoginAccount<I> loginAccount, long time, TimeUnit timeUnit);
-
-    /**
-     * 根据token获取登录账号信息
-     *
-     * @param token token
-     * @return login account
-     */
-    LoginAccount<I> getLoginAccount(String token);
 
     /**
      * 删除token关联的账号信息

@@ -71,7 +71,7 @@ public class RedisServiceImpl extends BaseServiceImpl<RedisMapper, RedisDO> impl
         if (redisForm.getId() == null) {
             insert(redis);
         } else {
-            updateById(redis);
+            updateByIdSelective(redis);
         }
     }
 

@@ -24,7 +24,8 @@ public class PermissionInfo {
     }
 
     /**
-     * 根据方法获取对应的权限信息,如果方法声明类上有@{@linkplain Permission}注解则为类名权限code + 方法权限code(方法权限code不存在，则为方法名)<br/>
+     * 根据方法获取对应的权限信息,如果方法声明类上有@{@linkplain Permission}注解则为类名权限code + 方法权限code
+     * (方法权限注解不存在，则为类注解上的code，存在但是如果方法权限code为空，则为类code:方法名)<br/>
      * 如果声明类没有@{@linkplain Permission}注解则只返回方法上权限code
      *
      * @param method 方法
@@ -43,15 +44,13 @@ public class PermissionInfo {
 
         String classCode = permission.code();
         Permission methodPermissionAnno = AnnotationUtils.getAnnotation(method, Permission.class);
-
-        if (methodPermissionAnno != null) {
-            String methodCode = methodPermissionAnno.code();
-            return new PermissionInfo(classCode + (StringUtils.isEmpty(methodCode)
-                    ? method.getName() : methodCode)).setRequireCode(methodPermissionAnno.requireCode());
-        } else {
-            return new PermissionInfo(classCode + method.getName())
-                    .setRequireCode(permission.requireCode());
+        if (methodPermissionAnno == null) {
+            return new PermissionInfo(classCode).setRequireCode(permission.requireCode());
         }
+
+        String methodCode = methodPermissionAnno.code();
+        return new PermissionInfo(classCode + (StringUtils.isEmpty(methodCode)
+                ? ":" + method.getName() : methodCode)).setRequireCode(methodPermissionAnno.requireCode());
     }
 
 

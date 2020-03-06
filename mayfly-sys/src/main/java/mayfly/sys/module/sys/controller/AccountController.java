@@ -1,7 +1,6 @@
 package mayfly.sys.module.sys.controller;
 
 import mayfly.core.exception.BusinessAssert;
-import mayfly.core.log.MethodLog;
 import mayfly.core.permission.Permission;
 import mayfly.core.result.Result;
 import mayfly.core.util.enums.EnumUtils;
@@ -33,7 +32,7 @@ import java.util.stream.Stream;
  * @author hml
  * @date 2018/6/27 下午4:44
  */
-@Permission(code = "account:")
+@Permission(code = "account")
 @RestController
 @RequestMapping("/sys/accounts")
 public class AccountController {
@@ -44,7 +43,6 @@ public class AccountController {
     private AccountRoleService accountRoleService;
 
     @Permission(requireCode = false)
-    @MethodLog(value = "获取账号列表", level = MethodLog.LogLevel.DEBUG)
     @GetMapping()
     public Result<?> list(AccountQuery accountQuery) {
         return accountService.listByQuery(accountQuery).toResult();
@@ -71,6 +69,7 @@ public class AccountController {
         return Result.success();
     }
 
+    @Permission
     @DeleteMapping("/{id}")
     public Result<?> delete(@PathVariable Integer id) {
         accountService.deleteById(id);
@@ -82,6 +81,7 @@ public class AccountController {
         return Result.success(accountRoleService.listRoleIdByAccountId(id));
     }
 
+    @Permission
     @PostMapping("/{id}/roles")
     public Result<?> saveRoles(@PathVariable Integer id, @RequestBody RoleUserForm adminForm) {
         List<Integer> ids;

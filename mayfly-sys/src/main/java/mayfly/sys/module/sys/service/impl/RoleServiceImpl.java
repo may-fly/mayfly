@@ -2,11 +2,13 @@ package mayfly.sys.module.sys.service.impl;
 
 import mayfly.core.base.service.impl.BaseServiceImpl;
 import mayfly.core.exception.BusinessAssert;
+import mayfly.core.log.MethodLog;
 import mayfly.sys.module.sys.entity.AccountRoleDO;
 import mayfly.sys.module.sys.entity.RoleDO;
 import mayfly.sys.module.sys.entity.RoleResourceDO;
 import mayfly.sys.module.sys.mapper.RoleMapper;
 import mayfly.sys.module.sys.service.AccountRoleService;
+import mayfly.sys.module.sys.service.OperationLogService;
 import mayfly.sys.module.sys.service.RoleResourceService;
 import mayfly.sys.module.sys.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @version 1.0
  * @date 2018-12-07 4:13 PM
  */
+@MethodLog("角色管理:")
 @Service
 public class RoleServiceImpl extends BaseServiceImpl<RoleMapper, RoleDO> implements RoleService {
 
@@ -27,6 +30,8 @@ public class RoleServiceImpl extends BaseServiceImpl<RoleMapper, RoleDO> impleme
     private RoleResourceService roleResourceService;
     @Autowired
     private AccountRoleService accountRoleService;
+    @Autowired
+    private OperationLogService logService;
 
     @Autowired
     @Override
@@ -34,9 +39,17 @@ public class RoleServiceImpl extends BaseServiceImpl<RoleMapper, RoleDO> impleme
         super.baseMapper = roleMapper;
     }
 
+    @Override
+    public void update(RoleDO role) {
+        RoleDO old = getById(role.getId());
+        BusinessAssert.notNull(old, "角色不存在");
+        updateByIdSelective(role);
+        logService.asyncUpdateLog("修改角色", role, old);
+    }
+
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void deleteRole(Integer id) {
+    public void delete(Integer id) {
         RoleDO role = getById(id);
         BusinessAssert.notNull(role, "角色不存在");
         // 删除角色关联的用户角色信息
@@ -44,5 +57,6 @@ public class RoleServiceImpl extends BaseServiceImpl<RoleMapper, RoleDO> impleme
         // 删除角色关联的资源信息
         roleResourceService.deleteByCondition(new RoleResourceDO().setRoleId(id));
         deleteById(id);
+        logService.asyncDeleteLog("删除角色", role);
     }
 }

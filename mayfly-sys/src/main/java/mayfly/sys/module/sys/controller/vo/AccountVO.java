@@ -1,10 +1,8 @@
 package mayfly.sys.module.sys.controller.vo;
 
 import lombok.Data;
-import mayfly.sys.module.sys.entity.RoleDO;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 /**
  * @author meilin.huang
@@ -24,5 +22,23 @@ public class AccountVO {
 
     private LocalDateTime updateTime;
 
-    private List<RoleDO> roles;
+    /**
+     * 创建账号id
+     */
+    private Integer createAccountId;
+
+    /**
+     * 创建账号名
+     */
+    private String createAccount;
+
+    /**
+     * 最后更新账号id
+     */
+    private Integer updateAccountId;
+
+    /**
+     * 最后更新账号名
+     */
+    private String updateAccount;
 }

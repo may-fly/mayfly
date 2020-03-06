@@ -1,7 +1,7 @@
 <template>
   <div class="role-list">
     <ToolBar>
-      <el-button v-permission="permission.save.code" type="primary" icon="el-icon-plus" size="mini" @click="editRole(false)">添加</el-button>
+      <el-button v-permission="permission.role.code" type="primary" icon="el-icon-plus" size="mini" @click="editRole(false)">添加</el-button>
       <div style="float: right">
         <el-input placeholder="请输入角色名称！" size="small" style="width: 140px" v-model="params.name" @clear="searchRole"
           clearable>
@@ -13,7 +13,7 @@
       <el-table-column label="序号" type="index"></el-table-column>
       <el-table-column prop="name" label="角色名称">
       </el-table-column>
-      <el-table-column prop="remark" label="描述">
+      <el-table-column prop="remark" label="描述" show-overflow-tooltip>
       </el-table-column>
       <el-table-column prop="createTime" label="创建时间">
       </el-table-column>
@@ -21,7 +21,7 @@
       </el-table-column>
       <el-table-column label="操作" width="350px">
         <template slot-scope="scope">
-          <el-button v-permission="permission.update.code" @click="editRole(scope.row)" type="primary" icon="el-icon-edit"
+          <el-button v-permission="permission.role.code" @click="editRole(scope.row)" type="primary" icon="el-icon-edit"
             size="mini">编辑</el-button>
           <el-button v-permission="permission.saveResources.code" @click="editResource(scope.row)" type="primary" icon="el-icon-setting"
             size="mini">分配菜单&权限</el-button>
@@ -45,6 +45,7 @@
   import RoleEdit from './role-edit.vue'
   import permission from '../permissions.js';
   import ResourceEdit from './resource-edit.vue';
+  import { roleApi, resourceApi } from '../api'
 
   export default {
     data() {
@@ -107,7 +108,7 @@
             cancelButtonText: '取消',
             type: 'warning'
           });
-          await this.permission.del.request({
+          await roleApi.del.request({
             id: data.id
           });
           this.$message.success("删除成功！");
@@ -117,11 +118,11 @@
         }
       },
       async editResource(row) {
-        let menus = await permission.menu.list.request(null);
+        let menus = await resourceApi.list.request(null);
         // 获取所有菜单列表
         this.resourceDialog.resources = menus;
         // 获取该角色拥有的菜单id
-        let roles = await this.permission.rolePermissions.request({
+        let roles = await roleApi.rolePermissions.request({
           id: row.id
         });
         let hasIds = roles;
@@ -170,7 +171,7 @@
         }, 10);
       },
       async search() {
-        let res = await this.permission.list.request(null);
+        let res = await roleApi.list.request(null);
         this.roles = res;
       }
     },

@@ -1,8 +1,6 @@
 package mayfly.sys.module.sys.controller;
 
-import mayfly.core.exception.BusinessAssert;
 import mayfly.core.exception.BusinessException;
-import mayfly.core.log.MethodLog;
 import mayfly.core.permission.Permission;
 import mayfly.core.result.Result;
 import mayfly.core.util.bean.BeanUtils;
@@ -22,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -32,8 +29,7 @@ import java.util.stream.Stream;
  * @version 1.0
  * @date 2018-12-20 9:31 AM
  */
-@MethodLog("角色管理：")
-@Permission(code = "role:")
+@Permission(code = "role")
 @RestController
 @RequestMapping("/sys/roles")
 public class RoleController {
@@ -44,7 +40,6 @@ public class RoleController {
     private RoleResourceService roleResourceService;
 
     @Permission(requireCode = false)
-    @MethodLog(value = "获取角色列表", level = MethodLog.LogLevel.DEBUG)
     @GetMapping()
     public Result<?> list() {
         return Result.success().with(roleService.listAll("create_time DESC"));
@@ -53,26 +48,21 @@ public class RoleController {
     @PostMapping()
     public Result<?> save(@Valid @RequestBody RoleForm roleForm) {
         RoleDO role = BeanUtils.copyProperties(roleForm, RoleDO.class);
-        LocalDateTime now = LocalDateTime.now();
-        role.setCreateTime(now);
-        role.setUpdateTime(now);
         role.setStatus(EnableDisableEnum.ENABLE.getValue());
         return Result.success(roleService.insert(role));
     }
 
     @PutMapping("/{id}")
     public Result<?> update(@PathVariable Integer id, @Valid @RequestBody RoleForm roleForm) {
-        RoleDO role = roleService.getById(id);
-        BusinessAssert.notNull(role, "角色不存在");
-        BeanUtils.copyProperties(roleForm, role);
-        LocalDateTime now = LocalDateTime.now();
-        role.setUpdateTime(now);
-        return Result.success(roleService.updateById(role));
+        roleForm.setId(id);
+        roleService.update(BeanUtils.copyProperties(roleForm, RoleDO.class));
+        return Result.success();
     }
 
+    @Permission
     @DeleteMapping("/{id}")
     public Result<?> delete(@PathVariable Integer id) {
-        roleService.deleteRole(id);
+        roleService.delete(id);
         return Result.success();
     }
 
@@ -81,6 +71,7 @@ public class RoleController {
         return Result.success(roleResourceService.listResourceId(id));
     }
 
+    @Permission
     @PostMapping("/{id}/resources")
     public Result<?> saveResources(@PathVariable Integer id, @RequestBody RoleForm roleForm) throws BusinessException {
         List<Integer> ids;

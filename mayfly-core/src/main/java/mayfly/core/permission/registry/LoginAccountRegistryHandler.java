@@ -12,26 +12,26 @@ import java.util.concurrent.TimeUnit;
 public final class LoginAccountRegistryHandler<I> {
 
     /**
-     * 用户权限码注册
+     * 登录账号注册器
      */
-    private LoginAccountRegistry<I> userCodeRegistry;
+    private LoginAccountRegistry<I> loginAccountRegistry;
 
 
-    private LoginAccountRegistryHandler(LoginAccountRegistry<I> userCodeRegistry) {
-        this.userCodeRegistry = userCodeRegistry;
+    private LoginAccountRegistryHandler(LoginAccountRegistry<I> loginAccountRegistry) {
+        this.loginAccountRegistry = loginAccountRegistry;
     }
 
     /**
      * 权限缓存工厂方法
      *
-     * @param userCodeRegistry 用户权限缓存器(null则使用默认注册器 {@link DefaultLoginAccountRegistry})
-     * @return PermissionCacheHandler
+     * @param loginAccountRegistry 登录账号注册器(null则使用默认注册器 {@link DefaultLoginAccountRegistry})
+     * @return LoginAccountRegistryHandler
      */
-    public static <T> LoginAccountRegistryHandler<T> of(LoginAccountRegistry<T> userCodeRegistry) {
-        if (userCodeRegistry == null) {
-            userCodeRegistry = DefaultLoginAccountRegistry.<T>getInstance();
+    public static <T> LoginAccountRegistryHandler<T> of(LoginAccountRegistry<T> loginAccountRegistry) {
+        if (loginAccountRegistry == null) {
+            loginAccountRegistry = DefaultLoginAccountRegistry.<T>getInstance();
         }
-        return new LoginAccountRegistryHandler<T>(userCodeRegistry);
+        return new LoginAccountRegistryHandler<T>(loginAccountRegistry);
     }
 
     /**
@@ -42,10 +42,10 @@ public final class LoginAccountRegistryHandler<I> {
      * @param timeUnit     单位
      */
     public void saveLoginAccount(String token, LoginAccount<I> loginAccount, long time, TimeUnit timeUnit) {
-        userCodeRegistry.save(token, loginAccount, time, timeUnit);
+        loginAccountRegistry.save(token, loginAccount, time, timeUnit);
     }
 
     public void removeLoginAccount(String token) {
-        userCodeRegistry.delete(token);
+        loginAccountRegistry.delete(token);
     }
 }

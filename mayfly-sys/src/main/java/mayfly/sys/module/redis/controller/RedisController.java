@@ -27,16 +27,16 @@ import org.springframework.web.bind.annotation.RestController;
  * @version 1.0
  * @date 2019-01-21 3:35 PM
  */
-@Permission(code = "redis:key:")
+@Permission(code = "redis:key")
 @RestController
 @RequestMapping("/devops/redis")
 public class RedisController {
     @Autowired
     private RedisService redisService;
 
-    @MethodLog(value = "查询redis key", level = MethodLog.LogLevel.DEBUG)
+    @MethodLog(level = MethodLog.LogLevel.DEBUG)
     @GetMapping("/{cluster}/{id}/scan")
-    public Result scan(@PathVariable Boolean cluster, @PathVariable Integer id, @Valid ScanForm scanForm) {
+    public Result<?> scan(@PathVariable Boolean cluster, @PathVariable Integer id, @Valid ScanForm scanForm) {
         RedisKeyCommands<String, byte[]> cmds = getKeyCmd(cluster, id);
         KeyScanVO scan = cluster ? KeyValueCommand.clusterScan(cmds, scanForm.getCount(), scanForm.getMatch())
                 : KeyValueCommand.scan(cmds, scanForm.getCursor(), scanForm.getCount(), scanForm.getMatch());
@@ -45,7 +45,7 @@ public class RedisController {
 
     @MethodLog(value = "查询redis value", resultLevel = MethodLog.LogLevel.DEBUG)
     @GetMapping("/{cluster}/{id}/value")
-    public Result value(@PathVariable Boolean cluster, @PathVariable Integer id, String key) {
+    public Result<?> value(@PathVariable Boolean cluster, @PathVariable Integer id, String key) {
         if (StringUtils.isEmpty(key)) {
             return Result.paramError("key不能为空!");
         }
@@ -54,7 +54,7 @@ public class RedisController {
 
     @MethodLog(value = "新增redis key value")
     @PostMapping("/{cluster}/{id}/value")
-    public Result addKeyValue(@PathVariable Boolean cluster, @PathVariable Integer id, @Valid KeyValueForm keyValue) {
+    public Result<?> addKeyValue(@PathVariable Boolean cluster, @PathVariable Integer id, @Valid KeyValueForm keyValue) {
         BaseRedisCommands<String, byte[]> cmds = cluster ? redisService.getClusterCmds(id) : redisService.getCmds(id);
         KeyValueCommand.addKeyValue(cmds, BeanUtils.copyProperties(keyValue, KeyInfo.class));
         return Result.success();
@@ -62,7 +62,7 @@ public class RedisController {
 
     @MethodLog("删除key")
     @DeleteMapping("/{cluster}/{id}")
-    public Result delete(@PathVariable Boolean cluster, @PathVariable Integer id, String key) {
+    public Result<?> delete(@PathVariable Boolean cluster, @PathVariable Integer id, String key) {
         if (StringUtils.isEmpty(key)) {
             return Result.paramError("key不能为空！");
         }

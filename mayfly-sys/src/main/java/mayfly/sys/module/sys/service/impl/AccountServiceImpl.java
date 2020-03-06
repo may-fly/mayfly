@@ -3,6 +3,7 @@ package mayfly.sys.module.sys.service.impl;
 import mayfly.core.base.model.PageResult;
 import mayfly.core.base.service.impl.BaseServiceImpl;
 import mayfly.core.exception.BusinessAssert;
+import mayfly.core.log.MethodLog;
 import mayfly.core.util.DigestUtils;
 import mayfly.core.util.bean.BeanUtils;
 import mayfly.sys.common.enums.EnableDisableEnum;
@@ -18,13 +19,12 @@ import mayfly.sys.module.sys.service.PermissionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-
 /**
  * @author meilin.huang
  * @version 1.0
  * @date 2019-07-06 14:57
  */
+@MethodLog(value = "账号管理:")
 @Service
 public class AccountServiceImpl extends BaseServiceImpl<AccountMapper, AccountDO> implements AccountService {
 
@@ -41,17 +41,13 @@ public class AccountServiceImpl extends BaseServiceImpl<AccountMapper, AccountDO
         super.baseMapper = accountMapper;
     }
 
+    @MethodLog(value = "获取账号列表", level = MethodLog.LogLevel.DEBUG)
     @Override
     public PageResult<AccountVO> listByQuery(AccountQuery query) {
-        PageResult<AccountVO> vos = PageResult.withPageHelper(query,
-                () -> listByCondition(BeanUtils.copyProperties(query, AccountDO.class)), AccountVO.class);
-        // 赋值角色信息
-        vos.getList().forEach(a -> {
-            a.setRoles(accountRoleService.listRoleByAccountId(a.getId()));
-        });
-        return vos;
+        return PageResult.withPageHelper(query, () -> accountMapper.selectByQuery(query), AccountVO.class);
     }
 
+    @MethodLog(level = MethodLog.LogLevel.NONE)
     @Override
     public AccountDO login(AccountLoginForm adminForm) {
         AccountDO condition = new AccountDO().setUsername(adminForm.getUsername())
@@ -63,6 +59,7 @@ public class AccountServiceImpl extends BaseServiceImpl<AccountMapper, AccountDO
         return account;
     }
 
+    @MethodLog(level = MethodLog.LogLevel.NONE)
     @Override
     public void logout(String token) {
         permissionService.removeToken(token);
@@ -74,9 +71,6 @@ public class AccountServiceImpl extends BaseServiceImpl<AccountMapper, AccountDO
                 "该用户名已存在");
         AccountDO account = BeanUtils.copyProperties(accountForm, AccountDO.class);
         account.setPassword(DigestUtils.md5DigestAsHex(accountForm.getPassword()));
-        LocalDateTime now = LocalDateTime.now();
-        account.setCreateTime(now);
-        account.setUpdateTime(now);
         // 默认启用状态
         account.setStatus(EnableDisableEnum.ENABLE.getValue());
         insert(account);

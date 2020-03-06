@@ -25,9 +25,9 @@ public class PermissionCheckHandler<I> {
     /**
      * 用户权限校验
      */
-    private LoginAccountRegistry<I> loginAccountRegistry;
+    private SimpleLoginAccountRegistry<I> loginAccountRegistry;
 
-    private PermissionCheckHandler(LoginAccountRegistry<I> loginAccountRegistry) {
+    private PermissionCheckHandler(SimpleLoginAccountRegistry<I> loginAccountRegistry) {
         this.loginAccountRegistry = loginAccountRegistry;
     }
 
@@ -37,7 +37,7 @@ public class PermissionCheckHandler<I> {
      * @param loginAccountRegistry login account registry
      * @return PermissionCheckHandler
      */
-    public static <T> PermissionCheckHandler<T> of(LoginAccountRegistry<T> loginAccountRegistry) {
+    public static <T> PermissionCheckHandler<T> of(SimpleLoginAccountRegistry<T> loginAccountRegistry) {
         if (loginAccountRegistry == null) {
             loginAccountRegistry = DefaultLoginAccountRegistry.getInstance();
         }

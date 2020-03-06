@@ -1,6 +1,7 @@
 package mayfly.sys.module.machine.controller;
 
 import mayfly.core.log.MethodLog;
+import mayfly.core.permission.Permission;
 import mayfly.core.result.Result;
 import mayfly.core.util.bean.BeanUtils;
 import mayfly.core.validation.annotation.Valid;
@@ -23,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @date 2019-11-04 3:07 下午
  */
 @MethodLog("机器管理：")
-//@Permission(code = "machine:")
+@Permission(code = "machine")
 @RestController
 @RequestMapping("/devops/machines")
 public class MachineController {

@@ -28,7 +28,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @version 1.0
  * @date 2018-12-19 2:27 PM
  */
-@Permission(code = "redis:")
+@Permission(code = "redis")
 @MethodLog
 @RestController
 @RequestMapping("/devops/redis")

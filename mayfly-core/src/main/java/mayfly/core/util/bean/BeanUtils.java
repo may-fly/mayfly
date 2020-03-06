@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.WeakHashMap;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -97,7 +98,7 @@ public class BeanUtils {
      * 获取bean的属性描述器
      *
      * @param clazz bean类型
-     * @return      PropertyDescriptor
+     * @return PropertyDescriptor
      */
     public static PropertyDescriptor[] getPropertyDescriptors(Class<?> clazz) {
         try {
@@ -110,14 +111,29 @@ public class BeanUtils {
     /**
      * 获取两个对象之间属性值改变记录列表（对象类型可不同，只要字段名和类型相同即可）
      *
-     * @param newObj  新对象
-     * @param old     旧对象
-     * @return        对象值改变列表
+     * @param newObj 新对象
+     * @param old    旧对象
+     * @return 对象值改变列表
      */
     public static List<FieldValueChangeRecord> getFieldValueChangeRecords(Object newObj, Object old) {
+        return getFieldValueChangeRecords(newObj, old, null);
+    }
+
+    /**
+     * 获取两个对象之间属性值改变记录列表（对象类型可不同，只要字段名和类型相同即可）
+     *
+     * @param newObj    新对象
+     * @param old       旧对象
+     * @param predicate 字段过滤器
+     * @return 对象值改变列表
+     */
+    public static List<FieldValueChangeRecord> getFieldValueChangeRecords(Object newObj, Object old, Predicate<Field> predicate) {
         Class<?> oldObjClass = old.getClass();
         List<FieldValueChangeRecord> changeRecords = new ArrayList<>();
         for (Field nf : ReflectionUtils.getFields(newObj.getClass())) {
+            if (predicate != null && !predicate.test(nf)) {
+                continue;
+            }
             String fieldName = nf.getName();
             // 旧值不存在指定字段，直接跳过
             Field oldObjFiled = ReflectionUtils.getField(oldObjClass, fieldName, nf.getType());
@@ -145,8 +161,8 @@ public class BeanUtils {
      * 将的bean转为map, key:fieldName, value:fieldValue  <br/> <br/>
      * 如果bean的属性中还有bean，则key为以前一个beanName.fieldName
      *
-     * @param bean  bean
-     * @return      map
+     * @param bean bean
+     * @return map
      */
     public static Map<String, Object> bean2Map(Object bean) {
         return doBean2Map(null, bean);
@@ -156,8 +172,8 @@ public class BeanUtils {
      * 将list中的bean转为map, key:fieldName, value:fieldValue  <br/> </br/>
      * 如果bean的属性中还有bean，则key为以前一个beanName.fieldName
      *
-     * @param beans  beans
-     * @return       maps
+     * @param beans beans
+     * @return maps
      */
     public static List<Map<String, Object>> beans2Maps(Collection<?> beans) {
         return beans.stream().map(BeanUtils::bean2Map).collect(Collectors.toList());
@@ -191,7 +207,7 @@ public class BeanUtils {
      *
      * @param prefix map中key字段的前缀，即map中key为perfix + "." + fieldName
      * @param bean   bean
-     * @return       map
+     * @return map
      */
     private static Map<String, Object> doBean2Map(String prefix, Object bean) {
         if (bean == null) {
@@ -269,8 +285,8 @@ public class BeanUtils {
     /**
      * 判断对象是否为简单基本类型
      *
-     * @param res  object
-     * @return     true or false
+     * @param res object
+     * @return true or false
      */
     public static boolean isSimpleValue(Object res) {
         return ObjectUtils.isWrapperOrPrimitive(res) || ObjectUtils.isEnum(res) || ObjectUtils.isDate(res);

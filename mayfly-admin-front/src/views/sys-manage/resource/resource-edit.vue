@@ -6,15 +6,30 @@
           <el-input v-model.trim="form.name" placeholder="请输入资源名" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item prop="type" label="类型:" required>
-          <el-radio :disabled="typeDisabled" v-for="item in enums.ResourceTypeEnum" :key="item.value" v-model="form.type" :label="item.value">{{item.label}}</el-radio>
+          <el-radio
+            :disabled="typeDisabled"
+            v-for="item in enums.ResourceTypeEnum"
+            :key="item.value"
+            v-model="form.type"
+            :label="item.value"
+          >{{item.label}}</el-radio>
         </el-form-item>
         <el-form-item v-if="form.type === enums.ResourceTypeEnum.MENU.value" label="样式:">
           <el-input v-model.trim="form.icon" placeholder="请输入菜单图标样式"></el-input>
         </el-form-item>
-        <el-form-item v-if="form.type === enums.ResourceTypeEnum.MENU.value" prop="code" label="路由code:">
+        <el-form-item
+          v-if="form.type === enums.ResourceTypeEnum.MENU.value"
+          prop="code"
+          label="路由code:"
+        >
           <el-input v-model.trim="form.code" placeholder="请输入路由code"></el-input>
         </el-form-item>
-        <el-form-item v-if="form.type === enums.ResourceTypeEnum.PERMISSION.value" prop="code" label="权限code:" required>
+        <el-form-item
+          v-if="form.type === enums.ResourceTypeEnum.PERMISSION.value"
+          prop="code"
+          label="权限code:"
+          required
+        >
           <el-input v-model.trim="form.code" placeholder="请输入权限code"></el-input>
         </el-form-item>
         <el-form-item label="序号:" prop="weight" required>
@@ -31,121 +46,117 @@
 </template>
 
 <script>
-  import permission from '../permissions.js'
-  import enums from '../enums.js'
-  export default {
-    name: 'ResourceEdit',
-    props: {
-      dialogFormVisible: Boolean,
-      data: [Object, Boolean],
-      title: String,
-      type: Number,
-      typeDisabled: Boolean
-    },
-    data() {
-      return {
-        permission: permission.menu,
-        enums: enums,
-        //弹出框对象
-        dialogForm: {
-          title: "",
-          visible: false,
-          data: {}
-        },
-        props: {
-          value: 'id',
-          label: 'name',
-          children: 'children'
-        },
-        form: {
-          id: null,
-          name: null,
-          pid: null,
-          code: null,
-          icon: null,
-          type: null,
-          weight: null
-        },
-        // 资源类型选择是否禁用
-        // typeDisabled: false,
-        btnLoading: false,
-        rules: {
-          name: [{
+import { resourceApi } from '../api'
+import enums from '../enums.js'
+export default {
+  name: 'ResourceEdit',
+  props: {
+    dialogFormVisible: Boolean,
+    data: [Object, Boolean],
+    title: String,
+    type: Number,
+    typeDisabled: Boolean
+  },
+  data() {
+    return {
+      enums: enums,
+      //弹出框对象
+      dialogForm: {
+        title: '',
+        visible: false,
+        data: {}
+      },
+      props: {
+        value: 'id',
+        label: 'name',
+        children: 'children'
+      },
+      form: {
+        id: null,
+        name: null,
+        pid: null,
+        code: null,
+        icon: null,
+        type: null,
+        weight: null
+      },
+      // 资源类型选择是否禁用
+      // typeDisabled: false,
+      btnLoading: false,
+      rules: {
+        name: [
+          {
             required: true,
             message: '请输入资源名称',
             trigger: ['change', 'blur']
-          }],
-          weight: [{
+          }
+        ],
+        weight: [
+          {
             required: true,
             message: '请输入序号',
             trigger: ['change', 'blur']
-          }]
-        }
-      }
-    },
-    watch: {
-      'data': {
-        handler: function() {
-          if (this.data) {
-            this.$Utils.copyProperties(this.data, this.form);
           }
-        },
-        deep: true
+        ]
       }
-    },
-    methods: {
-      handleChange() {},
-      addOperation() {
-        this.dialogForm.visible = true;
-      },
-      operationChange(operation) {
-        this.operations.push(operation);
-        this.dialogForm.visible = false;
-      },
-      btnOk() {
-        let p = this.form.id ? this.permission.update : this.permission.save;
-        let pi = this.$Permission.getPermission(p.code);
-
-        if (!pi.show) {
-          this.$message.error('您没有该权限!');
-        } else {
-          this.$refs["menuForm"].validate((valid) => {
-            if (valid) {
-              p.request(this.form).then(res => {
-                this.$emit('val-change', this.form);
-                this.btnLoading = true;
-                this.$message.success('保存成功')
-                setTimeout(() => {
-                  this.btnLoading = false;
-                }, 1000);
-                
-                this.cancel();
-              })
-            } else {
-              return false;
-            }
-          });
+    }
+  },
+  watch: {
+    data: {
+      handler: function() {
+        if (this.data) {
+          this.$Utils.copyProperties(this.data, this.form)
         }
       },
-      cancel() {
-        this.$emit('cancel');
-        setTimeout(() => {
-          this.$refs["menuForm"].resetFields();
-          //  重置对象属性为null
-          this.$Utils.resetProperties(this.form);
-        }, 200);
-      }
+      deep: true
+    }
+  },
+  methods: {
+    handleChange() {},
+    addOperation() {
+      this.dialogForm.visible = true
     },
-    mounted() {
+    operationChange(operation) {
+      this.operations.push(operation)
+      this.dialogForm.visible = false
+    },
+    btnOk() {
+      let p = this.form.id ? resourceApi.update : resourceApi.save
 
+      this.$refs['menuForm'].validate(valid => {
+        if (valid) {
+          p.request(this.form).then(res => {
+            this.$emit('val-change', this.form)
+            this.btnLoading = true
+            this.$message.success('保存成功')
+            setTimeout(() => {
+              this.btnLoading = false
+            }, 1000)
+
+            this.cancel()
+          })
+        } else {
+          return false
+        }
+      })
     },
-    components: {}
-  }
+    cancel() {
+      this.$emit('cancel')
+      setTimeout(() => {
+        this.$refs['menuForm'].resetFields()
+        //  重置对象属性为null
+        this.$Utils.resetProperties(this.form)
+      }, 200)
+    }
+  },
+  mounted() {},
+  components: {}
+}
 </script>
 <style lang="less">
-  // 	.m-dialog {
-  // 		.el-cascader {
-  // 			width: 100%;
-  // 		}
-  // 	}
+// 	.m-dialog {
+// 		.el-cascader {
+// 			width: 100%;
+// 		}
+// 	}
 </style>

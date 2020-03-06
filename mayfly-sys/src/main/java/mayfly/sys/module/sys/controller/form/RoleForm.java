@@ -11,6 +11,8 @@ import mayfly.core.validation.annotation.NotBlank;
 @Data
 public class RoleForm {
 
+    private Integer id;
+
     @NotBlank
     private String name;
 

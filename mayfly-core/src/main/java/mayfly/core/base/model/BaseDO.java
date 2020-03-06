@@ -75,8 +75,20 @@ public class BaseDO {
 
     /**
      * 自动设置基本信息
+     *
+     * @param isCreate 是否为创建操作
      */
     public void autoSetBaseInfo(boolean isCreate) {
+        autoSetBaseInfo(isCreate, LoginAccount.get());
+    }
+
+    /**
+     * 自动设置基本信息
+     *
+     * @param isCreate     是否为创建操作
+     * @param loginAccount 登录账号
+     */
+    public void autoSetBaseInfo(boolean isCreate, LoginAccount<Integer> loginAccount) {
         LocalDateTime now = LocalDateTime.now();
         if (isCreate) {
             this.createTime = now;
@@ -84,7 +96,6 @@ public class BaseDO {
         this.updateTime = now;
 
         // 设置操作账号相关信息
-        LoginAccount<Integer> loginAccount = LoginAccount.get();
         if (loginAccount == null) {
             return;
         }

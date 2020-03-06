@@ -30,7 +30,7 @@ import java.io.IOException;
  */
 @RestController
 @RequestMapping("/devops/machines")
-@Permission(code = "machineFile:")
+@Permission(code = "machineFile")
 public class MachineFileController {
 
     @Autowired
@@ -55,6 +55,7 @@ public class MachineFileController {
         return Result.success(machineFileService.getFileContent(id, path));
     }
 
+    @Permission
     @MethodLog("修改文件内容")
     @PutMapping("/files/{id}")
     public Result<?> updateFileContent(@PathVariable Integer id, @RequestBody @Valid MachineConfContentForm form) {
@@ -62,6 +63,7 @@ public class MachineFileController {
         return Result.success();
     }
 
+    @Permission
     @MethodLog("新增文件配置")
     @PostMapping("/{machineId}/files")
     public Result<?> addConf(@PathVariable Integer machineId, @RequestBody @Valid MachineFileForm form) {
@@ -75,6 +77,7 @@ public class MachineFileController {
         return Result.success();
     }
 
+    @Permission
     @PostMapping("/files/upload")
     public Result<?> upload(@Valid UploadForm form) {
         MultipartFile file = form.getFile();
@@ -86,6 +89,7 @@ public class MachineFileController {
         }
     }
 
+    @Permission
     @DeleteMapping("/files/{fileId}/rm")
     public Result<?> rm(@PathVariable Integer fileId, String path) {
         machineFileService.rmFile(fileId, path);

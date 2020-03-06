@@ -10,7 +10,7 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.Method;
+import java.util.function.BiConsumer;
 
 /**
  * 日志切面
@@ -20,12 +20,23 @@ import java.lang.reflect.Method;
  * @date 2018-09-19 上午9:16
  */
 @Aspect
-//@Component
 public class LogAspect {
 
     private static final Logger LOG = LoggerFactory.getLogger(LogAspect.class);
 
     private LogHandler handler = LogHandler.getInstance();
+
+    /**
+     * 日志结果消费者（回调）,主要用于保存日志信息等
+     */
+    private BiConsumer<LogTypeEnum, String> saveLogConsumer;
+
+    public LogAspect() {
+    }
+
+    public LogAspect(BiConsumer<LogTypeEnum, String> saveLogConsumer) {
+        this.saveLogConsumer = saveLogConsumer;
+    }
 
     /**
      * 拦截带有@MethodLog的方法或带有该注解的类
@@ -36,22 +47,27 @@ public class LogAspect {
 
     @AfterThrowing(pointcut = "logPointcut()", throwing = "e")
     public void doException(JoinPoint jp, Exception e) {
-        Object[] args = jp.getArgs();
-        Method method = ((MethodSignature) jp.getSignature()).getMethod();
-        LogHandler.LogInfo logInfo = handler.getLogInfo(method);
-        LOG.error(logInfo.getExceptionLogMsg(LogHandler.LogResult.exception(args, e)));
+        LogHandler.LogInfo logInfo = handler.getLogInfo(((MethodSignature) jp.getSignature()).getMethod());
+        String errMsg = logInfo.getExceptionLogMsg(LogHandler.LogResult.exception(jp.getArgs(), e));
+        // 执行回调
+        if (saveLogConsumer != null) {
+            try {
+                saveLogConsumer.accept(LogTypeEnum.EXCEPTION, errMsg);
+            } catch (Exception ex) {
+                LOG.error("执行log consumer失败：", ex);
+            }
+        }
+        LOG.error(errMsg);
     }
 
     @Around(value = "logPointcut()")
     private Object afterReturning(ProceedingJoinPoint pjp) throws Throwable {
-        Object[] args = pjp.getArgs();
-        Method method = ((MethodSignature) pjp.getSignature()).getMethod();
-        LogHandler.LogInfo logInfo = handler.getLogInfo(method);
+        LogHandler.LogInfo logInfo = handler.getLogInfo(((MethodSignature) pjp.getSignature()).getMethod());
 
         long startTime = System.currentTimeMillis();
         Object result = pjp.proceed();
 
-        String logMsg = logInfo.fillLogMsg(getSysLogLevel(), new LogHandler.LogResult(args, result,
+        String logMsg = logInfo.fillLogMsg(getSysLogLevel(), new LogHandler.LogResult(pjp.getArgs(), result,
                 System.currentTimeMillis() - startTime));
         if (logMsg == null) {
             return result;
@@ -74,7 +90,13 @@ public class LogAspect {
                 LOG.info(logMsg);
                 break;
         }
-
+        if (saveLogConsumer != null) {
+            try {
+                saveLogConsumer.accept(LogTypeEnum.NORMAN, logMsg);
+            } catch (Exception e) {
+                LOG.error("执行log consumer失败：", e);
+            }
+        }
         return result;
     }
 

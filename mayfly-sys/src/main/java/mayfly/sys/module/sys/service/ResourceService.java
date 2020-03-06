@@ -25,34 +25,37 @@ public interface ResourceService extends BaseService<ResourceDO> {
     /**
      * 获取所有资源树
      *
-     * @return
+     * @return 资源树
      */
     List<ResourceListVO> listResource(ResourceDO condition);
 
     /**
      * 删除指定菜单，如果是有子节点，也删除
      *
-     * @param id
-     * @return
+     * @param id id
      */
     void delete(Integer id);
 
     /**
-     * 保存菜单
+     * 创建资源
      *
-     * @param resource
-     * @return
+     * @param resource 资源
      */
-    ResourceDO create(ResourceDO resource);
+    void create(ResourceDO resource);
 
-    ResourceDO update(ResourceDO resource);
+    /**
+     * 更新资源
+     *
+     * @param resource 资源
+     */
+    void update(ResourceDO resource);
 
     /**
      * 改变菜单的权限
      *
-     * @param id
-     * @param status
+     * @param id     id
+     * @param status 状态
      * @return
      */
-    ResourceDO changeStatus(Integer id, Integer status);
+    void changeStatus(Integer id, Integer status);
 }

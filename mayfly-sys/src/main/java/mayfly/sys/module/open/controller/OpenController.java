@@ -1,12 +1,11 @@
 package mayfly.sys.module.open.controller;
 
-import mayfly.core.log.MethodLog;
 import mayfly.core.result.Result;
 import mayfly.core.validation.annotation.Valid;
+import mayfly.sys.module.open.controller.form.AccountLoginForm;
 import mayfly.sys.module.sys.entity.AccountDO;
 import mayfly.sys.module.sys.service.AccountService;
 import mayfly.sys.module.sys.service.PermissionService;
-import mayfly.sys.module.open.controller.form.AccountLoginForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,7 +26,6 @@ public class OpenController {
     @Autowired
     private AccountService accountService;
 
-    @MethodLog(value = "管理员登录", result = false)
     @PostMapping("/v1/login")
     public Result<?> login(@RequestBody @Valid AccountLoginForm loginForm) {
         AccountDO result = accountService.login(loginForm);

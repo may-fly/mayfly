@@ -2,6 +2,7 @@ package mayfly.sys.module.sys.service.impl;
 
 import mayfly.core.base.service.impl.BaseServiceImpl;
 import mayfly.core.exception.BusinessAssert;
+import mayfly.core.log.MethodLog;
 import mayfly.core.util.TreeUtils;
 import mayfly.core.util.bean.BeanUtils;
 import mayfly.core.util.enums.EnumUtils;
@@ -11,6 +12,7 @@ import mayfly.sys.module.sys.entity.ResourceDO;
 import mayfly.sys.module.sys.entity.RoleResourceDO;
 import mayfly.sys.module.sys.enums.ResourceTypeEnum;
 import mayfly.sys.module.sys.mapper.ResourceMapper;
+import mayfly.sys.module.sys.service.OperationLogService;
 import mayfly.sys.module.sys.service.PermissionService;
 import mayfly.sys.module.sys.service.ResourceService;
 import mayfly.sys.module.sys.service.RoleResourceService;
@@ -27,6 +29,7 @@ import java.util.Objects;
  * @author hml
  * @date 2018/6/27 下午4:09
  */
+@MethodLog("资源管理:")
 @Service
 public class ResourceServiceImpl extends BaseServiceImpl<ResourceMapper, ResourceDO> implements ResourceService {
 
@@ -36,6 +39,8 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourceMapper, Resourc
     private RoleResourceService roleResourceService;
     @Autowired
     private PermissionService permissionService;
+    @Autowired
+    private OperationLogService operationLogService;
 
     @Autowired
     @Override
@@ -43,11 +48,13 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourceMapper, Resourc
         super.baseMapper = resourceMapper;
     }
 
+    @MethodLog(level = MethodLog.LogLevel.NONE)
     @Override
     public List<ResourceListVO> listByUserId(Integer userId) {
         return TreeUtils.generateTrees(BeanUtils.copyProperties(resourceMapper.selectByUserId(userId), ResourceListVO.class));
     }
 
+    @MethodLog(value = "获取资源列表", level = MethodLog.LogLevel.DEBUG)
     @Override
     public List<ResourceListVO> listResource(ResourceDO condition) {
         List<ResourceDO> resources = listAll("pid ASC, weight ASC");
@@ -55,7 +62,7 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourceMapper, Resourc
     }
 
     @Override
-    public ResourceDO create(ResourceDO resource) {
+    public void create(ResourceDO resource) {
         if (resource.getPid() == null || Objects.equals(resource.getPid(), 0)) {
             resource.setPid(0);
             BusinessAssert.equals(resource.getType(), ResourceTypeEnum.MENU.getValue(), "权限资源不能为根节点");
@@ -75,44 +82,41 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourceMapper, Resourc
         //默认启用
         resource.setStatus(EnableDisableEnum.ENABLE.getValue());
         insert(resource);
-        return resource;
     }
 
     @Override
-    public ResourceDO update(ResourceDO resource) {
+    public void update(ResourceDO resource) {
         ResourceDO old = getById(resource.getId());
         BusinessAssert.notNull(old, "资源不存在");
         BusinessAssert.equals(resource.getType(), old.getType(), "资源类型不可变更");
         // 禁止误传修改其父节点
         resource.setPid(null);
-        // 是菜单直接 更新即可
-        if (Objects.equals(old.getType(), ResourceTypeEnum.MENU.getValue())) {
-            updateByIdSelective(resource);
-            return resource;
-        }
-        // 权限类型需要校验code不能为空
-        String code = resource.getCode();
-        // 如果修改了权限code，则需要校验
-        if (!Objects.equals(old.getCode(), code)) {
-            checkPermissionCode(code);
+
+        // 如果是权限，还需校验权限码
+        if (Objects.equals(old.getType(), ResourceTypeEnum.PERMISSION.getValue())) {
+            // 权限类型需要校验code不能为空
+            String code = resource.getCode();
+            // 如果修改了权限code，则需要校验
+            if (!Objects.equals(old.getCode(), code)) {
+                checkPermissionCode(code);
+            }
         }
         updateByIdSelective(resource);
-        return resource;
+        operationLogService.asyncUpdateLog("更新权限&菜单", resource, old);
     }
 
     @Override
-    public ResourceDO changeStatus(Integer id, Integer status) {
+    public void changeStatus(Integer id, Integer status) {
         BusinessAssert.state(EnumUtils.isExist(EnableDisableEnum.values(), status), "状态值错误");
         ResourceDO resource = getById(id);
         BusinessAssert.notNull(resource, "该资源不存在");
         // 状态不变直接返回
         if (Objects.equals(status, resource.getStatus())) {
-            return resource;
+            return;
         }
         resource.setStatus(status);
         // 更新数据库状态
         updateByIdSelective(resource);
-        return resource;
     }
 
     @Transactional(rollbackFor = Exception.class)

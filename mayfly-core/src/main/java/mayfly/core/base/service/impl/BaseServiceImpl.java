@@ -52,7 +52,7 @@ public class BaseServiceImpl<M extends BaseMapper<Integer, E>, E extends BaseDO>
 
     @Override
     public PageResult<E> listByCondition(E e, PageQuery pageQuery) {
-        return PageResult.withPageHelper(pageQuery.getPageNum(), pageQuery.getPageSize(), () -> this.listByCondition(e));
+        return PageResult.withPageHelper(pageQuery, () -> this.listByCondition(e));
     }
 
     @Override

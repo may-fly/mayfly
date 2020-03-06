@@ -49,6 +49,15 @@ let RouteList = [{
         component: resolve => require(['~/views/sys-manage/account'], resolve),
       },
       {
+        path: '/operation_log',
+        name: 'operation_log',
+        meta: {
+          title: '操作日志',
+          keepAlive: true
+        },
+        component: resolve => require(['~/views/sys-manage/log'], resolve),
+      },
+      {
         path: '/machines',
         name: 'machines',
         meta: {

@@ -64,7 +64,7 @@
         />
 
         <el-link
-          v-permission="permission.changeStatus.code"
+          v-permission="permission.resource.code"
           @click="changeStatus(data, 0)"
           v-if="data.status === 1 && data.type === enums.ResourceTypeEnum.PERMISSION.value"
           icon="el-icon-circle-close"
@@ -73,7 +73,7 @@
         />
 
         <el-link
-          v-permission="permission.changeStatus.code"
+          v-permission="permission.resource.code"
           @click="changeStatus(data, 1)"
           v-if="data.status === 0 && data.type === enums.ResourceTypeEnum.PERMISSION.value"
           type="success"
@@ -112,12 +112,13 @@ import ToolBar from '~/components/tool-bar/tool-bar.vue'
 import ResourceEdit from './resource-edit.vue'
 import permissions from '../permissions.js'
 import enums from '../enums.js'
+import { resourceApi } from '../api'
 
 export default {
   data() {
     return {
       enums: enums,
-      permission: permissions.menu,
+      permission: permissions.resource,
       showBtns: false,
       // 当前鼠标右击的节点数据
       rightClickData: {},
@@ -145,7 +146,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.permission.del
+        resourceApi.del
           .request({
             id: data.id
           })
@@ -156,7 +157,7 @@ export default {
       })
     },
     async search() {
-      let res = await this.permission.list.request(null)
+      let res = await resourceApi.list.request()
       this.data = res
     },
     addResource(data) {
@@ -197,7 +198,7 @@ export default {
     },
     async editResource(data) {
       this.dialogForm.visible = true
-      this.dialogForm.data = await this.permission.detail.request({
+      this.dialogForm.data = await resourceApi.detail.request({
         id: data.id
       })
       this.dialogForm.typeDisabled = true
@@ -212,7 +213,7 @@ export default {
       this.dialogForm.data = null
     },
     async changeStatus(data, status) {
-      await this.permission.changeStatus.request({
+      await resourceApi.changeStatus.request({
         id: data.id,
         status: status
       })
@@ -249,7 +250,7 @@ export default {
       }
     },
     async info(data) {
-      let info = await this.permission.detail.request({ id: data.id })
+      let info = await resourceApi.detail.request({ id: data.id })
       if (info.type === enums.ResourceTypeEnum.MENU.value) {
         this.$alert(
           '<strong style="margin-right: 18px">名称:</strong>' +
