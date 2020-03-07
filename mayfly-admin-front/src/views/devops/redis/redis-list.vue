@@ -92,10 +92,10 @@
 <script>
 import ToolBar from "~/components/tool-bar/tool-bar.vue";
 import Info from "./info.vue";
-import permission from "./permissions.js";
-import { redisApi, redisKeyApi } from './api'
+import { redisPermission, redisKeyPermission } from "../permissions.js";
+import { redisApi, redisKeyApi } from '../api'
 import { DynamicFormDialog } from "~/components/dynamic-form";
-import { Enum } from "~/common/Enum.js";
+
 //
 export default {
   data() {
@@ -108,8 +108,8 @@ export default {
 
     return {
       redisTable: [],
-      permission: permission.redis,
-      keyPermission: permission.redisKey,
+      permission: redisPermission,
+      keyPermission: redisKeyPermission,
       currentId: null,
       currentData: null,
       params: {
@@ -139,8 +139,8 @@ export default {
         visible: false,
         title: null,
         formInfo: {
-          addPermission: redisApi.save,
-          updatePermission: redisApi.update,
+          createApi: redisApi.save,
+          updateApi: redisApi.update,
           formRows: [
             [
               {

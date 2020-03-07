@@ -110,7 +110,7 @@
 <script>
 import ToolBar from '~/components/tool-bar/tool-bar.vue'
 import ResourceEdit from './resource-edit.vue'
-import permissions from '../permissions.js'
+import { resourcePermission } from '../permissions.js'
 import enums from '../enums.js'
 import { resourceApi } from '../api'
 
@@ -118,7 +118,7 @@ export default {
   data() {
     return {
       enums: enums,
-      permission: permissions.resource,
+      permission: resourcePermission,
       showBtns: false,
       // 当前鼠标右击的节点数据
       rightClickData: {},

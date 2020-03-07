@@ -125,7 +125,7 @@
 <script>
 import ToolBar from '~/components/tool-bar/tool-bar.vue'
 import HelpHint from '~/components/help-hint/help-hint.vue'
-import permission from '../permissions.js'
+import { accountPermission } from '../permissions.js'
 import RoleEdit from './role-edit.vue'
 import AccountEdit from './account-edit.vue'
 import enums from '../enums'
@@ -135,7 +135,7 @@ export default {
   data() {
     return {
       enums: enums,
-      permission: permission.account,
+      permission: accountPermission,
       currentId: null,
       currentData: null,
       query: {

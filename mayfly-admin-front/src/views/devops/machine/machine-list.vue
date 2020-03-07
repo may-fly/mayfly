@@ -94,14 +94,14 @@
 import ToolBar from '~/components/tool-bar/tool-bar.vue'
 import { DynamicFormDialog } from '~/components/dynamic-form'
 import FileManage from './file-manage.vue'
-import permission from './permissions.js'
-import { machineApi } from './api'
+import { machinePermission } from '../permissions.js'
+import { machineApi } from '../api'
 
 export default {
   data() {
     return {
       table: [],
-      permission: permission,
+      permission: machinePermission,
       currentId: null,
       currentData: null,
       params: {
@@ -117,8 +117,8 @@ export default {
         visible: false,
         title: null,
         formInfo: {
-          addPermission: machineApi.save,
-          updatePermission: machineApi.update,
+          createApi: machineApi.save,
+          updateApi: machineApi.update,
           formRows: [
             [
               {

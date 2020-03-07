@@ -55,15 +55,15 @@
   // import Api from "../../../api/index.js"
   import ToolBar from '~/components/tool-bar/tool-bar.vue'
   import Req from "~/common/request"
-  import enums from './enums'
-  import permission from './permissions.js'
+  import enums from '../enums'
+  import { redisKeyPermission } from '../permissions.js'
   import ValueDialog from './value-dialog.vue';
-  import { redisKeyApi } from './api'
+  import { redisKeyApi } from '../api'
 
   export default {
     data() {
       return {
-        permission: permission.redisKey,
+        permission: redisKeyPermission,
         loading: true,
         enums: enums,
         cluster: this.$route.params.cluster,

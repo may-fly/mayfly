@@ -43,14 +43,14 @@
   import ToolBar from '~/components/tool-bar/tool-bar.vue';
   import HelpHint from '~/components/help-hint/help-hint.vue';
   import RoleEdit from './role-edit.vue'
-  import permission from '../permissions.js';
+  import { rolePermission } from '../permissions.js';
   import ResourceEdit from './resource-edit.vue';
   import { roleApi, resourceApi } from '../api'
 
   export default {
     data() {
       return {
-        permission: permission.role,
+        permission: rolePermission,
         dialogFormVisible: false,
         currentEditPermissions: false,
         params: {
