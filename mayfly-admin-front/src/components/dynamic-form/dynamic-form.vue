@@ -98,8 +98,8 @@ export default {
           // 提交的表单数据
           let subform = { ...this.form }
           let operation = this.form.id
-            ? this.formInfo.updatePermission
-            : this.formInfo.addPermission
+            ? this.formInfo.updateApi
+            : this.formInfo.createApi
           if (operation) {
             this.submitDisabled = true
             operation.request(this.form).then(

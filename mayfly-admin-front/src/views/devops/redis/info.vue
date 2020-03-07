@@ -92,22 +92,8 @@
     },
     data() {
       return {
-        // info: {
-        //   Server: {},
-        //   Keyspace: {},
-        //   Clients: {},
-        //   CPU: {},
-        //   Memory: {}
-        // },
         name: ""
       }
-    },
-    watch: {
-      // id() {
-      //   Req.request('get', `/open/redis/${this.id}/info`, this.params).then(res => {
-      //     this.info = res;
-      //   })
-      // }
     },
     methods: {
       close() {
