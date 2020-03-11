@@ -14,7 +14,7 @@ mayfly前后端分离的后台系统(包含按钮级别的权限管理，以及�
 前端系统
 
 > mayfly-core
-后端核心模块，包括一些常用的uitls，BaseMapper（无需第三方插件包，详见博客：https://www.jianshu.com/p/5fcea00f439d），BaseService以及权限管理，参数校验器，日志处理等。
+后端核心模块，包括一些常用的uitls，BaseMapper（无需第三方插件包，详见博客：[Mybatis之通用Mapper（基于mybatis的Provider机制无需第三方插件包）](https://www.jianshu.com/p/5fcea00f439d)），BaseService以及权限检验，参数校验器，日志处理等。
 
 > mayfly-sys
 后端系统主要模块，包含各功能模块对应的Service和Controller等
@@ -135,6 +135,41 @@ Controller方法参数校验用法：
 public class PermissionController 
 ```
 具体如何拦截以及实时启用禁用可见对应拦截器:mayfly.sys.interceptor.PermissionInterceptor
+
+
+- ### 基于断言对业务逻辑判断
+系统中的业务逻辑判断都采用断言的方式进行判断，减少逻辑代码中大量的if代码
+
+```
+    public void update(ResourceDO resource) {
+        ResourceDO old = getById(resource.getId());
+        BusinessAssert.notNull(old, "资源不存在");
+        BusinessAssert.equals(resource.getType(), old.getType(), "资源类型不可变更");
+        // 禁止误传修改其父节点
+        resource.setPid(null);
+
+        // 如果是权限，还需校验权限码
+        if (Objects.equals(old.getType(), ResourceTypeEnum.PERMISSION.getValue())) {
+            // 权限类型需要校验code不能为空
+            String code = resource.getCode();
+            // 如果修改了权限code，则需要校验
+            if (!Objects.equals(old.getCode(), code)) {
+                checkPermissionCode(code);
+            }
+        }
+        updateByIdSelective(resource);
+    }
+    
+    /**
+     *  检验权限code
+     */
+    private void checkPermissionCode(String code) {
+        BusinessAssert.notEmpty(code, "权限code不能为空");
+        BusinessAssert.state(!code.contains(","), "权限code不能包含','");
+        BusinessAssert.equals(countByCondition(new ResourceDO().setCode(code)), 0L, "该权限code已存在");
+    }
+
+```
 
 - ### 前端枚举值统一管理维护
 具体细节可见前端模块：mayfly-account-front 或者博客：https://www.jianshu.com/p/75516ec4f366
