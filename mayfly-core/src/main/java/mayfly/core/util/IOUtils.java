@@ -18,6 +18,7 @@ import java.nio.channels.FileChannel;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.WritableByteChannel;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 /**
  * @author meilin.huang
@@ -152,16 +153,27 @@ public class IOUtils {
     /**
      * 从InputStream中读取String
      *
-     * @param is 输入流
+     * @param is      输入流
+     * @param charset 字符编码
      * @return String
      */
-    public static String read(InputStream is) {
-        BufferedReader reader = getReader(is, null);
+    public static String read(InputStream is, Charset charset) {
+        BufferedReader reader = getReader(is, charset);
         try {
             return read(reader);
         } finally {
             close(reader);
         }
+    }
+
+    /**
+     * 从InputStream中读取String（默认使用utf8编码）
+     *
+     * @param is 输入流
+     * @return String
+     */
+    public static String read(InputStream is) {
+        return read(is, StandardCharsets.UTF_8);
     }
 
 

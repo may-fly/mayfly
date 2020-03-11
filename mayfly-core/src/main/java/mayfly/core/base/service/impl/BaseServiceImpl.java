@@ -7,6 +7,7 @@ import mayfly.core.base.model.PageQuery;
 import mayfly.core.base.model.PageResult;
 import mayfly.core.base.service.BaseService;
 import mayfly.core.util.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Collections;
 import java.util.List;
@@ -19,9 +20,14 @@ import java.util.List;
 public class BaseServiceImpl<M extends BaseMapper<Integer, E>, E extends BaseDO> implements BaseService<E> {
 
     /**
-     * 通用Mapper
+     * Mapper
      */
-    protected BaseMapper<Integer, E> baseMapper;
+    @Autowired
+    protected M mapper;
+
+    protected void setMapper(M mapper) {
+        this.mapper = mapper;
+    }
 
     /**
      * 设置BaesMapper
@@ -134,9 +140,6 @@ public class BaseServiceImpl<M extends BaseMapper<Integer, E>, E extends BaseDO>
 
 
     protected BaseMapper<Integer, E> getMapper() {
-        return baseMapper;
-        // mapper class对象
-//        Class<M> mapperClazz = (Class<M>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
-//        return (M) SpringUtils.getBean(mapperClazz);
+        return mapper;
     }
 }

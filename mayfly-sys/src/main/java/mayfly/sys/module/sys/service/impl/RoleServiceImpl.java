@@ -25,19 +25,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class RoleServiceImpl extends BaseServiceImpl<RoleMapper, RoleDO> implements RoleService {
 
     @Autowired
-    private RoleMapper roleMapper;
-    @Autowired
     private RoleResourceService roleResourceService;
     @Autowired
     private AccountRoleService accountRoleService;
     @Autowired
     private OperationLogService logService;
 
-    @Autowired
-    @Override
-    protected void setBaseMapper() {
-        super.baseMapper = roleMapper;
-    }
 
     @Override
     public void update(RoleDO role) {

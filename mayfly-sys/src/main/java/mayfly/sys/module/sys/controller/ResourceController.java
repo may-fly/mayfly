@@ -32,7 +32,6 @@ public class ResourceController {
     @Autowired
     private ResourceService resourceService;
 
-    @Permission(requireCode = false)
     @GetMapping()
     public Result<?> list(ResourceQuery queryForm) {
         return Result.success(resourceService.listResource(BeanUtils.copyProperties(queryForm, ResourceDO.class)));

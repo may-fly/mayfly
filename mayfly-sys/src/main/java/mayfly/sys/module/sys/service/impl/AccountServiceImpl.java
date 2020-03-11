@@ -29,22 +29,15 @@ import org.springframework.stereotype.Service;
 public class AccountServiceImpl extends BaseServiceImpl<AccountMapper, AccountDO> implements AccountService {
 
     @Autowired
-    private AccountMapper accountMapper;
-    @Autowired
     private AccountRoleService accountRoleService;
     @Autowired
     private PermissionService permissionService;
 
-    @Autowired
-    @Override
-    protected void setBaseMapper() {
-        super.baseMapper = accountMapper;
-    }
 
     @MethodLog(value = "获取账号列表", level = MethodLog.LogLevel.DEBUG)
     @Override
     public PageResult<AccountVO> listByQuery(AccountQuery query) {
-        return PageResult.withPageHelper(query, () -> accountMapper.selectByQuery(query), AccountVO.class);
+        return PageResult.withPageHelper(query, () -> mapper.selectByQuery(query), AccountVO.class);
     }
 
     @MethodLog(level = MethodLog.LogLevel.NONE)

@@ -12,7 +12,6 @@ import mayfly.sys.module.sys.entity.OperationLogDO;
 import mayfly.sys.module.sys.enums.LogTypeEnum;
 import mayfly.sys.module.sys.mapper.OperationLogMapper;
 import mayfly.sys.module.sys.service.OperationLogService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,15 +23,6 @@ import java.util.stream.Collectors;
  */
 @Service
 public class OperationLogServiceImpl extends BaseServiceImpl<OperationLogMapper, OperationLogDO> implements OperationLogService {
-
-    @Autowired
-    private OperationLogMapper operationLogMapper;
-
-    @Autowired
-    @Override
-    protected void setBaseMapper() {
-        super.baseMapper = operationLogMapper;
-    }
 
     /**
      * 不需要记录变化的字段值

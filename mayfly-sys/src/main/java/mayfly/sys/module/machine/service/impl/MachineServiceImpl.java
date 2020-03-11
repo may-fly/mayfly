@@ -24,15 +24,7 @@ import org.springframework.stereotype.Service;
 public class MachineServiceImpl extends BaseServiceImpl<MachineMapper, MachineDO> implements MachineService {
 
     @Autowired
-    private MachineMapper machineMapper;
-    @Autowired
     private MachineFileService machineFileService;
-
-    @Autowired
-    @Override
-    protected void setBaseMapper() {
-        super.baseMapper = machineMapper;
-    }
 
     @Override
     public void create(MachineForm form) {

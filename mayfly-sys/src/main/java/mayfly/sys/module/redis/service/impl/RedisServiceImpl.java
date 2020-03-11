@@ -30,11 +30,6 @@ public class RedisServiceImpl extends BaseServiceImpl<RedisMapper, RedisDO> impl
     @Autowired
     private RedisMapper redisMapper;
 
-    @Autowired
-    @Override
-    protected void setBaseMapper() {
-        super.baseMapper = redisMapper;
-    }
 
     private RedisConnectionRegistry registry = RedisConnectionRegistry.getInstance();
 

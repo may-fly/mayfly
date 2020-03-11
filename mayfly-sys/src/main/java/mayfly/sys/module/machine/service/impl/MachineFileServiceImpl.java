@@ -44,11 +44,6 @@ public class MachineFileServiceImpl extends BaseServiceImpl<MachineFileMapper, M
     @Autowired
     private MachineService machineService;
 
-    @Autowired
-    @Override
-    protected void setBaseMapper() {
-        super.baseMapper = machineFileMapper;
-    }
 
     @Override
     public List<MachineFileDO> listByMachineId(Integer machineId) {
@@ -93,6 +88,7 @@ public class MachineFileServiceImpl extends BaseServiceImpl<MachineFileMapper, M
 
         List<LsVO> ls = new ArrayList<>(16);
         String pathPrefix = path.endsWith("/") ? path : path + "/";
+        // -rw-r--r-- 1 root root      433 Mar  3 14:07 Dockerfile 解析该文本格式
         machineService.exec(machineFile.getMachineId(), "ls -Alh " + path, (lineNum, lineContent) -> {
             if (lineNum == 1) {
                 return;

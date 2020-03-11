@@ -39,7 +39,6 @@ public class RoleController {
     @Autowired
     private RoleResourceService roleResourceService;
 
-    @Permission(requireCode = false)
     @GetMapping()
     public Result<?> list() {
         return Result.success().with(roleService.listAll("create_time DESC"));

@@ -22,8 +22,8 @@ let RouteList = [{
         component: resolve => require(['~/views/home'], resolve),
       },
       {
-        path: '/role_manage',
-        name: 'RoleManage',
+        path: '/roles',
+        name: 'roles',
         meta: {
           title: '角色列表',
           keepAlive: true
@@ -31,8 +31,8 @@ let RouteList = [{
         component: resolve => require(['~/views/sys-manage/role'], resolve),
       },
       {
-        path: '/menu_manage',
-        name: 'menu_manage',
+        path: '/resources',
+        name: 'resources',
         meta: {
           title: '菜单管理',
           keepAlive: true
@@ -40,8 +40,8 @@ let RouteList = [{
         component: resolve => require(['~/views/sys-manage/resource'], resolve),
       },
       {
-        path: '/account_list',
-        name: 'account_list',
+        path: '/accounts',
+        name: 'accounts',
         meta: {
           title: '账号管理',
           keepAlive: true
@@ -49,8 +49,8 @@ let RouteList = [{
         component: resolve => require(['~/views/sys-manage/account'], resolve),
       },
       {
-        path: '/operation_log',
-        name: 'operation_log',
+        path: '/logs',
+        name: 'logs',
         meta: {
           title: '操作日志',
           keepAlive: true
@@ -67,8 +67,8 @@ let RouteList = [{
         component: resolve => require(['~/views/devops/machine'], resolve),
       },
       {
-        path: '/redis_manage',
-        name: 'redis_manage',
+        path: '/redis',
+        name: 'redis',
         meta: {
           title: 'redis机器列表',
           keepAlive: true

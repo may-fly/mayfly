@@ -27,18 +27,10 @@ public class AccountRoleServiceImpl extends BaseServiceImpl<AccountRoleMapper, A
 
     @Autowired
     private RoleService roleService;
-    @Autowired
-    private AccountRoleMapper accountRoleMapper;
-
-    @Autowired
-    @Override
-    protected void setBaseMapper() {
-        super.baseMapper = accountRoleMapper;
-    }
 
     @Override
     public List<RoleDO> listRoleByAccountId(Integer accountId) {
-        return accountRoleMapper.selectRoleByAccountId(accountId);
+        return mapper.selectRoleByAccountId(accountId);
     }
 
     @Override

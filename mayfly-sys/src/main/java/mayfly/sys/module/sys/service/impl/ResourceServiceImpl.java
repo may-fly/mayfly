@@ -34,24 +34,16 @@ import java.util.Objects;
 public class ResourceServiceImpl extends BaseServiceImpl<ResourceMapper, ResourceDO> implements ResourceService {
 
     @Autowired
-    private ResourceMapper resourceMapper;
-    @Autowired
     private RoleResourceService roleResourceService;
     @Autowired
     private PermissionService permissionService;
     @Autowired
     private OperationLogService operationLogService;
 
-    @Autowired
-    @Override
-    protected void setBaseMapper() {
-        super.baseMapper = resourceMapper;
-    }
-
     @MethodLog(level = MethodLog.LogLevel.NONE)
     @Override
     public List<ResourceListVO> listByUserId(Integer userId) {
-        return TreeUtils.generateTrees(BeanUtils.copyProperties(resourceMapper.selectByUserId(userId), ResourceListVO.class));
+        return TreeUtils.generateTrees(BeanUtils.copyProperties(mapper.selectByUserId(userId), ResourceListVO.class));
     }
 
     @MethodLog(value = "获取资源列表", level = MethodLog.LogLevel.DEBUG)

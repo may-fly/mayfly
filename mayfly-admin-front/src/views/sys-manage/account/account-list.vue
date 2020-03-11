@@ -169,7 +169,7 @@ export default {
       this.total = res.total
     },
     async changeStatus(id, status) {
-      await this.permission.changeStatus.request({
+      await accountApi.changeStatus.request({
         id,
         status
       })

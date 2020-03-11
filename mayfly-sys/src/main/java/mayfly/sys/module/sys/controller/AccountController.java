@@ -42,7 +42,6 @@ public class AccountController {
     @Autowired
     private AccountRoleService accountRoleService;
 
-    @Permission(requireCode = false)
     @GetMapping()
     public Result<?> list(AccountQuery accountQuery) {
         return accountService.listByQuery(accountQuery).toResult();

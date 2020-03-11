@@ -1,6 +1,7 @@
 package mayfly.sys.module.websocket;
 
 import lombok.extern.slf4j.Slf4j;
+import mayfly.core.permission.LoginAccount;
 import mayfly.core.result.ResultEnum;
 import mayfly.sys.common.utils.SpringUtils;
 import mayfly.sys.common.websocket.MessageTypeEnum;
@@ -15,6 +16,7 @@ import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
+import java.util.Optional;
 
 /**
  * 系统消息
@@ -41,7 +43,8 @@ public class SysMsgWebSocket {
      */
     @OnOpen
     public void onOpen(@PathParam("token") String token, Session session) {
-        Integer userId = SpringUtils.getBean(PermissionService.class).getLoginAccount(token).getId();
+        Integer userId = Optional.ofNullable(SpringUtils.getBean(PermissionService.class).getLoginAccount(token))
+                .map(LoginAccount::getId).orElse(null);
         if (userId == null) {
             WebSocketUtils.sendText(session, MessageTypeEnum.ERROR.toMsg(ResultEnum.NO_PERMISSION.getName()));
             return;

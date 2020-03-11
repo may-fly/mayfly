@@ -33,12 +33,6 @@ public class RoleResourceServiceImpl extends BaseServiceImpl<RoleResourceMapper,
     @Autowired
     private ResourceService resourceService;
 
-    @Autowired
-    @Override
-    protected void setBaseMapper() {
-        super.baseMapper = roleResourceMapper;
-    }
-
     @Override
     public List<Integer> listResourceId(Integer roleId) {
         RoleResourceDO condition = new RoleResourceDO().setRoleId(roleId);

@@ -29,7 +29,7 @@
           @clear="query.createAccount = null"
           clearable
         ></el-input>
-        <el-button @click="search()" type="success" icon="el-icon-search" size="mini"></el-button>
+        <el-button @click="search(true)" type="success" icon="el-icon-search" size="mini"></el-button>
       </div>
     </ToolBar>
     <el-table :data="datas" border ref="table" show-overflow-tooltip>
@@ -85,7 +85,10 @@ export default {
       this.currentId = item.id
       this.currentData = item
     },
-    async search() {
+    async search(resetPageNum) {
+      if (resetPageNum) {
+        this.query.pageNum = 1
+      }
       let res = await logApi.list.request(this.query)
       this.datas = res.list
       this.total = res.total

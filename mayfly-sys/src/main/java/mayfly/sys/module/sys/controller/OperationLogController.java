@@ -1,5 +1,6 @@
 package mayfly.sys.module.sys.controller;
 
+import mayfly.core.permission.Permission;
 import mayfly.core.result.Result;
 import mayfly.core.util.bean.BeanUtils;
 import mayfly.sys.module.sys.controller.query.OperationLogQuery;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author meilin.huang
  * @date 2020-03-05 4:05 下午
  */
+@Permission(code = "log")
 @RestController
 @RequestMapping("/sys/logs")
 public class OperationLogController {
