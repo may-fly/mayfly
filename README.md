@@ -1,12 +1,12 @@
 # mayfly
 
 ## 介绍
-mayfly前后端分离的后台系统(包含按钮级别的权限管理，以及权限禁用，触发按钮置灰禁用状态等)。后续计划补上Redis单机以及集群管理（已完成部分接口以及界面）
+mayfly前后端分离的后台系统(包含按钮级别的权限管理，以及权限禁用，触发按钮置灰禁用状态等)。后续计划补上机器管理及Redis单机以及集群管理（已完成部分接口以及界面）
 
 
 ## 系统环境
 - 前端：node，  vue，  element-ui
-- 后端：jdk8，  SpringBoot，  Mybatis
+- 后端：jdk11，  SpringBoot，  Mybatis
 - DB： mysql，  redis
 
 ## 模块介绍
@@ -14,16 +14,16 @@ mayfly前后端分离的后台系统(包含按钮级别的权限管理，以及�
 前端系统
 
 > mayfly-core
-后端核心模块，包括一些常用的uitls以及权限管理，参数校验器，日志处理等。
+后端核心模块，包括一些常用的uitls，BaseMapper（无需第三方插件包，详见博客：https://www.jianshu.com/p/5fcea00f439d），BaseService以及权限管理，参数校验器，日志处理等。
 
 > mayfly-sys
-后端系统主要模块，包含BaseMapper，BaseService以及各功能对应的Service和Controller等
+后端系统主要模块，包含各功能模块对应的Service和Controller等
 
 ## 项目特点 
 
 - ### 方法日志记录(记录方法出入参以及执行时间或异常)
 日志记录采用AOP（mayfly.sys.aop.log.LogAspect）类进行拦截带有@MethodLog注解的所有方法或者带有@MethodLog类下的所有方法，进行出入参以及运行时间的记录，
-也包含异常日志的记录，也可以设置按指定日志级别打印日志.
+也包含异常日志的记录，也可以设置按指定的日志级别打印日志.
 使用方式大致如下：
 ```
 /**
@@ -36,13 +36,13 @@ public Result list(PermissionForm condition, @Valid PageForm pageQuery){}
 
 
 /**
-*也可以用于类上,如下，以DEBUG方式打印日志
+*也可以用于类上,如下，在DEBUG级别下打印日志
 */
 @MethodLog(level = MethodLog.LogLevel.DEBUG)
 public class PermissionServiceImpl{}
 ```
 打印结果如图：
-![日志输出](https://gitee.com/uploads/images/2019/0425/094929_de188281_1240250.png "屏幕截图.png")
+![日志输出](https://images.gitee.com/uploads/images/2020/0311/104645_3955cb50_1240250.png "日志输出.png")
 
 
 - ### 自定义参数校验器(支持入参枚举值自动校验等)
@@ -72,8 +72,48 @@ public class PermissionForm {
     @NotBlank
     private String description;
 
+    /**
+     * status只能是StatusEnum中(声明如下)对应的枚举值value
+     */
     @EnumValue(clazz = StatusEnum.class)
-    private Integer status;
+    private Integer status;   
+}
+
+/**
+ * 状态枚举类
+ *
+ * @author meilin.huang
+ * @version 1.0
+ * @date 2019-12-25 10:28 上午
+ */
+public enum StatusEnum implements NameValueEnum<Integer> {
+    /**
+     * 启用状态
+     */
+    ENABLE(1, "启用"),
+
+    /**
+     * 禁用状态
+     */
+    DISABLE(0, "禁用");
+
+    private Integer value;
+    private String name;
+    EnableDisableEnum(Integer value, String name) {
+        this.value = value;
+        this.name = name;
+    }
+
+
+    @Override
+    public String getName() {
+        return this.name;
+    }
+
+    @Override
+    public Integer getValue() {
+        return this.value;
+    }
 }
 ```
 更多可使用的参数字段校验规则，详见：mayfly.core.validation.annotation包
@@ -87,7 +127,7 @@ Controller方法参数校验用法：
 ```
 /**
 *每个方法都有丢应的权限code(用来进行权限校验以及前端页面按钮控制)  
-*如果该注解只作用于类上，则类中方法对应的权限code为类权限code + 方法名
+*如果该注解只作用于类上，则类中所有方法对应的权限code为类权限code
 */
 @mayfly.core.permission.Permission(code = "permission:")
 @RestController
@@ -102,7 +142,18 @@ public class PermissionController
 ## 系统部分页面
 
 1.菜单&权限管理页
-![菜单&权限管理](https://images.gitee.com/uploads/images/2019/1030/171326_c4e18bde_1240250.png "屏幕截图.png")
+![菜单&权限管理页](https://images.gitee.com/uploads/images/2020/0311/104924_bb08cd6d_1240250.png "菜单&权限管理页.png")
 
 2.角色分配菜单&权限页
-![分配角色权限](https://images.gitee.com/uploads/images/2019/1030/171427_7e82fde8_1240250.png "屏幕截图.png")
+![角色分配菜单&权限页](https://images.gitee.com/uploads/images/2020/0311/104949_3c61e72f_1240250.png "屏幕截图.png")
+
+3.操作日志
+![操作日志](https://images.gitee.com/uploads/images/2020/0311/105025_2d59ed81_1240250.png "操作日志.png")
+
+4.机器文件管理
+![机器文件管理](https://images.gitee.com/uploads/images/2020/0311/110243_fdd2ff21_1240250.png "机器文件管理.png")
+![机器文件管理](https://images.gitee.com/uploads/images/2020/0311/105100_a1b58e35_1240250.png "机器文件管理.png")
+
+5.redis基本操作
+![redis基本操作](https://images.gitee.com/uploads/images/2020/0311/105126_d763ba53_1240250.png "redis基本操作.png")
+![redis基本操作](https://images.gitee.com/uploads/images/2020/0311/105230_7281f9e2_1240250.png "redis基本操作.png")
