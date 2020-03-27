@@ -12,7 +12,7 @@ import java.io.Serializable;
 @Getter
 @Setter
 @Table("tb_account")
-public class AccountDO extends BaseDO implements Serializable {
+public class AccountDO extends BaseDO<Integer> implements Serializable {
 
     private static final long serialVersionUID = -5172351936029693334L;
 

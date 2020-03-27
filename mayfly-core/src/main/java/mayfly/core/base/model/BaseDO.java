@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
  * @author meilin.huang
  * @date 2020-02-21 7:07 下午
  */
-public class BaseDO {
+public class BaseDO<T> {
 
     /**
      * 创建账号字段名
@@ -34,7 +34,7 @@ public class BaseDO {
     /**
      * id
      */
-    private Integer id;
+    private T id;
 
     /**
      * 创建时间
@@ -112,11 +112,11 @@ public class BaseDO {
 
     //-------  getter setter ------- //
 
-    public Integer getId() {
+    public T getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(T id) {
         this.id = id;
     }
 

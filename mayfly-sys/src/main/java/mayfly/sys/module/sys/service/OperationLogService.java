@@ -2,6 +2,7 @@ package mayfly.sys.module.sys.service;
 
 import mayfly.core.base.model.BaseDO;
 import mayfly.core.base.service.BaseService;
+import mayfly.core.permission.LoginAccount;
 import mayfly.sys.module.sys.entity.OperationLogDO;
 import mayfly.sys.module.sys.enums.LogTypeEnum;
 
@@ -9,7 +10,7 @@ import mayfly.sys.module.sys.enums.LogTypeEnum;
  * @author meilin.huang
  * @date 2020-03-05 1:29 下午
  */
-public interface OperationLogService extends BaseService<OperationLogDO> {
+public interface OperationLogService extends BaseService<Integer, OperationLogDO> {
 
     /**
      * 异步记录日志
@@ -18,6 +19,8 @@ public interface OperationLogService extends BaseService<OperationLogDO> {
      * @param type 日志类型
      */
     void asyncLog(String log, LogTypeEnum type);
+
+    void asyncLog(String log, LogTypeEnum type, LoginAccount<Integer> account);
 
     /**
      * 异步记录数据修改的日志

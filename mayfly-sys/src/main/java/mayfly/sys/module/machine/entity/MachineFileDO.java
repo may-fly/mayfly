@@ -19,7 +19,7 @@ import mayfly.core.base.model.BaseDO;
 @Accessors(chain = true)
 @Table("tb_machine_file")
 @NoColumn(fields = {BaseDO.UPDATE_TIME, BaseDO.UPDATE_ACCOUNT, BaseDO.UPDATE_ACCOUNT_ID})
-public class MachineFileDO extends BaseDO {
+public class MachineFileDO extends BaseDO<Integer> {
     private Integer machineId;
 
     private String name;

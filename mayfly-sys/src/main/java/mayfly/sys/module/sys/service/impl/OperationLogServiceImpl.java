@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
  * @date 2020-03-05 1:30 下午
  */
 @Service
-public class OperationLogServiceImpl extends BaseServiceImpl<OperationLogMapper, OperationLogDO> implements OperationLogService {
+public class OperationLogServiceImpl extends BaseServiceImpl<OperationLogMapper, Integer, OperationLogDO> implements OperationLogService {
 
     /**
      * 不需要记录变化的字段值
@@ -33,10 +33,14 @@ public class OperationLogServiceImpl extends BaseServiceImpl<OperationLogMapper,
 
     @Override
     public void asyncLog(String log, LogTypeEnum type) {
-        LoginAccount<Integer> la = LoginAccount.get();
+        asyncLog(log, type, LoginAccount.get());
+    }
+
+    @Override
+    public void asyncLog(String log, LogTypeEnum type, LoginAccount<Integer> account) {
         GlobalThreadPool.execute(() -> {
             OperationLogDO logDO = new OperationLogDO().setOperation(log).setType(type.getValue());
-            logDO.autoSetBaseInfo(true, la);
+            logDO.autoSetBaseInfo(true, account);
             insert(logDO);
         });
     }

@@ -47,7 +47,8 @@ public class LoginAccount<I> implements Serializable {
      * @return true：有
      */
     public boolean hasPermission(String permissionCode) {
-        return !StringUtils.isEmpty(permissions) && ArrayUtils.contains(this.permissions.split(PERMISSION_CODE_SPLIT), permissionCode);
+        return !StringUtils.isEmpty(permissions)
+                && ArrayUtils.contains(this.permissions.split(PERMISSION_CODE_SPLIT), permissionCode);
     }
 
     /**

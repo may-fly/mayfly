@@ -22,7 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @MethodLog("角色管理:")
 @Service
-public class RoleServiceImpl extends BaseServiceImpl<RoleMapper, RoleDO> implements RoleService {
+public class RoleServiceImpl extends BaseServiceImpl<RoleMapper, Integer, RoleDO> implements RoleService {
 
     @Autowired
     private RoleResourceService roleResourceService;

@@ -92,8 +92,8 @@ function request(method, url, params) {
   if (lowMethod === 'post' || lowMethod === 'put') {
     query.headers = {
       'Content-Type': 'application/json;charset=UTF-8'
-    },
-      query.data = params;
+    }
+    query.data = params;
   } else {
     query.params = params;
   }

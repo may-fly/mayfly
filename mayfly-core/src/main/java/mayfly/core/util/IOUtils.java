@@ -3,7 +3,6 @@ package mayfly.core.util;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
-import java.io.Closeable;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -28,7 +27,7 @@ import java.nio.charset.StandardCharsets;
 public class IOUtils {
 
     /**
-     * 默认缓存大小 4096
+     * 默认缓存大小
      */
     public static final int DEFAULT_BUFFER_SIZE = 2 << 12;
 
@@ -63,8 +62,7 @@ public class IOUtils {
             outChannel = out.getChannel();
             return inChannel.transferTo(0, inChannel.size(), outChannel);
         } finally {
-            close(outChannel);
-            close(inChannel);
+            close(outChannel, inChannel);
         }
     }
 
@@ -244,33 +242,19 @@ public class IOUtils {
         }
     }
 
-
     /**
-     * 关闭对象<br>
+     * 关闭指定资源列表
      *
-     * @param closeable 被关闭的对象
+     * @param closeables 需要关闭的资源列表
      */
-    public static void close(Closeable closeable) {
-        if (closeable != null) {
-            try {
-                closeable.close();
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
-
-    /**
-     * 关闭对象<br>
-     *
-     * @param closeable 被关闭的对象
-     */
-    public static void close(AutoCloseable closeable) {
-        if (closeable != null) {
-            try {
-                closeable.close();
-            } catch (Exception e) {
-                throw new RuntimeException(e);
+    public static void close(AutoCloseable... closeables) {
+        for (AutoCloseable closeable : closeables) {
+            if (closeable != null) {
+                try {
+                    closeable.close();
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
     }

@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
  * @date 2019-08-19 20:13
  */
 @Service
-public class AccountRoleServiceImpl extends BaseServiceImpl<AccountRoleMapper, AccountRoleDO> implements AccountRoleService {
+public class AccountRoleServiceImpl extends BaseServiceImpl<AccountRoleMapper, Integer, AccountRoleDO> implements AccountRoleService {
 
     @Autowired
     private RoleService roleService;

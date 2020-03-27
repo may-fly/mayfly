@@ -8,11 +8,14 @@ import mayfly.core.base.model.PageResult;
 import java.util.List;
 
 /**
+ * @param <E> 实体类型
+ * @param <T> 实体主键类型
+ *
  * @author meilin.huang
  * @version 1.0
  * @date 2018-12-06 2:19 PM
  */
-public interface BaseService<E extends BaseDO> {
+public interface BaseService<T, E extends BaseDO<T>> {
 
     /**
      * 根据主键查询数据
@@ -20,7 +23,7 @@ public interface BaseService<E extends BaseDO> {
      * @param id  id
      * @return    实体
      */
-    E getById(Integer id);
+    E getById(T id);
 
     /**
      * 保存实体同时自动更新基本信息，如创建时间、创建人等 <br/>
@@ -70,14 +73,14 @@ public interface BaseService<E extends BaseDO> {
      * @param id   id
      * @return  影响条数
      */
-    Integer deleteById(Integer id);
+    Integer deleteById(T id);
 
     /**
      * 伪删除（即将is_deleted更新为1）
      * @param id  实体id
      * @return     影响条数
      */
-    Integer fakeDeleteById(Integer id);
+    Integer fakeDeleteById(T id);
 
     /**
      * 根据条件删除
@@ -116,7 +119,7 @@ public interface BaseService<E extends BaseDO> {
      * @param ids  id列表
      * @return      list
      */
-    List<E> listByIdIn(List<Integer> ids);
+    List<E> listByIdIn(List<T> ids);
 
     /**
      * 根据实体条件查询实体列表

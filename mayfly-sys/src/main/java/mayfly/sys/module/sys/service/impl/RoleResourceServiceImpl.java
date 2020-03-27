@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
  * @date 2019-06-30 11:59
  */
 @Service
-public class RoleResourceServiceImpl extends BaseServiceImpl<RoleResourceMapper, RoleResourceDO> implements RoleResourceService {
+public class RoleResourceServiceImpl extends BaseServiceImpl<RoleResourceMapper, Integer, RoleResourceDO> implements RoleResourceService {
 
     @Autowired
     private RoleResourceMapper roleResourceMapper;

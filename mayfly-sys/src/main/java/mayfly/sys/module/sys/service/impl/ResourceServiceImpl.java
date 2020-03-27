@@ -31,7 +31,7 @@ import java.util.Objects;
  */
 @MethodLog("资源管理:")
 @Service
-public class ResourceServiceImpl extends BaseServiceImpl<ResourceMapper, ResourceDO> implements ResourceService {
+public class ResourceServiceImpl extends BaseServiceImpl<ResourceMapper, Integer, ResourceDO> implements ResourceService {
 
     @Autowired
     private RoleResourceService roleResourceService;
@@ -56,8 +56,9 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourceMapper, Resourc
     @Override
     public void create(ResourceDO resource) {
         if (resource.getPid() == null || Objects.equals(resource.getPid(), 0)) {
-            resource.setPid(0);
             BusinessAssert.equals(resource.getType(), ResourceTypeEnum.MENU.getValue(), "权限资源不能为根节点");
+            // 为null的情况默认设为0
+            resource.setPid(0);
         } else {
             ResourceDO pResource = getById(resource.getPid());
             BusinessAssert.notNull(pResource, "pid不存在！");
@@ -114,7 +115,7 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourceMapper, Resourc
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void delete(Integer id) {
-        BusinessAssert.empty(listByCondition(new ResourceDO().setPid(id)), "请先删除该资源的子资源");
+        BusinessAssert.equals(countByCondition(new ResourceDO().setPid(id)), 0L, "请先删除该资源的子资源");
         BusinessAssert.equals(deleteById(id), 1, "删除菜单失败！");
         // 删除角色资源表中该菜单所关联的所有信息
         roleResourceService.deleteByCondition(new RoleResourceDO().setResourceId(id));

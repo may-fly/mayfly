@@ -26,7 +26,7 @@ import org.springframework.stereotype.Service;
  */
 @MethodLog(value = "账号管理:")
 @Service
-public class AccountServiceImpl extends BaseServiceImpl<AccountMapper, AccountDO> implements AccountService {
+public class AccountServiceImpl extends BaseServiceImpl<AccountMapper, Integer, AccountDO> implements AccountService {
 
     @Autowired
     private AccountRoleService accountRoleService;
@@ -60,7 +60,7 @@ public class AccountServiceImpl extends BaseServiceImpl<AccountMapper, AccountDO
 
     @Override
     public void create(AccountForm accountForm) {
-        BusinessAssert.isNull(getByCondition(new AccountDO().setUsername(accountForm.getUsername())),
+        BusinessAssert.equals(countByCondition(new AccountDO().setUsername(accountForm.getUsername())), 0L,
                 "该用户名已存在");
         AccountDO account = BeanUtils.copyProperties(accountForm, AccountDO.class);
         account.setPassword(DigestUtils.md5DigestAsHex(accountForm.getPassword()));

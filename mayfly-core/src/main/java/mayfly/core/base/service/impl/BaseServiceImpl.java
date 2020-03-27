@@ -13,14 +13,18 @@ import java.util.Collections;
 import java.util.List;
 
 /**
+ * @param <M> mapper类型
+ * @param <T> 主键类型
+ * @param <E> 实体类型
+ *
  * @author meilin.huang
  * @version 1.0
  * @date 2018-12-06 2:21 PM
  */
-public class BaseServiceImpl<M extends BaseMapper<Integer, E>, E extends BaseDO> implements BaseService<E> {
+public class BaseServiceImpl<M extends BaseMapper<T, E>, T, E extends BaseDO<T>> implements BaseService<T, E> {
 
     /**
-     * Mapper
+     * 实体Mapper，子服务类无需再注入本实体的Mapper，如需要直接调用本类mapper即可
      */
     @Autowired
     protected M mapper;
@@ -29,14 +33,8 @@ public class BaseServiceImpl<M extends BaseMapper<Integer, E>, E extends BaseDO>
         this.mapper = mapper;
     }
 
-    /**
-     * 设置BaesMapper
-     */
-    protected void setBaseMapper() {
-    }
-
     @Override
-    public E getById(Integer id) {
+    public E getById(T id) {
         if (id == null) {
             return null;
         }
@@ -44,7 +42,7 @@ public class BaseServiceImpl<M extends BaseMapper<Integer, E>, E extends BaseDO>
     }
 
     @Override
-    public List<E> listByIdIn(List<Integer> ids) {
+    public List<E> listByIdIn(List<T> ids) {
         if (CollectionUtils.isEmpty(ids)) {
             return Collections.emptyList();
         }
@@ -100,7 +98,7 @@ public class BaseServiceImpl<M extends BaseMapper<Integer, E>, E extends BaseDO>
     }
 
     @Override
-    public Integer deleteById(Integer id) {
+    public Integer deleteById(T id) {
         if (id == null) {
             return 0;
         }
@@ -108,7 +106,7 @@ public class BaseServiceImpl<M extends BaseMapper<Integer, E>, E extends BaseDO>
     }
 
     @Override
-    public Integer fakeDeleteById(Integer id) {
+    public Integer fakeDeleteById(T id) {
         if (id == null) {
             return 0;
         }
@@ -125,9 +123,6 @@ public class BaseServiceImpl<M extends BaseMapper<Integer, E>, E extends BaseDO>
         return getMapper().countByCriteria(e);
     }
 
-
-
-
     @Override
     public List<E> listAll(String orderBy) {
         return getMapper().selectAll(orderBy);
@@ -139,7 +134,7 @@ public class BaseServiceImpl<M extends BaseMapper<Integer, E>, E extends BaseDO>
     }
 
 
-    protected BaseMapper<Integer, E> getMapper() {
+    protected BaseMapper<T, E> getMapper() {
         return mapper;
     }
 }

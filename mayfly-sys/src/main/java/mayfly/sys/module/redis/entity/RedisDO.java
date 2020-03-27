@@ -17,7 +17,7 @@ import mayfly.core.base.model.BaseDO;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table("tb_redis")
-public class RedisDO extends BaseDO {
+public class RedisDO extends BaseDO<Integer> {
     private String host;
 
     private Integer port;

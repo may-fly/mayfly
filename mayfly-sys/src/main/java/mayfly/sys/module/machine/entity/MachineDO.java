@@ -13,7 +13,7 @@ import mayfly.core.base.model.BaseDO;
 @Getter
 @Setter
 @Table("tb_machine")
-public class MachineDO extends BaseDO {
+public class MachineDO extends BaseDO<Integer> {
     private String name;
 
     private String ip;

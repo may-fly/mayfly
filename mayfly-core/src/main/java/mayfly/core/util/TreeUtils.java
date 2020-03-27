@@ -57,7 +57,8 @@ public class TreeUtils {
      * @param parent 父节点
      * @param nodes  所有树节点列表
      */
-    public static <T extends TreeNode<?>> void setChildren(T parent, List<T> nodes) {
+    @SuppressWarnings("all")
+    public static <T extends TreeNode> void setChildren(T parent, List<T> nodes) {
         List<T> children = new ArrayList<>();
         Object parentId = parent.id();
         for (Iterator<T> ite = nodes.iterator(); ite.hasNext(); ) {
@@ -132,13 +133,14 @@ public class TreeUtils {
          *
          * @param children 子节点
          */
-        void setChildren(List<? extends TreeNode<?>> children);
+        @SuppressWarnings("all")
+        void setChildren(List children);
 
         /**
          * 获取所有子节点
          *
          * @return 子节点列表
          */
-        List<? extends TreeNode<?>> getChildren();
+        List<? extends TreeNode<T>> getChildren();
     }
 }

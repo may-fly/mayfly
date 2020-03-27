@@ -15,6 +15,7 @@ import mayfly.core.cache.Cache;
 import mayfly.core.cache.CacheBuilder;
 import mayfly.core.exception.BusinessRuntimeException;
 import mayfly.core.util.Assert;
+import mayfly.core.util.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -283,10 +284,9 @@ public class RedisConnectionRegistry {
          */
         public void close() {
             LOG.info("断开redis----> cluster:{}, id: {}", isCluster(), isCluster() ? clusterId : redisInfo.getId());
-            if (connection != null) {
-                connection.close();
-                connection = null;
-            }
+            IOUtils.close(connection);
+            connection = null;
+
             if (redisClient != null) {
                 redisClient.shutdown();
                 redisClient = null;

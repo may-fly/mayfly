@@ -13,7 +13,7 @@ import java.util.List;
  * @version 1.0
  * @date 2019-11-04 3:04 下午
  */
-public interface MachineFileService extends BaseService<MachineFileDO> {
+public interface MachineFileService extends BaseService<Integer, MachineFileDO> {
 
     /**
      * 获取指定机器上已保存的配置文件信息

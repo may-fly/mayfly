@@ -16,6 +16,8 @@ import mayfly.sys.module.machine.enums.MachineFileTypeEnum;
 import mayfly.sys.module.machine.mapper.MachineFileMapper;
 import mayfly.sys.module.machine.service.MachineFileService;
 import mayfly.sys.module.machine.service.MachineService;
+import mayfly.sys.module.sys.enums.LogTypeEnum;
+import mayfly.sys.module.sys.service.OperationLogService;
 import mayfly.sys.module.websocket.SysMsgWebSocket;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,7 +34,7 @@ import java.util.Objects;
  * @date 2019-11-04 3:04 下午
  */
 @Service
-public class MachineFileServiceImpl extends BaseServiceImpl<MachineFileMapper, MachineFileDO> implements MachineFileService {
+public class MachineFileServiceImpl extends BaseServiceImpl<MachineFileMapper, Integer, MachineFileDO> implements MachineFileService {
 
     public static char file = '-';
     public static char directory = 'd';
@@ -43,6 +45,8 @@ public class MachineFileServiceImpl extends BaseServiceImpl<MachineFileMapper, M
     private MachineFileMapper machineFileMapper;
     @Autowired
     private MachineService machineService;
+    @Autowired
+    private OperationLogService operationLogService;
 
 
     @Override
@@ -119,16 +123,21 @@ public class MachineFileServiceImpl extends BaseServiceImpl<MachineFileMapper, M
         MachineFileDO file = getById(fileId);
         checkPath(filePath, file);
 
-        Integer userId = LoginAccount.<Integer>get().getId();
+        LoginAccount<Integer> account = LoginAccount.get();
         // 异步上传，成功与否都webscoket通知上传者
         GlobalThreadPool.execute(() -> {
             machineService.sftpOperate(file.getMachineId(), sftp -> {
                 try {
                     sftp.put(inputStream, filePath);
-                    WebSocketUtils.sendText(SysMsgWebSocket.URI, userId, MessageTypeEnum.SUCCESS.toMsg(filePath + "文件上传成功"));
+                    // 记录日志并websocket通知客户端
+                    String msg = filePath + "文件上传成功";
+                    operationLogService.asyncLog(msg, LogTypeEnum.UPDATE, account);
+                    WebSocketUtils.sendText(SysMsgWebSocket.URI, account.getId(), MessageTypeEnum.SUCCESS.toMsg(msg));
                 } catch (Exception e) {
                     try {
-                        WebSocketUtils.sendText(SysMsgWebSocket.URI, userId, MessageTypeEnum.ERROR.toMsg("文件上传失败：" + e.getMessage()));
+                        String msg = "文件上传失败：" + e.getMessage();
+                        operationLogService.asyncLog(msg, LogTypeEnum.ERR_LOG, account);
+                        WebSocketUtils.sendText(SysMsgWebSocket.URI, account.getId(), MessageTypeEnum.ERROR.toMsg(msg));
                     } catch (SessionNoFoundException se) {
                         //
                     }

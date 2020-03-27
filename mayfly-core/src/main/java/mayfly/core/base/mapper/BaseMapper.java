@@ -32,7 +32,7 @@ import java.util.stream.Stream;
  *
  * @author meilin.huang
  * @param <I>  主键类型
- * @param <E>   实体类型
+ * @param <E>  实体类型
  */
 public interface BaseMapper<I, E> {
 
@@ -43,7 +43,7 @@ public interface BaseMapper<I, E> {
      * @return  影响条数
      */
     @InsertProvider(type = InsertSqlProvider.class, method = "sql")
-    @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
+    @Options(useGeneratedKeys = true, keyColumn = "id")
     Integer insert(E entity);
 
     /**
@@ -53,7 +53,7 @@ public interface BaseMapper<I, E> {
      * @return  影响条数
      */
     @InsertProvider(type = InsertSelectiveSqlProvider.class, method = "sql")
-    @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
+    @Options(useGeneratedKeys = true, keyColumn = "id")
     Integer insertSelective(E entity);
 
     /**
@@ -474,7 +474,7 @@ public interface BaseMapper<I, E> {
      */
     abstract class BaseSqlProviderSupport {
         /**
-         * key -> entity class   value -> tableInfo
+         * key -> mapper class   value -> tableInfo
          */
         private static Map<Class<?>, TableInfo> tableCache = new ConcurrentHashMap<>(128);
 
@@ -486,24 +486,7 @@ public interface BaseMapper<I, E> {
          */
         protected TableInfo tableInfo(ProviderContext context) {
             // 如果不存在则创建
-            return tableCache.computeIfAbsent(entityType(context), TableInfo::of);
-        }
-
-        /**
-         * 获取BaseMapper接口中的泛型类型
-         *
-         * @param context  context
-         * @return       实体类型
-         */
-        protected Class<?> entityType(ProviderContext context) {
-            return Stream.of(context.getMapperType().getGenericInterfaces())
-                    .filter(ParameterizedType.class::isInstance)
-                    .map(ParameterizedType.class::cast)
-                    .filter(type -> type.getRawType() == BaseMapper.class)
-                    .findFirst()
-                    .map(type -> type.getActualTypeArguments()[1])
-                    .filter(Class.class::isInstance).map(Class.class::cast)
-                    .orElseThrow(() -> new IllegalStateException("未找到BaseMapper的泛型类 " + context.getMapperType().getName() + "."));
+            return tableCache.computeIfAbsent(context.getMapperType(), TableInfo::of);
         }
     }
 
@@ -566,10 +549,11 @@ public interface BaseMapper<I, E> {
         /**
          * 获取TableInfo的简单工厂
          *
-         * @param entityClass 实体类型
+         * @param mapperType mapper类型
          * @return            {@link TableInfo}
          */
-        public static TableInfo of(Class<?> entityClass) {
+        public static TableInfo of(Class<?> mapperType) {
+            Class<?> entityClass = entityType(mapperType);
             // 获取不含有@NoColumn注解的fields
             Field[] fields = excludeNoColumnField(entityClass);
             TableInfo tableInfo = new TableInfo();
@@ -579,6 +563,23 @@ public interface BaseMapper<I, E> {
             tableInfo.columns = columns(fields);
             tableInfo.selectColumns = selectColumns(fields);
             return tableInfo;
+        }
+
+        /**
+         * 获取BaseMapper接口中的泛型类型
+         *
+         * @param mapperType  mapper类型
+         * @return       实体类型
+         */
+        public static Class<?> entityType(Class<?> mapperType) {
+            return Stream.of(mapperType.getGenericInterfaces())
+                    .filter(ParameterizedType.class::isInstance)
+                    .map(ParameterizedType.class::cast)
+                    .filter(type -> type.getRawType() == BaseMapper.class)
+                    .findFirst()
+                    .map(type -> type.getActualTypeArguments()[1])
+                    .filter(Class.class::isInstance).map(Class.class::cast)
+                    .orElseThrow(() -> new IllegalStateException("未找到BaseMapper的泛型类 " + mapperType.getName() + "."));
         }
 
 

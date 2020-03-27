@@ -11,7 +11,7 @@ import java.util.List;
  * @version 1.0
  * @date 2019-08-19 20:12
  */
-public interface AccountRoleService extends BaseService<AccountRoleDO> {
+public interface AccountRoleService extends BaseService<Integer, AccountRoleDO> {
 
     /**
      * 获取账号角色列表

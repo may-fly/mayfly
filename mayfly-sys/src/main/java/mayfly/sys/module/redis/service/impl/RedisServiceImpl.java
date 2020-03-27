@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
  * @date 2019-01-07 4:08 PM
  */
 @Service
-public class RedisServiceImpl extends BaseServiceImpl<RedisMapper, RedisDO> implements RedisService {
+public class RedisServiceImpl extends BaseServiceImpl<RedisMapper, Integer, RedisDO> implements RedisService {
 
     @Autowired
     private RedisMapper redisMapper;

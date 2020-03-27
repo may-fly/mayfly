@@ -161,9 +161,10 @@ public class PlaceholderResolver {
      * @param obj     填充解析内容的对象(如果是基本类型，则所有占位符替换为相同的值)
      * @return
      */
+    @SuppressWarnings("unchecked")
     public String resolveByObject(String content, final Object obj) {
         if (obj instanceof Map) {
-            return resolveByMap(content, (Map) obj);
+            return resolveByMap(content, (Map<String, Object>) obj);
         }
         return resolveByRule(content, placeholderValue -> String.valueOf(ReflectionUtils.getValueByFieldPath(obj, placeholderValue)));
     }

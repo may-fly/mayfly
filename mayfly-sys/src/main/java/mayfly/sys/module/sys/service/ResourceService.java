@@ -12,7 +12,7 @@ import java.util.List;
  * @author hml
  * @date 2018/6/27 下午3:14
  */
-public interface ResourceService extends BaseService<ResourceDO> {
+public interface ResourceService extends BaseService<Integer, ResourceDO> {
 
     /**
      * 根据用户id获取用户的所有菜单权限

@@ -20,7 +20,7 @@ import java.util.List;
 @Setter
 @Accessors(chain = true)
 @Table("tb_resource")
-public class ResourceDO extends BaseDO implements Serializable {
+public class ResourceDO extends BaseDO<Integer> implements Serializable {
 
     private static final long serialVersionUID = 6346288647519202567L;
 

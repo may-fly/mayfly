@@ -45,4 +45,4 @@ logging:
   #    root: INFO
   #    mayfly: DEBUG
   config: classpath:logback-spring-dev.xml
-savelog: true
+#savelog: true
