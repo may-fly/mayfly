@@ -44,7 +44,7 @@ public interface BaseMapper<I, E> {
      */
     @InsertProvider(type = InsertSqlProvider.class, method = "sql")
     @Options(useGeneratedKeys = true, keyColumn = "id")
-    Integer insert(E entity);
+    int insert(E entity);
 
     /**
      * 插入新对象（只设置非空字段）,并返回主键id值(id通过实体获取)
@@ -54,7 +54,7 @@ public interface BaseMapper<I, E> {
      */
     @InsertProvider(type = InsertSelectiveSqlProvider.class, method = "sql")
     @Options(useGeneratedKeys = true, keyColumn = "id")
-    Integer insertSelective(E entity);
+    int insertSelective(E entity);
 
     /**
      * 批量插入实体
@@ -63,7 +63,7 @@ public interface BaseMapper<I, E> {
      * @return          影响条数
      */
     @InsertProvider(type = BatchInsertSqlProvider.class, method = "sql")
-    Integer batchInsert(@Param("entities") List<E> entities);
+    int batchInsert(@Param("entities") List<E> entities);
 
     /**
      * 根据主键id更新实体，若实体field为null，则对应数据库的字段也更新为null
@@ -72,7 +72,7 @@ public interface BaseMapper<I, E> {
      * @return         影响条数
      */
     @UpdateProvider(type = UpdateSqlProvider.class, method = "sql")
-    Integer updateByPrimaryKey(E entity);
+    int updateByPrimaryKey(E entity);
 
     /**
      * 根据主键id更新实体，若实体field为null，则对应数据库的字段不更新
@@ -81,7 +81,7 @@ public interface BaseMapper<I, E> {
      * @return        影响条数
      */
     @UpdateProvider(type = UpdateSelectiveSqlProvider.class, method = "sql")
-    Integer updateByPrimaryKeySelective(E entity);
+    int updateByPrimaryKeySelective(E entity);
 
     /**
      * 根据主键id删除
@@ -90,7 +90,7 @@ public interface BaseMapper<I, E> {
      * @return  影响条数
      */
     @DeleteProvider(type = DeleteSqlProvider.class, method = "sql")
-    Integer deleteByPrimaryKey(I id);
+    int deleteByPrimaryKey(I id);
 
     /**
      * 伪删除，即将is_deleted字段更新为1
@@ -99,7 +99,7 @@ public interface BaseMapper<I, E> {
      * @return  影响条数
      */
     @UpdateProvider(type = FakeDeleteSqlProvider.class, method = "sql")
-    Integer fakeDeleteByPrimaryKey(I id);
+    int fakeDeleteByPrimaryKey(I id);
 
     /**
      * 根据实体条件删除
@@ -108,7 +108,7 @@ public interface BaseMapper<I, E> {
      * @return  影响条数
      */
     @DeleteProvider(type = DeleteByCriteriaSqlProvider.class, method = "sql")
-    Integer deleteByCriteria(E criteria);
+    int deleteByCriteria(E criteria);
 
     /**
      * 根据id查询实体
@@ -159,7 +159,7 @@ public interface BaseMapper<I, E> {
      * @return  总数
      */
     @SelectProvider(type = CountSqlProvider.class, method = "sql")
-    Long count();
+    long count();
 
     /**
      * 根据条件查询符合条件的实体总数
@@ -168,7 +168,7 @@ public interface BaseMapper<I, E> {
      * @return    数量
      */
     @SelectProvider(type = CountByCriteriaSqlProvider.class, method = "sql")
-    Long countByCriteria(E criteria);
+    long countByCriteria(E criteria);
 
 
     /**

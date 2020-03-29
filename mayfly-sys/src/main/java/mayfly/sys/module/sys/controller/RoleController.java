@@ -7,6 +7,7 @@ import mayfly.core.util.bean.BeanUtils;
 import mayfly.core.validation.annotation.Valid;
 import mayfly.sys.common.enums.EnableDisableEnum;
 import mayfly.sys.module.sys.controller.form.RoleForm;
+import mayfly.sys.module.sys.controller.query.RoleQuery;
 import mayfly.sys.module.sys.entity.RoleDO;
 import mayfly.sys.module.sys.service.RoleResourceService;
 import mayfly.sys.module.sys.service.RoleService;
@@ -40,8 +41,8 @@ public class RoleController {
     private RoleResourceService roleResourceService;
 
     @GetMapping()
-    public Result<?> list() {
-        return Result.success().with(roleService.listAll("create_time DESC"));
+    public Result<?> list(RoleQuery query) {
+        return Result.success().with(roleService.listByCondition(BeanUtils.copyProperties(query, RoleDO.class), query));
     }
 
     @PostMapping()
@@ -65,9 +66,14 @@ public class RoleController {
         return Result.success();
     }
 
+    @GetMapping("/{id}/resourceIds")
+    public Result<?> roleResourceIds(@PathVariable Integer id) {
+        return Result.success(roleResourceService.listResourceId(id));
+    }
+
     @GetMapping("/{id}/resources")
     public Result<?> roleResources(@PathVariable Integer id) {
-        return Result.success(roleResourceService.listResourceId(id));
+        return Result.success(roleResourceService.listResource(id));
     }
 
     @Permission
@@ -75,11 +81,12 @@ public class RoleController {
     public Result<?> saveResources(@PathVariable Integer id, @RequestBody RoleForm roleForm) throws BusinessException {
         List<Integer> ids;
         try {
-            ids = Stream.of(roleForm.getResourceIds().split(",")).map(Integer::valueOf).collect(Collectors.toList());
+            ids = Stream.of(roleForm.getResourceIds().split(",")).map(Integer::valueOf)
+                    .distinct().collect(Collectors.toList());
         } catch (Exception e) {
             return Result.paramError("menuIds参数错误！");
         }
-
-        return Result.success(roleResourceService.saveResource(id, ids));
+        roleResourceService.saveResource(id, ids);
+        return Result.success();
     }
 }

@@ -20,7 +20,7 @@ import java.util.List;
 @Setter
 @Accessors(chain = true)
 @Table("tb_role")
-public class RoleDO extends BaseDO<Integer> implements Serializable {
+public class RoleDO extends BaseDO implements Serializable {
     private static final long serialVersionUID = 5311816841875852758L;
 
     private String name;

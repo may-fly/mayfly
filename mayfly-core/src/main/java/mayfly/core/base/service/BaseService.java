@@ -15,7 +15,7 @@ import java.util.List;
  * @version 1.0
  * @date 2018-12-06 2:19 PM
  */
-public interface BaseService<T, E extends BaseDO<T>> {
+public interface BaseService<T, E extends BaseDO> {
 
     /**
      * 根据主键查询数据
@@ -32,7 +32,7 @@ public interface BaseService<T, E extends BaseDO<T>> {
      * @param e  实体
      * @return   影响条数
      */
-    Integer insert(E e);
+    int insert(E e);
 
     /**
      * 插入非空字段属性，同时自动更新基本信息，如创建时间、创建人等 <br/>
@@ -41,15 +41,16 @@ public interface BaseService<T, E extends BaseDO<T>> {
      * @param e  实体
      * @return   影响条数
      */
-    Integer insertSelective(E e);
+    int insertSelective(E e);
 
     /**
-     * 批量插入实体
+     * 批量插入实体(不自动更新基本信息，如创建时间、创建人等)，<br/>
+     * 如需要设置基本信息手动调用{@linkplain BaseDO#autoSetBaseInfo()}
      *
      * @param entities  实体列表
      * @return    影响条数
      */
-    Integer batchInsert(List<E> entities);
+    int batchInsert(List<E> entities);
 
     /**
      * 根据id更新实体（只更新字段值不为null），同时自动更新基本字段，如更新时间、更新人等
@@ -57,7 +58,7 @@ public interface BaseService<T, E extends BaseDO<T>> {
      * @param e  实体
      * @return  影响条数
      */
-    Integer updateByIdSelective(E e);
+    int updateByIdSelective(E e);
 
     /**
      * 根据id更新实体（null值也会更新到数据库），同时自动更新基本字段，如更新时间、更新人等
@@ -65,7 +66,7 @@ public interface BaseService<T, E extends BaseDO<T>> {
      * @param e  实体
      * @return  影响条数
      */
-    Integer updateById(E e);
+    int updateById(E e);
 
     /**
      * 删除指定id的实体
@@ -73,14 +74,14 @@ public interface BaseService<T, E extends BaseDO<T>> {
      * @param id   id
      * @return  影响条数
      */
-    Integer deleteById(T id);
+    int deleteById(T id);
 
     /**
      * 伪删除（即将is_deleted更新为1）
      * @param id  实体id
      * @return     影响条数
      */
-    Integer fakeDeleteById(T id);
+    int fakeDeleteById(T id);
 
     /**
      * 根据条件删除
@@ -88,7 +89,7 @@ public interface BaseService<T, E extends BaseDO<T>> {
      * @param e 实体对象
      * @return  影响条数
      */
-    Integer deleteByCondition(E e);
+    int deleteByCondition(E e);
 
     /**
      * 根据条件统计实体数
@@ -96,7 +97,7 @@ public interface BaseService<T, E extends BaseDO<T>> {
      * @param e 条件对象
      * @return  总数
      */
-    Long countByCondition(E e);
+    long countByCondition(E e);
 
 
     /**

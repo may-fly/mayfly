@@ -133,8 +133,7 @@ public class TreeUtils {
          *
          * @param children 子节点
          */
-        @SuppressWarnings("all")
-        void setChildren(List children);
+        void setChildren(List<? extends TreeNode<T>> children);
 
         /**
          * 获取所有子节点

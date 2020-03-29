@@ -53,14 +53,11 @@
         // 该账号拥有的角色id
         roles: [],
         query: {
-          status: 1,
+          name: null,
           pageNum: 1,
-          pageSize: 8,
-          code: null,
-          groupId: null
+          pageSize: 5
         },
         total: 0,
-        groups: []
       }
     },
     watch: {
@@ -137,8 +134,8 @@
         this.search();
       },
       async search() {
-        let res = await roleApi.list.request();
-        this.allRole = res;
+        let res = await roleApi.list.request(this.query);
+        this.allRole = res.list;
         this.total = res.total;
         this.checkSelected();
       }
@@ -153,6 +150,3 @@
     }
   }
 </script>
-<style lang="less">
-  .permissions-dialog {}
-</style>

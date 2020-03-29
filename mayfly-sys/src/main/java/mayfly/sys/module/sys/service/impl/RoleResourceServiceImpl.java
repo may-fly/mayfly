@@ -2,8 +2,9 @@ package mayfly.sys.module.sys.service.impl;
 
 import mayfly.core.base.service.impl.BaseServiceImpl;
 import mayfly.core.exception.BusinessAssert;
-import mayfly.core.exception.BusinessException;
 import mayfly.core.util.CollectionUtils;
+import mayfly.core.util.TreeUtils;
+import mayfly.sys.module.sys.controller.vo.RoleResourceVO;
 import mayfly.sys.module.sys.entity.RoleResourceDO;
 import mayfly.sys.module.sys.mapper.RoleResourceMapper;
 import mayfly.sys.module.sys.service.PermissionService;
@@ -39,30 +40,35 @@ public class RoleResourceServiceImpl extends BaseServiceImpl<RoleResourceMapper,
         return listByCondition(condition).stream().map(RoleResourceDO::getResourceId).collect(Collectors.toList());
     }
 
-    @Transactional
     @Override
-    public Boolean saveResource(Integer roleId, List<Integer> resourceIds) throws BusinessException {
+    public List<RoleResourceVO> listResource(Integer roleId) {
+        return TreeUtils.generateTrees(roleResourceMapper.selectResourceByRoleId(roleId));
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void saveResource(Integer roleId, List<Integer> resourceIds) {
         List<Integer> oldIds = listResourceId(roleId);
         //和之前存的权限列表id比较，哪些是新增已经哪些是修改以及不变的
         CollectionUtils.CompareResult<Integer> compareResult = CollectionUtils
                 .compare(resourceIds, oldIds, (Integer i1, Integer i2) -> i1.equals(i2) ? 0 : 1);
-
         Collection<Integer> delIds = compareResult.getDelValue();
         Collection<Integer> addIds = compareResult.getAddValue();
 
+        // 删除去除的资源id
         delIds.forEach(id -> {
             deleteByCondition(new RoleResourceDO()
                     .setRoleId(roleId).setResourceId(id));
         });
 
+        // 校验资源id正确性，及保存新增的资源id
         BusinessAssert.equals(resourceService.listByIdIn((List<Integer>) addIds).size(), addIds.size(), "资源id错误");
         List<RoleResourceDO> addValues = new ArrayList<>(addIds.size());
         for (Integer id : addIds) {
             RoleResourceDO rr = new RoleResourceDO().setRoleId(roleId).setResourceId(id);
+            rr.autoSetBaseInfo();
             addValues.add(rr);
         }
         batchInsert(addValues);
-
-        return true;
     }
 }

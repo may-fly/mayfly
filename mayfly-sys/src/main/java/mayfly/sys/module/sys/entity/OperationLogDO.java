@@ -16,7 +16,7 @@ import mayfly.core.base.model.BaseDO;
 @Accessors(chain = true)
 @Table("tb_sys_operation_log")
 @NoColumn(fields = {BaseDO.UPDATE_TIME, BaseDO.UPDATE_ACCOUNT, BaseDO.UPDATE_ACCOUNT_ID})
-public class OperationLogDO extends BaseDO<Integer> {
+public class OperationLogDO extends BaseDO {
 
     private Integer type;
 

@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
  * @author meilin.huang
  * @date 2020-02-21 7:07 下午
  */
-public class BaseDO<T> {
+public class BaseDO {
 
     /**
      * 创建账号字段名
@@ -32,9 +32,9 @@ public class BaseDO<T> {
     public static final String UPDATE_ACCOUNT_ID = "updateAccountId";
 
     /**
-     * id
+     * 唯一标识
      */
-    private T id;
+    private Integer id;
 
     /**
      * 创建时间
@@ -70,7 +70,7 @@ public class BaseDO<T> {
      * 自动设置基本信息，默认id为空时设置新建需要的基本信息
      */
     public void autoSetBaseInfo() {
-        this.autoSetBaseInfo(this.id == null);
+        this.autoSetBaseInfo(this.getId() == null);
     }
 
     /**
@@ -112,11 +112,11 @@ public class BaseDO<T> {
 
     //-------  getter setter ------- //
 
-    public T getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(T id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

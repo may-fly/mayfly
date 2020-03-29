@@ -1,6 +1,7 @@
 package mayfly.sys.module.sys.controller.vo;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import mayfly.core.util.TreeUtils;
 
 import java.util.List;
@@ -11,7 +12,8 @@ import java.util.Objects;
  * @version 1.0
  * @date 2019-07-27 21:55
  */
-@Data
+@Getter
+@Setter
 public class ResourceListVO implements TreeUtils.TreeNode<Integer> {
 
     private Integer id;
@@ -32,7 +34,7 @@ public class ResourceListVO implements TreeUtils.TreeNode<Integer> {
 
     @Override
     public Integer id() {
-        return this.id;
+        return this.getId();
     }
 
     @Override

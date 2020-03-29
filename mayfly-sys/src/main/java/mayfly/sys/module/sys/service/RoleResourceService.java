@@ -1,7 +1,7 @@
 package mayfly.sys.module.sys.service;
 
 import mayfly.core.base.service.BaseService;
-import mayfly.core.exception.BusinessException;
+import mayfly.sys.module.sys.controller.vo.RoleResourceVO;
 import mayfly.sys.module.sys.entity.RoleResourceDO;
 
 import java.util.List;
@@ -21,5 +21,19 @@ public interface RoleResourceService extends BaseService<Integer, RoleResourceDO
      */
     List<Integer> listResourceId(Integer roleId);
 
-    Boolean saveResource(Integer roleId, List<Integer> resourceIds) throws BusinessException;
+    /**
+     * 获取角色拥有的资源列表树
+     *
+     * @param roleId 角色id
+     * @return 资源列表树
+     */
+    List<RoleResourceVO> listResource(Integer roleId);
+
+    /**
+     * 保存角色关联的资源信息
+     *
+     * @param roleId 角色id
+     * @param resourceIds 资源id列表
+     */
+    void saveResource(Integer roleId, List<Integer> resourceIds);
 }

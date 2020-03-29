@@ -10,7 +10,7 @@
       >添加</el-button>
       <el-button
         v-permission="permission.account.code"
-        :disabled="currentId == null"
+        :disabled="chooseId == null"
         @click="editAccount(false)"
         type="primary"
         icon="el-icon-edit"
@@ -18,7 +18,7 @@
       >编辑</el-button>
       <el-button
         v-permission="permission.saveRoles.code"
-        :disabled="currentId == null"
+        :disabled="chooseId == null"
         @click="roleEdit()"
         type="success"
         icon="el-icon-setting"
@@ -26,7 +26,7 @@
       >角色分配</el-button>
       <el-button
         v-permission="permission.del.code"
-        :disabled="currentId == null"
+        :disabled="chooseId == null"
         @click="deleteAccount()"
         type="danger"
         icon="el-icon-delete"
@@ -45,14 +45,13 @@
       </div>
     </ToolBar>
     <el-table :data="datas" border ref="table" @current-change="choose" show-overflow-tooltip>
-      <el-table-column label="选择" width="55px">
+      <el-table-column label="选择" width="50px">
         <template slot-scope="scope">
-          <el-radio v-model="currentId" :label="scope.row.id">
+          <el-radio v-model="chooseId" :label="scope.row.id">
             <i></i>
           </el-radio>
         </template>
       </el-table-column>
-      <el-table-column label="序号" type="index"></el-table-column>
       <el-table-column prop="username" label="用户名" min-width="115"></el-table-column>
 
       <el-table-column prop="status" label="状态" min-width="95">
@@ -82,29 +81,25 @@
       <el-table-column min-width="160" prop="createTime" label="创建时间"></el-table-column>
       <el-table-column min-width="115" prop="updateAccount" label="更新账号"></el-table-column>
       <el-table-column min-width="160" prop="updateTime" label="修改时间"></el-table-column>
-      <el-table-column min-width="160" prop="remark" label="备注" show-overflow-tooltip></el-table-column>
-      <el-table-column label="操作" min-width="80">
-        <!-- <template slot-scope="scope">
-          <el-button
-            v-permission="permission.changeStatus.code"
-            v-if="scope.row.status == 0"
-            @click="changeStatus(scope.row.id, 1)"
+      <el-table-column label="查看更多" min-width="150">
+        <template slot-scope="scope">
+          <el-link
+            v-permission="permission.account.code"
+            @click="showRoles(scope.row)"
             type="success"
-            size="mini"
-          >启用</el-button>
-          <el-button
-            v-permission="permission.changeStatus.code"
-            v-if="scope.row.status == 1"
-            @click="changeStatus(scope.row.id, 0)"
-            type="danger"
-            size="mini"
-          >禁用</el-button>
-        </template>-->
+          >角色</el-link>
+          <el-link
+            v-permission="permission.account.code"
+            @click="showResources(scope.row)"
+            type="info"
+          >菜单&权限</el-link>
+        </template>
       </el-table-column>
+      <el-table-column min-width="120" prop="remark" label="备注" show-overflow-tooltip></el-table-column>
     </el-table>
     <el-pagination
       @current-change="handlePageChange"
-      style="text-align: center;margin-top: 20px;"
+      style="text-align: center"
       background
       layout="prev, pager, next, total, jumper"
       :total="total"
@@ -136,8 +131,8 @@ export default {
     return {
       enums: enums,
       permission: accountPermission,
-      currentId: null,
-      currentData: null,
+      chooseId: null,
+      chooseData: null,
       query: {
         pageNum: 1,
         pageSize: 10
@@ -160,14 +155,16 @@ export default {
       if (!item) {
         return
       }
-      this.currentId = item.id
-      this.currentData = item
+      this.chooseId = item.id
+      this.chooseData = item
     },
     async search() {
       let res = await accountApi.list.request(this.query)
       this.datas = res.list
       this.total = res.total
     },
+    showResources(row) {},
+    showRoles(row) {},
     async changeStatus(id, status) {
       await accountApi.changeStatus.request({
         id,
@@ -181,17 +178,18 @@ export default {
       this.search()
     },
     roleEdit() {
-      if (!this.currentId) {
+      if (!this.chooseId) {
         this.$message.error('请选择账号')
       }
       this.roleDialog.visible = true
-      this.roleDialog.account = this.currentData
+      console.log(this.chooseData)
+      this.roleDialog.account = this.chooseData
     },
     editAccount(isAdd = false) {
       if (isAdd) {
         this.accountDialog.data = false
       } else {
-        this.accountDialog.data = this.currentData
+        this.accountDialog.data = this.chooseData
       }
       this.accountDialog.visible = true
     },
@@ -211,7 +209,7 @@ export default {
       this.search()
     },
     deleteAccount() {
-      accountApi.del.request({ id: this.currentId }).then(res => {
+      accountApi.del.request({ id: this.chooseId }).then(res => {
         this.$message.success('删除成功')
         this.search()
       })

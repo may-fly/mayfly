@@ -33,10 +33,6 @@
     data() {
       return {
         enums: enums,
-        btns: {
-          menuList: {}
-        },
-        menus: [],
         defaultProps: {
           children: 'children',
           label: 'name'

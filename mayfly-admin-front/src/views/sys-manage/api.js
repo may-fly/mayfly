@@ -14,8 +14,9 @@ export const roleApi = {
     save: Api.url("/sys/roles").method('post'),
     update: Api.url("/sys/roles/{id}").method('put'),
     del: Api.url("/sys/roles/{id}").method('delete'),
-    // 获取指定角色拥有的资源
-    rolePermissions: Api.url("/sys/roles/{id}/resources").method('get'),
+    // 获取指定角色拥有的资源id
+    roleResourceIds: Api.url("/sys/roles/{id}/resourceIds").method('get'),
+    roleResources: Api.url("/sys/roles/{id}/resources").method('get'),
     saveResources: Api.url("/sys/roles/{id}/resources").method('post')
 }
 

@@ -21,7 +21,7 @@ import java.util.List;
  * @version 1.0
  * @date 2018-12-06 2:21 PM
  */
-public class BaseServiceImpl<M extends BaseMapper<T, E>, T, E extends BaseDO<T>> implements BaseService<T, E> {
+public class BaseServiceImpl<M extends BaseMapper<T, E>, T, E extends BaseDO> implements BaseService<T, E> {
 
     /**
      * 实体Mapper，子服务类无需再注入本实体的Mapper，如需要直接调用本类mapper即可
@@ -65,40 +65,39 @@ public class BaseServiceImpl<M extends BaseMapper<T, E>, T, E extends BaseDO<T>>
     }
 
     @Override
-    public Integer insert(E e) {
+    public int insert(E e) {
         e.autoSetBaseInfo();
         return getMapper().insert(e);
     }
 
     @Override
-    public Integer insertSelective(E e) {
+    public int insertSelective(E e) {
         e.autoSetBaseInfo();
         return getMapper().insertSelective(e);
     }
 
     @Override
-    public Integer batchInsert(List<E> entities) {
+    public int batchInsert(List<E> entities) {
         if (CollectionUtils.isEmpty(entities)) {
             return 0;
         }
-        entities.forEach(E::autoSetBaseInfo);
         return getMapper().batchInsert(entities);
     }
 
     @Override
-    public Integer updateByIdSelective(E e) {
+    public int updateByIdSelective(E e) {
         e.autoSetBaseInfo();
         return getMapper().updateByPrimaryKeySelective(e);
     }
 
     @Override
-    public Integer updateById(E e) {
+    public int updateById(E e) {
         e.autoSetBaseInfo();
         return getMapper().updateByPrimaryKey(e);
     }
 
     @Override
-    public Integer deleteById(T id) {
+    public int deleteById(T id) {
         if (id == null) {
             return 0;
         }
@@ -106,7 +105,7 @@ public class BaseServiceImpl<M extends BaseMapper<T, E>, T, E extends BaseDO<T>>
     }
 
     @Override
-    public Integer fakeDeleteById(T id) {
+    public int fakeDeleteById(T id) {
         if (id == null) {
             return 0;
         }
@@ -114,12 +113,12 @@ public class BaseServiceImpl<M extends BaseMapper<T, E>, T, E extends BaseDO<T>>
     }
 
     @Override
-    public Integer deleteByCondition(E e) {
+    public int deleteByCondition(E e) {
         return getMapper().deleteByCriteria(e);
     }
 
     @Override
-    public Long countByCondition(E e) {
+    public long countByCondition(E e) {
         return getMapper().countByCriteria(e);
     }
 

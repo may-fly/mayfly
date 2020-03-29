@@ -33,7 +33,6 @@
       </div>
     </ToolBar>
     <el-table :data="datas" border ref="table" show-overflow-tooltip>
-      <el-table-column label="序号" type="index"></el-table-column>
       <el-table-column min-width="600" prop="operation" label="操作记录" show-overflow-tooltip></el-table-column>
       <el-table-column min-width="80" prop="type" label="操作类型" align="center">
         <template slot-scope="scope">
@@ -45,7 +44,7 @@
     </el-table>
     <el-pagination
       @current-change="handlePageChange"
-      style="text-align: center;margin-top: 20px;"
+      style="text-align: center;"
       background
       layout="prev, pager, next, total, jumper"
       :total="total"

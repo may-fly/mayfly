@@ -18,8 +18,9 @@ public class LoginAccount<I> implements Serializable {
      * 权限码分隔符
      */
     public static final String PERMISSION_CODE_SPLIT = ",";
+
     /**
-     * 线程上下文，用户保存到登录账号信息
+     * 线程上下文，用于保存到登录账号信息
      */
     private static final ThreadLocal<LoginAccount<?>> CONTEXT = new ThreadLocal<>();
 
