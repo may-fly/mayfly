@@ -10,7 +10,7 @@ import mayfly.sys.module.sys.enums.LogTypeEnum;
  * @author meilin.huang
  * @date 2020-03-05 1:29 下午
  */
-public interface OperationLogService extends BaseService<Integer, OperationLogDO> {
+public interface OperationLogService extends BaseService<Long, OperationLogDO> {
 
     /**
      * 异步记录日志
@@ -20,7 +20,7 @@ public interface OperationLogService extends BaseService<Integer, OperationLogDO
      */
     void asyncLog(String log, LogTypeEnum type);
 
-    void asyncLog(String log, LogTypeEnum type, LoginAccount<Integer> account);
+    void asyncLog(String log, LogTypeEnum type, LoginAccount<Long> account);
 
     /**
      * 异步记录数据修改的日志

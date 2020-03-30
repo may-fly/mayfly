@@ -12,15 +12,15 @@ import java.util.List;
  * @author hml
  * @date 2018/6/27 下午3:14
  */
-public interface ResourceService extends BaseService<Integer, ResourceDO> {
+public interface ResourceService extends BaseService<Long, ResourceDO> {
 
     /**
      * 根据用户id获取用户的所有菜单权限
      *
-     * @param userId 用户id
+     * @param accountId 用户id
      * @return 菜单列表
      */
-    List<ResourceListVO> listByUserId(Integer userId);
+    List<ResourceListVO> listByAccountId(Long accountId);
 
     /**
      * 获取所有资源树
@@ -34,7 +34,7 @@ public interface ResourceService extends BaseService<Integer, ResourceDO> {
      *
      * @param id id
      */
-    void delete(Integer id);
+    void delete(Long id);
 
     /**
      * 创建资源
@@ -55,7 +55,6 @@ public interface ResourceService extends BaseService<Integer, ResourceDO> {
      *
      * @param id     id
      * @param status 状态
-     * @return
      */
-    void changeStatus(Integer id, Integer status);
+    void changeStatus(Long id, Integer status);
 }

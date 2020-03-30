@@ -12,7 +12,7 @@ import mayfly.core.validation.annotation.NotNull;
 @Data
 public class MachineForm {
 
-    private Integer id;
+    private Long id;
 
     @NotBlank
     private String name;

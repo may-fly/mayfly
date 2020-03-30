@@ -28,7 +28,7 @@ public class ServerCommand {
      * @param redisId
      * @return
      */
-    public static RedisCommands<String, byte[]> getCmds(int redisId) {
+    public static RedisCommands<String, byte[]> getCmds(long redisId) {
         return register.getCmds(redisId);
     }
 
@@ -68,7 +68,7 @@ public class ServerCommand {
      * @param param
      * @param value
      */
-    public static void configSetAndRewrite(int redisId, RedisConfEnum param, String value) {
+    public static void configSetAndRewrite(long redisId, RedisConfEnum param, String value) {
         Assert.notNull(param, "配置文件的参数值不能为空！");
 
         if (!StringUtils.isEmpty(param.valuePattern)) {

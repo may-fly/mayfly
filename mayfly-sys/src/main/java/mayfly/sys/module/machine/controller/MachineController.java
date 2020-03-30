@@ -45,14 +45,14 @@ public class MachineController {
     }
 
     @PutMapping("/{id}")
-    public Result<?> save(@PathVariable Integer id, @RequestBody @Valid MachineForm form) {
+    public Result<?> save(@PathVariable Long id, @RequestBody @Valid MachineForm form) {
         form.setId(id);
         machineService.create(form);
         return Result.success();
     }
 
     @DeleteMapping("/{machineId}")
-    public Result<?> delete(@PathVariable Integer machineId) {
+    public Result<?> delete(@PathVariable Long machineId) {
         machineService.deleteById(machineId);
         return Result.success();
     }

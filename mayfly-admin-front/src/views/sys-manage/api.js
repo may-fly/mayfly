@@ -25,7 +25,9 @@ export const accountApi = {
     save: Api.url("/sys/accounts").method('post'),
     del: Api.url("/sys/accounts/{id}").method('delete'),
     changeStatus: Api.url("/sys/accounts/{id}/{status}").method('put'),
+    roleIds: Api.url("/sys/accounts/{id}/roleIds").method('get'),
     roles: Api.url("/sys/accounts/{id}/roles").method('get'),
+    resources: Api.url("/sys/accounts/{id}/resources").method('get'),
     saveRoles: Api.url("/sys/accounts/{id}/roles").method('post')
 }
 

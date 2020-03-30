@@ -21,7 +21,7 @@ import org.springframework.stereotype.Service;
  * @date 2019-11-04 3:04 下午
  */
 @Service
-public class MachineServiceImpl extends BaseServiceImpl<MachineMapper, Integer, MachineDO> implements MachineService {
+public class MachineServiceImpl extends BaseServiceImpl<MachineMapper, Long, MachineDO> implements MachineService {
 
     @Autowired
     private MachineFileService machineFileService;

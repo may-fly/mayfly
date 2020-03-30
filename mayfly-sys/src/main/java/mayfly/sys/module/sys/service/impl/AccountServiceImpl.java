@@ -26,7 +26,7 @@ import org.springframework.stereotype.Service;
  */
 @MethodLog(value = "账号管理:")
 @Service
-public class AccountServiceImpl extends BaseServiceImpl<AccountMapper, Integer, AccountDO> implements AccountService {
+public class AccountServiceImpl extends BaseServiceImpl<AccountMapper, Long, AccountDO> implements AccountService {
 
     @Autowired
     private AccountRoleService accountRoleService;

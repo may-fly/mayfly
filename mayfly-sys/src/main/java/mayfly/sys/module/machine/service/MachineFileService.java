@@ -13,7 +13,7 @@ import java.util.List;
  * @version 1.0
  * @date 2019-11-04 3:04 下午
  */
-public interface MachineFileService extends BaseService<Integer, MachineFileDO> {
+public interface MachineFileService extends BaseService<Long, MachineFileDO> {
 
     /**
      * 获取指定机器上已保存的配置文件信息
@@ -21,7 +21,7 @@ public interface MachineFileService extends BaseService<Integer, MachineFileDO> 
      * @param machineId 机器id
      * @return 配置文件信息
      */
-    List<MachineFileDO> listByMachineId(Integer machineId);
+    List<MachineFileDO> listByMachineId(Long machineId);
 
     /**
      * 获取配置文件内容
@@ -30,7 +30,7 @@ public interface MachineFileService extends BaseService<Integer, MachineFileDO> 
      * @param path   路径
      * @return 文件内容
      */
-    String getFileContent(Integer fileId, String path);
+    String getFileContent(Long fileId, String path);
 
     /**
      * 更新文件内容
@@ -39,7 +39,7 @@ public interface MachineFileService extends BaseService<Integer, MachineFileDO> 
      * @param path    文件全路径
      * @param content 文件内容
      */
-    void updateFileContent(Integer confId, String path, String content);
+    void updateFileContent(Long confId, String path, String content);
 
     /**
      * 新增配置文件
@@ -47,7 +47,7 @@ public interface MachineFileService extends BaseService<Integer, MachineFileDO> 
      * @param machineId 机器id
      * @param form      表单
      */
-    MachineFileDO create(Integer machineId, MachineFileForm form);
+    MachineFileDO create(Long machineId, MachineFileForm form);
 
     /**
      * 文件上传
@@ -56,7 +56,7 @@ public interface MachineFileService extends BaseService<Integer, MachineFileDO> 
      * @param filePath    文件完整路径，包括文件名
      * @param inputStream inputstream
      */
-    void uploadFile(Integer fileId, String filePath, InputStream inputStream);
+    void uploadFile(Long fileId, String filePath, InputStream inputStream);
 
     /**
      * 删除文件
@@ -64,7 +64,7 @@ public interface MachineFileService extends BaseService<Integer, MachineFileDO> 
      * @param fileId 配置的文件id
      * @param path   路径
      */
-    void rmFile(Integer fileId, String path);
+    void rmFile(Long fileId, String path);
 
     /**
      * 获取目录下的内容
@@ -73,5 +73,5 @@ public interface MachineFileService extends BaseService<Integer, MachineFileDO> 
      * @param path   路径
      * @return 内容
      */
-    List<LsVO> ls(Integer fileId, String path);
+    List<LsVO> ls(Long fileId, String path);
 }

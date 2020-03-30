@@ -9,7 +9,7 @@ import lombok.Data;
 @Data
 public class RedisVO {
 
-    private Integer id;
+    private Long id;
 
     private String host;
 
@@ -17,5 +17,5 @@ public class RedisVO {
 
     private String description;
 
-    private Integer clusterId;
+    private Long clusterId;
 }

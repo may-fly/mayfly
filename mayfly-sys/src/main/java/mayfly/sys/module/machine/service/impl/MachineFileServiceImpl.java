@@ -34,7 +34,7 @@ import java.util.Objects;
  * @date 2019-11-04 3:04 下午
  */
 @Service
-public class MachineFileServiceImpl extends BaseServiceImpl<MachineFileMapper, Integer, MachineFileDO> implements MachineFileService {
+public class MachineFileServiceImpl extends BaseServiceImpl<MachineFileMapper, Long, MachineFileDO> implements MachineFileService {
 
     public static char file = '-';
     public static char directory = 'd';
@@ -50,12 +50,12 @@ public class MachineFileServiceImpl extends BaseServiceImpl<MachineFileMapper, I
 
 
     @Override
-    public List<MachineFileDO> listByMachineId(Integer machineId) {
+    public List<MachineFileDO> listByMachineId(Long machineId) {
         return this.listByCondition(new MachineFileDO().setMachineId(machineId));
     }
 
     @Override
-    public String getFileContent(Integer fileId, String path) {
+    public String getFileContent(Long fileId, String path) {
         MachineFileDO file = getById(fileId);
         checkPath(path, file);
 
@@ -64,7 +64,7 @@ public class MachineFileServiceImpl extends BaseServiceImpl<MachineFileMapper, I
     }
 
     @Override
-    public void updateFileContent(Integer confId, String path, String content) {
+    public void updateFileContent(Long confId, String path, String content) {
         BusinessAssert.notEmpty(content, "内容不能为空");
         MachineFileDO file = getById(confId);
         checkPath(path, file);
@@ -73,7 +73,7 @@ public class MachineFileServiceImpl extends BaseServiceImpl<MachineFileMapper, I
     }
 
     @Override
-    public MachineFileDO create(Integer machineId, MachineFileForm form) {
+    public MachineFileDO create(Long machineId, MachineFileForm form) {
         boolean isFile = Objects.equals(form.getType(), MachineFileTypeEnum.FILE.getValue());
         String res = machineService.exec(machineId, isFile ? ShellCmd.fileExist(form.getPath()) : ShellCmd.directoryExist(form.getPath()));
         BusinessAssert.equals(res, "1\n", () -> isFile ? "该文件不存在" : "该目录不存在");
@@ -86,7 +86,7 @@ public class MachineFileServiceImpl extends BaseServiceImpl<MachineFileMapper, I
     }
 
     @Override
-    public List<LsVO> ls(Integer fileId, String path) {
+    public List<LsVO> ls(Long fileId, String path) {
         MachineFileDO machineFile = getById(fileId);
         checkPath(path, machineFile);
 
@@ -119,11 +119,11 @@ public class MachineFileServiceImpl extends BaseServiceImpl<MachineFileMapper, I
 
 
     @Override
-    public void uploadFile(Integer fileId, String filePath, InputStream inputStream) {
+    public void uploadFile(Long fileId, String filePath, InputStream inputStream) {
         MachineFileDO file = getById(fileId);
         checkPath(filePath, file);
 
-        LoginAccount<Integer> account = LoginAccount.get();
+        LoginAccount<Long> account = LoginAccount.get();
         // 异步上传，成功与否都webscoket通知上传者
         GlobalThreadPool.execute(() -> {
             machineService.sftpOperate(file.getMachineId(), sftp -> {
@@ -148,7 +148,7 @@ public class MachineFileServiceImpl extends BaseServiceImpl<MachineFileMapper, I
     }
 
     @Override
-    public void rmFile(Integer fileId, String path) {
+    public void rmFile(Long fileId, String path) {
         MachineFileDO file = getById(fileId);
         checkPath(path, file);
 

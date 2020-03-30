@@ -1,18 +1,14 @@
 <template>
   <div class="account-dialog">
     <el-dialog :title="'分配“'+account.username+'”的角色'" :visible="visible" :show-close="false">
-      <!-- <ToolBar>
+      <ToolBar>
         <div style="float: left">
-          <el-select v-model="query.groupId" size="small" clearable placeholder="请选择权限组">
-            <el-option v-for="item in groups" :key="item.id" :value="item.id" :label="item.name">
-            </el-option>
-          </el-select>
-          <el-input placeholder="请输入权限code" size="small" style="width: 150px" v-model="query.code" @clear="clear()"
+          <el-input placeholder="请输入角色名" size="small" style="width: 150px" v-model="query.name" @clear="clear()"
             clearable>
           </el-input>
           <el-button @click="search" type="success" icon="el-icon-search" size="small"></el-button>
         </div>
-      </ToolBar> -->
+      </ToolBar>
       <el-table :data="allRole" border ref="roleTable" @select="select" style="width: 100%">
         <el-table-column type="selection" width="40"></el-table-column>
         <el-table-column prop="name" label="角色名称">
@@ -65,7 +61,7 @@
         handler: function() {
           if (!this.account)
             return;
-          accountApi.roles.request({
+          accountApi.roleIds.request({
             id: this.account.id
           }).then(res => {
             this.roles = res;
@@ -130,7 +126,7 @@
        */
       clear() {
         this.query.pageNum = 1;
-        this.query.code = null;
+        this.query.name = null;
         this.search();
       },
       async search() {

@@ -53,7 +53,7 @@ public class RoleController {
     }
 
     @PutMapping("/{id}")
-    public Result<?> update(@PathVariable Integer id, @Valid @RequestBody RoleForm roleForm) {
+    public Result<?> update(@PathVariable Long id, @Valid @RequestBody RoleForm roleForm) {
         roleForm.setId(id);
         roleService.update(BeanUtils.copyProperties(roleForm, RoleDO.class));
         return Result.success();
@@ -61,30 +61,30 @@ public class RoleController {
 
     @Permission
     @DeleteMapping("/{id}")
-    public Result<?> delete(@PathVariable Integer id) {
+    public Result<?> delete(@PathVariable Long id) {
         roleService.delete(id);
         return Result.success();
     }
 
     @GetMapping("/{id}/resourceIds")
-    public Result<?> roleResourceIds(@PathVariable Integer id) {
+    public Result<?> roleResourceIds(@PathVariable Long id) {
         return Result.success(roleResourceService.listResourceId(id));
     }
 
     @GetMapping("/{id}/resources")
-    public Result<?> roleResources(@PathVariable Integer id) {
+    public Result<?> roleResources(@PathVariable Long id) {
         return Result.success(roleResourceService.listResource(id));
     }
 
     @Permission
     @PostMapping("/{id}/resources")
-    public Result<?> saveResources(@PathVariable Integer id, @RequestBody RoleForm roleForm) throws BusinessException {
-        List<Integer> ids;
+    public Result<?> saveResources(@PathVariable Long id, @RequestBody RoleForm roleForm) throws BusinessException {
+        List<Long> ids;
         try {
-            ids = Stream.of(roleForm.getResourceIds().split(",")).map(Integer::valueOf)
+            ids = Stream.of(roleForm.getResourceIds().split(",")).map(Long::valueOf)
                     .distinct().collect(Collectors.toList());
         } catch (Exception e) {
-            return Result.paramError("menuIds参数错误！");
+            return Result.paramError("资源id列表参数错误！");
         }
         roleResourceService.saveResource(id, ids);
         return Result.success();

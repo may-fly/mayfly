@@ -68,7 +68,7 @@ public class PermissionInterceptor implements HandlerInterceptor {
      * @param response
      * @throws Exception
      */
-    public static void sendErrorMessage(HttpServletResponse response, Result result) {
+    public static void sendErrorMessage(HttpServletResponse response, Result<?> result) {
         response.setContentType("application/json; charset=utf-8");
         response.setHeader("Access-Control-Allow-Origin", "*");
         response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE, PUT");

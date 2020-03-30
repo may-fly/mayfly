@@ -88,6 +88,7 @@
             @click="showRoles(scope.row)"
             type="success"
           >角色</el-link>
+
           <el-link
             v-permission="permission.account.code"
             @click="showResources(scope.row)"
@@ -106,6 +107,37 @@
       :current-page.sync="query.pageNum"
       :page-size="query.pageSize"
     />
+
+    <el-dialog width="500px" :title="showRoleDialog.title" :visible.sync="showRoleDialog.visible">
+      <el-table border :data="showRoleDialog.accountRoles">
+        <el-table-column property="name" label="角色名" width="125"></el-table-column>
+        <el-table-column property="createAccount" label="分配账号" width="125"></el-table-column>
+        <el-table-column property="createTime" label="分配时间"></el-table-column>
+      </el-table>
+    </el-dialog>
+
+    <el-dialog
+      :title="showResourceDialog.title"
+      :visible.sync="showResourceDialog.visible"
+      width="400px"
+      height="400px"
+    >
+      <el-tree
+        style="height: 50vh;overflow: auto;"
+        :data="showResourceDialog.resources"
+        node-key="id"
+        :props="showResourceDialog.defaultProps"
+        :expand-on-click-node="false"
+      >
+        <span class="custom-tree-node" slot-scope="{ node, data }">
+          <span v-if="data.type == enums.ResourceTypeEnum.MENU.value">{{ node.label }}</span>
+          <span
+            v-if="data.type == enums.ResourceTypeEnum.PERMISSION.value"
+            style="color: #67c23a;"
+          >{{ node.label }}</span>
+        </span>
+      </el-tree>
+    </el-dialog>
 
     <RoleEdit :visible="roleDialog.visible" :account="roleDialog.account" @cancel="cancel()"></RoleEdit>
     <AccountEdit
@@ -139,6 +171,20 @@ export default {
       },
       datas: [],
       total: null,
+      showRoleDialog: {
+        title: '',
+        visible: false,
+        accountRoles: []
+      },
+      showResourceDialog: {
+        title: '',
+        visible: false,
+        resources: [],
+        defaultProps: {
+          children: 'children',
+          label: 'name'
+        }
+      },
       roleDialog: {
         visible: false,
         account: {},
@@ -163,8 +209,23 @@ export default {
       this.datas = res.list
       this.total = res.total
     },
-    showResources(row) {},
-    showRoles(row) {},
+    async showResources(row) {
+      let showResourceDialog = this.showResourceDialog
+      showResourceDialog.title = '"' + row.username + '" 的菜单&权限'
+      showResourceDialog.resources = []
+      showResourceDialog.resources = await accountApi.resources.request({
+        id: row.id
+      })
+      showResourceDialog.visible = true
+    },
+    async showRoles(row) {
+      let showRoleDialog = this.showRoleDialog
+      showRoleDialog.title = '"' + row.username + '" 的角色信息'
+      showRoleDialog.accountRoles = await accountApi.roles.request({
+        id: row.id
+      })
+      showRoleDialog.visible = true
+    },
     async changeStatus(id, status) {
       await accountApi.changeStatus.request({
         id,

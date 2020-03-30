@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Data
 public class MachineVO {
 
-    private Integer id;
+    private Long id;
 
     private String name;
 

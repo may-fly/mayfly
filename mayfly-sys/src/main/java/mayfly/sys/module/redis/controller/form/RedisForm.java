@@ -12,7 +12,7 @@ import mayfly.core.validation.annotation.NotNull;
 @Data
 public class RedisForm {
 
-    private Integer id;
+    private Long id;
 
     @NotBlank
     private String host;
@@ -22,7 +22,7 @@ public class RedisForm {
 
     private String pwd;
 
-    private Integer clusterId;
+    private Long clusterId;
 
     private String description;
 }

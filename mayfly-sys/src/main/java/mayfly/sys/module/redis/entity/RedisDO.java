@@ -26,5 +26,5 @@ public class RedisDO extends BaseDO {
 
     private String description;
 
-    private Integer clusterId;
+    private Long clusterId;
 }

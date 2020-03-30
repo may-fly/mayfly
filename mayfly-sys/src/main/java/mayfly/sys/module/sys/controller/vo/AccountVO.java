@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Data
 public class AccountVO {
 
-    private Integer id;
+    private Long id;
 
     private String username;
 
@@ -25,7 +25,7 @@ public class AccountVO {
     /**
      * 创建账号id
      */
-    private Integer createAccountId;
+    private Long createAccountId;
 
     /**
      * 创建账号名
@@ -35,7 +35,7 @@ public class AccountVO {
     /**
      * 最后更新账号id
      */
-    private Integer updateAccountId;
+    private Long updateAccountId;
 
     /**
      * 最后更新账号名

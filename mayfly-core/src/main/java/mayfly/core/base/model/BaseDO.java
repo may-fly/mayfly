@@ -34,7 +34,7 @@ public class BaseDO {
     /**
      * 唯一标识
      */
-    private Integer id;
+    private Long id;
 
     /**
      * 创建时间
@@ -49,7 +49,7 @@ public class BaseDO {
     /**
      * 创建账号id
      */
-    private Integer createAccountId;
+    private Long createAccountId;
 
     /**
      * 创建账号名
@@ -59,7 +59,7 @@ public class BaseDO {
     /**
      * 最后更新账号id
      */
-    private Integer updateAccountId;
+    private Long updateAccountId;
 
     /**
      * 最后更新账号名
@@ -88,7 +88,7 @@ public class BaseDO {
      * @param isCreate     是否为创建操作
      * @param loginAccount 登录账号
      */
-    public void autoSetBaseInfo(boolean isCreate, LoginAccount<Integer> loginAccount) {
+    public void autoSetBaseInfo(boolean isCreate, LoginAccount<Long> loginAccount) {
         LocalDateTime now = LocalDateTime.now();
         if (isCreate) {
             this.createTime = now;
@@ -100,7 +100,7 @@ public class BaseDO {
             return;
         }
         String account = loginAccount.getUsername();
-        Integer accountId = loginAccount.getId();
+        Long accountId = loginAccount.getId();
         // 赋值
         this.updateAccount = account;
         this.updateAccountId = accountId;
@@ -112,11 +112,11 @@ public class BaseDO {
 
     //-------  getter setter ------- //
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -136,11 +136,11 @@ public class BaseDO {
         this.updateTime = updateTime;
     }
 
-    public Integer getCreateAccountId() {
+    public Long getCreateAccountId() {
         return createAccountId;
     }
 
-    public void setCreateAccountId(Integer createAccountId) {
+    public void setCreateAccountId(Long createAccountId) {
         this.createAccountId = createAccountId;
     }
 
@@ -152,11 +152,11 @@ public class BaseDO {
         this.createAccount = createAccount;
     }
 
-    public Integer getUpdateAccountId() {
+    public Long getUpdateAccountId() {
         return updateAccountId;
     }
 
-    public void setUpdateAccountId(Integer updateAccountId) {
+    public void setUpdateAccountId(Long updateAccountId) {
         this.updateAccountId = updateAccountId;
     }
 

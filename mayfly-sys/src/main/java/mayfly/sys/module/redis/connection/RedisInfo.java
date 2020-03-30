@@ -15,17 +15,17 @@ public class RedisInfo implements Comparable<RedisInfo> {
     /**
      * 默认为单机
      */
-    public static final int STANDALONE = 0;
+    public static final long STANDALONE = 0L;
 
     /**
      * redis id
      */
-    private Integer id;
+    private Long id;
 
     /**
      * 集群节点id
      */
-    private int clusterId = STANDALONE;
+    private long clusterId = STANDALONE;
 
     /**
      * redis uri
@@ -38,23 +38,23 @@ public class RedisInfo implements Comparable<RedisInfo> {
      *
      * @return
      */
-    public static boolean isStandlone(Integer clusterId) {
+    public static boolean isStandlone(Long clusterId) {
         return clusterId == STANDALONE;
     }
 
-    public static Builder builder(Integer id) {
+    public static Builder builder(Long id) {
         return new Builder(id == null ?  0 : id);
     }
 
     public static class Builder {
         private RedisInfo redisInfo;
 
-        public Builder(int id) {
+        public Builder(long id) {
             redisInfo = new RedisInfo();
             redisInfo.id = id;
         }
 
-        public Builder clusterId(int clusterId) {
+        public Builder clusterId(long clusterId) {
             redisInfo.clusterId = clusterId;
             return this;
         }
@@ -86,7 +86,7 @@ public class RedisInfo implements Comparable<RedisInfo> {
         return uri.getPort();
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 }

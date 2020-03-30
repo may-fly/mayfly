@@ -8,7 +8,7 @@ import mayfly.sys.module.sys.entity.RoleDO;
  * @version 1.0
  * @date 2018-12-07 4:13 PM
  */
-public interface RoleService extends BaseService<Integer, RoleDO> {
+public interface RoleService extends BaseService<Long, RoleDO> {
 
     /**
      * 更新角色
@@ -22,5 +22,5 @@ public interface RoleService extends BaseService<Integer, RoleDO> {
      *
      * @param id 角色id
      */
-    void delete(Integer id);
+    void delete(Long id);
 }

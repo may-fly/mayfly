@@ -31,7 +31,7 @@ import java.util.Objects;
  */
 @MethodLog("资源管理:")
 @Service
-public class ResourceServiceImpl extends BaseServiceImpl<ResourceMapper, Integer, ResourceDO> implements ResourceService {
+public class ResourceServiceImpl extends BaseServiceImpl<ResourceMapper, Long, ResourceDO> implements ResourceService {
 
     @Autowired
     private RoleResourceService roleResourceService;
@@ -42,8 +42,8 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourceMapper, Integer
 
     @MethodLog(level = MethodLog.LogLevel.NONE)
     @Override
-    public List<ResourceListVO> listByUserId(Integer userId) {
-        return TreeUtils.generateTrees(BeanUtils.copyProperties(mapper.selectByUserId(userId), ResourceListVO.class));
+    public List<ResourceListVO> listByAccountId(Long userId) {
+        return TreeUtils.generateTrees(BeanUtils.copyProperties(mapper.selectByAccountId(userId), ResourceListVO.class));
     }
 
     @MethodLog(value = "获取资源列表", level = MethodLog.LogLevel.DEBUG)
@@ -58,7 +58,7 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourceMapper, Integer
         if (resource.getPid() == null || Objects.equals(resource.getPid(), 0)) {
             BusinessAssert.equals(resource.getType(), ResourceTypeEnum.MENU.getValue(), "权限资源不能为根节点");
             // 为null的情况默认设为0
-            resource.setPid(0);
+            resource.setPid(0L);
         } else {
             ResourceDO pResource = getById(resource.getPid());
             BusinessAssert.notNull(pResource, "pid不存在！");
@@ -99,7 +99,7 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourceMapper, Integer
     }
 
     @Override
-    public void changeStatus(Integer id, Integer status) {
+    public void changeStatus(Long id, Integer status) {
         BusinessAssert.state(EnumUtils.isExist(EnableDisableEnum.values(), status), "状态值错误");
         ResourceDO resource = getById(id);
         BusinessAssert.notNull(resource, "该资源不存在");
@@ -114,7 +114,7 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourceMapper, Integer
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void delete(Integer id) {
+    public void delete(Long id) {
         BusinessAssert.equals(countByCondition(new ResourceDO().setPid(id)), 0L, "请先删除该资源的子资源");
         BusinessAssert.equals(deleteById(id), 1, "删除菜单失败！");
         // 删除角色资源表中该菜单所关联的所有信息

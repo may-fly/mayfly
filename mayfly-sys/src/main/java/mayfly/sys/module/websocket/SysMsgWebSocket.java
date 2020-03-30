@@ -32,7 +32,7 @@ public class SysMsgWebSocket {
 
     public static final String URI = "/sysmsg/{token}";
 
-    private static WebSocketUtils.SessionRegistry<Integer> registry = WebSocketUtils.SessionRegistry.create(URI, false);
+    private static WebSocketUtils.SessionRegistry<Long> registry = WebSocketUtils.SessionRegistry.create(URI, false);
 
     static {
         WebSocketUtils.putRegistry(registry);
@@ -43,7 +43,7 @@ public class SysMsgWebSocket {
      */
     @OnOpen
     public void onOpen(@PathParam("token") String token, Session session) {
-        Integer userId = Optional.ofNullable(SpringUtils.getBean(PermissionService.class).getLoginAccount(token))
+        Long userId = Optional.ofNullable(SpringUtils.getBean(PermissionService.class).getLoginAccount(token))
                 .map(LoginAccount::getId).orElse(null);
         if (userId == null) {
             WebSocketUtils.sendText(session, MessageTypeEnum.ERROR.toMsg(ResultEnum.NO_PERMISSION.getName()));

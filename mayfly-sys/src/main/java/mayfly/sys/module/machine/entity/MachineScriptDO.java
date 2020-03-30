@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Data
 public class MachineScriptDO {
 
-    private Integer id;
+    private Long id;
 
     private Integer machineId;
 

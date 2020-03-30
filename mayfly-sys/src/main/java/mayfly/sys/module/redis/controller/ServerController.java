@@ -53,42 +53,42 @@ public class ServerController {
     }
 
     @PutMapping("/{id}")
-    public Result<?> update(@PathVariable Integer id, @RequestBody @Valid RedisForm redisForm) {
+    public Result<?> update(@PathVariable Long id, @RequestBody @Valid RedisForm redisForm) {
         redisForm.setId(id);
         redisService.saveNode(redisForm);
         return Result.success();
     }
 
     @DeleteMapping("/{id}")
-    public Result<?> remove(@PathVariable Integer id) {
+    public Result<?> remove(@PathVariable Long id) {
        redisService.delete(id);
         return Result.success();
     }
 
     @PostMapping("/{id}/close")
-    public Result close(@PathVariable Integer id) {
+    public Result close(@PathVariable Long id) {
 //        RedisHandler.close(id);
         return Result.success();
     }
 
     @PostMapping("/{id}/flushdb")
-    public Result flushdb(@PathVariable Integer id) {
+    public Result flushdb(@PathVariable Long id) {
 //        RedisHandler.getCommands(id).flushdb();
         return Result.success();
     }
 
     @GetMapping("/{id}/info")
-    public Result info(@PathVariable Integer id) {
+    public Result info(@PathVariable Long id) {
         return Result.success(ServerCommand.info(redisService.getCmds(id)));
     }
 
     @GetMapping("/{id}/conf")
-    public Result getConf(@PathVariable Integer id) {
+    public Result getConf(@PathVariable Long id) {
         return Result.success(ServerCommand.getConf(redisService.getCmds(id)));
     }
 
     @PutMapping("/{id}/conf")
-    public Result setConf(@PathVariable Integer id, RedisConfParamVO redisConfParam) {
+    public Result setConf(@PathVariable Long id, RedisConfParamVO redisConfParam) {
         ServerCommand.configSetAndRewrite(id, RedisConfEnum.getByParam(redisConfParam.getParam()), redisConfParam.getValue());
         return Result.success();
     }

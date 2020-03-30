@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
  * @date 2020-03-05 1:30 下午
  */
 @Service
-public class OperationLogServiceImpl extends BaseServiceImpl<OperationLogMapper, Integer, OperationLogDO> implements OperationLogService {
+public class OperationLogServiceImpl extends BaseServiceImpl<OperationLogMapper, Long, OperationLogDO> implements OperationLogService {
 
     /**
      * 不需要记录变化的字段值
@@ -37,7 +37,7 @@ public class OperationLogServiceImpl extends BaseServiceImpl<OperationLogMapper,
     }
 
     @Override
-    public void asyncLog(String log, LogTypeEnum type, LoginAccount<Integer> account) {
+    public void asyncLog(String log, LogTypeEnum type, LoginAccount<Long> account) {
         GlobalThreadPool.execute(() -> {
             OperationLogDO logDO = new OperationLogDO().setOperation(log).setType(type.getValue());
             logDO.autoSetBaseInfo(true, account);
@@ -47,7 +47,7 @@ public class OperationLogServiceImpl extends BaseServiceImpl<OperationLogMapper,
 
     @Override
     public void asyncUpdateLog(String desc, Object newObj, BaseDO oldObj) {
-        LoginAccount<Integer> la = LoginAccount.get();
+        LoginAccount<Long> la = LoginAccount.get();
         GlobalThreadPool.execute(() -> {
             List<String> results = BeanUtils.getFieldValueChangeRecords(newObj, oldObj,
                     field -> !ArrayUtils.contains(ignoreFields, field.getName()))
@@ -67,7 +67,7 @@ public class OperationLogServiceImpl extends BaseServiceImpl<OperationLogMapper,
 
     @Override
     public void asyncDeleteLog(String desc, Object obj) {
-        LoginAccount<Integer> la = LoginAccount.get();
+        LoginAccount<Long> la = LoginAccount.get();
         GlobalThreadPool.execute(() -> {
             OperationLogDO logDO = new OperationLogDO().setOperation(desc + " => " + JsonUtils.toJSONString(obj))
                     .setType(LogTypeEnum.DELETE.getValue());

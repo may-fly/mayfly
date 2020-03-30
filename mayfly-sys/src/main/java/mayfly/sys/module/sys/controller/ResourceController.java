@@ -38,7 +38,7 @@ public class ResourceController {
     }
 
     @GetMapping("/{id}")
-    public Result<?> detail(@PathVariable Integer id) {
+    public Result<?> detail(@PathVariable Long id) {
         return Result.success(BeanUtils.copyProperties(resourceService.getById(id), ResourceDetailVO.class));
     }
 
@@ -51,7 +51,7 @@ public class ResourceController {
 
     @Permission
     @PutMapping("/{id}")
-    public Result<?> update(@PathVariable Integer id, @RequestBody @Valid ResourceForm resourceForm) {
+    public Result<?> update(@PathVariable Long id, @RequestBody @Valid ResourceForm resourceForm) {
         ResourceDO resource = BeanUtils.copyProperties(resourceForm, ResourceDO.class);
         resource.setId(id);
         resourceService.update(resource);
@@ -59,14 +59,14 @@ public class ResourceController {
     }
 
     @PutMapping("/{id}/{status}")
-    public Result<?> changeStatus(@PathVariable Integer id, @PathVariable Integer status) {
+    public Result<?> changeStatus(@PathVariable Long id, @PathVariable Integer status) {
         resourceService.changeStatus(id, status);
         return Result.success();
     }
 
     @Permission
     @DeleteMapping("/{id}")
-    public Result<?> delete(@PathVariable Integer id) {
+    public Result<?> delete(@PathVariable Long id) {
         resourceService.delete(id);
         return Result.success();
     }

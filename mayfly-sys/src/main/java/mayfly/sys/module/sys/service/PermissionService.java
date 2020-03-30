@@ -10,7 +10,7 @@ import mayfly.sys.module.sys.entity.AccountDO;
  * @author: meilin.huang
  * @date: 2018/6/26 上午9:48
  */
-public interface PermissionService extends LoginAccountRegistry<Integer> {
+public interface PermissionService extends LoginAccountRegistry<Long> {
     /**
      * 保存id以及对应的权限
      *
@@ -25,12 +25,5 @@ public interface PermissionService extends LoginAccountRegistry<Integer> {
      * @param token token
      */
     void removeToken(String token);
-
-    /**
-     * 退出登录移除权限
-     *
-     * @param userId  user id
-     */
-//    void removePermissions(Integer userId);
 
 }

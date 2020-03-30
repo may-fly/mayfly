@@ -14,7 +14,7 @@ import mayfly.sys.module.sys.entity.AccountDO;
  * @version 1.0
  * @date 2019-07-06 14:56
  */
-public interface AccountService extends BaseService<Integer, AccountDO> {
+public interface AccountService extends BaseService<Long, AccountDO> {
 
     PageResult<AccountVO> listByQuery(AccountQuery query);
 

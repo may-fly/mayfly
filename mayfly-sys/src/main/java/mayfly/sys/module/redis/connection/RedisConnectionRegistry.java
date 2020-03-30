@@ -78,7 +78,7 @@ public class RedisConnectionRegistry {
 
     public synchronized void registerCluster(Set<RedisInfo> redisCluster) {
         Assert.notEmpty(redisCluster, "集群节点uri不能为空！");
-        int clusterId = redisCluster.stream().findFirst().get().getClusterId();
+        long clusterId = redisCluster.stream().findFirst().get().getClusterId();
         Assert.assertState(clusterId != RedisInfo.STANDALONE, "集群id不存在！");
 
         if (connectionCache.containsKey(getClusterKey(clusterId))) {
@@ -95,11 +95,11 @@ public class RedisConnectionRegistry {
      * @param id       redis id
      * @param cluster  是否为集群
      */
-    public void remove(int id, boolean cluster) {
+    public void remove(long id, boolean cluster) {
         connectionCache.remove(cluster ? getClusterKey(id) : getStandaloneKey(id));
     }
 
-    public boolean contains(boolean cluster, int id) {
+    public boolean contains(boolean cluster, long id) {
         return cluster ? connectionCache.containsKey(getClusterKey(id)) : connectionCache.containsKey(getStandaloneKey(id));
     }
 
@@ -107,7 +107,7 @@ public class RedisConnectionRegistry {
 //        return (RedisClient) connectionCache.get(id).getRequireRedisClient();
 //    }
 
-    public RedisClusterClient getClusterClient(int clusterId) {
+    public RedisClusterClient getClusterClient(long clusterId) {
         return (RedisClusterClient) connectionCache.get(getClusterKey(clusterId), true).getRequireRedisClient();
     }
 
@@ -117,7 +117,7 @@ public class RedisConnectionRegistry {
      * @param redisId redis id
      * @return
      */
-    public StatefulRedisConnection<String, byte[]> getConnection(int redisId) {
+    public StatefulRedisConnection<String, byte[]> getConnection(long redisId) {
         RedisInfo ri = getRedisInfo(redisId);
         Assert.notNull(ri, "不存在该redis实例连接");
         //如果是单机则返回单机连接
@@ -134,7 +134,7 @@ public class RedisConnectionRegistry {
      * @param clusterId 集群id
      * @return
      */
-    public StatefulRedisClusterConnection<String, byte[]> getClusterConnection(int clusterId) {
+    public StatefulRedisClusterConnection<String, byte[]> getClusterConnection(long clusterId) {
         return Optional.ofNullable(connectionCache.get(getClusterKey(clusterId)))
                 .map(x -> (StatefulRedisClusterConnection<String, byte[]>) x.getRequireConnection())
                 .orElseThrow(() -> new BusinessRuntimeException("不存在该集群连接实例！"));
@@ -147,7 +147,7 @@ public class RedisConnectionRegistry {
      * @param redisId
      * @return
      */
-    public RedisInfo getRedisInfo(int redisId) {
+    public RedisInfo getRedisInfo(long redisId) {
         for (RedisInfo r : allRedis) {
             if (r.getId() == redisId) {
                 return r;
@@ -162,7 +162,7 @@ public class RedisConnectionRegistry {
      * @param redisId
      * @return
      */
-    public RedisCommands<String, byte[]> getCmds(int redisId) {
+    public RedisCommands<String, byte[]> getCmds(long redisId) {
         return getConnection(redisId).sync();
     }
 
@@ -172,7 +172,7 @@ public class RedisConnectionRegistry {
      * @param clusterId
      * @return
      */
-    public RedisClusterCommands<String, byte[]> getClusterCmds(int clusterId) {
+    public RedisClusterCommands<String, byte[]> getClusterCmds(long clusterId) {
         return getClusterConnection(clusterId).sync();
     }
 
@@ -182,7 +182,7 @@ public class RedisConnectionRegistry {
      * @param clusterId 集群id
      * @return
      */
-    public static String getClusterKey(int clusterId) {
+    public static String getClusterKey(long clusterId) {
         return "cluster_" + clusterId;
     }
 
@@ -192,7 +192,7 @@ public class RedisConnectionRegistry {
      * @param redisId
      * @return
      */
-    public static String getStandaloneKey(int redisId) {
+    public static String getStandaloneKey(long redisId) {
         return "redis_" + redisId;
     }
 
@@ -211,7 +211,7 @@ public class RedisConnectionRegistry {
         /**
          * 是否为集群模式
          */
-        private int clusterId = RedisInfo.STANDALONE;
+        private long clusterId = RedisInfo.STANDALONE;
 
         private Set<RedisInfo> redisInfos;
 

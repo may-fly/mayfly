@@ -19,7 +19,7 @@ import mayfly.core.base.model.BaseDO;
 @Table("tb_account_role")
 @NoColumn(fields = {BaseDO.UPDATE_TIME, BaseDO.UPDATE_ACCOUNT, BaseDO.UPDATE_ACCOUNT_ID})
 public class AccountRoleDO extends BaseDO {
-    private Integer accountId;
+    private Long accountId;
 
-    private Integer roleId;
+    private Long roleId;
 }

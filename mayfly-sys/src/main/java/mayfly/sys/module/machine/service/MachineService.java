@@ -20,7 +20,7 @@ import java.util.function.Function;
  * @version 1.0
  * @date 2019-11-04 3:04 下午
  */
-public interface MachineService extends BaseService<Integer, MachineDO> {
+public interface MachineService extends BaseService<Long, MachineDO> {
 
     /**
      * 保存新增的机器信息
@@ -36,7 +36,7 @@ public interface MachineService extends BaseService<Integer, MachineDO> {
      * @param machineId 机器id
      * @param cmd       命令
      */
-    default String exec(Integer machineId, String cmd) {
+    default String exec(Long machineId, String cmd) {
         try {
             return SSHUtils.exec(getSession(machineId), cmd);
         } catch (SSHException e) {
@@ -51,7 +51,7 @@ public interface MachineService extends BaseService<Integer, MachineDO> {
      * @param cmd           命令
      * @param lineProcessor 行处理器
      */
-    default void exec(Integer machineId, String cmd, IOUtils.LineProcessor lineProcessor) {
+    default void exec(Long machineId, String cmd, IOUtils.LineProcessor lineProcessor) {
         try {
             SSHUtils.exec(getSession(machineId), cmd, lineProcessor);
         } catch (SSHException e) {
@@ -64,7 +64,7 @@ public interface MachineService extends BaseService<Integer, MachineDO> {
      *
      * @param machineId 机器id
      */
-    default void sftpOperate(Integer machineId, Function<ChannelSftp, Void> function) {
+    default void sftpOperate(Long machineId, Function<ChannelSftp, Void> function) {
         try {
             SSHUtils.sftpOperate(getSession(machineId), function);
         } catch (SSHException e) {
@@ -78,7 +78,7 @@ public interface MachineService extends BaseService<Integer, MachineDO> {
      * @param machineId 机器id
      * @return session
      */
-    default Session getSession(Integer machineId) {
+    default Session getSession(Long machineId) {
         return SSHUtils.getSession(Objects.toString(machineId), () -> {
             MachineDO machine = getById(machineId);
             BusinessAssert.notNull(machine, "机器不存在");

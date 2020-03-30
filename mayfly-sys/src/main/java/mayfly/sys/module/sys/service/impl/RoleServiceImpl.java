@@ -22,7 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @MethodLog("角色管理:")
 @Service
-public class RoleServiceImpl extends BaseServiceImpl<RoleMapper, Integer, RoleDO> implements RoleService {
+public class RoleServiceImpl extends BaseServiceImpl<RoleMapper, Long, RoleDO> implements RoleService {
 
     @Autowired
     private RoleResourceService roleResourceService;
@@ -42,7 +42,7 @@ public class RoleServiceImpl extends BaseServiceImpl<RoleMapper, Integer, RoleDO
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void delete(Integer id) {
+    public void delete(Long id) {
         RoleDO role = getById(id);
         BusinessAssert.notNull(role, "角色不存在");
         // 删除角色关联的用户角色信息

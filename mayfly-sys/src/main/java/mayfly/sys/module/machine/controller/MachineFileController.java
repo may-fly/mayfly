@@ -40,25 +40,25 @@ public class MachineFileController {
 
     @MethodLog(value = "获取文件配置列表", level = MethodLog.LogLevel.DEBUG)
     @GetMapping("/{machineId}/files")
-    public Result<?> files(@PathVariable Integer machineId) {
+    public Result<?> files(@PathVariable Long machineId) {
         return Result.success(machineFileService.listByMachineId(machineId));
     }
 
     @GetMapping("/files/{id}/ls")
-    public Result<?> ls(@PathVariable Integer id, String path) {
+    public Result<?> ls(@PathVariable Long id, String path) {
         BusinessAssert.notNull(path, "path不能为空");
         return Result.success(machineFileService.ls(id, path));
     }
 
     @GetMapping("/files/{id}/cat")
-    public Result<?> cat(@PathVariable Integer id, String path) {
+    public Result<?> cat(@PathVariable Long id, String path) {
         return Result.success(machineFileService.getFileContent(id, path));
     }
 
     @Permission
     @MethodLog("修改文件内容")
     @PutMapping("/files/{id}")
-    public Result<?> updateFileContent(@PathVariable Integer id, @RequestBody @Valid MachineConfContentForm form) {
+    public Result<?> updateFileContent(@PathVariable Long id, @RequestBody @Valid MachineConfContentForm form) {
         machineFileService.updateFileContent(id, form.getPath(), form.getContent());
         return Result.success();
     }
@@ -66,13 +66,13 @@ public class MachineFileController {
     @Permission
     @MethodLog("新增文件配置")
     @PostMapping("/{machineId}/files")
-    public Result<?> addConf(@PathVariable Integer machineId, @RequestBody @Valid MachineFileForm form) {
+    public Result<?> addConf(@PathVariable Long machineId, @RequestBody @Valid MachineFileForm form) {
         return Result.success(machineFileService.create(machineId, form));
     }
 
     @MethodLog("删除文件配置")
     @DeleteMapping("/files/{id}")
-    public Result<?> delConf(@PathVariable Integer id) {
+    public Result<?> delConf(@PathVariable Long id) {
         machineFileService.deleteById(id);
         return Result.success();
     }
@@ -91,7 +91,7 @@ public class MachineFileController {
 
     @Permission
     @DeleteMapping("/files/{fileId}/rm")
-    public Result<?> rm(@PathVariable Integer fileId, String path) {
+    public Result<?> rm(@PathVariable Long fileId, String path) {
         machineFileService.rmFile(fileId, path);
         return Result.success();
     }

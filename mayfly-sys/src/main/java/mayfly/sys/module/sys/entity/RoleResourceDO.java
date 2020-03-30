@@ -21,7 +21,7 @@ import mayfly.core.base.model.BaseDO;
 @NoColumn(fields = {BaseDO.UPDATE_TIME, BaseDO.UPDATE_ACCOUNT, BaseDO.UPDATE_ACCOUNT_ID})
 public class RoleResourceDO extends BaseDO {
 
-    private Integer roleId;
+    private Long roleId;
 
-    private Integer resourceId;
+    private Long resourceId;
 }

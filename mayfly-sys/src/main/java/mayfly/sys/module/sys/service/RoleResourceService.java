@@ -11,7 +11,7 @@ import java.util.List;
  * @version 1.0
  * @date 2019-06-30 11:58
  */
-public interface RoleResourceService extends BaseService<Integer, RoleResourceDO> {
+public interface RoleResourceService extends BaseService<Long, RoleResourceDO> {
 
     /**
      * 获取角色拥有的资源id列表
@@ -19,7 +19,7 @@ public interface RoleResourceService extends BaseService<Integer, RoleResourceDO
      * @param roleId 角色id
      * @return 资源id列表
      */
-    List<Integer> listResourceId(Integer roleId);
+    List<Long> listResourceId(Long roleId);
 
     /**
      * 获取角色拥有的资源列表树
@@ -27,7 +27,7 @@ public interface RoleResourceService extends BaseService<Integer, RoleResourceDO
      * @param roleId 角色id
      * @return 资源列表树
      */
-    List<RoleResourceVO> listResource(Integer roleId);
+    List<RoleResourceVO> listResource(Long roleId);
 
     /**
      * 保存角色关联的资源信息
@@ -35,5 +35,5 @@ public interface RoleResourceService extends BaseService<Integer, RoleResourceDO
      * @param roleId 角色id
      * @param resourceIds 资源id列表
      */
-    void saveResource(Integer roleId, List<Integer> resourceIds);
+    void saveResource(Long roleId, List<Long> resourceIds);
 }

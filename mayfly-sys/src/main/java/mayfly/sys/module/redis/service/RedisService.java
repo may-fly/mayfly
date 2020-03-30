@@ -11,7 +11,7 @@ import mayfly.sys.module.redis.entity.RedisDO;
  * @version 1.0
  * @date 2019-01-07 4:07 PM
  */
-public interface RedisService extends BaseService<Integer, RedisDO> {
+public interface RedisService extends BaseService<Long, RedisDO> {
 
     /**
      * 获取单台机器的redis命令操作对象，可以是单机版也可以是集群版
@@ -19,7 +19,7 @@ public interface RedisService extends BaseService<Integer, RedisDO> {
      * @param redisId
      * @return
      */
-    RedisCommands<String, byte[]> getCmds(int redisId);
+    RedisCommands<String, byte[]> getCmds(long redisId);
 
     /**
      * 获取集群连接
@@ -27,7 +27,7 @@ public interface RedisService extends BaseService<Integer, RedisDO> {
      * @param clusterId
      * @return
      */
-    RedisClusterCommands<String, byte[]> getClusterCmds(int clusterId);
+    RedisClusterCommands<String, byte[]> getClusterCmds(long clusterId);
 
     /**
      * 新增节点
@@ -41,5 +41,5 @@ public interface RedisService extends BaseService<Integer, RedisDO> {
      *
      * @param redisId     redis id
      */
-    void delete(int redisId);
+    void delete(long redisId);
 }

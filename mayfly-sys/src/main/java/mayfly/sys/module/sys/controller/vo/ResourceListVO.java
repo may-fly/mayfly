@@ -14,11 +14,11 @@ import java.util.Objects;
  */
 @Getter
 @Setter
-public class ResourceListVO implements TreeUtils.TreeNode<Integer> {
+public class ResourceListVO implements TreeUtils.TreeNode<Long> {
 
-    private Integer id;
+    private Long id;
 
-    private Integer pid;
+    private Long pid;
 
     private Integer type;
 
@@ -33,18 +33,18 @@ public class ResourceListVO implements TreeUtils.TreeNode<Integer> {
     private List<ResourceListVO> children;
 
     @Override
-    public Integer id() {
+    public Long id() {
         return this.getId();
     }
 
     @Override
-    public Integer parentId() {
+    public Long parentId() {
         return this.pid;
     }
 
     @Override
     public boolean root() {
-        return Objects.equals(this.pid, 0);
+        return Objects.equals(this.pid, 0L);
     }
 
     @Override

@@ -24,7 +24,7 @@ public class ResourceDO extends BaseDO implements Serializable {
 
     private static final long serialVersionUID = 6346288647519202567L;
 
-    private Integer pid;
+    private Long pid;
 
     private Integer type;
 

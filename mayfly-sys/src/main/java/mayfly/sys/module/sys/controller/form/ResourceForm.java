@@ -14,7 +14,7 @@ import mayfly.sys.module.sys.enums.ResourceTypeEnum;
  */
 @Data
 public class ResourceForm {
-    private Integer pid;
+    private Long pid;
 
     @NotBlank
     @Size(min = 2, max = 24)

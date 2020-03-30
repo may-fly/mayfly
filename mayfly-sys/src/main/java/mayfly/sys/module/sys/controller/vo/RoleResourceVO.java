@@ -14,11 +14,11 @@ import java.util.Objects;
  */
 @Getter
 @Setter
-public class RoleResourceVO implements TreeUtils.TreeNode<Integer> {
+public class RoleResourceVO implements TreeUtils.TreeNode<Long> {
 
-    private Integer resourceId;
+    private Long resourceId;
 
-    private Integer resourcePid;
+    private Long resourcePid;
 
     private String resourceName;
 
@@ -33,18 +33,18 @@ public class RoleResourceVO implements TreeUtils.TreeNode<Integer> {
     private List<RoleResourceVO> children;
 
     @Override
-    public Integer id() {
+    public Long id() {
         return this.resourceId;
     }
 
     @Override
-    public Integer parentId() {
+    public Long parentId() {
         return this.resourcePid;
     }
 
     @Override
     public boolean root() {
-        return Objects.equals(this.resourcePid, 0);
+        return Objects.equals(this.resourcePid, 0L);
     }
 
     @Override

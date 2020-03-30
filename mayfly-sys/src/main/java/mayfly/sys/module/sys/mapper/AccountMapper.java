@@ -13,7 +13,7 @@ import java.util.List;
  * @author hml
  * @date 2018/6/27 下午2:35
  */
-public interface AccountMapper extends BaseMapper<Integer, AccountDO> {
+public interface AccountMapper extends BaseMapper<Long, AccountDO> {
 
     @Select("<script>" +
             "SELECT id, username, status, create_time AS createTime, update_time AS updateTime, create_account AS createAccount" +

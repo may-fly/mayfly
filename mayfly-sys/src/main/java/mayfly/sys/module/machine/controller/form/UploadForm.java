@@ -16,7 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class UploadForm {
 
     @NotNull
-    private Integer fileId;
+    private Long fileId;
 
     @NotBlank
     private String path;

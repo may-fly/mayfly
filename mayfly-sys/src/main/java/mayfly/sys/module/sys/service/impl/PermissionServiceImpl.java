@@ -43,14 +43,14 @@ public class PermissionServiceImpl implements PermissionService  {
     /**
      * 权限缓存处理器
      */
-    private LoginAccountRegistryHandler<Integer> loginAccountRegistryHandler = LoginAccountRegistryHandler.of(this);
+    private LoginAccountRegistryHandler<Long> loginAccountRegistryHandler = LoginAccountRegistryHandler.of(this);
 
 
     @Override
     public LoginSuccessVO saveIdAndPermission(AccountDO account) {
-        Integer id = account.getId();
+        Long id = account.getId();
         String token = UUIDUtils.generateUUID();
-        List<ResourceListVO> resources = resourceService.listByUserId(id);
+        List<ResourceListVO> resources = resourceService.listByAccountId(id);
         // 获取所有叶子节点
         List<ResourceListVO> permissions = new ArrayList<>();
         for (ResourceListVO root : resources) {
@@ -61,7 +61,7 @@ public class PermissionServiceImpl implements PermissionService  {
                 .map(p -> p.getStatus().equals(EnableDisableEnum.DISABLE.getValue()) ? PermissionCheckHandler.getDisablePermissionCode(p.getCode()) : p.getCode())
                 .collect(Collectors.toList());
         // 保存登录账号信息
-        LoginAccount<Integer> loginAccount = new LoginAccount<Integer>().setId(account.getId()).setUsername(account.getUsername())
+        LoginAccount<Long> loginAccount = new LoginAccount<Long>().setId(account.getId()).setUsername(account.getUsername())
                 .setPermissions(permissionCodes);
         loginAccountRegistryHandler.saveLoginAccount(token, loginAccount, UserCacheKey.EXPIRE_TIME, TimeUnit.MINUTES);
 
@@ -87,8 +87,8 @@ public class PermissionServiceImpl implements PermissionService  {
 
     @SuppressWarnings("all")
     @Override
-    public LoginAccount<Integer> getLoginAccount(String token) {
-        return (LoginAccount<Integer>) redisTemplate.opsForValue().get(BracePlaceholder.resolveByObject(UserCacheKey.ACCOUNT_TOKEN_KEY, token));
+    public LoginAccount<Long> getLoginAccount(String token) {
+        return (LoginAccount<Long>) redisTemplate.opsForValue().get(BracePlaceholder.resolveByObject(UserCacheKey.ACCOUNT_TOKEN_KEY, token));
     }
 
     @SuppressWarnings("all")

@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
  * @date 2019-01-07 4:08 PM
  */
 @Service
-public class RedisServiceImpl extends BaseServiceImpl<RedisMapper, Integer, RedisDO> implements RedisService {
+public class RedisServiceImpl extends BaseServiceImpl<RedisMapper, Long, RedisDO> implements RedisService {
 
     @Autowired
     private RedisMapper redisMapper;
@@ -34,7 +34,7 @@ public class RedisServiceImpl extends BaseServiceImpl<RedisMapper, Integer, Redi
     private RedisConnectionRegistry registry = RedisConnectionRegistry.getInstance();
 
     @Override
-    public RedisCommands<String, byte[]> getCmds(int redisId) {
+    public RedisCommands<String, byte[]> getCmds(long redisId) {
         //如果不存在该redis信息，则先连接对应的单机or集群连接
         if (registry.getRedisInfo(redisId) == null) {
             RedisDO redis = getById(redisId);
@@ -49,7 +49,7 @@ public class RedisServiceImpl extends BaseServiceImpl<RedisMapper, Integer, Redi
     }
 
     @Override
-    public RedisClusterCommands<String, byte[]> getClusterCmds(int clusterId) {
+    public RedisClusterCommands<String, byte[]> getClusterCmds(long clusterId) {
         //如果不存在该集群连接，则先连接
         if (!registry.contains(true, clusterId)) {
             registry.registerCluster(toRedisCluster(clusterId));
@@ -71,7 +71,7 @@ public class RedisServiceImpl extends BaseServiceImpl<RedisMapper, Integer, Redi
     }
 
     @Override
-    public void delete(int redisId) {
+    public void delete(long redisId) {
         RedisDO redis = getById(redisId);
         BusinessAssert.notNull(redis, "节点不存在");
 
@@ -88,14 +88,14 @@ public class RedisServiceImpl extends BaseServiceImpl<RedisMapper, Integer, Redi
         return RedisInfo.builder(redis.getId()).info(redis.getHost(), redis.getPort(), redis.getPwd()).build();
     }
 
-    private Set<RedisInfo> toRedisCluster(int clusterId) {
+    private Set<RedisInfo> toRedisCluster(long clusterId) {
         List<RedisDO> nodes = listByCondition(RedisDO.builder().clusterId(clusterId).build());
         BusinessAssert.notEmpty(nodes, "不存在该redis集群实例！");
         return nodes.stream().map(n -> RedisInfo.builder(n.getId()).clusterId(clusterId).info(n.getHost(), n.getPort(), n.getPwd()).build())
                 .collect(Collectors.toSet());
     }
 
-    private boolean isStandalone(Integer clusterId) {
+    private boolean isStandalone(Long clusterId) {
         return clusterId == null || clusterId == RedisInfo.STANDALONE;
     }
 }
