@@ -20,7 +20,7 @@ mayfly前后端分离的后台系统(包含按钮级别的权限管理，以及�
 后端系统主要模块，包含各功能模块对应的Service和Controller等
 
 ## 演示环境
-地址：<mayfly.1yue.net/>
+地址：<http://mayfly.1yue.net>
 账号：test 密码：123456
 
 ## 项目特点 
