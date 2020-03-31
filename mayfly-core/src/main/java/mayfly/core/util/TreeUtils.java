@@ -39,19 +39,6 @@ public class TreeUtils {
     }
 
     /**
-     * 获取指定树节点下的所有叶子节点
-     *
-     * @param parent 父节点
-     * @param <T>    实际节点类型
-     * @return 叶子节点
-     */
-    public static <T extends TreeNode<?>> List<T> getLeafs(T parent) {
-        List<T> leafs = new ArrayList<>();
-        fillLeaf(parent, leafs);
-        return leafs;
-    }
-
-    /**
      * 从所有节点列表中查找并设置parent的所有子节点
      *
      * @param parent 父节点
@@ -77,6 +64,19 @@ public class TreeUtils {
             // 递归设置子节点
             setChildren(m, nodes);
         });
+    }
+
+    /**
+     * 获取指定树节点下的所有叶子节点
+     *
+     * @param parent 父节点
+     * @param <T>    实际节点类型
+     * @return 叶子节点
+     */
+    public static <T extends TreeNode<?>> List<T> getLeafs(T parent) {
+        List<T> leafs = new ArrayList<>();
+        fillLeaf(parent, leafs);
+        return leafs;
     }
 
     /**

@@ -1,5 +1,6 @@
 package mayfly.sys.module.open.controller;
 
+import mayfly.core.permission.Permission;
 import mayfly.core.result.Result;
 import mayfly.core.validation.annotation.Valid;
 import mayfly.sys.module.open.controller.form.AccountLoginForm;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/open")
+@Permission(requireCode = false)
 public class OpenController {
 
     @Autowired

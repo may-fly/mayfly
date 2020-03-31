@@ -9,9 +9,3 @@ spring:
     encoding:
       charset: UTF-8
       enabled: true
-#日志
-logging:
-  #  level:
-  #    root: INFO
-  #    mayfly: DEBUG
-  config: classpath:logback-spring-dev.xml
