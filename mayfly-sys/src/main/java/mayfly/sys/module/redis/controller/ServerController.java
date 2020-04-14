@@ -4,7 +4,6 @@ import mayfly.core.log.MethodLog;
 import mayfly.core.permission.Permission;
 import mayfly.core.result.Result;
 import mayfly.core.util.bean.BeanUtils;
-import mayfly.core.validation.annotation.Valid;
 import mayfly.sys.module.redis.commands.ServerCommand;
 import mayfly.sys.module.redis.controller.form.RedisForm;
 import mayfly.sys.module.redis.controller.vo.RedisConfParamVO;
@@ -22,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**

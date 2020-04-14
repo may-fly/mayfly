@@ -37,70 +37,70 @@
 </template>
 
 <script>
-import openApi from "../../common/openApi.js";
-import sockets from "~/common/sockets";
+import openApi from '../../common/openApi.js'
+import sockets from '~/common/sockets'
 // import Vue from 'vue'
 export default {
   data() {
     return {
       loginForm: {
-        username: "",
-        password: ""
+        username: '',
+        password: ''
       },
       remember: false,
       loginLoading: false
-    };
+    }
   },
   methods: {
     async login() {
-      this.loginLoading = true;
+      this.loginLoading = true
       try {
-        let res = await openApi.login(this.loginForm);
+        let res = await openApi.login(this.loginForm)
         if (this.remember) {
-          localStorage.setItem("remember", JSON.stringify(this.loginForm));
+          localStorage.setItem('remember', JSON.stringify(this.loginForm))
         } else {
-          localStorage.removeItem("remember");
+          localStorage.removeItem('remember')
         }
         setTimeout(() => {
           //保存用户token以及菜单按钮权限
-          this.$Permission.savePermission(res);
+          this.$Permission.savePermission(res)
           this.$notify({
-            title: "登录成功",
-            message: "很高兴你使用Mayfly Admin！别忘了给个Star哦。",
-            type: "success"
-          });
-          this.loginLoading = false;
+            title: '登录成功',
+            message: '很高兴你使用Mayfly Admin！别忘了给个Star哦。',
+            type: 'success'
+          })
+          this.loginLoading = false
           // 有重定向则重定向，否则到首页
-          let redirect = this.$route.query.redirect;
+          let redirect = this.$route.query.redirect
           if (redirect) {
-            this.$router.push(redirect);
+            this.$router.push(redirect)
           } else {
             this.$router.push({
-              path: "/"
-            });
+              path: '/'
+            })
           }
-        }, 500);
+        }, 500)
       } catch (err) {
-        this.loginLoading = false;
+        this.loginLoading = false
       }
     },
     getRemember() {
-      return localStorage.getItem('remember');
+      return localStorage.getItem('remember')
     }
   },
   mounted() {
-    let remember = JSON.parse(this.getRemember());
+    let remember = JSON.parse(this.getRemember())
     if (remember) {
-      this.remember = true;
-      this.loginForm.username = remember.username;
-      this.loginForm.password = remember.password;
+      this.remember = true
+      this.loginForm.username = remember.username
+      this.loginForm.password = remember.password
     } else {
-      this.remember = false;
+      this.remember = false
     }
   }
-};
+}
 </script>
 
 <style lang="less">
-@import "Login.less";
+@import 'Login.less';
 </style>

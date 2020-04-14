@@ -7,6 +7,7 @@ import mayfly.core.base.mapper.annotation.Table;
 import mayfly.core.base.model.BaseDO;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 @Accessors(chain = true)
 @Getter
@@ -21,4 +22,6 @@ public class AccountDO extends BaseDO implements Serializable {
     private String password;
 
     private Integer status;
+
+    private LocalDateTime lastLoginTime;
 }

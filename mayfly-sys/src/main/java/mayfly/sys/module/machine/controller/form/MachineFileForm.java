@@ -2,9 +2,10 @@ package mayfly.sys.module.machine.controller.form;
 
 import lombok.Data;
 import mayfly.core.validation.annotation.EnumValue;
-import mayfly.core.validation.annotation.NotBlank;
-import mayfly.core.validation.annotation.NotNull;
 import mayfly.sys.module.machine.enums.MachineFileTypeEnum;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 /**
  * @author meilin.huang

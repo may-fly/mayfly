@@ -1,14 +1,17 @@
 package mayfly.sys.module.open.controller.form;
 
-import lombok.Data;
-import mayfly.core.validation.annotation.NotBlank;
+import lombok.Getter;
+import lombok.Setter;
+
+import javax.validation.constraints.NotBlank;
 
 /**
  * @author meilin.huang
  * @version 1.0
  * @date 2018-11-22 10:28 AM
  */
-@Data
+@Getter
+@Setter
 public class AccountLoginForm {
 
     @NotBlank

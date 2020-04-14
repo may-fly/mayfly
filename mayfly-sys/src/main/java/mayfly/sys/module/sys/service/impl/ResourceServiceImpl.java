@@ -49,13 +49,13 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourceMapper, Long, R
     @MethodLog(value = "获取资源列表", level = MethodLog.LogLevel.DEBUG)
     @Override
     public List<ResourceListVO> listResource(ResourceDO condition) {
-        List<ResourceDO> resources = listAll("pid ASC, weight ASC");
-        return TreeUtils.generateTrees(BeanUtils.copyProperties(resources, ResourceListVO.class));
+        return TreeUtils.generateTrees(BeanUtils.copyProperties(listAll("pid ASC, weight ASC"),
+                ResourceListVO.class));
     }
 
     @Override
     public void create(ResourceDO resource) {
-        if (resource.getPid() == null || Objects.equals(resource.getPid(), 0)) {
+        if (resource.getPid() == null || Objects.equals(resource.getPid(), 0L)) {
             BusinessAssert.equals(resource.getType(), ResourceTypeEnum.MENU.getValue(), "权限资源不能为根节点");
             // 为null的情况默认设为0
             resource.setPid(0L);

@@ -5,9 +5,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import mayfly.core.validation.annotation.EnumValue;
-import mayfly.core.validation.annotation.NotBlank;
-import mayfly.core.validation.annotation.NotNull;
 import mayfly.sys.module.redis.enums.RedisValueTypeEnum;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 /**
  * @author meilin.huang

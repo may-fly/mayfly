@@ -21,9 +21,9 @@ public enum ResourceTypeEnum implements NameValueEnum<Integer> {
      */
     PERMISSION(2, "权限");
 
-    private Integer value;
+    private final Integer value;
 
-    private String name;
+    private final String name;
 
     ResourceTypeEnum(Integer value, String name) {
         this.value = value;

@@ -44,20 +44,20 @@ public class CollectionUtils {
     /**
      * 根据比较器比较两个collection中哪些是新增的对象以及删除的对象和没有改变的对象
      *
-     * @param newList    新list
-     * @param oldList    旧list
+     * @param newCollection    新list
+     * @param oldCollection    旧list
      * @param comparator 集合对象比较器
      * @param <T>        集合元素泛型对象
      * @return 比较结果 {@link CompareResult}
      */
-    public static <T> CompareResult<T> compare(Collection<T> newList, Collection<T> oldList, Comparator<T> comparator) {
-        Collection<T> unmodifiedValue = new ArrayList<>();
+    public static <T> CompareResult<T> compare(Collection<T> newCollection, Collection<T> oldCollection, Comparator<T> comparator) {
+        List<T> unmodifiedValue = new ArrayList<>();
 
-        Iterator<T> newIte = newList.iterator();
+        Iterator<T> newIte = newCollection.iterator();
         while (newIte.hasNext()) {
             T newObj = newIte.next();
             //遍历旧数组
-            Iterator<T> oldIte = oldList.iterator();
+            Iterator<T> oldIte = oldCollection.iterator();
             while (oldIte.hasNext()) {
                 //如果新旧数组中的对象相同，则为没有改变的对象
                 T oldObj = oldIte.next();
@@ -69,7 +69,7 @@ public class CollectionUtils {
             }
         }
 
-        return new CompareResult<T>(newList, oldList, unmodifiedValue);
+        return new CompareResult<T>(newCollection, oldCollection, unmodifiedValue);
     }
 
 
@@ -82,15 +82,15 @@ public class CollectionUtils {
         /**
          * 新增的对象列表
          */
-        private Collection<T> addValue;
+        private final Collection<T> addValue;
         /**
          * 删除的对象列表
          */
-        private Collection<T> delValue;
+        private final Collection<T> delValue;
         /**
          * 没有改变的对象列表
          */
-        private Collection<T> unmodifiedValue;
+        private final Collection<T> unmodifiedValue;
 
         public CompareResult(Collection<T> addValue, Collection<T> delValue, Collection<T> unmodifiedValue) {
             this.addValue = addValue;

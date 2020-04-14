@@ -125,7 +125,7 @@ public class MachineFileServiceImpl extends BaseServiceImpl<MachineFileMapper, L
 
         LoginAccount<Long> account = LoginAccount.get();
         // 异步上传，成功与否都webscoket通知上传者
-        GlobalThreadPool.execute(() -> {
+        GlobalThreadPool.execute("machineFileUploadNotify", () -> {
             machineService.sftpOperate(file.getMachineId(), sftp -> {
                 try {
                     sftp.put(inputStream, filePath);

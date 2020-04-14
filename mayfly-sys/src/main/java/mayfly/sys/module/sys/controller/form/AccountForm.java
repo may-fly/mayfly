@@ -1,7 +1,8 @@
 package mayfly.sys.module.sys.controller.form;
 
 import lombok.Data;
-import mayfly.core.validation.annotation.NotBlank;
+
+import javax.validation.constraints.NotBlank;
 
 /**
  * @author meilin.huang

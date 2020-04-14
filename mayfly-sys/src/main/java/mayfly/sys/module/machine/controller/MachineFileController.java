@@ -4,7 +4,6 @@ import mayfly.core.exception.BusinessAssert;
 import mayfly.core.log.MethodLog;
 import mayfly.core.permission.Permission;
 import mayfly.core.result.Result;
-import mayfly.core.validation.annotation.Valid;
 import mayfly.sys.module.machine.controller.form.MachineConfContentForm;
 import mayfly.sys.module.machine.controller.form.MachineFileForm;
 import mayfly.sys.module.machine.controller.form.UploadForm;
@@ -21,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import java.io.IOException;
 
 /**

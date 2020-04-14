@@ -2,9 +2,10 @@ package mayfly.sys.module.machine.controller.form;
 
 import lombok.Getter;
 import lombok.Setter;
-import mayfly.core.validation.annotation.NotBlank;
-import mayfly.core.validation.annotation.NotNull;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 /**
  * @author meilin.huang

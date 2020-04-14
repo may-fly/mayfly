@@ -23,34 +23,33 @@ public final class MapUtils {
     /**
      * HashMap Builder
      *
-     * @param capacity 容量
-     * @param <K>      key类型
-     * @param <V>      value类型
+     * @param size 元素个数(实际需要存储的元素个数，并非hashmap中的capacity)
+     * @param <K>  key类型
+     * @param <V>  value类型
      * @return map builder
      */
-    public static <K, V> MapBuilder<K, V> hashMapBuilder(int capacity) {
-        return new MapBuilder<K, V>(new HashMap<>(capacity));
+    public static <K, V> MapBuilder<K, V> hashMapBuilder(int size) {
+        return new MapBuilder<K, V>(new HashMap<>(Math.max((int) (size / .75f) + 1, 16)));
     }
 
     /**
      * HashMap Builder
      *
-     * @param capacity   容量
+     * @param size       元素个数(实际需要存储的元素个数，并非hashmap中的capacity)
      * @param firstKey   key值
      * @param firstValue value值
      * @param <K>        key类型
      * @param <V>        value类型
      * @return map builder
      */
-    public static <K, V> MapBuilder<K, V> hashMapBuilder(int capacity, K firstKey, V firstValue) {
-        return new MapBuilder<K, V>(new HashMap<>(capacity))
-                .put(firstKey, firstValue);
+    public static <K, V> MapBuilder<K, V> hashMapBuilder(int size, K firstKey, V firstValue) {
+        return MapUtils.<K, V>hashMapBuilder(size).put(firstKey, firstValue);
     }
 
 
     public static class MapBuilder<K, V> {
 
-        private Map<K, V> map;
+        private final Map<K, V> map;
 
         public MapBuilder(Map<K, V> map) {
             this.map = map;

@@ -1,7 +1,9 @@
 package mayfly.sys.module.redis.controller.form;
 
 import lombok.Data;
-import mayfly.core.validation.annotation.Size;
+
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 
 /**
  * @author meilin.huang
@@ -12,7 +14,8 @@ import mayfly.core.validation.annotation.Size;
 public class ScanForm {
     private String cursor;
 
-    @Size(min = 1, max = 20)
+    @Min(1)
+    @Max(20)
     private Integer count;
 
     private String match;

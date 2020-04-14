@@ -15,7 +15,7 @@ import java.util.Map;
  */
 public class HttpUtils {
 
-    private static HttpClient httpClient = HttpClient.newHttpClient();
+    private static final HttpClient HTTP_CLIENT = HttpClient.newHttpClient();
 
     /**
      * 发送get请求
@@ -29,7 +29,7 @@ public class HttpUtils {
                 .GET()
                 .build();
         try {
-            var httpResponse = httpClient.send(httpGet, HttpResponse.BodyHandlers.ofString());
+            var httpResponse = HTTP_CLIENT.send(httpGet, HttpResponse.BodyHandlers.ofString());
             return httpResponse.body();
         } catch (IOException | InterruptedException e) {
             throw new IllegalArgumentException(e);
@@ -61,7 +61,7 @@ public class HttpUtils {
                 .POST(HttpRequest.BodyPublishers.ofString(JsonUtils.toJSONString(jsonBody)))
                 .build();
         try {
-            var httpResponse = httpClient.send(post, HttpResponse.BodyHandlers.ofString());
+            var httpResponse = HTTP_CLIENT.send(post, HttpResponse.BodyHandlers.ofString());
             return httpResponse.body();
         } catch (IOException | InterruptedException e) {
             throw new IllegalArgumentException(e);
@@ -86,7 +86,7 @@ public class HttpUtils {
             paramMap = BeanUtils.bean2Map(params);
         }
 
-        StringBuilder sb = new StringBuilder("?");
+        var sb = new StringBuilder("?");
         boolean isFirst = true;
         for (Map.Entry<String, Object> entry : paramMap.entrySet()) {
             String k = entry.getKey();

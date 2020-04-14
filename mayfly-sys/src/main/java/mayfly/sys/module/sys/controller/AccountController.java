@@ -5,7 +5,6 @@ import mayfly.core.permission.Permission;
 import mayfly.core.result.Result;
 import mayfly.core.util.bean.BeanUtils;
 import mayfly.core.util.enums.EnumUtils;
-import mayfly.core.validation.annotation.Valid;
 import mayfly.sys.common.enums.EnableDisableEnum;
 import mayfly.sys.module.sys.controller.form.AccountForm;
 import mayfly.sys.module.sys.controller.form.RoleUserForm;
@@ -25,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;

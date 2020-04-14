@@ -27,7 +27,7 @@ public class TreeUtils {
             T node = ite.next();
             if (node.root()) {
                 roots.add(node);
-                // 从所有节点列表中删除该节点
+                // 从所有节点列表中删除该节点，以免后续重复遍历该节点
                 ite.remove();
             }
         }
@@ -52,6 +52,7 @@ public class TreeUtils {
             T node = ite.next();
             if (Objects.equals(node.parentId(), parentId)) {
                 children.add(node);
+                // 从所有节点列表中删除该节点，以免后续重复遍历该节点
                 ite.remove();
             }
         }

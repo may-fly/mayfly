@@ -1,51 +1,96 @@
 package mayfly.core.validation.annotation;
 
-import mayfly.core.util.Assert;
 import mayfly.core.util.ObjectUtils;
 import mayfly.core.util.enums.EnumUtils;
+import mayfly.core.util.enums.NameValueEnum;
 import mayfly.core.util.enums.ValueEnum;
-import mayfly.core.validation.annotation.validator.Validator;
+import org.hibernate.validator.constraintvalidation.HibernateConstraintValidatorContext;
 
+import javax.validation.Constraint;
+import javax.validation.ConstraintValidator;
+import javax.validation.ConstraintValidatorContext;
+import javax.validation.Payload;
 import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-
-import static java.lang.annotation.ElementType.FIELD;
-import static java.lang.annotation.ElementType.PARAMETER;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import java.util.Arrays;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
- * 枚举值校验
+ * 枚举值校验，即值只能是指定枚举类中的value值
  *
  * @author meilin.huang
  * @version 1.0
- * @date 2019-03-28 5:10 PM
+ * @date 2020-04-14 10:22 上午
  */
-@Target({FIELD, PARAMETER})
-@Retention(RUNTIME)
+@Target({ElementType.FIELD})
+@Retention(RetentionPolicy.RUNTIME)
 @Documented
-@ValidateBy(EnumValue.EnumValueValidator.class)
+@Constraint(validatedBy = EnumValue.EnumValueValidator.class)
 public @interface EnumValue {
+
     /**
-     * 枚举值类型，枚举必须继承{@link ValueEnum}
+     * 枚举类(必须实现{@link ValueEnum}接口的枚举)
      */
-    Class<? extends Enum<? extends ValueEnum<?>>> value();
+    @SuppressWarnings("rawtypes")
+    Class<? extends Enum<? extends ValueEnum>> value();
 
-    String message() default "{fieldName}字段枚举值错误！";
+    /**
+     * 错误提示
+     */
+    String message() default "{field}枚举值错误，可选值为[{enums}]";
+
+    /**
+     * 用于分组校验
+     */
+    Class<?>[] groups() default {};
+
+    Class<? extends Payload>[] payload() default {};
 
 
-    class EnumValueValidator implements Validator<EnumValue, Object> {
-        @SuppressWarnings("all")
+    class EnumValueValidator implements ConstraintValidator<EnumValue, Object> {
+
+        @SuppressWarnings("rawtypes")
+        private Class<? extends Enum<? extends ValueEnum>> enumClass;
+
         @Override
-        public boolean validation(EnumValue enumValue, Object value) {
+        public void initialize(EnumValue enumValue) {
+            this.enumClass = enumValue.value();
+        }
+
+        @SuppressWarnings({"rawtypes", "unchecked"})
+        @Override
+        public boolean isValid(Object value, ConstraintValidatorContext context) {
             if (value == null) {
                 return true;
             }
-            Class<? extends Enum> enumClass = enumValue.value();
-            Assert.assertState(ValueEnum.class.isAssignableFrom(enumClass),
-                    "@EnumValue注解中的枚举类必须继承ValueEnum接口！");
-            // 判断字段值是否存在指定的枚举类中
-            return EnumUtils.isExist(ObjectUtils.cast(enumClass.getEnumConstants(), ValueEnum.class), value);
+
+            Enum<? extends ValueEnum>[] enums = enumClass.getEnumConstants();
+            String enumsPlaceholderValue;
+            // 如果是NameValueEnum类型，则返回的错误信息带有name属性值
+            if (NameValueEnum.class.isAssignableFrom(enumClass)) {
+                NameValueEnum[] nameValueEnums = ObjectUtils.cast(enums, NameValueEnum.class);
+                if (EnumUtils.isExist(nameValueEnums, value)) {
+                    return true;
+                }
+                enumsPlaceholderValue = Arrays.stream(nameValueEnums).map(nv -> nv.getValue() + ":" + nv.getName())
+                        .collect(Collectors.joining(", "));
+            } else {
+                ValueEnum[] valueEnums = ObjectUtils.cast(enums, ValueEnum.class);
+                if (EnumUtils.isExist(valueEnums, value)) {
+                    return true;
+                }
+                enumsPlaceholderValue = Arrays.stream(valueEnums).map(nv -> Objects.toString(nv.getValue()))
+                        .collect(Collectors.joining(", "));
+            }
+
+            //添加枚举值占位符值参数，校验失败的时候可用
+            HibernateConstraintValidatorContext hibernateContext = context.unwrap(HibernateConstraintValidatorContext.class);
+            hibernateContext.addMessageParameter("enums", enumsPlaceholderValue);
+            return false;
         }
     }
 }

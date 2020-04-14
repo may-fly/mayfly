@@ -2,7 +2,6 @@ package mayfly.sys.module.open.controller;
 
 import mayfly.core.permission.Permission;
 import mayfly.core.result.Result;
-import mayfly.core.validation.annotation.Valid;
 import mayfly.sys.module.open.controller.form.AccountLoginForm;
 import mayfly.sys.module.sys.entity.AccountDO;
 import mayfly.sys.module.sys.service.AccountService;
@@ -12,6 +11,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.validation.Valid;
 
 /**
  * @author meilin.huang

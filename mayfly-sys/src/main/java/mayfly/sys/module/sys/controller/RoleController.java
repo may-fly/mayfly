@@ -1,10 +1,8 @@
 package mayfly.sys.module.sys.controller;
 
-import mayfly.core.exception.BusinessException;
 import mayfly.core.permission.Permission;
 import mayfly.core.result.Result;
 import mayfly.core.util.bean.BeanUtils;
-import mayfly.core.validation.annotation.Valid;
 import mayfly.sys.common.enums.EnableDisableEnum;
 import mayfly.sys.module.sys.controller.form.RoleForm;
 import mayfly.sys.module.sys.controller.query.RoleQuery;
@@ -21,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -78,7 +77,7 @@ public class RoleController {
 
     @Permission
     @PostMapping("/{id}/resources")
-    public Result<?> saveResources(@PathVariable Long id, @RequestBody RoleForm roleForm) throws BusinessException {
+    public Result<?> saveResources(@PathVariable Long id, @RequestBody RoleForm roleForm) {
         List<Long> ids;
         try {
             ids = Stream.of(roleForm.getResourceIds().split(",")).map(Long::valueOf)

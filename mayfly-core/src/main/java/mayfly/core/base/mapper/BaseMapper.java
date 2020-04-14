@@ -43,7 +43,7 @@ public interface BaseMapper<I, E> {
      * @return  影响条数
      */
     @InsertProvider(type = InsertSqlProvider.class, method = "sql")
-    @Options(useGeneratedKeys = true, keyColumn = "id")
+    @Options(useGeneratedKeys = true, keyColumn = TableInfo.DEFAULT_PRIMARY_KEY)
     int insert(E entity);
 
     /**
@@ -53,7 +53,7 @@ public interface BaseMapper<I, E> {
      * @return  影响条数
      */
     @InsertProvider(type = InsertSelectiveSqlProvider.class, method = "sql")
-    @Options(useGeneratedKeys = true, keyColumn = "id")
+    @Options(useGeneratedKeys = true, keyColumn = TableInfo.DEFAULT_PRIMARY_KEY)
     int insertSelective(E entity);
 
     /**

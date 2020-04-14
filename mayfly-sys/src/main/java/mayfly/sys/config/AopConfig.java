@@ -2,7 +2,6 @@ package mayfly.sys.config;
 
 import mayfly.core.log.LogAspect;
 import mayfly.core.log.LogTypeEnum;
-import mayfly.core.validation.ParamValidAspect;
 import mayfly.sys.module.sys.service.OperationLogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -32,10 +31,5 @@ public class AopConfig {
             logService.asyncLog(logMsg, type == LogTypeEnum.NORMAN ? mayfly.sys.module.sys.enums.LogTypeEnum.SYS_LOG
                     : mayfly.sys.module.sys.enums.LogTypeEnum.ERR_LOG);
         });
-    }
-
-    @Bean
-    public ParamValidAspect paramValid() {
-        return new ParamValidAspect();
     }
 }

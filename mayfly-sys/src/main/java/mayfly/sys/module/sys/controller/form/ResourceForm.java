@@ -1,18 +1,21 @@
 package mayfly.sys.module.sys.controller.form;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import mayfly.core.validation.annotation.EnumValue;
-import mayfly.core.validation.annotation.NotBlank;
-import mayfly.core.validation.annotation.NotNull;
-import mayfly.core.validation.annotation.Size;
 import mayfly.sys.module.sys.enums.ResourceTypeEnum;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  * @author meilin.huang
  * @version 1.0
  * @date 2018-12-11 11:18 AM
  */
-@Data
+@Getter
+@Setter
 public class ResourceForm {
     private Long pid;
 

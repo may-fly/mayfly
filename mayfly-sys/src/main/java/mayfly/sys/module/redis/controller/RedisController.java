@@ -7,13 +7,12 @@ import mayfly.core.permission.Permission;
 import mayfly.core.result.Result;
 import mayfly.core.util.StringUtils;
 import mayfly.core.util.bean.BeanUtils;
-import mayfly.core.validation.annotation.Valid;
+import mayfly.sys.module.redis.commands.KeyInfo;
+import mayfly.sys.module.redis.commands.KeyValueCommand;
 import mayfly.sys.module.redis.controller.form.KeyValueForm;
 import mayfly.sys.module.redis.controller.form.ScanForm;
 import mayfly.sys.module.redis.controller.vo.KeyScanVO;
 import mayfly.sys.module.redis.service.RedisService;
-import mayfly.sys.module.redis.commands.KeyInfo;
-import mayfly.sys.module.redis.commands.KeyValueCommand;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +20,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.validation.Valid;
 
 /**
  * @author meilin.huang

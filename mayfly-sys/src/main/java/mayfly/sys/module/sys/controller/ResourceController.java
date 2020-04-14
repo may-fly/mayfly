@@ -3,7 +3,6 @@ package mayfly.sys.module.sys.controller;
 import mayfly.core.permission.Permission;
 import mayfly.core.result.Result;
 import mayfly.core.util.bean.BeanUtils;
-import mayfly.core.validation.annotation.Valid;
 import mayfly.sys.module.sys.controller.form.ResourceForm;
 import mayfly.sys.module.sys.controller.query.ResourceQuery;
 import mayfly.sys.module.sys.controller.vo.ResourceDetailVO;
@@ -18,6 +17,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.validation.Valid;
 
 /**
  * @author meilin.huang

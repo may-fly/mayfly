@@ -1,9 +1,7 @@
 package mayfly.sys.module.redis.machine;
 
 import mayfly.core.exception.BusinessRuntimeException;
-import mayfly.core.validation.annotation.NotBlank;
-import mayfly.core.validation.annotation.NotNull;
-import mayfly.core.validation.annotation.Size;
+
 
 /**
  * @author meilin.huang
@@ -27,47 +25,6 @@ public class MachineHandler {
         } catch (Exception e) {
             throw new BusinessRuntimeException(e.getMessage());
         }
-    }
-
-    static class User {
-
-        @NotBlank
-        private String name;
-
-        @NotNull(message = "性别不能为空")
-        @Size(max = 100, min = 1)
-        private Integer sex;
-
-        @NotBlank
-        private String name1;
-
-        @NotNull(message = "性别不能为空")
-        @Size(max = 100, min = 1)
-        private Integer sex1;
-
-        @NotBlank
-        private String name22;
-
-        @NotNull(message = "性别不能为空")
-        @Size(max = 100, min = 1)
-        private Integer sex2;
-
-        @NotBlank
-        private String name3;
-
-        @NotNull(message = "性别不能为空")
-        @Size(max = 100, min = 1)
-        private Integer sex4;
-
-        @NotBlank
-        private String name5;
-
-        @NotNull(message = "性别不能为空")
-        @Size(max = 100, min = 1)
-        private Integer sex6;
-
-
-        private Integer method;
     }
 
 }

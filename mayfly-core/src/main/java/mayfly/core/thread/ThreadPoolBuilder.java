@@ -1,5 +1,7 @@
 package mayfly.core.thread;
 
+import mayfly.core.util.StringUtils;
+
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -20,35 +22,49 @@ public class ThreadPoolBuilder {
      * 初始池大小
      */
     private int corePoolSize;
+
     /**
      * 最大池大小（允许同时执行的最大线程数）
      */
     private int maxPoolSize = Integer.MAX_VALUE;
+
     /**
      * 线程存活时间，即当池中线程多于初始大小时，多出的线程保留的时长
      */
     private long keepAliveTime = TimeUnit.SECONDS.toNanos(60);
+
     /**
      * 队列，用于存在未执行的线程
      */
     private BlockingQueue<Runnable> workQueue;
+
     /**
      * 线程工厂，用于自定义线程创建
      */
     private ThreadFactory threadFactory;
+
+    /**
+     * 线程名前缀（如果 {@linkplain ThreadFactory}为空，则使用该名称生成对应的线程工厂）
+     * ，会自动在线程名后面加上-%d以标识线程，如threadName = rpc-thread；<br/>
+     * 那么创建出来的线程名就类似rpc-thread-1，rpc-thread-2等）
+     */
+    private String threadName;
+
     /**
      * 当线程阻塞（block）时的异常处理器，所谓线程阻塞即线程池和等待队列已满，无法处理线程时采取的策略
      */
     private RejectedExecutionHandler handler;
+
     /**
      * 核心线程执行超时后是否回收线程
      */
     private Boolean allowCoreThreadTimeOut;
 
-    private ThreadPoolBuilder() {
-    }
 
-    /**
+     private ThreadPoolBuilder() {
+     }
+
+     /**
      * 创建ThreadPoolBuilder，开始构建
      *
      * @return {@link ThreadPoolBuilder}
@@ -153,6 +169,19 @@ public class ThreadPoolBuilder {
     }
 
     /**
+     * 设置线程名
+     *
+     * @param threadName 线程名称(ThreadFactory不存在情况下有效)，会自动在线程名后面加上-%d以标识线程，如threadName = rpc-thread；<br/>
+     *                  那么创建出来的线程名就类似rpc-thread-1，rpc-thread-2等）
+     * @return this
+     * @see ThreadFactoryBuilder
+     */
+    public ThreadPoolBuilder threadName(String threadName) {
+        this.threadName = threadName;
+        return this;
+    }
+
+    /**
      * 设置当线程阻塞（block）时的异常处理器，所谓线程阻塞即线程池和等待队列已满，无法处理线程时采取的策略
      * <p>
      *
@@ -199,7 +228,12 @@ public class ThreadPoolBuilder {
             // corePoolSize为0则要使用SynchronousQueue避免无限阻塞
             workQueue = (corePoolSize <= 0) ? new SynchronousQueue<Runnable>() : new LinkedBlockingQueue<Runnable>();
         }
-        final ThreadFactory threadFactory = (builder.threadFactory != null) ? builder.threadFactory : Executors.defaultThreadFactory();
+
+        String threadName;
+        final ThreadFactory threadFactory = (builder.threadFactory != null) ?
+                builder.threadFactory : !StringUtils.isEmpty(threadName = builder.threadName) ?
+                ThreadFactoryBuilder.newBuilder(threadName).build() : Executors.defaultThreadFactory();
+
         RejectedExecutionHandler handler = builder.handler == null ? new ThreadPoolExecutor.AbortPolicy() : builder.handler;
 
         final ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(
