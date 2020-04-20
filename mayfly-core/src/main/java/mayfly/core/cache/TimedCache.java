@@ -14,9 +14,9 @@ public class TimedCache<K, V> extends AbstractCache<K, V> {
 
     private static final String ID_PREFIX = "removeExpireCacheKey-";
 
-    private long timeout;
+    private final long timeout;
 
-    private TimeUnit timeUnit;
+    private final TimeUnit timeUnit;
 
 
     public TimedCache(long timeout, TimeUnit timeUnit) {

@@ -3,6 +3,7 @@ package mayfly.sys.module.sys.service.impl;
 import mayfly.core.base.service.impl.BaseServiceImpl;
 import mayfly.core.exception.BusinessAssert;
 import mayfly.core.log.MethodLog;
+import mayfly.core.util.StringUtils;
 import mayfly.core.util.TreeUtils;
 import mayfly.core.util.bean.BeanUtils;
 import mayfly.core.util.enums.EnumUtils;
@@ -43,12 +44,12 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourceMapper, Long, R
     @MethodLog(level = MethodLog.LogLevel.NONE)
     @Override
     public List<ResourceListVO> listByAccountId(Long userId) {
-        return TreeUtils.generateTrees(BeanUtils.copyProperties(mapper.selectByAccountId(userId), ResourceListVO.class));
+        return BeanUtils.copyProperties(mapper.selectByAccountId(userId), ResourceListVO.class);
     }
 
-    @MethodLog(value = "获取资源列表", level = MethodLog.LogLevel.DEBUG)
+    @MethodLog(value = "获取资源树", level = MethodLog.LogLevel.DEBUG)
     @Override
-    public List<ResourceListVO> listResource(ResourceDO condition) {
+    public List<ResourceListVO> listResource() {
         return TreeUtils.generateTrees(BeanUtils.copyProperties(listAll("pid ASC, weight ASC"),
                 ResourceListVO.class));
     }
@@ -64,13 +65,18 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourceMapper, Long, R
             BusinessAssert.notNull(pResource, "pid不存在！");
             BusinessAssert.equals(pResource.getType(), ResourceTypeEnum.MENU.getValue(), "权限资源不能添加子节点");
         }
+        String code = resource.getCode();
         // 如果是添加菜单，则该父节点不能存在有权限节点
         if (Objects.equals(resource.getType(), ResourceTypeEnum.MENU.getValue())) {
             // 查询指定pid节点下是否有权限节点
-            ResourceDO condition = new ResourceDO().setPid(resource.getPid()).setType(ResourceTypeEnum.PERMISSION.getValue());
-            BusinessAssert.state(countByCondition(condition) == 0, "该菜单已有权限资源子节点，不能再添加菜单");
+            BusinessAssert.equals(countByCondition(new ResourceDO().setPid(resource.getPid()).setType(ResourceTypeEnum.PERMISSION.getValue()))
+                    , 0L, "该菜单下已有权限资源子节点，不能再添加菜单");
+            if (!StringUtils.isEmpty(code)) {
+                checkPermissionCode(code);
+            }
         } else {
-            checkPermissionCode(resource.getCode());
+            BusinessAssert.notEmpty(code, "权限code不能为空");
+            checkPermissionCode(code);
         }
         //默认启用
         resource.setStatus(EnableDisableEnum.ENABLE.getValue());
@@ -85,13 +91,17 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourceMapper, Long, R
         // 禁止误传修改其父节点
         resource.setPid(null);
 
-        // 如果是权限，还需校验权限码
-        if (Objects.equals(old.getType(), ResourceTypeEnum.PERMISSION.getValue())) {
-            // 权限类型需要校验code不能为空
-            String code = resource.getCode();
-            // 如果修改了权限code，则需要校验
-            if (!Objects.equals(old.getCode(), code)) {
+        String code = resource.getCode();
+        // 如果修改了权限code，则需要校验
+        if (!Objects.equals(old.getCode(), code)) {
+            // 如果是权限，还需校验非空
+            if (Objects.equals(old.getType(), ResourceTypeEnum.PERMISSION.getValue())) {
+                BusinessAssert.notEmpty(code, "权限code不能为空");
                 checkPermissionCode(code);
+            } else {
+                if (!StringUtils.isEmpty(code)) {
+                    checkPermissionCode(code);
+                }
             }
         }
         updateByIdSelective(resource);
@@ -127,7 +137,6 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourceMapper, Long, R
      * @param code code
      */
     private void checkPermissionCode(String code) {
-        BusinessAssert.notEmpty(code, "权限code不能为空");
         BusinessAssert.state(!code.contains(","), "权限code不能包含','");
         BusinessAssert.equals(countByCondition(new ResourceDO().setCode(code)), 0L, "该权限code已存在");
     }

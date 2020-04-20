@@ -22,5 +22,7 @@ public class LoginSuccessVO {
 
     private AccountVO admin;
 
-    private List<ResourceListVO> resources;
+    private List<ResourceListVO> menus;
+
+    private List<ResourceListVO> codes;
 }

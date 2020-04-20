@@ -23,7 +23,7 @@ public class PermissionInterceptor implements HandlerInterceptor {
 
     private static final String TOKEN_PARAM_NAME = "token";
 
-    private PermissionCheckHandler<?> checkHandler;
+    private final PermissionCheckHandler<?> checkHandler;
 
     public <I> PermissionInterceptor(SimpleLoginAccountRegistry<I> loginAccountRegistry) {
         this.checkHandler = PermissionCheckHandler.<I>of(loginAccountRegistry);
@@ -39,6 +39,10 @@ public class PermissionInterceptor implements HandlerInterceptor {
         try {
             // 判断该用户是否有执行该方法的权限，如果校验通过，返回true
             if (!(handler instanceof HandlerMethod) || checkHandler.hasPermission(token, ((HandlerMethod) handler).getMethod())) {
+                if (!"admin".equals(LoginAccount.get().getUsername()) && !"GET".equals(request.getMethod())) {
+                    sendErrorMessage(response, Result.error("只可观望"));
+                    return false;
+                }
                 return true;
             }
             // token 过期
@@ -51,7 +55,7 @@ public class PermissionInterceptor implements HandlerInterceptor {
     }
 
     @Override
-    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
         // 移除ThreadLocal值
         LoginAccount.remove();
     }

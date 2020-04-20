@@ -1,11 +1,12 @@
 <template>
   <div class="menu-dialog">
-    <el-dialog :title="title" :visible="dialogFormVisible" :show-close="false" width="35%">
+    <el-dialog :title="title" :visible="dialogFormVisible" :show-close="false" width="28%">
       <el-form :model="form" ref="menuForm" :rules="rules" label-width="85px" size="small">
-        <el-form-item prop="name" label="名称:" required>
+        <el-form-item prop="name" label="名称" required>
           <el-input v-model.trim="form.name" placeholder="请输入资源名" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item prop="type" label="类型:" required>
+
+        <el-form-item prop="type" label="类型" required>
           <el-radio
             :disabled="typeDisabled"
             v-for="item in enums.ResourceTypeEnum"
@@ -14,32 +15,33 @@
             :label="item.value"
           >{{item.label}}</el-radio>
         </el-form-item>
-        <el-form-item v-if="form.type === enums.ResourceTypeEnum.MENU.value" label="样式:">
+
+        <el-form-item v-if="form.type === enums.ResourceTypeEnum.MENU.value" label="样式">
           <el-input v-model.trim="form.icon" placeholder="请输入菜单图标样式"></el-input>
         </el-form-item>
         <el-form-item
           v-if="form.type === enums.ResourceTypeEnum.MENU.value"
           prop="code"
-          label="路由code:"
+          label="路由"
         >
           <el-input v-model.trim="form.code" placeholder="请输入路由code"></el-input>
         </el-form-item>
+
         <el-form-item
-          v-if="form.type === enums.ResourceTypeEnum.PERMISSION.value"
           prop="code"
-          label="权限code:"
-          required
+          label="权限code"
         >
           <el-input v-model.trim="form.code" placeholder="请输入权限code"></el-input>
         </el-form-item>
-        <el-form-item label="序号:" prop="weight" required>
+
+        <el-form-item label="序号" prop="weight" required>
           <el-input v-model.trim="form.weight" type="number" placeholder="请输入序号"></el-input>
         </el-form-item>
       </el-form>
 
-      <div slot="footer" class="dialog-footer">
+      <div style="text-align: center" class="dialog-footer">
+        <el-button type="primary" :loading="btnLoading" @click="btnOk" size="mini">确 定</el-button>
         <el-button @click="cancel" size="mini">取 消</el-button>
-        <el-button type="primary" :loading="btnLoading" @click="btnOk" size="small">确 定</el-button>
       </div>
     </el-dialog>
   </div>

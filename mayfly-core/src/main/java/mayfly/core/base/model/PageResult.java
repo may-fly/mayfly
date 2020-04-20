@@ -20,12 +20,12 @@ public class PageResult<T> {
     /**
      * 数据总数
      */
-    private Long total;
+    private final Long total;
 
     /**
      * 指定页数数据列表
      */
-    private List<T> list;
+    private final List<T> list;
 
 
     private PageResult(Long total, List<T> list) {

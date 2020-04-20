@@ -91,7 +91,7 @@ export default {
   },
   methods: {
     toPath(menu) {
-      let path = menu.code
+      let path = menu.url
       this.goToPath(path)
       this.addTab(path, menu.name)
     },
@@ -153,7 +153,7 @@ export default {
   },
   mounted: function() {
     this.menus = JSON.parse(
-      sessionStorage.getItem(this.$Config.name.resourcesKey)
+      sessionStorage.getItem(this.$Config.name.menusKey)
     )
     this.username = JSON.parse(
       sessionStorage.getItem(this.$Config.name.adminKey)

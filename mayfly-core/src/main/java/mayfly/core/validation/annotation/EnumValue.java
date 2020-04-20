@@ -39,9 +39,14 @@ public @interface EnumValue {
     Class<? extends Enum<? extends ValueEnum>> value();
 
     /**
+     * 字段名
+     */
+    String name() default "";
+
+    /**
      * 错误提示
      */
-    String message() default "{field}枚举值错误，可选值为[{enums}]";
+    String message() default "{name}枚举值错误，可选值为[{enums}]";
 
     /**
      * 用于分组校验

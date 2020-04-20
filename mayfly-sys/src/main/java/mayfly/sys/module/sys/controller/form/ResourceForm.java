@@ -26,7 +26,7 @@ public class ResourceForm {
     private String code;
 
     @NotNull
-    @EnumValue(ResourceTypeEnum.class)
+    @EnumValue(value = ResourceTypeEnum.class, name = "资源类型")
     private Integer type;
 
     private String icon;

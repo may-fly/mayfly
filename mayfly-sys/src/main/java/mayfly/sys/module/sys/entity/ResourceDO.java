@@ -36,6 +36,8 @@ public class ResourceDO extends BaseDO implements Serializable {
 
     private String code;
 
+    private String url;
+
     private Integer status;
 
     @NoColumn

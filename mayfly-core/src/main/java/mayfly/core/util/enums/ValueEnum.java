@@ -1,7 +1,8 @@
 package mayfly.core.util.enums;
 
 /**
- * 最简单的枚举类，即只含value的枚举（实现此接口可使用{@link EnumUtils}中的方法）
+ * 最简单的枚举类，即只含value的枚举（实现此接口可使用{@link EnumUtils}中的方法
+ * 以及{@link mayfly.core.validation.annotation.EnumValue}注解）
  *
  * @author meilin.huang
  * @version 1.0

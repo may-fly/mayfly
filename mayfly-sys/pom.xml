@@ -39,6 +39,10 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-websocket</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>com.github.pagehelper</groupId>
@@ -55,24 +59,23 @@
             <groupId>org.mybatis</groupId>
             <artifactId>mybatis</artifactId>
         </dependency>
-
         <!-- 添加MySQL jdbc -->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
         </dependency>
 
-
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>druid</artifactId>
         </dependency>
-
+        <!--        ssh-->
         <dependency>
             <groupId>com.jcraft</groupId>
             <artifactId>jsch</artifactId>
             <version>${jsch.version}</version>
         </dependency>
+        <!--        test-->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -90,6 +93,19 @@
                 <configuration>
                     <classifier>exec</classifier>
                     <mainClass>mayfly.sys.Application</mainClass>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>com.spotify</groupId>
+                <artifactId>dockerfile-maven-plugin</artifactId>
+                <version>1.4.10</version>
+                <configuration>
+                    <repository>${project.artifactId}</repository>
+                    <buildArgs>
+                        <!-- 提供参数向Dockerfile传递 -->
+                        <JAR_FILE>target/${project.build.finalName}.jar</JAR_FILE>
+                    </buildArgs>
                 </configuration>
             </plugin>
         </plugins>

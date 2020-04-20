@@ -66,7 +66,7 @@ public final class DateUtils {
     }
 
     /**
-     * 默认解析字符串日期时间
+     * 默认解析字符串日期时间（yyyy-MM-dd HH:mm:ss）
      *
      * @param dateTime  字符串日期
      * @return  LocalDateTime

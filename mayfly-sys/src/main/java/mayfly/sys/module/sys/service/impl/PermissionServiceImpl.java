@@ -4,6 +4,7 @@ import mayfly.core.permission.LoginAccount;
 import mayfly.core.permission.registry.LoginAccountRegistryHandler;
 import mayfly.core.permission.registry.PermissionCheckHandler;
 import mayfly.core.util.BracePlaceholder;
+import mayfly.core.util.StringUtils;
 import mayfly.core.util.TreeUtils;
 import mayfly.core.util.UUIDUtils;
 import mayfly.core.util.bean.BeanUtils;
@@ -43,7 +44,7 @@ public class PermissionServiceImpl implements PermissionService  {
     /**
      * 权限缓存处理器
      */
-    private LoginAccountRegistryHandler<Long> loginAccountRegistryHandler = LoginAccountRegistryHandler.of(this);
+    private final LoginAccountRegistryHandler<Long> loginAccountRegistryHandler = LoginAccountRegistryHandler.of(this);
 
 
     @Override
@@ -51,22 +52,29 @@ public class PermissionServiceImpl implements PermissionService  {
         Long id = account.getId();
         String token = UUIDUtils.generateUUID();
         List<ResourceListVO> resources = resourceService.listByAccountId(id);
-        // 获取所有叶子节点
-        List<ResourceListVO> permissions = new ArrayList<>();
-        for (ResourceListVO root : resources) {
-            TreeUtils.fillLeaf(root, permissions);
+        // 菜单列表
+        List<ResourceListVO> menus = new ArrayList<>();
+        // 含有权限code的列表
+        List<ResourceListVO> codes = new ArrayList<>();
+        for (ResourceListVO r : resources) {
+            if (!StringUtils.isEmpty(r.getCode())) {
+                codes.add(r);
+            }
+            if (Objects.equals(r.getType(), ResourceTypeEnum.MENU.getValue())) {
+                menus.add(r);
+            }
         }
-        // 如果权限被禁用，将会在code后加上:0标志
-        List<String> permissionCodes = permissions.stream().filter(p -> Objects.equals(p.getType(), ResourceTypeEnum.PERMISSION.getValue()))
-                .map(p -> p.getStatus().equals(EnableDisableEnum.DISABLE.getValue()) ? PermissionCheckHandler.getDisablePermissionCode(p.getCode()) : p.getCode())
-                .collect(Collectors.toList());
+
+        // 获取所有含有权限code的资源，如果权限被禁用，将会在code后加上:0标志，用于保存服务端进行校验
+        List<String> permissionCodes = codes.stream().map(p -> p.getStatus().equals(EnableDisableEnum.DISABLE.getValue()) ?
+                PermissionCheckHandler.getDisablePermissionCode(p.getCode()) : p.getCode()).collect(Collectors.toList());
         // 保存登录账号信息
         LoginAccount<Long> loginAccount = new LoginAccount<Long>().setId(account.getId()).setUsername(account.getUsername())
                 .setPermissions(permissionCodes);
         loginAccountRegistryHandler.saveLoginAccount(token, loginAccount, UserCacheKey.EXPIRE_TIME, TimeUnit.MINUTES);
 
         return LoginSuccessVO.builder().admin(BeanUtils.copyProperties(account, AccountVO.class))
-                .token(token).resources(resources).build();
+                .token(token).menus(TreeUtils.generateTrees(menus)).codes(codes).build();
     }
 
     @Override

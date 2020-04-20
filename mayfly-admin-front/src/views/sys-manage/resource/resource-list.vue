@@ -218,7 +218,7 @@ export default {
         status: status
       })
       data.status = status
-      this.$message.success('操作成功！')
+      this.$message.success((status === 1 ? '启用' : '禁用') + '成功！')
     },
     // 节点被展开时触发的事件
     handleNodeExpand(data, node) {
@@ -257,7 +257,9 @@ export default {
             info.name +
             ' <br/><strong style="margin-right: 18px">图标:</strong>' +
             (info.icon ? info.icon : '无') +
-            ' <br/><strong style="margin-right: 18px">路径:</strong>' +
+            ' <br/><strong style="margin-right: 18px">路由:</strong>' +
+            (info.url ? info.url : '无') +
+            ' <br/><strong style="margin-right: 18px">权限code:</strong>' +
             (info.code ? info.code : '无') +
             ' <br/><strong style="margin-right: 18px">权重:</strong>' +
             info.weight +

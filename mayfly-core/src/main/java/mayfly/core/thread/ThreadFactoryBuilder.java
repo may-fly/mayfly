@@ -18,7 +18,7 @@ public class ThreadFactoryBuilder {
      * 线程名（会自动在线程名后面加上-%d以标识线程，如name = rpc-thread；<br/>
      * 那么创建出来的线程名就类似rpc-thread-1，rpc-thread-2等）
      */
-    private String name;
+    private final String name;
 
     private Boolean daemon;
 

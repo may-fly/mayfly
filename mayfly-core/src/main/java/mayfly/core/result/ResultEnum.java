@@ -44,11 +44,11 @@ public enum ResultEnum implements NameValueEnum<Integer> {
     /**
      * 结果操作码
      */
-    private Integer code;
+    private final Integer code;
     /**
      * 结果消息
      */
-    private String msg;
+    private final String msg;
 
     ResultEnum(Integer code, String msg) {
         this.code = code;

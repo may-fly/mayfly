@@ -1,7 +1,5 @@
-package mayfly.sys.config;
+package mayfly.core.exception;
 
-import mayfly.core.exception.BusinessException;
-import mayfly.core.exception.BusinessRuntimeException;
 import mayfly.core.result.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +18,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    private static Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+    private static final Logger LOG = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(Exception.class)
     public Result<?> handleException(Exception e) {
@@ -29,10 +27,10 @@ public class GlobalExceptionHandler {
             return Result.error(e.getMessage());
         }
         if (e instanceof HttpRequestMethodNotSupportedException) {
-            return Result.serverError("url请求方法错误！");
+            return Result.serverError("请求方法错误！");
         }
         // 记录未知异常日志
-        log.error("系统异常：", e);
+        LOG.error("系统异常：", e);
         return Result.serverError();
     }
 
@@ -42,7 +40,7 @@ public class GlobalExceptionHandler {
         if (fieldError == null) {
             return Result.serverError();
         }
-        return Result.paramError(fieldError.getField() + " " + fieldError.getDefaultMessage());
+        return Result.paramError(fieldError.getDefaultMessage());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -51,7 +49,7 @@ public class GlobalExceptionHandler {
         if (fieldError == null) {
             return Result.serverError();
         }
-        return Result.paramError(fieldError.getField() + " " + fieldError.getDefaultMessage());
+        return Result.paramError(fieldError.getDefaultMessage());
     }
 
 }

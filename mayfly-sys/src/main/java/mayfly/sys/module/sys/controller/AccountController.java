@@ -3,6 +3,7 @@ package mayfly.sys.module.sys.controller;
 import mayfly.core.exception.BusinessAssert;
 import mayfly.core.permission.Permission;
 import mayfly.core.result.Result;
+import mayfly.core.util.TreeUtils;
 import mayfly.core.util.bean.BeanUtils;
 import mayfly.core.util.enums.EnumUtils;
 import mayfly.sys.common.enums.EnableDisableEnum;
@@ -92,7 +93,7 @@ public class AccountController {
 
     @GetMapping("/{id}/resources")
     public Result<?> resources(@PathVariable Long id) {
-        return Result.success(resourceService.listByAccountId(id));
+        return Result.success(TreeUtils.generateTrees(resourceService.listByAccountId(id)));
     }
 
     @Permission

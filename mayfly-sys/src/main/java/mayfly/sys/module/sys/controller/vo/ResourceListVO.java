@@ -28,6 +28,8 @@ public class ResourceListVO implements TreeUtils.TreeNode<Long> {
 
     private String code;
 
+    private String url;
+
     private Integer status;
 
     private List<ResourceListVO> children;

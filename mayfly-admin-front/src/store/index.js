@@ -13,9 +13,9 @@ export default new Vuex.Store({
     }
   },
   mutations: {
-    setPermissions(state, permissions) {
+    setPermissionCodeMap(state, permissions) {
       for (let p of permissions) {
-        state.permissionMap.set(p.code, p.url)
+        state.permissionMap.set(p.code, p)
       }
     }
   }

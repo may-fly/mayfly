@@ -35,7 +35,7 @@ public class ResourceController {
 
     @GetMapping()
     public Result<?> list(ResourceQuery queryForm) {
-        return Result.success(resourceService.listResource(BeanUtils.copyProperties(queryForm, ResourceDO.class)));
+        return Result.success(resourceService.listResource());
     }
 
     @GetMapping("/{id}")

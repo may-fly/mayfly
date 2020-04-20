@@ -9,3 +9,8 @@ spring:
     encoding:
       charset: UTF-8
       enabled: true
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"

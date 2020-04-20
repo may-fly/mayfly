@@ -79,7 +79,7 @@ public class BeanUtils {
         }
         T target;
         try {
-            target = targetClass.newInstance();
+            target = instantiate(targetClass);
             copyProperties(source, target);
         } catch (Exception e) {
             throw new IllegalArgumentException(e);

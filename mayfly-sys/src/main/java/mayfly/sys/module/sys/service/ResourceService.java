@@ -27,7 +27,7 @@ public interface ResourceService extends BaseService<Long, ResourceDO> {
      *
      * @return 资源树
      */
-    List<ResourceListVO> listResource(ResourceDO condition);
+    List<ResourceListVO> listResource();
 
     /**
      * 删除指定菜单，如果是有子节点，也删除

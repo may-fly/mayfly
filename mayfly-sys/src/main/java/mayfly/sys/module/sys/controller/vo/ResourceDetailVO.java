@@ -22,6 +22,8 @@ public class ResourceDetailVO {
 
     private String code;
 
+    private String url;
+
     private Integer status;
 
     private Integer weight;

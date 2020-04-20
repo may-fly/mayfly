@@ -1,5 +1,6 @@
 import request from './request'
 import Config from './config'
+import store from '../store'
 
 /**
  * 可用于各模块定义各自权限对象
@@ -26,11 +27,17 @@ class Permission {
    */
   static savePermission(tokenMenuAndPermission) {
     //保存token
-    Permission.saveToken(tokenMenuAndPermission.token);
-    //保存menus
-    sessionStorage.setItem(Config.name.resourcesKey, JSON.stringify(tokenMenuAndPermission.resources));
-    //
+    Permission.saveToken(tokenMenuAndPermission.token)
+    //保存resources
+    sessionStorage.setItem(Config.name.menusKey, JSON.stringify(tokenMenuAndPermission.menus))
+    // 保存登录用户基本信息
     sessionStorage.setItem(Config.name.adminKey, JSON.stringify(tokenMenuAndPermission.admin))
+
+    let codeObj = {}
+    for (let r of tokenMenuAndPermission.codes) {
+      codeObj[r.code] = {status: r.status, type: r.type}
+    }
+    sessionStorage.setItem(Config.name.codesKey, JSON.stringify(codeObj))
   }
 
   /**
@@ -52,57 +59,16 @@ class Permission {
    * 从sessionStorage所有permissions获取指定permission对象的PermissionInfo
    */
   static getPermission(code) {
-    // 超级管理员通行
-    // if (JSON.parse(sessionStorage.getItem(Config.name.adminKey)).username == 'admin') {
-    //   return new PermissionInfo(true, false);
-    // }
-    let menus = JSON.parse(sessionStorage.getItem(Config.name.resourcesKey));
-    for (let menu of menus) {
-      let leafs = Permission.getLeafs(menu);
-      // 获取菜单的所有叶子节点
-      for (let p of leafs) {
-        // 如果是菜单类型，则跳过
-        if (p.type === 1) {
-          continue;
-        }
-
-        if (p.code === code) {
-          // 如果是禁用状态，则禁止按钮点击
-          if (p.status === 0) {
-            return new PermissionInfo(true, true);
-          }
-          return new PermissionInfo(true, false);
-        }
+    let resource = JSON.parse(sessionStorage.getItem(Config.name.codesKey))[code]
+    if (resource) {
+      // 如果是禁用状态，则禁止按钮点击
+      if (resource.status == 0) {
+        return new PermissionInfo(true, true);
       }
+      return new PermissionInfo(true, false);
     }
 
     return new PermissionInfo(false, true);
-  }
-
-  /**
-   * 获取菜单的所有叶子节点
-   * @param {Object} menu 根菜单
-   */
-  static getLeafs(menu) {
-    let leafs = [];
-    Permission.fillLeafs(menu, leafs);
-    return leafs;
-  }
-
-  /**
-   * 将所有叶子节点填充
-   * @param {Object} meun  根菜单
-   * @param {Object} leafs 需要填充的叶子节点
-   */
-  static fillLeafs(menu, leafs) {
-    let children = menu.children;
-    if (!children) {
-      leafs.push(menu);
-      return;
-    }
-    children.forEach(m => {
-      Permission.fillLeafs(m, leafs);
-    })
   }
 
   /**

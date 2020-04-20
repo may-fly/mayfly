@@ -1,8 +1,10 @@
 package mayfly.sys.config;
 
+import mayfly.core.exception.GlobalExceptionHandler;
 import mayfly.core.permission.PermissionInterceptor;
 import mayfly.sys.module.sys.service.PermissionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -33,5 +35,14 @@ public class MvcConfig implements WebMvcConfigurer {
                 .allowedMethods("*")
                 .allowedOrigins("*")
                 .allowCredentials(true);
+    }
+
+    /**
+     * 全局异常处理器
+     * @return GlobalExceptionHandler
+     */
+    @Bean
+    public GlobalExceptionHandler globalExceptionHandler() {
+        return new GlobalExceptionHandler();
     }
 }
