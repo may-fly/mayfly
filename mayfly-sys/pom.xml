@@ -13,13 +13,14 @@
 
     <properties>
         <jsch.version>0.1.55</jsch.version>
+        <mayfly.core.version>1.0-SNAPSHOT</mayfly.core.version>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>net.yiyue</groupId>
             <artifactId>mayfly-core</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>${mayfly.core.version}</version>
         </dependency>
 
         <!--springboot相关插件-->
@@ -69,6 +70,11 @@
             <groupId>com.alibaba</groupId>
             <artifactId>druid</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+        </dependency>
         <!--        ssh-->
         <dependency>
             <groupId>com.jcraft</groupId>
@@ -81,7 +87,6 @@
             <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
-
     </dependencies>
 
 
@@ -99,14 +104,6 @@
             <plugin>
                 <groupId>com.spotify</groupId>
                 <artifactId>dockerfile-maven-plugin</artifactId>
-                <version>1.4.10</version>
-                <configuration>
-                    <repository>${project.artifactId}</repository>
-                    <buildArgs>
-                        <!-- 提供参数向Dockerfile传递 -->
-                        <JAR_FILE>target/${project.build.finalName}.jar</JAR_FILE>
-                    </buildArgs>
-                </configuration>
             </plugin>
         </plugins>
     </build>

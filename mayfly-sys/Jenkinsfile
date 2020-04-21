@@ -1,49 +1,45 @@
-pipeline {
-   agent any
-   // 构建版本的名称
+node {
+       //构建版本的名称
    def tag = "latest"
    // 仓库私服地址
-   def docker_repo_url = "ccr.ccs.tencentyun.com"
-   // 仓库的项目名称
-   def repo_project_name = "mayfly"
+   def docker_registry = "ccr.ccs.tencentyun.com"
+   // 命名空间
+   def docker_namespace = "mayfly"
    // 项目名
    def project_name = "mayfly-sys"
-
-   stages {
-      stage('拉取代码') {
-         steps {
-            git branch: 'dev', credentialsId: 'gitee_mayfly', url: 'git@gitee.com:objs/mayfly.git'
-         }
+   
+    stage('拉取代码') {
+         git branch: 'dev', credentialsId: 'gitee_mayfly', url: 'git@gitee.com:objs/mayfly.git'
       }
 
-      stage('编译，构建，push镜像') {
-         steps {
-            // 定义镜像名称
-            def imageName = "${project_name}:${tag}"
-            def tagName = "${docker_repo_url}/${repo_project_name}/${imageName}"
+  stage('编译，构建镜像') {
+        // 定义镜像名称
+        def imageName = "${project_name}:${tag}"
+        def tagName = "${docker_registry}/${docker_namespace}/${imageName}"
 
-            // 编译，构建本地镜像
-            sh 'mvn clean package -Dmaven.test.skip=true dockerfile:build'
-            // 给镜像打标签
-            sh "docker tag ${imageName} ${tagName}"
+        //编译并安装公共工程
+        sh "mvn clean -Dmaven.test.skip=true install"
+        // 编译，构建本地镜像
+        sh "mvn -f ${project_name} clean package -Dmaven.test.skip=true dockerfile:build"
+  }
 
-            withCredentials([usernamePassword(credentialsId: 'docker_repo', passwordVariable: 'password', usernameVariable: 'username')]) {
-                // 登录
-                sh "docker login -u ${username} -p ${password} ${docker_repo_url}"
-                // 上传镜像
-                sh "docker push ${tagName}"
-            }
+  stage("发布镜像至仓库") {
+  // 给镜像打标签
+          sh "docker tag ${imageName} ${tagName}"
 
-            // 删除本地镜像
-            sh "docker rmi -f ${imageName}"
-            sh "docker rmi -f ${tagName}"
-         }
-      }
+          withCredentials([usernamePassword(credentialsId: 'docker_repo', passwordVariable: 'password', usernameVariable: 'username')]) {
+              // 登录
+              sh "docker login -u ${username} -p ${password} ${docker_repo_url}"
+              // 上传镜像
+              sh "docker push ${tagName}"
+          }
 
-      stage {
-        steps {
-            sshPublisher(publishers: [sshPublisherDesc(configName: 'jd_yun', transfers: [sshTransfer(cleanRemote: false, excludes: '', execCommand: '/usr/local/java/deploy.sh ${docker_repo_url} ${repo_project_name} ${project_name} ${tag}', execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: '', remoteDirectorySDF: false, removePrefix: '', sourceFiles: '\'\'')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: false)])
-        }
-      }
-   }
+          // 删除本地镜像
+          sh "docker rmi -f ${imageName}"
+          sh "docker rmi -f ${tagName}"
+  }
+
+  stage("部署运行镜像") {
+    sshPublisher(publishers: [sshPublisherDesc(configName: 'jd_yun', transfers: [sshTransfer(cleanRemote: false, excludes: '', execCommand: '/usr/local/java/deploy.sh ${docker_registry} ${docker_namespace} ${project_name} ${tag}', execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: '', remoteDirectorySDF: false, removePrefix: '', sourceFiles: '\'\'')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: false)])
+  }
 }
