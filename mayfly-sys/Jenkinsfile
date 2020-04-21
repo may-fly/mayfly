@@ -12,34 +12,34 @@ node {
          git branch: 'dev', credentialsId: 'gitee_mayfly', url: 'git@gitee.com:objs/mayfly.git'
       }
 
-  stage('编译，构建镜像') {
-        // 定义镜像名称
-        def imageName = "${project_name}:${tag}"
-        def tagName = "${docker_registry}/${docker_namespace}/${imageName}"
+    // 定义镜像名称
+    def imageName = "${project_name}:${tag}"
+    def tagName = "${docker_registry}/${docker_namespace}/${imageName}"
 
-        //编译并安装公共工程
-        sh "mvn clean -Dmaven.test.skip=true install"
+    stage('编译，构建镜像') {
+        // 编译并安装公共工程
+        sh "mvn clean -Dmaven.test.skip=true package"
         // 编译，构建本地镜像
         sh "mvn -f ${project_name} clean package -Dmaven.test.skip=true dockerfile:build"
-  }
+    }
 
-  stage("发布镜像至仓库") {
-  // 给镜像打标签
-          sh "docker tag ${imageName} ${tagName}"
+    stage("发布镜像至仓库") {
+        // 给镜像打标签
+        sh "docker tag ${imageName} ${tagName}"
 
-          withCredentials([usernamePassword(credentialsId: 'docker_repo', passwordVariable: 'password', usernameVariable: 'username')]) {
-              // 登录
-              sh "docker login -u ${username} -p ${password} ${docker_repo_url}"
-              // 上传镜像
-              sh "docker push ${tagName}"
-          }
+        withCredentials([usernamePassword(credentialsId: 'docker_repo', passwordVariable: 'password', usernameVariable: 'username')]) {
+            // 登录
+            sh "docker login -u ${username} -p ${password} ${docker_registry}"
+            // 上传镜像
+            sh "docker push ${tagName}"
+        }
 
-          // 删除本地镜像
-          sh "docker rmi -f ${imageName}"
-          sh "docker rmi -f ${tagName}"
-  }
+        // 删除本地镜像
+        sh "docker rmi -f ${imageName}"
+        sh "docker rmi -f ${tagName}"
+     }
 
-  stage("部署运行镜像") {
-    sshPublisher(publishers: [sshPublisherDesc(configName: 'jd_yun', transfers: [sshTransfer(cleanRemote: false, excludes: '', execCommand: '/usr/local/java/deploy.sh ${docker_registry} ${docker_namespace} ${project_name} ${tag}', execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: '', remoteDirectorySDF: false, removePrefix: '', sourceFiles: '\'\'')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: false)])
-  }
+    stage("服务器执行部署脚本") {
+        sshPublisher(publishers: [sshPublisherDesc(configName: 'jd_yun', transfers: [sshTransfer(cleanRemote: false, excludes: '', execCommand: "/usr/local/java/deploy.sh $docker_registry $docker_namespace $project_name $tag", execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: '', remoteDirectorySDF: false, removePrefix: '', sourceFiles: '\'\'')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: false)])
+    }
 }
