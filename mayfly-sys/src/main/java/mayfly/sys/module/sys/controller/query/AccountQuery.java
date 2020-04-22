@@ -2,6 +2,7 @@ package mayfly.sys.module.sys.controller.query;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import mayfly.core.base.model.PageQuery;
 
 /**
@@ -11,6 +12,7 @@ import mayfly.core.base.model.PageQuery;
  */
 @Getter
 @Setter
+@ToString(callSuper = true)
 public class AccountQuery extends PageQuery {
 
     private String username;

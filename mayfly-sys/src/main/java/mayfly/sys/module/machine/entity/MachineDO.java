@@ -2,6 +2,7 @@ package mayfly.sys.module.machine.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import mayfly.core.base.mapper.annotation.Table;
 import mayfly.core.base.model.BaseDO;
 
@@ -12,6 +13,7 @@ import mayfly.core.base.model.BaseDO;
  */
 @Getter
 @Setter
+@ToString(callSuper = true)
 @Table("tb_machine")
 public class MachineDO extends BaseDO {
     private String name;

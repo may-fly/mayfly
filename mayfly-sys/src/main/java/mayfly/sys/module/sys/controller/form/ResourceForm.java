@@ -2,6 +2,7 @@ package mayfly.sys.module.sys.controller.form;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import mayfly.core.validation.annotation.EnumValue;
 import mayfly.sys.module.sys.enums.ResourceTypeEnum;
 
@@ -16,6 +17,7 @@ import javax.validation.constraints.Size;
  */
 @Getter
 @Setter
+@ToString
 public class ResourceForm {
     private Long pid;
 

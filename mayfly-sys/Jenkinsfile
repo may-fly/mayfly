@@ -1,5 +1,5 @@
 node {
-       //构建版本的名称
+   //构建版本的名称
    def tag = "latest"
    // 仓库私服地址
    def docker_registry = "ccr.ccs.tencentyun.com"
@@ -10,7 +10,7 @@ node {
    
     stage('拉取代码') {
          git branch: 'dev', credentialsId: 'gitee_mayfly', url: 'git@gitee.com:objs/mayfly.git'
-      }
+    }
 
     // 定义镜像名称
     def imageName = "${project_name}:${tag}"

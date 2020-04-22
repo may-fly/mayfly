@@ -2,6 +2,7 @@ package mayfly.sys.module.sys.controller.vo;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import mayfly.core.util.TreeUtils;
 
 import java.time.LocalDateTime;
@@ -14,6 +15,7 @@ import java.util.Objects;
  */
 @Getter
 @Setter
+@ToString
 public class RoleResourceVO implements TreeUtils.TreeNode<Long> {
 
     private Long resourceId;

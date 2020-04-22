@@ -190,4 +190,12 @@ public class PageResult<T> {
     public Long getTotal() {
         return total;
     }
+
+    @Override
+    public String toString() {
+        return "PageResult{" +
+                "total=" + total +
+                ", list=" + list +
+                '}';
+    }
 }

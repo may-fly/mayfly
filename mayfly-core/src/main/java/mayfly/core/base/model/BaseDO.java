@@ -167,4 +167,17 @@ public class BaseDO {
     public void setUpdateAccount(String updateAccount) {
         this.updateAccount = updateAccount;
     }
+
+    @Override
+    public String toString() {
+        return "BaseDO{" +
+                "id=" + id +
+                ", createTime=" + createTime +
+                ", updateTime=" + updateTime +
+                ", createAccountId=" + createAccountId +
+                ", createAccount='" + createAccount + '\'' +
+                ", updateAccountId=" + updateAccountId +
+                ", updateAccount='" + updateAccount + '\'' +
+                '}';
+    }
 }

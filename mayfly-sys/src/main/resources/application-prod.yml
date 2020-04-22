@@ -3,9 +3,9 @@ spring:
   # redis
   redis:
     database: 0
-    host: 114.67.67.10
+    host: 172.18.0.3
     port: 6379
-    password:
+    password: 111049
     # 连接超时时间（毫秒）
     timeout: 1000
       #    lettuce:
@@ -21,9 +21,9 @@ spring:
   # 数据源
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://114.67.67.10:3306/mayfly?useUnicode=true&autoReconnect=true&useSSL=false
+    url: jdbc:mysql://172.18.0.2:3306/mayfly?useUnicode=true&autoReconnect=true&useSSL=false
     username: root
-    password:
+    password: 8ENmG4KdGMhHCNJS
     # 下面为连接池的补充设置，应用到上面所有数据源中
     # 初始化大小，最小，最大
     initialSize: 5
@@ -33,10 +33,16 @@ spring:
     maxWait: 60000
     # 通过connectProperties属性来打开mergeSql功能；慢SQL记录
     connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+  #文件上传大小限制
+  servlet:
+    multipart:
+      max-file-size: 200MB
+      max-request-size: 200MB
 
 #日志
 logging:
   #  level:
   #    root: INFO
   #    mayfly: DEBUG
-  config: classpath:logback-spring.xml
+  config: classpath:logback-spring-prod.xml
+savelog: true

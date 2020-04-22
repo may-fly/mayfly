@@ -38,4 +38,12 @@ public class PageQuery {
     public void setPageSize(Integer pageSize) {
         this.pageSize = pageSize;
     }
+
+    @Override
+    public String toString() {
+        return "PageQuery{" +
+                "pageNum=" + pageNum +
+                ", pageSize=" + pageSize +
+                '}';
+    }
 }

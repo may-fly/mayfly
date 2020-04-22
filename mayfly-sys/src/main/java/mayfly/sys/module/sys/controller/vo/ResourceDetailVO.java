@@ -1,6 +1,8 @@
 package mayfly.sys.module.sys.controller.vo;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 
@@ -9,7 +11,9 @@ import java.time.LocalDateTime;
  * @version 1.0
  * @date 2019-07-27 10:52
  */
-@Data
+@Getter
+@Setter
+@ToString
 public class ResourceDetailVO {
 
     private Long id;

@@ -1,6 +1,5 @@
 package mayfly.core.log;
 
-import com.alibaba.fastjson.JSON;
 import mayfly.core.util.Assert;
 import mayfly.core.util.CollectionUtils;
 import mayfly.core.util.PlaceholderResolver;
@@ -13,6 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -232,7 +232,7 @@ public class LogHandler {
             // 当记录日志结果属性为true并且记录结果的级别大于系统级别时填充结果属性
             if (this.result && this.resultLevel.order() >= sysLogLevel.order()) {
                 logMsg.append(RESULT_MSG_TEMP);
-                value.put("result", JSON.toJSONString(result.result));
+                value.put("result", Objects.toString(result.result));
             }
 
             Object[] args = result.args;
@@ -240,7 +240,7 @@ public class LogHandler {
                 if (CollectionUtils.contains(noNeedLogParamIndex, i)) {
                     continue;
                 }
-                value.put("param" + i, JSON.toJSONString(args[i]));
+                value.put("param" + i, Objects.toString(args[i]));
             }
 
             return resolver.resolveByMap(logMsg.toString(), value);
@@ -267,7 +267,7 @@ public class LogHandler {
                 if (CollectionUtils.contains(noNeedLogParamIndex, i)) {
                     continue;
                 }
-                value.put("param" + i, com.alibaba.fastjson.JSON.toJSONString(args[i]));
+                value.put("param" + i, Objects.toString(args[i]));
             }
 
             return resolver.resolveByMap(logMsg.toString(), value);

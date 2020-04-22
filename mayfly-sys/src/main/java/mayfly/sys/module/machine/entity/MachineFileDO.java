@@ -2,6 +2,7 @@ package mayfly.sys.module.machine.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 import mayfly.core.base.mapper.annotation.NoColumn;
 import mayfly.core.base.mapper.annotation.Table;
@@ -16,6 +17,7 @@ import mayfly.core.base.model.BaseDO;
  */
 @Getter
 @Setter
+@ToString(callSuper = true)
 @Accessors(chain = true)
 @Table("tb_machine_file")
 @NoColumn(fields = {BaseDO.UPDATE_TIME, BaseDO.UPDATE_ACCOUNT, BaseDO.UPDATE_ACCOUNT_ID})

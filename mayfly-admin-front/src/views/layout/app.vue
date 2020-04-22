@@ -34,7 +34,6 @@
             background-color="#222d32"
             text-color="#bbbbbb"
             active-text-color="#fff"
-            :default-active="$route.path"
             class="menu"
           >
             <MenuTree @toPath="toPath" :menus="this.menus"></MenuTree>

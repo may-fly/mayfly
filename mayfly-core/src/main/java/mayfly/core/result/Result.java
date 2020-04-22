@@ -2,7 +2,6 @@ package mayfly.core.result;
 
 import mayfly.core.util.enums.NameValueEnum;
 import mayfly.core.util.enums.ValueEnum;
-import mayfly.core.util.JsonUtils;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -174,6 +173,10 @@ public final class Result<T> implements Serializable {
 
     @Override
     public String toString() {
-        return JsonUtils.toJSONString(this);
+        return "Result{" +
+                "code=" + code +
+                ", msg='" + msg + '\'' +
+                ", data=" + data +
+                '}';
     }
 }
