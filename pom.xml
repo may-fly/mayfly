@@ -29,7 +29,7 @@
 
         <!--统一版本管理-->
         <mybatis.version>3.5.4</mybatis.version>
-        <mybatis.pagehelper.version>5.1.2</mybatis.pagehelper.version>
+        <mybatis.pagehelper.version>1.2.3</mybatis.pagehelper.version>
         <mysql.connector.version>8.0.11</mysql.connector.version>
         <alibaba.druid.version>1.0.28</alibaba.druid.version>
         <alibaba.fastjson.version>1.2.54</alibaba.fastjson.version>
@@ -46,10 +46,10 @@
                 <artifactId>mybatis</artifactId>
                 <version>${mybatis.version}</version>
             </dependency>
-            <!--mybatis分页插件-->
+            <!--mybatis自动分页插件-->
             <dependency>
                 <groupId>com.github.pagehelper</groupId>
-                <artifactId>pagehelper</artifactId>
+                <artifactId>pagehelper-spring-boot-starter</artifactId>
                 <version>${mybatis.pagehelper.version}</version>
             </dependency>
 
