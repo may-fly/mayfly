@@ -29,11 +29,12 @@
 
         <!--统一版本管理-->
         <mybatis.version>3.5.4</mybatis.version>
-        <mybatis.pagehelper.version>1.2.3</mybatis.pagehelper.version>
+        <mybatis.pagehelper.version>5.1.2</mybatis.pagehelper.version>
         <mysql.connector.version>8.0.11</mysql.connector.version>
         <alibaba.druid.version>1.0.28</alibaba.druid.version>
         <alibaba.fastjson.version>1.2.54</alibaba.fastjson.version>
         <lombok.version>1.18.12</lombok.version>
+        <junit.version>4.12</junit.version>
         <dockerfile.plugin.version>1.4.10</dockerfile.plugin.version>
     </properties>
 
@@ -45,10 +46,10 @@
                 <artifactId>mybatis</artifactId>
                 <version>${mybatis.version}</version>
             </dependency>
-            <!--mybatis自动分页插件-->
+            <!--mybatis分页插件-->
             <dependency>
                 <groupId>com.github.pagehelper</groupId>
-                <artifactId>pagehelper-spring-boot-starter</artifactId>
+                <artifactId>pagehelper</artifactId>
                 <version>${mybatis.pagehelper.version}</version>
             </dependency>
 
@@ -74,6 +75,13 @@
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
                 <version>${lombok.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>${junit.version}</version>
+                <scope>test</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>

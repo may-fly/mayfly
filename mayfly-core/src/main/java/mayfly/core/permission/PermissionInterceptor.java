@@ -4,6 +4,7 @@ import mayfly.core.exception.BusinessException;
 import mayfly.core.permission.registry.PermissionCheckHandler;
 import mayfly.core.permission.registry.SimpleLoginAccountRegistry;
 import mayfly.core.result.Result;
+import mayfly.core.util.JsonUtils;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -80,7 +81,7 @@ public class PermissionInterceptor implements HandlerInterceptor {
 //        response.setHeader("Access-Control-Allow-Headers", "x-requested-with");
         try {
             PrintWriter writer = response.getWriter();
-            writer.print(result.toString());
+            writer.print(JsonUtils.toJSONString(result));
             writer.close();
             response.flushBuffer();
         } catch (Exception e) {

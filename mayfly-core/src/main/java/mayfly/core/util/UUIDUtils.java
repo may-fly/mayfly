@@ -10,7 +10,11 @@ import java.util.UUID;
  */
 public class UUIDUtils {
 
+    /**
+     * 生成uuid，并去除横线
+     * @return uuid
+     */
     public static String generateUUID() {
-        return UUID.randomUUID().toString();
+        return UUID.randomUUID().toString().replace("-","");
     }
 }

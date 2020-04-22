@@ -2,6 +2,7 @@ package mayfly.sys.module.sys.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 import mayfly.core.base.mapper.annotation.NoColumn;
 import mayfly.core.base.mapper.annotation.Table;
@@ -18,6 +19,7 @@ import java.util.List;
  */
 @Getter
 @Setter
+@ToString
 @Accessors(chain = true)
 @Table("tb_resource")
 public class ResourceDO extends BaseDO implements Serializable {

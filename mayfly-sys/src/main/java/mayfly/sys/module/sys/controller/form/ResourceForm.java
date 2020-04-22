@@ -27,6 +27,8 @@ public class ResourceForm {
 
     private String code;
 
+    private String url;
+
     @NotNull
     @EnumValue(value = ResourceTypeEnum.class, name = "资源类型")
     private Integer type;

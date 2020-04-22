@@ -2,6 +2,7 @@ package mayfly.sys.module.sys.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 import mayfly.core.base.mapper.annotation.Table;
 import mayfly.core.base.model.BaseDO;
@@ -12,6 +13,7 @@ import java.time.LocalDateTime;
 @Accessors(chain = true)
 @Getter
 @Setter
+@ToString
 @Table("tb_account")
 public class AccountDO extends BaseDO implements Serializable {
 

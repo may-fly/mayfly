@@ -24,7 +24,7 @@
           prop="code"
           label="路由"
         >
-          <el-input v-model.trim="form.code" placeholder="请输入路由code"></el-input>
+          <el-input v-model.trim="form.url" placeholder="请输入路由code"></el-input>
         </el-form-item>
 
         <el-form-item
@@ -78,6 +78,7 @@ export default {
         name: null,
         pid: null,
         code: null,
+        url: null,
         icon: null,
         type: null,
         weight: null
