@@ -114,10 +114,6 @@ public class BusinessAssert {
         state(Objects.equals(o1, o2), msgSupplier);
     }
 
-    public static <E extends Enum<?> & NameValueEnum<Integer>> void equals(Object o1, Object o2, E errorEnum) {
-        state(Objects.equals(o1, o2), errorEnum);
-    }
-
 
     /**
      * 断言一个boolean表达式
