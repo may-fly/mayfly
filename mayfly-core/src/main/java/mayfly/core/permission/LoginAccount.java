@@ -19,6 +19,8 @@ public class LoginAccount<I> implements Serializable {
      */
     public static final String PERMISSION_CODE_SPLIT = ",";
 
+    public static final String CODE_STATUS_SEPARATOR = ":";
+
     /**
      * 线程上下文，用于保存到登录账号信息
      */
@@ -47,9 +49,21 @@ public class LoginAccount<I> implements Serializable {
      * @param permissionCode 权限code
      * @return true：有
      */
-    public boolean hasPermission(String permissionCode) {
-        return !StringUtils.isEmpty(permissions)
-                && ArrayUtils.contains(this.permissions.split(PERMISSION_CODE_SPLIT), permissionCode);
+    public boolean hasPermission(String permissionCode) throws PermissionDisabledException {
+        if (StringUtils.isEmpty(permissions)) {
+            return true;
+        }
+        if (StringUtils.isEmpty(permissionCode)) {
+            return false;
+        }
+        String[] codes = this.permissions.split(PERMISSION_CODE_SPLIT);
+        if (ArrayUtils.contains(codes, permissionCode)) {
+            return true;
+        }
+        if (ArrayUtils.contains(codes, getDisablePermissionCode(permissionCode))) {
+            throw new PermissionDisabledException();
+        }
+        return false;
     }
 
     /**
@@ -74,6 +88,16 @@ public class LoginAccount<I> implements Serializable {
      */
     public static void remove() {
         CONTEXT.remove();
+    }
+
+    /**
+     * 获取权限code对应的禁用code,即code + ":" + 0
+     *
+     * @param code code
+     * @return 禁用code
+     */
+    public static String getDisablePermissionCode(String code) {
+        return code + CODE_STATUS_SEPARATOR + 0;
     }
 
 

@@ -2,7 +2,6 @@ package mayfly.sys.module.sys.service.impl;
 
 import mayfly.core.permission.LoginAccount;
 import mayfly.core.permission.registry.LoginAccountRegistryHandler;
-import mayfly.core.permission.registry.PermissionCheckHandler;
 import mayfly.core.util.BracePlaceholder;
 import mayfly.core.util.StringUtils;
 import mayfly.core.util.TreeUtils;
@@ -67,7 +66,7 @@ public class PermissionServiceImpl implements PermissionService  {
 
         // 获取所有含有权限code的资源，如果权限被禁用，将会在code后加上:0标志，用于保存服务端进行校验
         List<String> permissionCodes = codes.stream().map(p -> p.getStatus().equals(EnableDisableEnum.DISABLE.getValue()) ?
-                PermissionCheckHandler.getDisablePermissionCode(p.getCode()) : p.getCode()).collect(Collectors.toList());
+                LoginAccount.getDisablePermissionCode(p.getCode()) : p.getCode()).collect(Collectors.toList());
         // 保存登录账号信息
         LoginAccount<Long> loginAccount = new LoginAccount<Long>().setId(account.getId()).setUsername(account.getUsername())
                 .setPermissions(permissionCodes);

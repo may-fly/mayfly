@@ -32,9 +32,6 @@ public final class Result<T> implements Serializable {
      */
     private T data;
 
-    private Result() {
-    }
-
     private Result(Integer code, String msg, T data) {
         this.code = code;
         this.msg = msg;
@@ -78,34 +75,96 @@ public final class Result<T> implements Serializable {
     // 各种结果对象的简单工厂，可使用Result.<T>success()调用返回指定泛型data值的对象(防止部分编译警告)
     //---------------------------------------------------------------------
 
+    /**
+     * 成功结果 （结果枚举为 {@linkplain ResultEnum#SUCCESS}）
+     *
+     * @param <T> data类型
+     * @return result
+     */
     public static <T> Result<T> success() {
         return of(ResultEnum.SUCCESS);
     }
 
+    /**
+     * 成功结果 （结果枚举为 {@linkplain ResultEnum#SUCCESS}）
+     *
+     * @param <T> data类型
+     * @return result
+     */
     public static <T> Result<T> success(T data) {
         return Result.<T>success().with(data);
     }
 
-    public static <T> Result<T> error() {
-        return of(ResultEnum.ERROR);
+    /**
+     * 错误结果
+     *
+     * @param errorCode 错误码对象
+     * @param <T>       实体类型
+     * @return result
+     */
+    public static <T> Result<T> error(Integer errorCode, String errorMsg) {
+        return new Result<T>(errorCode, errorMsg);
     }
 
-    public static <T> Result<T> error(String msg) {
-        return of(ResultEnum.ERROR, msg);
+    /**
+     * 操作失败（通常是业务逻辑错误），使用默认错误信息（错误枚举为 {@linkplain ResultEnum#FAILURE}）
+     *
+     * @param <T> 结果泛型
+     * @return result
+     */
+    public static <T> Result<T> failure() {
+        return of(ResultEnum.FAILURE);
     }
 
+    /**
+     * 操作失败，通常是业务逻辑错误（错误枚举为 {@linkplain ResultEnum#FAILURE}）
+     *
+     * @param msg 失败原因
+     * @param <T> 结果泛型
+     * @return result
+     */
+    public static <T> Result<T> failure(String msg) {
+        return of(ResultEnum.FAILURE, msg);
+    }
+
+    /**
+     * 请求参数错误，使用默认错误信息（错误枚举为 {@linkplain ResultEnum#PARAM_ERROR}）
+     *
+     * @param <T> 结果泛型
+     * @return result
+     */
     public static <T> Result<T> paramError() {
         return of(ResultEnum.PARAM_ERROR);
     }
 
+    /**
+     * 请求参数错误（错误枚举为 {@linkplain ResultEnum#PARAM_ERROR}）
+     *
+     * @param <T> 结果泛型
+     * @param msg 具体参数错误信息
+     * @return result
+     */
     public static <T> Result<T> paramError(String msg) {
         return of(ResultEnum.PARAM_ERROR, msg);
     }
 
+    /**
+     * 服务器异常（未知异常），使用默认错误信息（错误枚举为 {@linkplain ResultEnum#SERVER_ERROR}）
+     *
+     * @param <T> T
+     * @return result
+     */
     public static <T> Result<T> serverError() {
         return of(ResultEnum.SERVER_ERROR);
     }
 
+    /**
+     * 服务器异常（未知异常）（错误枚举为 {@linkplain ResultEnum#SERVER_ERROR}）
+     *
+     * @param msg 具体异常信息
+     * @param <T> T
+     * @return result
+     */
     public static <T> Result<T> serverError(String msg) {
         return of(ResultEnum.SERVER_ERROR, msg);
     }

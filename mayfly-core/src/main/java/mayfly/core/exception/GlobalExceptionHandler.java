@@ -20,36 +20,56 @@ public class GlobalExceptionHandler {
 
     private static final Logger LOG = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
+    @ExceptionHandler(BusinessRuntimeException.class)
+    public Result<?> handleBusinessRuntimeException(BusinessRuntimeException e) {
+        // 如果是业务逻辑异常则无需记录日志，错误提示即可
+        return Result.error(e.getErrorCode(), e.getMessage());
+    }
+
+    @ExceptionHandler(BusinessException.class)
+    public Result<?> handleBusinessException(BusinessException e) {
+        // 如果是业务逻辑异常则无需记录日志，错误提示即可
+        return Result.error(e.getErrorCode(), e.getMessage());
+    }
+
+    /**
+     * 参数校验错误异常
+     *
+     * @param e 异常
+     * @return 结果
+     */
+    @ExceptionHandler(BindException.class)
+    public Object validExceptionHandler(BindException e) {
+        FieldError fieldError = e.getBindingResult().getFieldError();
+        if (fieldError == null) {
+            return Result.serverError();
+        }
+        return Result.paramError(fieldError.getDefaultMessage());
+    }
+
+    /**
+     * 参数校验错误异常
+     *
+     * @param e 异常
+     * @return 结果
+     */
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public Object validExceptionHandler(MethodArgumentNotValidException e) {
+        FieldError fieldError = e.getBindingResult().getFieldError();
+        if (fieldError == null) {
+            return Result.serverError();
+        }
+        return Result.paramError(fieldError.getDefaultMessage());
+    }
+
     @ExceptionHandler(Exception.class)
     public Result<?> handleException(Exception e) {
-        // 如果是业务逻辑异常则无需记录日志，错误提示即可
-        if (e instanceof BusinessException || e instanceof BusinessRuntimeException) {
-            return Result.error(e.getMessage());
-        }
         if (e instanceof HttpRequestMethodNotSupportedException) {
             return Result.serverError("请求方法错误！");
         }
         // 记录未知异常日志
         LOG.error("系统异常：", e);
         return Result.serverError();
-    }
-
-    @ExceptionHandler(BindException.class)
-    public Object validExceptionHandler(BindException e){
-        FieldError fieldError = e.getBindingResult().getFieldError();
-        if (fieldError == null) {
-            return Result.serverError();
-        }
-        return Result.paramError(fieldError.getDefaultMessage());
-    }
-
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public Object validExceptionHandler(MethodArgumentNotValidException e){
-        FieldError fieldError = e.getBindingResult().getFieldError();
-        if (fieldError == null) {
-            return Result.serverError();
-        }
-        return Result.paramError(fieldError.getDefaultMessage());
     }
 
 }

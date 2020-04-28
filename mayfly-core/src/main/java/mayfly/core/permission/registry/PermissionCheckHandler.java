@@ -79,20 +79,6 @@ public class PermissionCheckHandler<I> {
         if (loginAccount.hasPermission(permissionCode)) {
             return true;
         }
-        // 判断该权限是否有被禁用
-        if (loginAccount.hasPermission(getDisablePermissionCode(permissionCode))) {
-            throw new PermissionDisabledException();
-        }
         throw new BusinessException("没有该权限");
-    }
-
-    /**
-     * 获取权限code对应的禁用code,即code + ":" + 0
-     *
-     * @param code code
-     * @return 禁用code
-     */
-    public static String getDisablePermissionCode(String code) {
-        return code + CODE_STATUS_SEPARATOR + 0;
     }
 }

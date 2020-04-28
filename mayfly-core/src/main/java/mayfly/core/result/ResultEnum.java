@@ -13,32 +13,32 @@ public enum ResultEnum implements NameValueEnum<Integer> {
     /**
      * 操作成功
      */
-    SUCCESS(200, "操作成功"),
+    SUCCESS(200, "SUCCESS"),
 
     /**
-     * 失败
+     * 操作失败（通常为业务逻辑错误）
      */
-    ERROR(400, "操作失败"),
+    FAILURE(400, "FAILURE"),
 
     /**
      * 参数错误
      */
-    PARAM_ERROR(405, "参数错误"),
+    PARAM_ERROR(405, "PARAM_ERROR"),
 
     /**
      * 资源未找到
      */
-    NO_FOUND(404, "未找到对应的资源"),
+    NO_FOUND(404, "NO_FOUND"),
 
     /**
-     * 服务器异常
+     * 服务器异常（其他未知错误）
      */
-    SERVER_ERROR(500, "服务器异常"),
+    SERVER_ERROR(500, "SERVER_ERROR"),
 
     /**
      * 无权限
      */
-    NO_PERMISSION(501, "没有权限");
+    NO_PERMISSION(501, "NO_PERMISSION");
 
 
     /**

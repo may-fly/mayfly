@@ -2,6 +2,7 @@ package mayfly.core.exception;
 
 import mayfly.core.util.CollectionUtils;
 import mayfly.core.util.StringUtils;
+import mayfly.core.util.enums.NameValueEnum;
 
 import java.util.Collection;
 import java.util.Objects;
@@ -30,6 +31,10 @@ public class BusinessAssert {
         state(object != null, supplier);
     }
 
+    public static <E extends Enum<?> & NameValueEnum<Integer>> void notNull(Object object, E errorEnum) {
+        state(object != null, errorEnum);
+    }
+
     /**
      * 断言对象为空
      *
@@ -42,6 +47,10 @@ public class BusinessAssert {
 
     public static void isNull(Object object, Supplier<String> supplier) {
         state(object == null, supplier);
+    }
+
+    public static <E extends Enum<?> & NameValueEnum<Integer>> void isNull(Object object, E errorEnum) {
+        state(object == null, errorEnum);
     }
 
 
@@ -57,6 +66,10 @@ public class BusinessAssert {
 
     public static void notEmpty(String str, Supplier<String> supplier) {
         state(!StringUtils.isEmpty(str), supplier);
+    }
+
+    public static <E extends Enum<?> & NameValueEnum<Integer>> void notEmpty(String str, E errorEnum) {
+        state(!StringUtils.isEmpty(str), errorEnum);
     }
 
     /**
@@ -82,9 +95,9 @@ public class BusinessAssert {
     /**
      * 断言两个对象必须相等
      *
-     * @param o1   对象1
-     * @param o2   对象2
-     * @param msg  错误消息
+     * @param o1  对象1
+     * @param o2  对象2
+     * @param msg 错误消息
      */
     public static void equals(Object o1, Object o2, String msg) {
         state(Objects.equals(o1, o2), msg);
@@ -93,13 +106,18 @@ public class BusinessAssert {
     /**
      * 断言两个对象必须相等
      *
-     * @param o1   对象1
-     * @param o2   对象2
-     * @param msgSupplier  错误消息提供器
+     * @param o1          对象1
+     * @param o2          对象2
+     * @param msgSupplier 错误消息提供器
      */
     public static void equals(Object o1, Object o2, Supplier<String> msgSupplier) {
         state(Objects.equals(o1, o2), msgSupplier);
     }
+
+    public static <E extends Enum<?> & NameValueEnum<Integer>> void equals(Object o1, Object o2, E errorEnum) {
+        state(Objects.equals(o1, o2), errorEnum);
+    }
+
 
     /**
      * 断言一个boolean表达式
@@ -122,6 +140,18 @@ public class BusinessAssert {
     public static void state(boolean expression, Supplier<String> supplier) {
         if (!expression) {
             throw new BusinessRuntimeException(supplier.get());
+        }
+    }
+
+    /**
+     * 断言一个boolean表达式，用于需要大量拼接字符串以及一些其他操作等
+     *
+     * @param expression boolean表达式
+     * @param errorEnum      错误枚举
+     */
+    public static <E extends Enum<?> & NameValueEnum<Integer>> void state(boolean expression, E errorEnum) {
+        if (!expression) {
+            throw new BusinessRuntimeException(errorEnum);
         }
     }
 }

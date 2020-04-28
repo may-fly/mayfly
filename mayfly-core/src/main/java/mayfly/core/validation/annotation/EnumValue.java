@@ -92,7 +92,7 @@ public @interface EnumValue {
                         .collect(Collectors.joining(", "));
             }
 
-            //添加枚举值占位符值参数，校验失败的时候可用
+            // 添加枚举值占位符值参数，校验失败的时候可用
             HibernateConstraintValidatorContext hibernateContext = context.unwrap(HibernateConstraintValidatorContext.class);
             hibernateContext.addMessageParameter("enums", enumsPlaceholderValue);
             return false;

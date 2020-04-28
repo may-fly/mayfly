@@ -1,5 +1,6 @@
 package mayfly.sys.module.open.controller;
 
+import mayfly.core.exception.BusinessAssert;
 import mayfly.core.permission.Permission;
 import mayfly.core.result.Result;
 import mayfly.sys.module.open.controller.form.AccountLoginForm;
@@ -32,9 +33,7 @@ public class OpenController {
     @PostMapping("/v1/login")
     public Result<?> login(@RequestBody @Valid AccountLoginForm loginForm) {
         AccountDO result = accountService.login(loginForm);
-        if (result == null) {
-            return Result.noFound("用户名或密码错误！");
-        }
+        BusinessAssert.notNull(result, "用户名或密码错误！");
         return Result.success(permissionService.saveIdAndPermission(result));
     }
 }

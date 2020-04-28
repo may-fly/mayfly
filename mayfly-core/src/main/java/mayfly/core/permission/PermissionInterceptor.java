@@ -41,7 +41,7 @@ public class PermissionInterceptor implements HandlerInterceptor {
             // 判断该用户是否有执行该方法的权限，如果校验通过，返回true
             if (!(handler instanceof HandlerMethod) || checkHandler.hasPermission(token, ((HandlerMethod) handler).getMethod())) {
                 if (!"admin".equals(LoginAccount.get().getUsername()) && !"GET".equals(request.getMethod())) {
-                    sendErrorMessage(response, Result.error("只可观望"));
+                    sendErrorMessage(response, Result.failure("只可观望"));
                     return false;
                 }
                 return true;
@@ -50,7 +50,7 @@ public class PermissionInterceptor implements HandlerInterceptor {
             return noPermission(response);
         } catch (BusinessException e) {
             //权限禁用or没有权限
-            sendErrorMessage(response, Result.error(e.getMessage()));
+            sendErrorMessage(response, Result.failure(e.getMessage()));
             return false;
         }
     }

@@ -24,7 +24,7 @@ public class LogAspect {
 
     private static final Logger LOG = LoggerFactory.getLogger(LogAspect.class);
 
-    private LogHandler handler = LogHandler.getInstance();
+    private final LogHandler handler = LogHandler.getInstance();
 
     /**
      * 日志结果消费者（回调）,主要用于保存日志信息等
