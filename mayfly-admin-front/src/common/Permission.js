@@ -1,6 +1,4 @@
-import request from './request'
 import Config from './config'
-import store from '../store'
 
 /**
  * 可用于各模块定义各自权限对象

@@ -54,26 +54,18 @@
       </el-table-column>
       <el-table-column prop="username" label="用户名" min-width="115"></el-table-column>
 
-      <el-table-column prop="status" label="状态" min-width="95">
+      <el-table-column align="center" prop="status" label="状态" min-width="63">
         <template slot-scope="scope">
-          <el-tag v-if="scope.row.status == enums.accountStatus.DISABLE.value" type="danger">禁用</el-tag>
-          <el-tag v-else type="success">正常</el-tag>
-          <el-popover placement="bottom" width="60" trigger="click">
-            <el-select
-              size="mini"
-              @change="changeStatus(scope.row.id, scope.row.status)"
+          <el-tooltip :content="scope.row.status == 1 ? '启用' : '禁用'" placement="top">
+            <el-switch
               v-model="scope.row.status"
-              placeholder="状态"
-            >
-              <el-option
-                v-for="item in enums.accountStatus"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              ></el-option>
-            </el-select>
-            <el-link slot="reference" icon="el-icon-edit" />
-          </el-popover>
+              :active-value="1"
+              active-color="#13ce66"
+              inactive-color="#ff4949"
+              @change="changeStatus(scope.row)"
+              :disabled="!$Permission.getPermission(permission.changeStatus.code).show || $Permission.getPermission(permission.changeStatus.code).disabled"
+            ></el-switch>
+          </el-tooltip>
         </template>
       </el-table-column>
 
@@ -226,7 +218,9 @@ export default {
       })
       showRoleDialog.visible = true
     },
-    async changeStatus(id, status) {
+    async changeStatus(row) {
+      let id = row.id
+      let status = row.status ? 1 : 0
       await accountApi.changeStatus.request({
         id,
         status

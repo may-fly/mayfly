@@ -22,6 +22,20 @@
         @keyup.native.enter="login"
       ></el-input>
 
+      <el-row>
+        <el-col :span="12">
+          <img @click="getCaptcha" width="130px" height="40px" :src="captchaImage" style="cursor: pointer"/>
+        </el-col>
+        <el-col :span="12">
+          <el-input
+            placeholder="请输入验证码"
+            suffix-icon="fa fa-user"
+            v-model="loginForm.captcha"
+            style="margin-bottom: 18px"
+          ></el-input>
+        </el-col>
+      </el-row>
+
       <el-button
         type="primary"
         :loading="loginLoading"
@@ -43,15 +57,23 @@ import sockets from '~/common/sockets'
 export default {
   data() {
     return {
+      captchaImage: '',
       loginForm: {
         username: '',
-        password: ''
+        password: '',
+        captcha: '',
+        uuid: ''
       },
       remember: false,
       loginLoading: false
     }
   },
   methods: {
+    async getCaptcha() {
+      let res = await openApi.captcha()
+      this.captchaImage = res.base64
+      this.loginForm.uuid = res.uuid
+    },
     async login() {
       this.loginLoading = true
       try {
@@ -89,6 +111,7 @@ export default {
     }
   },
   mounted() {
+    this.getCaptcha()
     let remember = JSON.parse(this.getRemember())
     if (remember) {
       this.remember = true

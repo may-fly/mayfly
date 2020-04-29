@@ -65,6 +65,7 @@ public class AccountController {
         return Result.success();
     }
 
+    @Permission
     @PutMapping("/{id}/{status}")
     public Result<?> changeStatus(@PathVariable Long id, @PathVariable Integer status) {
         BusinessAssert.state(EnumUtils.isExist(EnableDisableEnum.values(), status), "状态值错误");

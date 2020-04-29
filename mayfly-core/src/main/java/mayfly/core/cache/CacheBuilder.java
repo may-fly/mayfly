@@ -10,7 +10,7 @@ import java.util.function.Consumer;
  */
 public final class CacheBuilder<K, V> {
 
-    private AbstractCache<K, V> abstractCache;
+    private final AbstractCache<K, V> abstractCache;
 
     private CacheBuilder(AbstractCache<K, V> abstractCache) {
         this.abstractCache = abstractCache;

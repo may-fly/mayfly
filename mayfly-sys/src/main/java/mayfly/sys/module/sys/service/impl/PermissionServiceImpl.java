@@ -7,7 +7,7 @@ import mayfly.core.util.StringUtils;
 import mayfly.core.util.TreeUtils;
 import mayfly.core.util.UUIDUtils;
 import mayfly.core.util.bean.BeanUtils;
-import mayfly.sys.common.cache.UserCacheKey;
+import mayfly.sys.common.cache.CacheKey;
 import mayfly.sys.common.enums.EnableDisableEnum;
 import mayfly.sys.module.sys.controller.vo.AccountVO;
 import mayfly.sys.module.sys.controller.vo.LoginSuccessVO;
@@ -70,7 +70,7 @@ public class PermissionServiceImpl implements PermissionService  {
         // 保存登录账号信息
         LoginAccount<Long> loginAccount = new LoginAccount<Long>().setId(account.getId()).setUsername(account.getUsername())
                 .setPermissions(permissionCodes);
-        loginAccountRegistryHandler.saveLoginAccount(token, loginAccount, UserCacheKey.EXPIRE_TIME, TimeUnit.MINUTES);
+        loginAccountRegistryHandler.saveLoginAccount(token, loginAccount, CacheKey.SESSION_EXPIRE_TIME, TimeUnit.MINUTES);
 
         return LoginSuccessVO.builder().admin(BeanUtils.copyProperties(account, AccountVO.class))
                 .token(token).menus(TreeUtils.generateTrees(menus)).codes(codes).build();
@@ -89,18 +89,18 @@ public class PermissionServiceImpl implements PermissionService  {
     @SuppressWarnings("all")
     @Override
     public void save(String token, LoginAccount loginAccount, long time, TimeUnit timeUnit) {
-        redisTemplate.opsForValue().set(BracePlaceholder.resolveByObject(UserCacheKey.ACCOUNT_TOKEN_KEY, token), loginAccount, time, timeUnit);
+        redisTemplate.opsForValue().set(BracePlaceholder.resolveByObject(CacheKey.ACCOUNT_TOKEN_KEY, token), loginAccount, time, timeUnit);
     }
 
     @SuppressWarnings("all")
     @Override
     public LoginAccount<Long> getLoginAccount(String token) {
-        return (LoginAccount<Long>) redisTemplate.opsForValue().get(BracePlaceholder.resolveByObject(UserCacheKey.ACCOUNT_TOKEN_KEY, token));
+        return (LoginAccount<Long>) redisTemplate.opsForValue().get(BracePlaceholder.resolveByObject(CacheKey.ACCOUNT_TOKEN_KEY, token));
     }
 
     @SuppressWarnings("all")
     @Override
     public void delete(String token) {
-        redisTemplate.delete(BracePlaceholder.resolveByObject(UserCacheKey.ACCOUNT_TOKEN_KEY, token));
+        redisTemplate.delete(BracePlaceholder.resolveByObject(CacheKey.ACCOUNT_TOKEN_KEY, token));
     }
 }

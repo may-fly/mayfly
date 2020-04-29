@@ -50,7 +50,7 @@ public class PermissionInterceptor implements HandlerInterceptor {
             return noPermission(response);
         } catch (BusinessException e) {
             //权限禁用or没有权限
-            sendErrorMessage(response, Result.failure(e.getMessage()));
+            sendErrorMessage(response, Result.error(e.getErrorCode(), e.getMessage()));
             return false;
         }
     }

@@ -18,7 +18,7 @@ node {
 
     stage('编译，构建镜像') {
         // 编译并安装公共工程
-        sh "mvn clean -Dmaven.test.skip=true package"
+        sh "mvn clean -Dmaven.test.skip=true install"
         // 编译，构建本地镜像
         sh "mvn -f ${project_name} clean package -Dmaven.test.skip=true dockerfile:build"
     }

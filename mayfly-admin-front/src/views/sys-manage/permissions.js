@@ -15,6 +15,7 @@ export const rolePermission = {
 
 export const accountPermission = {
   account: Permission.code("account"),
+  changeStatus: Permission.code("account:changeStatus"),
   del: Permission.code("account:delete"),
   saveRoles: Permission.code("account:saveRoles")
 }

@@ -4,6 +4,7 @@ import mayfly.core.exception.BusinessException;
 import mayfly.core.permission.LoginAccount;
 import mayfly.core.permission.PermissionDisabledException;
 import mayfly.core.permission.PermissionInfo;
+import mayfly.core.result.ResultEnum;
 import mayfly.core.util.StringUtils;
 
 import java.lang.reflect.Method;
@@ -79,6 +80,6 @@ public class PermissionCheckHandler<I> {
         if (loginAccount.hasPermission(permissionCode)) {
             return true;
         }
-        throw new BusinessException("没有该权限");
+        throw new BusinessException(ResultEnum.NO_PERMISSION);
     }
 }
