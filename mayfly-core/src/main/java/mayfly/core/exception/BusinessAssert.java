@@ -24,15 +24,15 @@ public class BusinessAssert {
      * @param msg    不满足断言的异常信息
      */
     public static void notNull(Object object, String msg) {
-        state(object != null, msg);
+        isTrue(object != null, msg);
     }
 
     public static void notNull(Object object, Supplier<String> supplier) {
-        state(object != null, supplier);
+        isTrue(object != null, supplier);
     }
 
     public static <E extends Enum<?> & NameValueEnum<Integer>> void notNull(Object object, E errorEnum) {
-        state(object != null, errorEnum);
+        isTrue(object != null, errorEnum);
     }
 
     /**
@@ -42,15 +42,15 @@ public class BusinessAssert {
      * @param msg    不满足断言的异常信息
      */
     public static void isNull(Object object, String msg) {
-        state(object == null, msg);
+        isTrue(object == null, msg);
     }
 
     public static void isNull(Object object, Supplier<String> supplier) {
-        state(object == null, supplier);
+        isTrue(object == null, supplier);
     }
 
     public static <E extends Enum<?> & NameValueEnum<Integer>> void isNull(Object object, E errorEnum) {
-        state(object == null, errorEnum);
+        isTrue(object == null, errorEnum);
     }
 
 
@@ -61,15 +61,15 @@ public class BusinessAssert {
      * @param msg 不满足断言的异常信息
      */
     public static void notEmpty(String str, String msg) {
-        state(!StringUtils.isEmpty(str), msg);
+        isTrue(!StringUtils.isEmpty(str), msg);
     }
 
     public static void notEmpty(String str, Supplier<String> supplier) {
-        state(!StringUtils.isEmpty(str), supplier);
+        isTrue(!StringUtils.isEmpty(str), supplier);
     }
 
     public static <E extends Enum<?> & NameValueEnum<Integer>> void notEmpty(String str, E errorEnum) {
-        state(!StringUtils.isEmpty(str), errorEnum);
+        isTrue(!StringUtils.isEmpty(str), errorEnum);
     }
 
     /**
@@ -79,7 +79,7 @@ public class BusinessAssert {
      * @param msg        不满足断言的异常信息
      */
     public static void notEmpty(Collection<?> collection, String msg) {
-        state(!CollectionUtils.isEmpty(collection), msg);
+        isTrue(!CollectionUtils.isEmpty(collection), msg);
     }
 
     /**
@@ -89,7 +89,7 @@ public class BusinessAssert {
      * @param msg        不满足断言的异常信息
      */
     public static void empty(Collection<?> collection, String msg) {
-        state(CollectionUtils.isEmpty(collection), msg);
+        isTrue(CollectionUtils.isEmpty(collection), msg);
     }
 
     /**
@@ -100,7 +100,7 @@ public class BusinessAssert {
      * @param msg 错误消息
      */
     public static void equals(Object o1, Object o2, String msg) {
-        state(Objects.equals(o1, o2), msg);
+        isTrue(Objects.equals(o1, o2), msg);
     }
 
     /**
@@ -111,41 +111,41 @@ public class BusinessAssert {
      * @param msgSupplier 错误消息提供器
      */
     public static void equals(Object o1, Object o2, Supplier<String> msgSupplier) {
-        state(Objects.equals(o1, o2), msgSupplier);
+        isTrue(Objects.equals(o1, o2), msgSupplier);
     }
 
 
     /**
-     * 断言一个boolean表达式
+     * 断言一个boolean表达式为true
      *
      * @param expression boolean表达式
      * @param message    不满足断言的异常信息
      */
-    public static void state(boolean expression, String message) {
+    public static void isTrue(boolean expression, String message) {
         if (!expression) {
             throw new BusinessRuntimeException(message);
         }
     }
 
     /**
-     * 断言一个boolean表达式，用于需要大量拼接字符串以及一些其他操作等
+     * 断言一个boolean表达式为true，用于需要大量拼接字符串以及一些其他操作等
      *
      * @param expression boolean表达式
      * @param supplier   msg生产者
      */
-    public static void state(boolean expression, Supplier<String> supplier) {
+    public static void isTrue(boolean expression, Supplier<String> supplier) {
         if (!expression) {
             throw new BusinessRuntimeException(supplier.get());
         }
     }
 
     /**
-     * 断言一个boolean表达式，用于需要大量拼接字符串以及一些其他操作等
+     * 断言一个boolean表达式为true，用于需要大量拼接字符串以及一些其他操作等
      *
      * @param expression boolean表达式
      * @param errorEnum      错误枚举
      */
-    public static <E extends Enum<?> & NameValueEnum<Integer>> void state(boolean expression, E errorEnum) {
+    public static <E extends Enum<?> & NameValueEnum<Integer>> void isTrue(boolean expression, E errorEnum) {
         if (!expression) {
             throw new BusinessRuntimeException(errorEnum);
         }

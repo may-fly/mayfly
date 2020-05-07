@@ -1,6 +1,6 @@
 package mayfly.sys.common.websocket;
 
-import mayfly.core.result.ResultEnum;
+import mayfly.core.base.model.ResultEnum;
 import mayfly.core.util.enums.ValueEnum;
 
 /**

@@ -1,8 +1,7 @@
 package mayfly.sys.module.open.controller;
 
 import mayfly.core.exception.BusinessAssert;
-import mayfly.core.permission.Permission;
-import mayfly.core.result.Result;
+import mayfly.core.base.model.Result;
 import mayfly.sys.module.open.controller.form.AccountLoginForm;
 import mayfly.sys.module.open.service.OpenService;
 import mayfly.sys.module.sys.entity.AccountDO;
@@ -24,7 +23,6 @@ import javax.validation.Valid;
  */
 @RestController
 @RequestMapping("/open")
-@Permission(requireCode = false)
 public class OpenController {
 
     @Autowired
@@ -39,9 +37,9 @@ public class OpenController {
         return Result.success(openService.generateCaptcha());
     }
 
-    @PostMapping("/v1/login")
+    @PostMapping("/login")
     public Result<?> login(@RequestBody @Valid AccountLoginForm loginForm) {
-        BusinessAssert.state(openService.checkCaptcha(loginForm.getUuid(), loginForm.getCaptcha()), "验证码错误");
+        BusinessAssert.isTrue(openService.checkCaptcha(loginForm.getUuid(), loginForm.getCaptcha()), "验证码错误");
         AccountDO result = accountService.login(loginForm);
         BusinessAssert.notNull(result, "用户名或密码错误！");
         return Result.success(permissionService.saveIdAndPermission(result));

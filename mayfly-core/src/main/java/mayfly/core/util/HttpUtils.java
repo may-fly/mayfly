@@ -37,6 +37,17 @@ public class HttpUtils {
     }
 
     /**
+     * 发送get请求获取json并转换为对应对象
+     *
+     * @param url  url
+     * @param type response结果类型
+     * @return response
+     */
+    public static <T> T get(String url, Class<T> type) {
+        return JsonUtils.parseObject(get(url), type);
+    }
+
+    /**
      * 发送带有查询参数的get请求
      *
      * @param url    url
@@ -48,17 +59,29 @@ public class HttpUtils {
     }
 
     /**
-     * 用Content-Type=application/json形式发送post请求
+     * 发送带有查询参数的get请求获取json并转换为对应对象
      *
-     * @param url      url
-     * @param jsonBody 请求体
+     * @param url    url
+     * @param params 参数（可以是map也可以使普通对象）
+     * @param type   response结果类型
      * @return response
      */
-    public static String postJson(String url, Object jsonBody) {
+    public static <T> T get(String url, Object params, Class<T> type) {
+        return JsonUtils.parseObject(get(url, params), type);
+    }
+
+    /**
+     * 用Content-Type=application/json形式发送post请求
+     *
+     * @param url  url
+     * @param json json字符串
+     * @return response
+     */
+    public static String postJson(String url, String json) {
         var post = HttpRequest.newBuilder()
                 .header("Content-Type", "application/json")
                 .uri(URI.create(url))
-                .POST(HttpRequest.BodyPublishers.ofString(JsonUtils.toJSONString(jsonBody)))
+                .POST(HttpRequest.BodyPublishers.ofString(json))
                 .build();
         try {
             var httpResponse = HTTP_CLIENT.send(post, HttpResponse.BodyHandlers.ofString());
@@ -67,6 +90,29 @@ public class HttpUtils {
             throw new IllegalArgumentException(e);
         }
     }
+
+    /**
+     * 用Content-Type=application/json形式发送post请求
+     *
+     * @param url      url
+     * @param jsonBody 请求体（对象）
+     * @return response
+     */
+    public static String postJson(String url, Object jsonBody) {
+        return postJson(url, JsonUtils.toJSONString(jsonBody));
+    }
+
+    /**
+     * 用Content-Type=application/json形式发送post请求，并解析响应结果json对象
+     *
+     * @param url      url
+     * @param jsonBody 请求体
+     * @return response
+     */
+    public static <T> T postJson(String url, Object jsonBody, Class<T> type) {
+        return JsonUtils.parseObject(postJson(url, jsonBody), type);
+    }
+
 
     /**
      * 解析查询参数

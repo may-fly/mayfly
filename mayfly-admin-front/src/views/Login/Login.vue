@@ -28,7 +28,7 @@
         </el-col>
         <el-col :span="12">
           <el-input
-            placeholder="请输入验证码"
+            placeholder="请输入算术结果"
             suffix-icon="fa fa-user"
             v-model="loginForm.captcha"
             style="margin-bottom: 18px"
@@ -104,6 +104,7 @@ export default {
         }, 500)
       } catch (err) {
         this.loginLoading = false
+        this.getCaptcha()
       }
     },
     getRemember() {

@@ -35,7 +35,7 @@ public class BigDecimalUtils {
             return value.compareTo(min) > -1;
         }
 
-        Assert.state(min.compareTo(max) != 1, "最小值不能大于最大值");
+        Assert.isTrue(min.compareTo(max) != 1, "最小值不能大于最大值");
 
         return value.compareTo(min) > -1 && value.compareTo(max) < 1;
     }

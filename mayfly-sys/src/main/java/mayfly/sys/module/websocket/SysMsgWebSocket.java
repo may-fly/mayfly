@@ -2,7 +2,7 @@ package mayfly.sys.module.websocket;
 
 import lombok.extern.slf4j.Slf4j;
 import mayfly.core.permission.LoginAccount;
-import mayfly.core.result.ResultEnum;
+import mayfly.core.base.model.ResultEnum;
 import mayfly.sys.common.utils.SpringUtils;
 import mayfly.sys.common.websocket.MessageTypeEnum;
 import mayfly.sys.common.websocket.WebSocketUtils;

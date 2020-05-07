@@ -2,7 +2,6 @@ package mayfly.sys.module.open.service.impl;
 
 import mayfly.core.captcha.ArithmeticCaptcha;
 import mayfly.core.captcha.CaptchaBuilder;
-import mayfly.core.captcha.base.BaseCaptcha;
 import mayfly.core.exception.BusinessAssert;
 import mayfly.core.util.BracePlaceholder;
 import mayfly.core.util.UUIDUtils;
@@ -28,12 +27,11 @@ public class OpenServiceImpl implements OpenService {
     @Override
     public CaptchaVO generateCaptcha() {
         ArithmeticCaptcha ac = CaptchaBuilder.<ArithmeticCaptcha>newArithmeticBuilder()
-                .len(3).font(BaseCaptcha.FONT_1).build();
+                .len(3).build();
         String text = ac.text();
         String uuid = UUIDUtils.generateUUID();
         String key = BracePlaceholder.resolve(CacheKey.CAPTCHA_KEY, uuid);
-        redisTemplate.opsForValue().set(key, text);
-        redisTemplate.expire(key, CacheKey.CAPTCHA_EXPIRE_TIME, TimeUnit.MINUTES);
+        redisTemplate.opsForValue().set(key, text, CacheKey.CAPTCHA_EXPIRE_TIME, TimeUnit.MINUTES);
         return new CaptchaVO(uuid, ac.toBase64());
     }
 

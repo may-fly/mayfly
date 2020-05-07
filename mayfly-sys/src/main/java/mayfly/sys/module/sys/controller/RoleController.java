@@ -1,7 +1,7 @@
 package mayfly.sys.module.sys.controller;
 
 import mayfly.core.permission.Permission;
-import mayfly.core.result.Result;
+import mayfly.core.base.model.Result;
 import mayfly.core.util.bean.BeanUtils;
 import mayfly.sys.common.enums.EnableDisableEnum;
 import mayfly.sys.module.sys.controller.form.RoleForm;

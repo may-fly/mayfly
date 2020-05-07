@@ -74,7 +74,7 @@ public class SessionInfo {
         }
 
         public SessionInfoBuilder port(int port) {
-            Assert.state(port > 0, "port必须大于0");
+            Assert.isTrue(port > 0, "port必须大于0");
             this.info.port = port;
             return this;
         }

@@ -55,19 +55,19 @@ public class Assert {
         }
     }
 
-    public static void state(boolean expression, String message) {
+    public static void isTrue(boolean expression, String message) {
         if (!expression) {
             throw new IllegalArgumentException(message);
         }
     }
 
     /**
-     * 断言一个boolean表达式，用于需要大量拼接字符串以及一些其他操作等
+     * 断言一个boolean表达式为true，用于需要大量拼接字符串以及一些其他操作等
      *
      * @param expression boolean表达式
      * @param supplier   msg生产者
      */
-    public static void state(boolean expression, Supplier<String> supplier) {
+    public static void isTrue(boolean expression, Supplier<String> supplier) {
         if (!expression) {
             throw new IllegalArgumentException(supplier.get());
         }

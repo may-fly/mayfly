@@ -174,10 +174,10 @@ public class MachineFileServiceImpl extends BaseServiceImpl<MachineFileMapper, L
         BusinessAssert.notNull(file, "配置信息不存在");
         if (isDirectory(file)) {
             // 访问的文件路径必须是在配置的子目录下
-            BusinessAssert.state(path.startsWith(file.getPath()), "无法访问该文件");
+            BusinessAssert.isTrue(path.startsWith(file.getPath()), "无法访问该文件");
         } else {
             BusinessAssert.equals(path, file.getPath(), "文件路径错误");
-            BusinessAssert.state(isFile(file), "该路径为目录，非文件");
+            BusinessAssert.isTrue(isFile(file), "该路径为目录，非文件");
         }
     }
 }

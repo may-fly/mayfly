@@ -1,6 +1,6 @@
 package mayfly.core.exception;
 
-import mayfly.core.result.ResultEnum;
+import mayfly.core.base.model.ResultEnum;
 import mayfly.core.util.enums.NameValueEnum;
 
 /**

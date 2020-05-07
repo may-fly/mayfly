@@ -84,7 +84,7 @@ public class RedisServiceImpl extends BaseServiceImpl<RedisMapper, Long, RedisDO
 
     private RedisInfo toRedisInfo(RedisDO redis) {
         Assert.notNull(redis, "不存在该redis实例！");
-        BusinessAssert.state(isStandalone(redis.getClusterId()), "该redis为集群模式！");
+        BusinessAssert.isTrue(isStandalone(redis.getClusterId()), "该redis为集群模式！");
         return RedisInfo.builder(redis.getId()).info(redis.getHost(), redis.getPort(), redis.getPwd()).build();
     }
 

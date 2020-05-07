@@ -1,6 +1,6 @@
 package mayfly.core.exception;
 
-import mayfly.core.result.Result;
+import mayfly.core.base.model.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.validation.BindException;

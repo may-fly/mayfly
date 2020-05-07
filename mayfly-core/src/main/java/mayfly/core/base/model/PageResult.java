@@ -1,7 +1,6 @@
 package mayfly.core.base.model;
 
 import com.github.pagehelper.PageHelper;
-import mayfly.core.result.Result;
 import mayfly.core.util.bean.BeanUtils;
 
 import java.util.Collections;

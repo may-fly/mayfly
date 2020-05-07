@@ -2,7 +2,7 @@ package mayfly.sys.module.machine.controller;
 
 import mayfly.core.log.MethodLog;
 import mayfly.core.permission.Permission;
-import mayfly.core.result.Result;
+import mayfly.core.base.model.Result;
 import mayfly.core.util.bean.BeanUtils;
 import mayfly.sys.module.machine.controller.form.MachineForm;
 import mayfly.sys.module.machine.controller.vo.MachineVO;

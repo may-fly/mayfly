@@ -4,7 +4,7 @@ import mayfly.core.exception.BusinessException;
 import mayfly.core.permission.LoginAccount;
 import mayfly.core.permission.PermissionDisabledException;
 import mayfly.core.permission.PermissionInfo;
-import mayfly.core.result.ResultEnum;
+import mayfly.core.base.model.ResultEnum;
 import mayfly.core.util.StringUtils;
 
 import java.lang.reflect.Method;

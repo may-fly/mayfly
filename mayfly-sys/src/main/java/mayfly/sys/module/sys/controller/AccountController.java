@@ -2,7 +2,7 @@ package mayfly.sys.module.sys.controller;
 
 import mayfly.core.exception.BusinessAssert;
 import mayfly.core.permission.Permission;
-import mayfly.core.result.Result;
+import mayfly.core.base.model.Result;
 import mayfly.core.util.TreeUtils;
 import mayfly.core.util.bean.BeanUtils;
 import mayfly.core.util.enums.EnumUtils;
@@ -68,7 +68,7 @@ public class AccountController {
     @Permission
     @PutMapping("/{id}/{status}")
     public Result<?> changeStatus(@PathVariable Long id, @PathVariable Integer status) {
-        BusinessAssert.state(EnumUtils.isExist(EnableDisableEnum.values(), status), "状态值错误");
+        BusinessAssert.isTrue(EnumUtils.isExist(EnableDisableEnum.values(), status), "状态值错误");
         AccountDO a = new AccountDO().setStatus(status);
         a.setId(id);
         accountService.updateByIdSelective(a);

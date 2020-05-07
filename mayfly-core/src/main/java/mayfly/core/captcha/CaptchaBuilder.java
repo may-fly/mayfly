@@ -45,7 +45,12 @@ public class CaptchaBuilder<T extends BaseCaptcha> {
         return new CaptchaBuilder<T>(new GifCaptcha());
     }
 
-
+    /**
+     * 验证码长度
+     *
+     * @param len 长度
+     * @return builder
+     */
     public CaptchaBuilder<T> len(int len) {
         captcha.setLen(len);
         return this;
@@ -60,16 +65,34 @@ public class CaptchaBuilder<T extends BaseCaptcha> {
         return this;
     }
 
+    /**
+     * 验证码宽度
+     *
+     * @param width 宽度
+     * @return builder
+     */
     public CaptchaBuilder<T> width(int width) {
         captcha.setWidth(width);
         return this;
     }
 
+    /**
+     * 验证码高度
+     *
+     * @param height 高度
+     * @return builder
+     */
     public CaptchaBuilder<T> height(int height) {
         captcha.setHeight(height);
         return this;
     }
 
+    /**
+     * 字符类型
+     *
+     * @param charType 字符类型
+     * @return builder
+     */
     public CaptchaBuilder<T> charType(int charType) {
         captcha.setCharType(charType);
         return this;

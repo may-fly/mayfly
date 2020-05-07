@@ -1,7 +1,7 @@
 package mayfly.sys.common.websocket;
 
 import lombok.Data;
-import mayfly.core.result.ResultEnum;
+import mayfly.core.base.model.ResultEnum;
 import mayfly.core.util.JsonUtils;
 
 /**

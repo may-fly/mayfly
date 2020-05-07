@@ -110,7 +110,7 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourceMapper, Long, R
 
     @Override
     public void changeStatus(Long id, Integer status) {
-        BusinessAssert.state(EnumUtils.isExist(EnableDisableEnum.values(), status), "状态值错误");
+        BusinessAssert.isTrue(EnumUtils.isExist(EnableDisableEnum.values(), status), "状态值错误");
         ResourceDO resource = getById(id);
         BusinessAssert.notNull(resource, "该资源不存在");
         // 状态不变直接返回
@@ -137,7 +137,7 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourceMapper, Long, R
      * @param code code
      */
     private void checkPermissionCode(String code) {
-        BusinessAssert.state(!code.contains(","), "权限code不能包含','");
+        BusinessAssert.isTrue(!code.contains(","), "权限code不能包含','");
         BusinessAssert.equals(countByCondition(new ResourceDO().setCode(code)), 0L, "该权限code已存在");
     }
 }

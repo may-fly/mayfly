@@ -3,7 +3,7 @@ package mayfly.sys.module.machine.controller;
 import mayfly.core.exception.BusinessAssert;
 import mayfly.core.log.MethodLog;
 import mayfly.core.permission.Permission;
-import mayfly.core.result.Result;
+import mayfly.core.base.model.Result;
 import mayfly.sys.module.machine.controller.form.MachineConfContentForm;
 import mayfly.sys.module.machine.controller.form.MachineFileForm;
 import mayfly.sys.module.machine.controller.form.UploadForm;

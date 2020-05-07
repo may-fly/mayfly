@@ -1,4 +1,4 @@
-package mayfly.core.result;
+package mayfly.core.base.model;
 
 import mayfly.core.util.enums.NameValueEnum;
 import mayfly.core.util.enums.ValueEnum;
