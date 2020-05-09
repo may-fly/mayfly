@@ -22,6 +22,8 @@ public class AccountVO {
 
     private LocalDateTime updateTime;
 
+    private LocalDateTime lastLoginTime;
+
     /**
      * 创建账号id
      */

@@ -41,7 +41,6 @@ public class OpenController {
     public Result<?> login(@RequestBody @Valid AccountLoginForm loginForm) {
         BusinessAssert.isTrue(openService.checkCaptcha(loginForm.getUuid(), loginForm.getCaptcha()), "验证码错误");
         AccountDO result = accountService.login(loginForm);
-        BusinessAssert.notNull(result, "用户名或密码错误！");
         return Result.success(permissionService.saveIdAndPermission(result));
     }
 }

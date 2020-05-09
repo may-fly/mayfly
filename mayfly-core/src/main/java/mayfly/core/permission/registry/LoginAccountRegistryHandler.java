@@ -14,7 +14,7 @@ public final class LoginAccountRegistryHandler<I> {
     /**
      * 登录账号注册器
      */
-    private LoginAccountRegistry<I> loginAccountRegistry;
+    private final LoginAccountRegistry<I> loginAccountRegistry;
 
 
     private LoginAccountRegistryHandler(LoginAccountRegistry<I> loginAccountRegistry) {

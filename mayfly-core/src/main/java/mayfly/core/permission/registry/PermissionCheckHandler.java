@@ -26,7 +26,7 @@ public class PermissionCheckHandler<I> {
     /**
      * 用户权限校验
      */
-    private SimpleLoginAccountRegistry<I> loginAccountRegistry;
+    private final SimpleLoginAccountRegistry<I> loginAccountRegistry;
 
     private PermissionCheckHandler(SimpleLoginAccountRegistry<I> loginAccountRegistry) {
         this.loginAccountRegistry = loginAccountRegistry;
@@ -65,6 +65,24 @@ public class PermissionCheckHandler<I> {
         }
 
         return hasPermission(loginAccount, pi.getPermissionCode());
+    }
+
+    /**
+     * 判断指定token是否拥有指定权限
+     *
+     * @param token          token
+     * @param permissionCode permisison code
+     * @return true 拥有该权限
+     * @throws BusinessException 权限禁用异常
+     */
+    public boolean hasPermission(String token, String permissionCode) throws BusinessException {
+        LoginAccount<I> loginAccount;
+        if (StringUtils.isEmpty(token) || (loginAccount = loginAccountRegistry.getLoginAccount(token)) == null) {
+            return false;
+        }
+        LoginAccount.set(loginAccount);
+
+        return hasPermission(loginAccount, permissionCode);
     }
 
     /**

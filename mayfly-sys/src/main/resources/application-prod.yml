@@ -21,7 +21,7 @@ spring:
   # 数据源
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://172.18.0.2:3306/mayfly?useUnicode=true&autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true
+    url: jdbc:mysql://172.18.0.2:3306/mayfly?useUnicode=true&autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Hongkong
     username: root
     password: 8ENmG4KdGMhHCNJS
     # 下面为连接池的补充设置，应用到上面所有数据源中

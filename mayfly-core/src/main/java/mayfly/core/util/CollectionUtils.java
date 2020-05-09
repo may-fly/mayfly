@@ -69,7 +69,7 @@ public class CollectionUtils {
             }
         }
 
-        return new CompareResult<T>(newCollection, oldCollection, unmodifiedValue);
+        return new CompareResult<T>(new ArrayList<>(newCollection), new ArrayList<>(oldCollection), unmodifiedValue);
     }
 
 
@@ -82,31 +82,31 @@ public class CollectionUtils {
         /**
          * 新增的对象列表
          */
-        private final Collection<T> addValue;
+        private final List<T> addValue;
         /**
          * 删除的对象列表
          */
-        private final Collection<T> delValue;
+        private final List<T> delValue;
         /**
          * 没有改变的对象列表
          */
-        private final Collection<T> unmodifiedValue;
+        private final List<T> unmodifiedValue;
 
-        public CompareResult(Collection<T> addValue, Collection<T> delValue, Collection<T> unmodifiedValue) {
+        public CompareResult(List<T> addValue, List<T> delValue, List<T> unmodifiedValue) {
             this.addValue = addValue;
             this.delValue = delValue;
             this.unmodifiedValue = unmodifiedValue;
         }
 
-        public Collection<T> getDelValue() {
+        public List<T> getDelValue() {
             return delValue;
         }
 
-        public Collection<T> getAddValue() {
+        public List<T> getAddValue() {
             return addValue;
         }
 
-        public Collection<T> getUnmodifiedValue() {
+        public List<T> getUnmodifiedValue() {
             return unmodifiedValue;
         }
     }

@@ -19,6 +19,8 @@ import mayfly.sys.module.sys.service.PermissionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 /**
  * @author meilin.huang
  * @version 1.0
@@ -46,9 +48,14 @@ public class AccountServiceImpl extends BaseServiceImpl<AccountMapper, Long, Acc
         AccountDO condition = new AccountDO().setUsername(adminForm.getUsername())
                 .setPassword(DigestUtils.md5DigestAsHex(adminForm.getPassword()));
         AccountDO account = getByCondition(condition);
-        if (account != null) {
-            BusinessAssert.equals(account.getStatus(), EnableDisableEnum.ENABLE.getValue(), "该账号已被禁用");
-        }
+        BusinessAssert.notNull(account, "用户名或密码错误！");
+        BusinessAssert.equals(account.getStatus(), EnableDisableEnum.ENABLE.getValue(), "该账号已被禁用");
+
+        // 更新最后登录时间
+        AccountDO updateDo = new AccountDO().setLastLoginTime(LocalDateTime.now());
+        updateDo.setId(account.getId());
+        mapper.updateByPrimaryKeySelective(updateDo);
+
         return account;
     }
 

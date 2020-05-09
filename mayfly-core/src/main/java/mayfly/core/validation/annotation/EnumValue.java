@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
  * @version 1.0
  * @date 2020-04-14 10:22 上午
  */
-@Target({ElementType.FIELD})
+@Target({ElementType.METHOD, ElementType.FIELD, ElementType.ANNOTATION_TYPE, ElementType.CONSTRUCTOR, ElementType.PARAMETER, ElementType.TYPE_USE})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Constraint(validatedBy = EnumValue.EnumValueValidator.class)

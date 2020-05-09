@@ -73,6 +73,7 @@
       <el-table-column min-width="160" prop="createTime" label="创建时间"></el-table-column>
       <el-table-column min-width="115" prop="updateAccount" label="更新账号"></el-table-column>
       <el-table-column min-width="160" prop="updateTime" label="修改时间"></el-table-column>
+      <el-table-column min-width="160" prop="lastLoginTime" label="最后登录时间"></el-table-column>
       <el-table-column label="查看更多" min-width="150">
         <template slot-scope="scope">
           <el-link
@@ -220,7 +221,7 @@ export default {
     },
     async changeStatus(row) {
       let id = row.id
-      let status = row.status ? 1 : 0
+      let status = row.status ? 1 : 2
       await accountApi.changeStatus.request({
         id,
         status

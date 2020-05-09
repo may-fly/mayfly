@@ -14,11 +14,6 @@ public class LoginAccount<I> implements Serializable {
 
     private static final long serialVersionUID = -8397728352145291302L;
 
-    /**
-     * 权限码分隔符
-     */
-    public static final String PERMISSION_CODE_SPLIT = ",";
-
     public static final String CODE_STATUS_SEPARATOR = ":";
 
     /**
@@ -40,7 +35,7 @@ public class LoginAccount<I> implements Serializable {
     /**
      * 账号权限列表，用','分割
      */
-    private String permissions;
+    private String[] permissions;
 
 
     /**
@@ -50,13 +45,13 @@ public class LoginAccount<I> implements Serializable {
      * @return true：有
      */
     public boolean hasPermission(String permissionCode) throws PermissionDisabledException {
-        if (StringUtils.isEmpty(permissions)) {
+        if (ArrayUtils.isEmpty(permissions)) {
             return true;
         }
         if (StringUtils.isEmpty(permissionCode)) {
             return false;
         }
-        String[] codes = this.permissions.split(PERMISSION_CODE_SPLIT);
+        String[] codes = this.permissions;
         if (ArrayUtils.contains(codes, permissionCode)) {
             return true;
         }
@@ -122,17 +117,17 @@ public class LoginAccount<I> implements Serializable {
         return this;
     }
 
-    public String getPermissions() {
+    public String[] getPermissions() {
         return permissions;
     }
 
-    public LoginAccount<I> setPermissions(String permissions) {
+    public LoginAccount<I> setPermissions(String[] permissions) {
         this.permissions = permissions;
         return this;
     }
 
     public LoginAccount<I> setPermissions(Collection<String> permissions) {
-        this.permissions = String.join(PERMISSION_CODE_SPLIT, permissions);
+        this.permissions = permissions.toArray(new String[0]);
         return this;
     }
 }
