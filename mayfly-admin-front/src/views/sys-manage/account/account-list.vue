@@ -221,7 +221,7 @@ export default {
     },
     async changeStatus(row) {
       let id = row.id
-      let status = row.status ? 1 : 2
+      let status = row.status ? 1 : 0
       await accountApi.changeStatus.request({
         id,
         status

@@ -9,29 +9,38 @@ import java.util.concurrent.TimeUnit;
  * @version 1.0
  * @date 2018-11-26 11:02 AM
  */
-public final class LoginAccountRegistryHandler<I> {
+public final class LoginAccountRegistryHandler {
 
     /**
      * 登录账号注册器
      */
-    private final LoginAccountRegistry<I> loginAccountRegistry;
+    private final LoginAccountRegistry loginAccountRegistry;
 
 
-    private LoginAccountRegistryHandler(LoginAccountRegistry<I> loginAccountRegistry) {
+    private LoginAccountRegistryHandler(LoginAccountRegistry loginAccountRegistry) {
         this.loginAccountRegistry = loginAccountRegistry;
     }
 
     /**
-     * 权限缓存工厂方法
+     * 登录账号缓存处理器工厂方法
      *
      * @param loginAccountRegistry 登录账号注册器(null则使用默认注册器 {@link DefaultLoginAccountRegistry})
      * @return LoginAccountRegistryHandler
      */
-    public static <T> LoginAccountRegistryHandler<T> of(LoginAccountRegistry<T> loginAccountRegistry) {
+    public static LoginAccountRegistryHandler of(LoginAccountRegistry loginAccountRegistry) {
         if (loginAccountRegistry == null) {
-            loginAccountRegistry = DefaultLoginAccountRegistry.<T>getInstance();
+            return getDefaultHandler();
         }
-        return new LoginAccountRegistryHandler<T>(loginAccountRegistry);
+        return new LoginAccountRegistryHandler(loginAccountRegistry);
+    }
+
+    /**
+     * 获取默认的登录账号缓存处理器工厂方法（默认使用{@linkplain DefaultLoginAccountRegistry}注册）
+     *
+     * @return LoginAccountRegistryHandler
+     */
+    public static LoginAccountRegistryHandler getDefaultHandler() {
+        return new LoginAccountRegistryHandler(DefaultLoginAccountRegistry.getInstance());
     }
 
     /**
@@ -41,7 +50,7 @@ public final class LoginAccountRegistryHandler<I> {
      * @param time         时间
      * @param timeUnit     单位
      */
-    public void saveLoginAccount(String token, LoginAccount<I> loginAccount, long time, TimeUnit timeUnit) {
+    public void saveLoginAccount(String token, LoginAccount loginAccount, long time, TimeUnit timeUnit) {
         loginAccountRegistry.save(token, loginAccount, time, timeUnit);
     }
 

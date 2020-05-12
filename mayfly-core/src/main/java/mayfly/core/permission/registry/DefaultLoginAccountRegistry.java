@@ -14,26 +14,24 @@ import java.util.concurrent.TimeUnit;
  * @version 1.0
  * @date 2019-03-23 8:25 PM
  */
-public class DefaultLoginAccountRegistry<I> implements LoginAccountRegistry<I> {
+public class DefaultLoginAccountRegistry implements LoginAccountRegistry {
 
-    @SuppressWarnings("all")
-    private static DefaultLoginAccountRegistry defaultUserPermissionCodeRegistry = new DefaultLoginAccountRegistry();
+    private static final DefaultLoginAccountRegistry DEFAULT_REGISTRY = new DefaultLoginAccountRegistry();
 
-    @SuppressWarnings("unchecked")
-    public static <T> DefaultLoginAccountRegistry<T> getInstance() {
-        return (DefaultLoginAccountRegistry<T>) defaultUserPermissionCodeRegistry;
+    public static DefaultLoginAccountRegistry getInstance() {
+        return DEFAULT_REGISTRY;
     }
 
     /**
-     * 权限缓存
+     * 登录账号信息缓存
      */
-    private Map<String, LoginAccount<I>> loginAccountMap = new ConcurrentHashMap<>(255);
+    private final Map<String, LoginAccount> loginAccountMap = new ConcurrentHashMap<>(255);
 
     private DefaultLoginAccountRegistry() {
     }
 
     @Override
-    public void save(String token, LoginAccount<I> loginAccount, long time, TimeUnit timeUnit) {
+    public void save(String token, LoginAccount loginAccount, long time, TimeUnit timeUnit) {
         this.loginAccountMap.put(token, loginAccount);
         ScheduleUtils.schedule("removeLoginAccount", () -> {
             this.delete(token);
@@ -41,7 +39,7 @@ public class DefaultLoginAccountRegistry<I> implements LoginAccountRegistry<I> {
     }
 
     @Override
-    public LoginAccount<I> getLoginAccount(String token) {
+    public LoginAccount getLoginAccount(String token) {
         return loginAccountMap.get(token);
     }
 

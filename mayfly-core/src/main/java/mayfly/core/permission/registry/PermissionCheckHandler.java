@@ -4,7 +4,7 @@ import mayfly.core.exception.BusinessException;
 import mayfly.core.permission.LoginAccount;
 import mayfly.core.permission.PermissionDisabledException;
 import mayfly.core.permission.PermissionInfo;
-import mayfly.core.base.model.ResultEnum;
+import mayfly.core.base.model.ResultCodeEnum;
 import mayfly.core.util.StringUtils;
 
 import java.lang.reflect.Method;
@@ -16,19 +16,14 @@ import java.lang.reflect.Method;
  * @version 1.0
  * @date 2019-03-28 2:03 PM
  */
-public class PermissionCheckHandler<I> {
-
-    /**
-     * 权限码与状态分割符号
-     */
-    public static final String CODE_STATUS_SEPARATOR = ":";
+public class PermissionCheckHandler {
 
     /**
      * 用户权限校验
      */
-    private final SimpleLoginAccountRegistry<I> loginAccountRegistry;
+    private final SimpleLoginAccountRegistry loginAccountRegistry;
 
-    private PermissionCheckHandler(SimpleLoginAccountRegistry<I> loginAccountRegistry) {
+    private PermissionCheckHandler(SimpleLoginAccountRegistry loginAccountRegistry) {
         this.loginAccountRegistry = loginAccountRegistry;
     }
 
@@ -38,11 +33,11 @@ public class PermissionCheckHandler<I> {
      * @param loginAccountRegistry login account registry
      * @return PermissionCheckHandler
      */
-    public static <T> PermissionCheckHandler<T> of(SimpleLoginAccountRegistry<T> loginAccountRegistry) {
+    public static PermissionCheckHandler of(SimpleLoginAccountRegistry loginAccountRegistry) {
         if (loginAccountRegistry == null) {
             loginAccountRegistry = DefaultLoginAccountRegistry.getInstance();
         }
-        return new PermissionCheckHandler<T>(loginAccountRegistry);
+        return new PermissionCheckHandler(loginAccountRegistry);
     }
 
     /**
@@ -54,7 +49,7 @@ public class PermissionCheckHandler<I> {
      * @throws PermissionDisabledException 权限禁用异常
      */
     public boolean hasPermission(String token, Method method) throws BusinessException {
-        LoginAccount<I> loginAccount;
+        LoginAccount loginAccount;
         if (StringUtils.isEmpty(token) || (loginAccount = loginAccountRegistry.getLoginAccount(token)) == null) {
             return false;
         }
@@ -76,7 +71,7 @@ public class PermissionCheckHandler<I> {
      * @throws BusinessException 权限禁用异常
      */
     public boolean hasPermission(String token, String permissionCode) throws BusinessException {
-        LoginAccount<I> loginAccount;
+        LoginAccount loginAccount;
         if (StringUtils.isEmpty(token) || (loginAccount = loginAccountRegistry.getLoginAccount(token)) == null) {
             return false;
         }
@@ -93,11 +88,11 @@ public class PermissionCheckHandler<I> {
      * @return true：拥有该权限
      * @throws PermissionDisabledException 若不存在权限code,而存在与之对应的禁用权限code,抛出此异常
      */
-    public boolean hasPermission(LoginAccount<I> loginAccount, String permissionCode) throws BusinessException {
+    public boolean hasPermission(LoginAccount loginAccount, String permissionCode) throws BusinessException {
         //判断code注册器是否含有该用户的权限code
         if (loginAccount.hasPermission(permissionCode)) {
             return true;
         }
-        throw new BusinessException(ResultEnum.NO_PERMISSION);
+        throw new BusinessException(ResultCodeEnum.NO_PERMISSION);
     }
 }

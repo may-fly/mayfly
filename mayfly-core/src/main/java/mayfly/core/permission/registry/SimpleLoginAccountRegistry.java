@@ -8,12 +8,12 @@ import mayfly.core.permission.LoginAccount;
  * @author meilin.huang
  * @date 2020-03-06 8:41 上午
  */
-public interface SimpleLoginAccountRegistry<I> {
+public interface SimpleLoginAccountRegistry {
     /**
      * 根据token获取登录账号信息
      *
      * @param token token
      * @return login account
      */
-    LoginAccount<I> getLoginAccount(String token);
+    LoginAccount getLoginAccount(String token);
 }

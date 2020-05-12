@@ -43,7 +43,7 @@ public class PermissionServiceImpl implements PermissionService  {
     /**
      * 权限缓存处理器
      */
-    private final LoginAccountRegistryHandler<Long> loginAccountRegistryHandler = LoginAccountRegistryHandler.of(this);
+    private final LoginAccountRegistryHandler loginAccountRegistryHandler = LoginAccountRegistryHandler.of(this);
 
 
     @Override
@@ -68,7 +68,7 @@ public class PermissionServiceImpl implements PermissionService  {
         List<String> permissionCodes = codes.stream().map(p -> p.getStatus().equals(EnableDisableEnum.DISABLE.getValue()) ?
                 LoginAccount.getDisablePermissionCode(p.getCode()) : p.getCode()).collect(Collectors.toList());
         // 保存登录账号信息
-        LoginAccount<Long> loginAccount = new LoginAccount<Long>().setId(account.getId()).setUsername(account.getUsername())
+        LoginAccount loginAccount = new LoginAccount().setId(account.getId()).setUsername(account.getUsername())
                 .setPermissions(permissionCodes);
         loginAccountRegistryHandler.saveLoginAccount(token, loginAccount, CacheKey.SESSION_EXPIRE_TIME, TimeUnit.MINUTES);
 
@@ -92,10 +92,9 @@ public class PermissionServiceImpl implements PermissionService  {
         redisTemplate.opsForValue().set(BracePlaceholder.resolveByObject(CacheKey.ACCOUNT_TOKEN_KEY, token), loginAccount, time, timeUnit);
     }
 
-    @SuppressWarnings("all")
     @Override
-    public LoginAccount<Long> getLoginAccount(String token) {
-        return (LoginAccount<Long>) redisTemplate.opsForValue().get(BracePlaceholder.resolveByObject(CacheKey.ACCOUNT_TOKEN_KEY, token));
+    public LoginAccount getLoginAccount(String token) {
+        return (LoginAccount) redisTemplate.opsForValue().get(BracePlaceholder.resolveByObject(CacheKey.ACCOUNT_TOKEN_KEY, token));
     }
 
     @SuppressWarnings("all")

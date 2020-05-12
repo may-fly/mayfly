@@ -10,7 +10,7 @@ import mayfly.sys.module.sys.entity.AccountDO;
  * @author: meilin.huang
  * @date: 2018/6/26 上午9:48
  */
-public interface PermissionService extends LoginAccountRegistry<Long> {
+public interface PermissionService extends LoginAccountRegistry {
     /**
      * 保存id以及对应的权限
      *

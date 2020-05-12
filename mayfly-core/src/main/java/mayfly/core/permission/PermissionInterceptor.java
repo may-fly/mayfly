@@ -24,10 +24,10 @@ public class PermissionInterceptor implements HandlerInterceptor {
 
     private static final String TOKEN_PARAM_NAME = "token";
 
-    private final PermissionCheckHandler<?> checkHandler;
+    private final PermissionCheckHandler checkHandler;
 
-    public <I> PermissionInterceptor(SimpleLoginAccountRegistry<I> loginAccountRegistry) {
-        this.checkHandler = PermissionCheckHandler.<I>of(loginAccountRegistry);
+    public <I> PermissionInterceptor(SimpleLoginAccountRegistry loginAccountRegistry) {
+        this.checkHandler = PermissionCheckHandler.of(loginAccountRegistry);
     }
 
     @Override

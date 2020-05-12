@@ -10,22 +10,14 @@ import java.util.Collection;
  * @author meilin.huang
  * @date 2020-03-03 8:40 上午
  */
-public class LoginAccount<I> implements Serializable {
+public class LoginAccount implements Serializable {
 
     private static final long serialVersionUID = -8397728352145291302L;
-
-    public static final String CODE_STATUS_SEPARATOR = ":";
-
-    /**
-     * 线程上下文，用于保存到登录账号信息
-     */
-    private static final ThreadLocal<LoginAccount<?>> CONTEXT = new ThreadLocal<>();
-
 
     /**
      * 账号id
      */
-    private I id;
+    private Long id;
 
     /**
      * 账号用户名
@@ -36,6 +28,17 @@ public class LoginAccount<I> implements Serializable {
      * 账号权限列表，用','分割
      */
     private String[] permissions;
+
+
+    /**
+     * 权限码与状态分割符号
+     */
+    public static final String CODE_STATUS_SEPARATOR = ":";
+
+    /**
+     * 线程上下文，用于保存到登录账号信息
+     */
+    private static final ThreadLocal<LoginAccount> CONTEXT = new ThreadLocal<>();
 
 
     /**
@@ -66,16 +69,15 @@ public class LoginAccount<I> implements Serializable {
      *
      * @param loginAccount  login account
      */
-    public static void set(LoginAccount<?> loginAccount) {
+    public static void set(LoginAccount loginAccount) {
         CONTEXT.set(loginAccount);
     }
 
     /**
      * 获取该线程上下文的登录账号
      */
-    @SuppressWarnings("unchecked")
-    public static <I> LoginAccount<I> get() {
-        return (LoginAccount<I>) CONTEXT.get();
+    public static <I> LoginAccount get() {
+        return CONTEXT.get();
     }
 
     /**
@@ -99,11 +101,11 @@ public class LoginAccount<I> implements Serializable {
 
     //---------  getter setter  --------//
 
-    public I getId() {
+    public Long getId() {
         return id;
     }
 
-    public LoginAccount<I> setId(I id) {
+    public LoginAccount setId(Long id) {
         this.id = id;
         return this;
     }
@@ -112,7 +114,7 @@ public class LoginAccount<I> implements Serializable {
         return username;
     }
 
-    public LoginAccount<I> setUsername(String username) {
+    public LoginAccount setUsername(String username) {
         this.username = username;
         return this;
     }
@@ -121,12 +123,12 @@ public class LoginAccount<I> implements Serializable {
         return permissions;
     }
 
-    public LoginAccount<I> setPermissions(String[] permissions) {
+    public LoginAccount setPermissions(String[] permissions) {
         this.permissions = permissions;
         return this;
     }
 
-    public LoginAccount<I> setPermissions(Collection<String> permissions) {
+    public LoginAccount setPermissions(Collection<String> permissions) {
         this.permissions = permissions.toArray(new String[0]);
         return this;
     }

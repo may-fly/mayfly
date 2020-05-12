@@ -1,7 +1,7 @@
 package mayfly.sys.common.websocket;
 
 import lombok.Data;
-import mayfly.core.base.model.ResultEnum;
+import mayfly.core.base.model.ResultCodeEnum;
 import mayfly.core.util.JsonUtils;
 
 /**
@@ -24,7 +24,7 @@ public class WebSocketMessage<T> {
         this.data = data;
     }
 
-    public static <T> String msg(MessageTypeEnum type, ResultEnum result, T data) {
+    public static <T> String msg(MessageTypeEnum type, ResultCodeEnum result, T data) {
         return JsonUtils.toJSONString(new WebSocketMessage<T>(type.getValue(), result.getValue(), data));
     }
 }

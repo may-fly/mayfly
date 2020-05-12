@@ -37,7 +37,7 @@ public class OperationLogServiceImpl extends BaseServiceImpl<OperationLogMapper,
     }
 
     @Override
-    public void asyncLog(String log, LogTypeEnum type, LoginAccount<Long> account) {
+    public void asyncLog(String log, LogTypeEnum type, LoginAccount account) {
         GlobalThreadPool.execute("asyncLog", () -> {
             OperationLogDO logDO = new OperationLogDO().setOperation(log).setType(type.getValue());
             logDO.autoSetBaseInfo(true, account);
@@ -47,7 +47,7 @@ public class OperationLogServiceImpl extends BaseServiceImpl<OperationLogMapper,
 
     @Override
     public void asyncUpdateLog(String desc, Object newObj, BaseDO oldObj) {
-        LoginAccount<Long> la = LoginAccount.get();
+        LoginAccount la = LoginAccount.get();
         GlobalThreadPool.execute("asyncUpdateLog", () -> {
             List<String> results = BeanUtils.getFieldValueChangeRecords(newObj, oldObj,
                     field -> !ArrayUtils.contains(ignoreFields, field.getName()))
@@ -67,7 +67,7 @@ public class OperationLogServiceImpl extends BaseServiceImpl<OperationLogMapper,
 
     @Override
     public void asyncDeleteLog(String desc, Object obj) {
-        LoginAccount<Long> la = LoginAccount.get();
+        LoginAccount la = LoginAccount.get();
         GlobalThreadPool.execute("asyncDeleteLog", () -> {
             OperationLogDO logDO = new OperationLogDO().setOperation(desc + " => " + JsonUtils.toJSONString(obj))
                     .setType(LogTypeEnum.DELETE.getValue());

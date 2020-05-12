@@ -9,7 +9,7 @@ import mayfly.core.util.enums.NameValueEnum;
  * @version 1.0
  * @date 2019-06-26 15:24
  */
-public enum ResultEnum implements NameValueEnum<Integer> {
+public enum ResultCodeEnum implements NameValueEnum<Integer> {
     /**
      * 操作成功
      */
@@ -50,7 +50,7 @@ public enum ResultEnum implements NameValueEnum<Integer> {
      */
     private final String msg;
 
-    ResultEnum(Integer code, String msg) {
+    ResultCodeEnum(Integer code, String msg) {
         this.code = code;
         this.msg = msg;
     }

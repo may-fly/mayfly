@@ -20,7 +20,7 @@ public interface OperationLogService extends BaseService<Long, OperationLogDO> {
      */
     void asyncLog(String log, LogTypeEnum type);
 
-    void asyncLog(String log, LogTypeEnum type, LoginAccount<Long> account);
+    void asyncLog(String log, LogTypeEnum type, LoginAccount account);
 
     /**
      * 异步记录数据修改的日志

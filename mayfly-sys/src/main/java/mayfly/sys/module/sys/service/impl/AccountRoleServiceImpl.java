@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -47,9 +46,8 @@ public class AccountRoleServiceImpl extends BaseServiceImpl<AccountRoleMapper, L
         //和之前存的角色列表id比较，哪些是新增，哪些是修改以及不变的
         CollectionUtils.CompareResult<Long> compareResult = CollectionUtils
                 .compare(roleIds, oldRoles, (Long i1, Long i2) -> i1.equals(i2) ? 0 : 1);
-
-        Collection<Long> delIds = compareResult.getDelValue();
-        Collection<Long> addIds = compareResult.getAddValue();
+        List<Long> delIds = compareResult.getDelValue();
+        List<Long> addIds = compareResult.getAddValue();
 
         delIds.forEach(r -> {
             deleteByCondition(new AccountRoleDO().setAccountId(accountId).setRoleId(r));
@@ -60,7 +58,7 @@ public class AccountRoleServiceImpl extends BaseServiceImpl<AccountRoleMapper, L
         }
         List<AccountRoleDO> ars = new ArrayList<>(addIds.size());
         // 校验资源id正确性，及保存新增的资源id
-        BusinessAssert.equals(roleService.listByIdIn((List<Long>) addIds).size(), addIds.size(), "存在错误角色id");
+        BusinessAssert.equals(roleService.listByIdIn(addIds).size(), addIds.size(), "存在错误角色id");
         for (Long id : addIds) {
             AccountRoleDO ru = new AccountRoleDO().setRoleId(id).setAccountId(accountId);
             ru.autoSetBaseInfo();

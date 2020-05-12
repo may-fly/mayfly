@@ -88,7 +88,7 @@ public class BaseDO {
      * @param isCreate     是否为创建操作
      * @param loginAccount 登录账号
      */
-    public void autoSetBaseInfo(boolean isCreate, LoginAccount<Long> loginAccount) {
+    public void autoSetBaseInfo(boolean isCreate, LoginAccount loginAccount) {
         LocalDateTime now = LocalDateTime.now();
         if (isCreate) {
             this.createTime = now;
