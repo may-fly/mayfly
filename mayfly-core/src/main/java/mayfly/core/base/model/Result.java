@@ -66,27 +66,23 @@ public final class Result<T> implements Serializable {
         return new Result<T>(resultEnum.getValue(), msg);
     }
 
-    public static <T, E extends Enum<?> & ValueEnum<Integer>> Result<T> of(E resultEnum, String msg, T data) {
-        return new Result<T>(resultEnum.getValue(), msg, data);
-    }
-
 
     //---------------------------------------------------------------------
     // 各种结果对象的简单工厂，可使用Result.<T>success()调用返回指定泛型data值的对象(防止部分编译警告)
     //---------------------------------------------------------------------
 
     /**
-     * 成功结果 （结果枚举为 {@linkplain ResultCodeEnum#SUCCESS}）
+     * 成功结果 （结果枚举为 {@linkplain CodeEnum#SUCCESS}）
      *
      * @param <T> data类型
      * @return result
      */
     public static <T> Result<T> success() {
-        return of(ResultCodeEnum.SUCCESS);
+        return of(CodeEnum.SUCCESS);
     }
 
     /**
-     * 成功结果 （结果枚举为 {@linkplain ResultCodeEnum#SUCCESS}）
+     * 成功结果 （结果枚举为 {@linkplain CodeEnum#SUCCESS}）
      *
      * @param <T> data类型
      * @return result
@@ -107,78 +103,84 @@ public final class Result<T> implements Serializable {
     }
 
     /**
-     * 操作失败（通常是业务逻辑错误），使用默认错误信息（错误枚举为 {@linkplain ResultCodeEnum#FAILURE}）
+     * 操作失败（通常是业务逻辑错误），使用默认错误信息（错误枚举为 {@linkplain CodeEnum#FAILURE}）
      *
      * @param <T> 结果泛型
      * @return result
      */
     public static <T> Result<T> failure() {
-        return of(ResultCodeEnum.FAILURE);
+        return of(CodeEnum.FAILURE);
     }
 
     /**
-     * 操作失败，通常是业务逻辑错误（错误枚举为 {@linkplain ResultCodeEnum#FAILURE}）
+     * 操作失败，通常是业务逻辑错误（错误枚举为 {@linkplain CodeEnum#FAILURE}）
      *
      * @param msg 失败原因
      * @param <T> 结果泛型
      * @return result
      */
     public static <T> Result<T> failure(String msg) {
-        return of(ResultCodeEnum.FAILURE, msg);
+        return of(CodeEnum.FAILURE, msg);
     }
 
     /**
-     * 请求参数错误，使用默认错误信息（错误枚举为 {@linkplain ResultCodeEnum#PARAM_ERROR}）
+     * 请求参数错误，使用默认错误信息（错误枚举为 {@linkplain CodeEnum#PARAM_ERROR}）
      *
      * @param <T> 结果泛型
      * @return result
      */
     public static <T> Result<T> paramError() {
-        return of(ResultCodeEnum.PARAM_ERROR);
+        return of(CodeEnum.PARAM_ERROR);
     }
 
     /**
-     * 请求参数错误（错误枚举为 {@linkplain ResultCodeEnum#PARAM_ERROR}）
+     * 请求参数错误（错误枚举为 {@linkplain CodeEnum#PARAM_ERROR}）
      *
      * @param <T> 结果泛型
      * @param msg 具体参数错误信息
      * @return result
      */
     public static <T> Result<T> paramError(String msg) {
-        return of(ResultCodeEnum.PARAM_ERROR, msg);
+        return of(CodeEnum.PARAM_ERROR, msg);
     }
 
     /**
-     * 服务器异常（未知异常），使用默认错误信息（错误枚举为 {@linkplain ResultCodeEnum#SERVER_ERROR}）
+     * 服务器异常（未知异常），使用默认错误信息（错误枚举为 {@linkplain CodeEnum#SERVER_ERROR}）
      *
      * @param <T> T
      * @return result
      */
     public static <T> Result<T> serverError() {
-        return of(ResultCodeEnum.SERVER_ERROR);
+        return of(CodeEnum.SERVER_ERROR);
     }
 
     /**
-     * 服务器异常（未知异常）（错误枚举为 {@linkplain ResultCodeEnum#SERVER_ERROR}）
+     * 服务器异常（未知异常）（错误枚举为 {@linkplain CodeEnum#SERVER_ERROR}）
      *
      * @param msg 具体异常信息
      * @param <T> T
      * @return result
      */
     public static <T> Result<T> serverError(String msg) {
-        return of(ResultCodeEnum.SERVER_ERROR, msg);
+        return of(CodeEnum.SERVER_ERROR, msg);
     }
 
+    /**
+     * 资源未找到result
+     *
+     * @param <T> T
+     * @return result
+     */
     public static <T> Result<T> noFound() {
-        return of(ResultCodeEnum.NO_FOUND);
+        return of(CodeEnum.NO_FOUND);
     }
 
     public static <T> Result<T> noFound(String msg) {
-        return of(ResultCodeEnum.NO_FOUND, msg);
+        return of(CodeEnum.NO_FOUND, msg);
     }
 
     public static <T> Result<T> withoutPermission() {
-        return of(ResultCodeEnum.NO_PERMISSION);
+        return of(CodeEnum.NO_PERMISSION);
     }
 
     /**
@@ -198,8 +200,70 @@ public final class Result<T> implements Serializable {
      * @return true: success
      */
     public boolean isSuccess() {
-        return Objects.equals(this.code, ResultCodeEnum.SUCCESS.getValue());
+        return Objects.equals(this.code, CodeEnum.SUCCESS.getValue());
     }
+
+
+    /**
+     * code枚举类
+     */
+    public enum CodeEnum implements NameValueEnum<Integer> {
+        /**
+         * 操作成功
+         */
+        SUCCESS(200, "SUCCESS"),
+
+        /**
+         * 操作失败（通常为业务逻辑错误）
+         */
+        FAILURE(400, "FAILURE"),
+
+        /**
+         * 参数错误
+         */
+        PARAM_ERROR(405, "PARAM_ERROR"),
+
+        /**
+         * 资源未找到
+         */
+        NO_FOUND(404, "NO_FOUND"),
+
+        /**
+         * 服务器异常（其他未知错误）
+         */
+        SERVER_ERROR(500, "SERVER_ERROR"),
+
+        /**
+         * 无权限
+         */
+        NO_PERMISSION(501, "NO_PERMISSION");
+
+
+        /**
+         * 结果操作码
+         */
+        private final Integer code;
+        /**
+         * 结果消息
+         */
+        private final String msg;
+
+        CodeEnum(Integer code, String msg) {
+            this.code = code;
+            this.msg = msg;
+        }
+
+        @Override
+        public String getName() {
+            return this.msg;
+        }
+
+        @Override
+        public Integer getValue() {
+            return this.code;
+        }
+    }
+
 
 
     //---------------------------------------------------------------------

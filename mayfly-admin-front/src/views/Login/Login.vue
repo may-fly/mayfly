@@ -71,7 +71,7 @@ export default {
   methods: {
     async getCaptcha() {
       let res = await openApi.captcha()
-      this.captchaImage = res.base64
+      this.captchaImage = res.base64Img
       this.loginForm.uuid = res.uuid
     },
     async login() {
@@ -104,6 +104,7 @@ export default {
         }, 500)
       } catch (err) {
         this.loginLoading = false
+        this.loginForm.captcha = null
         this.getCaptcha()
       }
     },

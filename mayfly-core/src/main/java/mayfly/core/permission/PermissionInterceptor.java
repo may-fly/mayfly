@@ -26,7 +26,11 @@ public class PermissionInterceptor implements HandlerInterceptor {
 
     private final PermissionCheckHandler checkHandler;
 
-    public <I> PermissionInterceptor(SimpleLoginAccountRegistry loginAccountRegistry) {
+    public PermissionInterceptor() {
+        this.checkHandler = PermissionCheckHandler.getDefaultHandler();
+    }
+
+    public PermissionInterceptor(SimpleLoginAccountRegistry loginAccountRegistry) {
         this.checkHandler = PermissionCheckHandler.of(loginAccountRegistry);
     }
 
@@ -70,15 +74,13 @@ public class PermissionInterceptor implements HandlerInterceptor {
     /**
      * 发送无权限消息
      *
-     * @param response
-     * @throws Exception
+     * @param response  response
      */
     public static void sendErrorMessage(HttpServletResponse response, Result<?> result) {
         response.setContentType("application/json; charset=utf-8");
         response.setHeader("Access-Control-Allow-Origin", "*");
         response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE, PUT");
         response.setHeader("Access-Control-Max-Age", "3600");
-//        response.setHeader("Access-Control-Allow-Headers", "x-requested-with");
         try {
             PrintWriter writer = response.getWriter();
             writer.print(JsonUtils.toJSONString(result));

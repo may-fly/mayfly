@@ -1,10 +1,8 @@
 package mayfly.core.permission.registry;
 
-import mayfly.core.exception.BusinessException;
 import mayfly.core.permission.LoginAccount;
 import mayfly.core.permission.PermissionDisabledException;
 import mayfly.core.permission.PermissionInfo;
-import mayfly.core.base.model.ResultCodeEnum;
 import mayfly.core.util.StringUtils;
 
 import java.lang.reflect.Method;
@@ -35,9 +33,18 @@ public class PermissionCheckHandler {
      */
     public static PermissionCheckHandler of(SimpleLoginAccountRegistry loginAccountRegistry) {
         if (loginAccountRegistry == null) {
-            loginAccountRegistry = DefaultLoginAccountRegistry.getInstance();
+            return getDefaultHandler();
         }
         return new PermissionCheckHandler(loginAccountRegistry);
+    }
+
+    /**
+     * 默认权限检查器工厂方法（使用{@linkplain DefaultLoginAccountRegistry}）
+     *
+     * @return PermissionCheckHandler
+     */
+    public static PermissionCheckHandler getDefaultHandler() {
+        return new PermissionCheckHandler(DefaultLoginAccountRegistry.getInstance());
     }
 
     /**
@@ -48,7 +55,7 @@ public class PermissionCheckHandler {
      * @return true 拥有该权限
      * @throws PermissionDisabledException 权限禁用异常
      */
-    public boolean hasPermission(String token, Method method) throws BusinessException {
+    public boolean hasPermission(String token, Method method) throws PermissionDisabledException {
         LoginAccount loginAccount;
         if (StringUtils.isEmpty(token) || (loginAccount = loginAccountRegistry.getLoginAccount(token)) == null) {
             return false;
@@ -68,9 +75,9 @@ public class PermissionCheckHandler {
      * @param token          token
      * @param permissionCode permisison code
      * @return true 拥有该权限
-     * @throws BusinessException 权限禁用异常
+     * @throws PermissionDisabledException 权限禁用异常
      */
-    public boolean hasPermission(String token, String permissionCode) throws BusinessException {
+    public boolean hasPermission(String token, String permissionCode) throws PermissionDisabledException {
         LoginAccount loginAccount;
         if (StringUtils.isEmpty(token) || (loginAccount = loginAccountRegistry.getLoginAccount(token)) == null) {
             return false;
@@ -88,11 +95,8 @@ public class PermissionCheckHandler {
      * @return true：拥有该权限
      * @throws PermissionDisabledException 若不存在权限code,而存在与之对应的禁用权限code,抛出此异常
      */
-    public boolean hasPermission(LoginAccount loginAccount, String permissionCode) throws BusinessException {
-        //判断code注册器是否含有该用户的权限code
-        if (loginAccount.hasPermission(permissionCode)) {
-            return true;
-        }
-        throw new BusinessException(ResultCodeEnum.NO_PERMISSION);
+    public boolean hasPermission(LoginAccount loginAccount, String permissionCode) throws PermissionDisabledException {
+        // 判断code注册器是否含有该用户的权限code
+        return loginAccount.hasPermission(permissionCode);
     }
 }

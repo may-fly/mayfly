@@ -1,6 +1,6 @@
 package mayfly.core.exception;
 
-import mayfly.core.base.model.ResultCodeEnum;
+import mayfly.core.base.model.Result;
 import mayfly.core.util.enums.NameValueEnum;
 
 /**
@@ -20,13 +20,13 @@ public class BusinessRuntimeException extends RuntimeException {
     private final Integer errorCode;
 
     /**
-     * 默认错误code为 {@linkplain ResultCodeEnum#FAILURE}
+     * 默认错误code为 {@linkplain mayfly.core.base.model.Result.CodeEnum#FAILURE}
      *
      * @param msg 错误消息
      */
     public BusinessRuntimeException(String msg) {
         super(msg);
-        this.errorCode = ResultCodeEnum.FAILURE.getValue();
+        this.errorCode = Result.CodeEnum.FAILURE.getValue();
     }
 
     /**

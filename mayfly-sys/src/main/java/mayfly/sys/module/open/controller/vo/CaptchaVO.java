@@ -11,12 +11,12 @@ import lombok.Setter;
 @Setter
 public class CaptchaVO {
 
-    private String base64;
+    private String base64Img;
 
     private String uuid;
 
     public CaptchaVO(String uuid, String base64) {
         this.uuid = uuid;
-        this.base64 = base64;
+        this.base64Img = base64;
     }
 }

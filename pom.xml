@@ -34,7 +34,6 @@
         <alibaba.druid.version>1.1.22</alibaba.druid.version>
         <alibaba.fastjson.version>1.2.54</alibaba.fastjson.version>
         <lombok.version>1.18.12</lombok.version>
-        <kaptcha.version>2.3.2</kaptcha.version>
         <junit.version>4.12</junit.version>
         <dockerfile.plugin.version>1.4.10</dockerfile.plugin.version>
     </properties>
@@ -76,13 +75,6 @@
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
                 <version>${lombok.version}</version>
-            </dependency>
-
-            <!-- 验证码工具包 -->
-            <dependency>
-                <groupId>com.github.penggle</groupId>
-                <artifactId>kaptcha</artifactId>
-                <version>${kaptcha.version}</version>
             </dependency>
 
             <dependency>
