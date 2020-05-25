@@ -3,8 +3,7 @@ package mayfly.sys.module.sys.controller.vo;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-
-import java.time.LocalDateTime;
+import mayfly.core.base.model.BaseDO;
 
 /**
  * @author meilin.huang
@@ -14,9 +13,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @ToString
-public class ResourceDetailVO {
-
-    private Long id;
+public class ResourceDetailVO extends BaseDO {
 
     private Integer type;
 
@@ -31,12 +28,4 @@ public class ResourceDetailVO {
     private Integer status;
 
     private Integer weight;
-
-    private LocalDateTime createTime;
-
-    private LocalDateTime updateTime;
-
-    private String createAccount;
-
-    private String updateAccount;
 }

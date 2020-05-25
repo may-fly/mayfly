@@ -5,21 +5,16 @@
   </div>
 </template>
 
-<script>
-  export default {
-    name: 'app',
-    data() {
-      return {
-        sysMsgSocket: null
-      }
-    },
-    mounted() {
-    },
-  }
+<script lang="ts">
+import { Component, Vue } from 'vue-property-decorator'
+@Component({
+  name: 'App'
+})
+export default class extends Vue {}
 </script>
 
 <style lang="less">
-  #app {
-    background-color: #222d32;
-  }
+#app {
+  background-color: #222d32;
+}
 </style>

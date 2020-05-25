@@ -3,7 +3,6 @@
  * @author meilin.huang
  */
 export class Enum {
-  
   /**
    * 添加枚举字段
    * 
@@ -11,8 +10,8 @@ export class Enum {
    * @param {string} label  枚举名称
    * @param {Object} value  枚举值
    */
-  add(field, label, value) {
-    this[field] = {label, value}
+  add(field: string, label: string, value: any) {
+    this[field] = { label, value }
     return this
   }
 
@@ -21,13 +20,13 @@ export class Enum {
    * 
    * @param {Object} value 
    */
-  getLabelByValue(value) {
+  getLabelByValue(value: any) {
     // 字段不存在返回‘’
     if (value === undefined || value === null) {
       return ''
     }
     for (let i in this) {
-      let e = this[i]
+      let e: any = this[i]
       if (e && e.value === value) {
         return e.label
       }

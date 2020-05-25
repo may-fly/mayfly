@@ -16,9 +16,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
  * @date 2018-12-18 11:03 AM
  */
 @RestControllerAdvice
-public class GlobalExceptionHandler {
+public class DefaultGlobalExceptionHandler {
 
-    private static final Logger LOG = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DefaultGlobalExceptionHandler.class);
 
     @ExceptionHandler(BusinessRuntimeException.class)
     public Result<?> handleBusinessRuntimeException(BusinessRuntimeException e) {
@@ -65,7 +65,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public Result<?> handleException(Exception e) {
         if (e instanceof HttpRequestMethodNotSupportedException) {
-            return Result.serverError("请求方法错误！");
+            return Result.serverError("request method error");
         }
         // 记录未知异常日志
         LOG.error("系统异常：", e);

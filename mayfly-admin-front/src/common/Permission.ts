@@ -5,7 +5,9 @@ import Config from './config'
  */
 class Permission {
 
-  constructor(code) {
+  code: string;
+
+  constructor(code: string) {
     this.code = code;
   }
 
@@ -15,7 +17,7 @@ class Permission {
    * 静态工厂，设置code，并返回Permission对象
    * @param {String} code 权限code（权限标识符）Permission对象必有的属性
    */
-  static code(code) {
+  static code(code: string) {
     return new Permission(code);
   }
 
@@ -23,7 +25,7 @@ class Permission {
   /**
    * 登录成功保存对应的token以及菜单按钮列表
    */
-  static savePermission(tokenMenuAndPermission) {
+  static savePermission(tokenMenuAndPermission: any) {
     //保存token
     Permission.saveToken(tokenMenuAndPermission.token)
     //保存resources
@@ -33,7 +35,7 @@ class Permission {
 
     let codeObj = {}
     for (let r of tokenMenuAndPermission.codes) {
-      codeObj[r.code] = {status: r.status, type: r.type}
+      codeObj[r.code] = { status: r.status, type: r.type }
     }
     sessionStorage.setItem(Config.name.codesKey, JSON.stringify(codeObj))
   }
@@ -49,15 +51,19 @@ class Permission {
    * 保存token
    * @param {Object} token token
    */
-  static saveToken(token) {
+  static saveToken(token: string) {
     sessionStorage.setItem(Config.name.tokenKey, token);
   }
 
   /**
    * 从sessionStorage所有permissions获取指定permission对象的PermissionInfo
    */
-  static getPermission(code) {
-    let resource = JSON.parse(sessionStorage.getItem(Config.name.codesKey))[code]
+  static getPermission(code: string) {
+    let res = sessionStorage.getItem(Config.name.codesKey);
+    if (res == null) {
+      return new PermissionInfo(false, false);
+    }
+    let resource = JSON.parse(res)[code]
     if (resource) {
       // 如果是禁用状态，则禁止按钮点击
       if (resource.status == 0) {
@@ -74,9 +80,9 @@ class Permission {
    * @param code 权限码
    * @param elDom  dom元素
    */
-  static checkCodeAndSetDom(code, elDom) {
+  static checkCodeAndSetDom(code: string, elDom: any) {
     // 根据权限code获取对应权限信息
-    let permission = Permission.getPermission(code);
+    let permission: PermissionInfo = Permission.getPermission(code);
     // 如果没有显示权限，则隐藏该元素
     if (!permission.show) {
       elDom.style.display = 'none';
@@ -96,7 +102,10 @@ class Permission {
  * disabled: 菜单功能是否被禁用
  */
 class PermissionInfo {
-  constructor(show, disabled) {
+  show: boolean;
+  disabled: boolean;
+
+  constructor(show: boolean, disabled: boolean) {
     this.show = show;
     this.disabled = disabled;
   }

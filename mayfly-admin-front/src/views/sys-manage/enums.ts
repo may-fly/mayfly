@@ -1,4 +1,4 @@
-import {Enum} from '~/common/Enum.js'
+import { Enum } from '@/common/Enum'
 
 /**
  * 枚举类

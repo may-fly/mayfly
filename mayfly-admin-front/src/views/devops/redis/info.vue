@@ -84,33 +84,33 @@
 </template>
 
 <script>
-  import Req from "~/common/request"
-  export default {
-    props: {
-      visible: Boolean,
-      info: Object
-    },
-    data() {
-      return {
-        name: ""
-      }
-    },
-    methods: {
-      close() {
-        this.name = "";
-        this.$emit('close');
-      }
+import Req from '@/common/request'
+export default {
+  props: {
+    visible: Boolean,
+    info: Object
+  },
+  data() {
+    return {
+      name: ''
+    }
+  },
+  methods: {
+    close() {
+      this.name = ''
+      this.$emit('close')
     }
   }
+}
 </script>
 
 <style>
-  .row .title {
-    font-size: 12px;
-  }
+.row .title {
+  font-size: 12px;
+}
 
-  .row .value {
-    font-size: 12px;
-    color: black;
-  }
+.row .value {
+  font-size: 12px;
+  color: black;
+}
 </style>

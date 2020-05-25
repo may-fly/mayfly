@@ -101,10 +101,10 @@
 </template>
 
 <script>
-import ToolBar from '~/components/tool-bar/tool-bar.vue'
-import HelpHint from '~/components/help-hint/help-hint.vue'
+import ToolBar from '@/components/tool-bar/tool-bar.vue'
+import HelpHint from '@/components/help-hint/help-hint.vue'
 import RoleEdit from './role-edit.vue'
-import { rolePermission } from '../permissions.js'
+import { rolePermission } from '../permissions'
 import ResourceEdit from './resource-edit.vue'
 import ShowResource from './show-resource.vue'
 import { roleApi, resourceApi } from '../api'

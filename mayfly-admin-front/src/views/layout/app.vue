@@ -16,7 +16,7 @@
             <i class="el-icon-arrow-down el-icon--right"></i>
           </span>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item @click.native="$router.push('/personal')">
+            <el-dropdown-item @click.native="this['$router'].push('/personal')">
               <i style="padding-right: 8px" class="fa fa-cog"></i>个人中心
             </el-dropdown-item>
             <el-dropdown-item @click.native="logout">
@@ -71,101 +71,109 @@
   </div>
 </template>
 
-<script>
-import EuiFooter from '~/views/layout/footer.vue'
+<script lang="ts">
+import { Component, Vue } from 'vue-property-decorator'
+import EuiFooter from '@/views/layout/footer.vue'
 import MenuTree from './menu-tree.vue'
-import api from '~/common/openApi.js'
+import api from '@/common/openApi'
 
-export default {
-  data() {
-    return {
-      iframe: false,
-      iframeSrc: null,
-      username: null,
-      menus: [],
-      activeName: '',
-      tabs: [],
-      tabIndex: 2
-    }
-  },
-  methods: {
-    toPath(menu) {
-      let path = menu.url
-      this.goToPath(path)
-      this.addTab(path, menu.name)
-    },
-    goToPath(path) {
-      // 如果是请求其他地址，则使用iframe展示
-      if (path && (path.startsWith('http://') || path.startsWith('https://'))) {
-        this.iframe = true
-        this.iframeSrc = path
-        return
-      }
-      this.iframe = false
-      this.iframeSrc = null
-      this.$router
-        .push({
-          path
-        })
-        .catch(err => {})
-    },
-    tabClick(tab) {
-      this.goToPath(tab.name)
-    },
-    addTab(path, title) {
-      for (let n of this.tabs) {
-        if (n.name === path) {
-          this.activeName = path
-          return
-        }
-      }
-      this.tabs.push({
-        name: path,
-        title: title
-      })
-      this.activeName = path
-    },
-    removeTab(targetName) {
-      let tabs = this.tabs
-      let activeName = this.activeName
-      if (activeName === targetName) {
-        tabs.forEach((tab, index) => {
-          if (tab.name == targetName) {
-            let nextTab = tabs[index + 1] || tabs[index - 1]
-            if (nextTab) {
-              activeName = nextTab.name
-            }
-          }
-        })
-      }
-      this.activeName = activeName
-      this.tabs = tabs.filter(tab => tab.name !== targetName)
-      this.goToPath(activeName)
-    },
-    logout() {
-      api.logout({ token: this.$Permission.getToken() })
-      sessionStorage.clear()
-      this.$router.push({
-        path: '/login'
-      })
-    }
-  },
-  mounted: function() {
-    this.menus = JSON.parse(
-      sessionStorage.getItem(this.$Config.name.menusKey)
-    )
-    this.username = JSON.parse(
-      sessionStorage.getItem(this.$Config.name.adminKey)
-    ).username
-
-    this.addTab(this.$route.path, this.$route.meta.title)
-  },
+@Component({
+  name: 'app',
   components: {
     EuiFooter,
     MenuTree
   }
+})
+export default class App extends Vue {
+  private iframe: boolean = false
+  private iframeSrc: string | null = null
+  private username: string = ''
+  private menus: Array<object> = []
+  private tabs: Array<any> = []
+  private activeName: string = ''
+  private tabIndex: number = 2
+
+  private toPath(menu: any) {
+    let path = menu.url
+    this.goToPath(path)
+    this.addTab(path, menu.name)
+  }
+
+  private goToPath(path: string) {
+    // 如果是请求其他地址，则使用iframe展示
+    if (path && (path.startsWith('http://') || path.startsWith('https://'))) {
+      this.iframe = true
+      this.iframeSrc = path
+      return
+    }
+    this.iframe = false
+    this.iframeSrc = null
+    this['$router']
+      .push({
+        path
+      })
+      .catch((err: any) => {})
+  }
+
+  private tabClick(tab: any) {
+    this.goToPath(tab.name)
+  }
+
+  private addTab(path: string, title: string) {
+    for (let n of this.tabs) {
+      if (n.name === path) {
+        this.activeName = path
+        return
+      }
+    }
+    this.tabs.push({
+      name: path,
+      title: title
+    })
+    this.activeName = path
+  }
+
+  private removeTab(targetName: string) {
+    let tabs = this.tabs
+    let activeName = this.activeName
+    if (activeName === targetName) {
+      tabs.forEach((tab, index) => {
+        if (tab.name == targetName) {
+          let nextTab = tabs[index + 1] || tabs[index - 1]
+          if (nextTab) {
+            activeName = nextTab.name
+          }
+        }
+      })
+    }
+    this.activeName = activeName
+    this.tabs = tabs.filter(tab => tab.name !== targetName)
+    this.goToPath(activeName)
+  }
+
+  private logout() {
+    api.logout({ token: this['$Permission'].getToken() })
+    sessionStorage.clear()
+    this['$router'].push({
+      path: '/login'
+    })
+  }
+
+  mounted() {
+    let menu = sessionStorage.getItem(this['$Config'].name.menusKey)
+    if (menu != null) {
+      this.menus = JSON.parse(menu)
+    }
+
+    let user = sessionStorage.getItem(this['$Config'].name.adminKey)
+    if (user != null) {
+      this.username = JSON.parse(user).username
+    }
+
+    this.addTab(this['$route'].path, this['$route'].meta.title)
+  }
 }
-</script>
+</script>>
 <style lang="less">
 .main {
   display: flex;

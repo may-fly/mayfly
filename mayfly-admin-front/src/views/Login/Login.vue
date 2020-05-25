@@ -19,12 +19,17 @@
         type="password"
         style="margin-bottom: 18px"
         autocomplete="new-password"
-        @keyup.native.enter="login"
       ></el-input>
 
       <el-row>
         <el-col :span="12">
-          <img @click="getCaptcha" width="130px" height="40px" :src="captchaImage" style="cursor: pointer"/>
+          <img
+            @click="getCaptcha"
+            width="130px"
+            height="40px"
+            :src="captchaImage"
+            style="cursor: pointer"
+          />
         </el-col>
         <el-col :span="12">
           <el-input
@@ -32,6 +37,7 @@
             suffix-icon="fa fa-user"
             v-model="loginForm.captcha"
             style="margin-bottom: 18px"
+            @keyup.native.enter="login"
           ></el-input>
         </el-col>
       </el-row>
@@ -50,78 +56,85 @@
   </div>
 </template>
 
-<script>
-import openApi from '../../common/openApi.js'
-import sockets from '~/common/sockets'
-// import Vue from 'vue'
-export default {
-  data() {
-    return {
-      captchaImage: '',
-      loginForm: {
-        username: '',
-        password: '',
-        captcha: '',
-        uuid: ''
-      },
-      remember: false,
-      loginLoading: false
-    }
-  },
-  methods: {
-    async getCaptcha() {
-      let res = await openApi.captcha()
-      this.captchaImage = res.base64Img
-      this.loginForm.uuid = res.uuid
-    },
-    async login() {
-      this.loginLoading = true
-      try {
-        let res = await openApi.login(this.loginForm)
-        if (this.remember) {
-          localStorage.setItem('remember', JSON.stringify(this.loginForm))
-        } else {
-          localStorage.removeItem('remember')
-        }
-        setTimeout(() => {
-          //保存用户token以及菜单按钮权限
-          this.$Permission.savePermission(res)
-          this.$notify({
-            title: '登录成功',
-            message: '很高兴你使用Mayfly Admin！别忘了给个Star哦。',
-            type: 'success'
-          })
-          this.loginLoading = false
-          // 有重定向则重定向，否则到首页
-          let redirect = this.$route.query.redirect
-          if (redirect) {
-            this.$router.push(redirect)
-          } else {
-            this.$router.push({
-              path: '/'
-            })
-          }
-        }, 500)
-      } catch (err) {
-        this.loginLoading = false
-        this.loginForm.captcha = null
-        this.getCaptcha()
-      }
-    },
-    getRemember() {
-      return localStorage.getItem('remember')
-    }
-  },
+<script lang="ts">
+import openApi from '../../common/openApi'
+import sockets from '@/common/sockets'
+import { Component, Vue } from 'vue-property-decorator'
+
+@Component({
+  name: 'login'
+})
+export default class Login extends Vue {
+  private captchaImage: string = ''
+  private loginForm = {
+    username: '',
+    password: '',
+    captcha: '',
+    uuid: ''
+  }
+  private remember: boolean = false
+  private loginLoading: boolean = false
+
   mounted() {
     this.getCaptcha()
-    let remember = JSON.parse(this.getRemember())
-    if (remember) {
+    let r = this.getRemember()
+    let rememberAccount: any
+    if (r != null) {
+      rememberAccount = JSON.parse(r)
+    }
+
+    if (rememberAccount) {
       this.remember = true
-      this.loginForm.username = remember.username
-      this.loginForm.password = remember.password
+      this.loginForm.username = rememberAccount.username
+      this.loginForm.password = rememberAccount.password
     } else {
       this.remember = false
     }
+  }
+
+  private async getCaptcha() {
+    let res: any = await openApi.captcha()
+    this.captchaImage = res.base64Img
+    this.loginForm.uuid = res.uuid
+  }
+
+  private async login() {
+    this.loginLoading = true
+    try {
+      let res = await openApi.login(this.loginForm)
+      if (this.remember) {
+        localStorage.setItem('remember', JSON.stringify(this.loginForm))
+      } else {
+        localStorage.removeItem('remember')
+      }
+      setTimeout(() => {
+        //保存用户token以及菜单按钮权限
+        this['$Permission'].savePermission(res)
+        this['$notify']({
+          title: '登录成功',
+          message: '很高兴你使用Mayfly Admin！别忘了给个Star哦。',
+          type: 'success'
+        })
+        this.loginLoading = false
+        // 有重定向则重定向，否则到首页
+        let redirect: any = this.$route.query.redirect
+        if (redirect) {
+          this.$router.push(redirect)
+        } else {
+          this.$router.push({
+            path: '/'
+          })
+        }
+      }, 500)
+    } catch (err) {
+      this.loginLoading = false
+      this.loginForm.captcha = ''
+      this.getCaptcha()
+    }
+  }
+
+  private getRemember() {
+    return localStorage.getItem('remember')
   }
 }
 </script>

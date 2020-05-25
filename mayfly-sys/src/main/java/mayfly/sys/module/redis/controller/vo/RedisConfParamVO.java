@@ -4,6 +4,7 @@ import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
 
+
 /**
  * @author meilin.huang
  * @version 1.0

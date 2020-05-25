@@ -1,6 +1,6 @@
 package mayfly.sys.config;
 
-import mayfly.core.exception.GlobalExceptionHandler;
+import mayfly.core.exception.DefaultGlobalExceptionHandler;
 import mayfly.core.permission.PermissionInterceptor;
 import mayfly.sys.module.sys.service.PermissionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +42,7 @@ public class MvcConfig implements WebMvcConfigurer {
      * @return GlobalExceptionHandler
      */
     @Bean
-    public GlobalExceptionHandler globalExceptionHandler() {
-        return new GlobalExceptionHandler();
+    public DefaultGlobalExceptionHandler globalExceptionHandler() {
+        return new DefaultGlobalExceptionHandler();
     }
 }

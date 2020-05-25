@@ -14,7 +14,7 @@ import mayfly.core.base.model.PageQuery;
 @ToString(callSuper = true)
 public class OperationLogQuery extends PageQuery {
 
-    private String createAccount;
+    private String creator;
 
     private Integer type;
 }

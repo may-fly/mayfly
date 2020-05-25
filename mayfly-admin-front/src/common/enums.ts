@@ -1,4 +1,4 @@
-import { Enum } from './Enum.js'
+import { Enum } from './Enum'
 
 /**
  * 全局公共枚举类

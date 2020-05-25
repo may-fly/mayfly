@@ -27,13 +27,13 @@ public class OperationLogServiceImpl extends BaseServiceImpl<OperationLogMapper,
     /**
      * 不需要记录变化的字段值
      */
-    public static String[] ignoreFields = new String[]{BaseDO.UPDATE_TIME, BaseDO.UPDATE_ACCOUNT_ID,
-            BaseDO.UPDATE_ACCOUNT, BaseDO.CREATE_ACCOUNT, BaseDO.CREATE_ACCOUNT_ID};
+    public static String[] ignoreFields = new String[]{BaseDO.UPDATE_TIME, BaseDO.MODIFIER_ID,
+            BaseDO.MODIFIER, BaseDO.CREATOR, BaseDO.CREATOR_ID};
 
 
     @Override
     public void asyncLog(String log, LogTypeEnum type) {
-        asyncLog(log, type, LoginAccount.get());
+        asyncLog(log, type, LoginAccount.getForContext());
     }
 
     @Override
@@ -47,7 +47,7 @@ public class OperationLogServiceImpl extends BaseServiceImpl<OperationLogMapper,
 
     @Override
     public void asyncUpdateLog(String desc, Object newObj, BaseDO oldObj) {
-        LoginAccount la = LoginAccount.get();
+        LoginAccount la = LoginAccount.getForContext();
         GlobalThreadPool.execute("asyncUpdateLog", () -> {
             List<String> results = BeanUtils.getFieldValueChangeRecords(newObj, oldObj,
                     field -> !ArrayUtils.contains(ignoreFields, field.getName()))
@@ -67,7 +67,7 @@ public class OperationLogServiceImpl extends BaseServiceImpl<OperationLogMapper,
 
     @Override
     public void asyncDeleteLog(String desc, Object obj) {
-        LoginAccount la = LoginAccount.get();
+        LoginAccount la = LoginAccount.getForContext();
         GlobalThreadPool.execute("asyncDeleteLog", () -> {
             OperationLogDO logDO = new OperationLogDO().setOperation(desc + " => " + JsonUtils.toJSONString(obj))
                     .setType(LogTypeEnum.DELETE.getValue());

@@ -1,12 +1,6 @@
 <template>
   <div>
-    <el-dialog
-      @close="closeDialog"
-      :title="title"
-      :visible="visible"
-      width="400px"
-      height="400px"
-    >
+    <el-dialog @close="closeDialog" :title="title" :visible="visible" width="400px" height="400px">
       <el-tree
         style="height: 50vh;overflow: auto;"
         :data="resources"
@@ -35,7 +29,7 @@
 </template>
 
 <script>
-import enums from '../enums.js'
+import enums from '../enums'
 
 export default {
   props: {
@@ -59,7 +53,7 @@ export default {
         '<strong style="margin-right: 18px">资源名称:</strong>' +
           info.resourceName +
           ' <br/><strong style="margin-right: 18px">分配账号:</strong>' +
-          info.createAccount +
+          info.creator +
           ' <br/><strong style="margin-right: 18px">分配时间:</strong>' +
           info.createTime +
           '',

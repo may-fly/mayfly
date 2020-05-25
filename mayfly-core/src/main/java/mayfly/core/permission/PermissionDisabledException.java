@@ -1,5 +1,6 @@
 package mayfly.core.permission;
 
+
 import mayfly.core.exception.BusinessException;
 
 /**

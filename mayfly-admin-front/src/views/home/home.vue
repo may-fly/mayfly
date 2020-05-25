@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import ActivePlate from '~/components/active-plate/active-plate.vue'
+import ActivePlate from '@/components/active-plate/active-plate.vue'
 import HomeCard from './components/card.vue'
 import ChartPie from './components/chart-pie.vue'
 import ChartLine from './components/chart-line.vue'

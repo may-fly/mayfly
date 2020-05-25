@@ -123,7 +123,7 @@ public class MachineFileServiceImpl extends BaseServiceImpl<MachineFileMapper, L
         MachineFileDO file = getById(fileId);
         checkPath(filePath, file);
 
-        LoginAccount account = LoginAccount.get();
+        LoginAccount account = LoginAccount.getForContext();
         // 异步上传，成功与否都webscoket通知上传者
         GlobalThreadPool.execute("machineFileUploadNotify", () -> {
             machineService.sftpOperate(file.getMachineId(), sftp -> {

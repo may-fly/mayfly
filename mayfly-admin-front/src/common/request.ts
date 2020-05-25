@@ -4,29 +4,44 @@ import Axios from 'axios';
 import Config from './config';
 import enums from './enums'
 
+export interface Result {
+  /**
+   * 响应码
+   */
+  code: number;
+  /**
+   * 响应消息
+   */
+  msg: string;
+  /**
+   * 数据
+   */
+  data?: any;
+}
+
 // 全局设置
 function setToken() {
   Axios.defaults.headers['token'] = sessionStorage.getItem(Config.name.tokenKey);
 }
 
 
-function buildApiUrl(url) {
+function buildApiUrl(url: string) {
   return `${Config.apiUrl}${url}`;
 }
 
 /**
  * 解析服务端返回结果
  */
-function parseResponse(res) {
+function parseResponse(res: any) {
   return new Promise((resolve, reject) => {
     if (res.status !== 200) {
       reject('请求异常');
       return;
     }
     // 获取请求返回结果
-    let data = res.data;
+    let data: Result = res.data;
     // 如果提示没有权限，则移除token，使其重新登录
-    if (data.code === enums.ResultEnum.NO_PERMISSION.value) {
+    if (data.code === enums.ResultEnum['NO_PERMISSION'].value) {
       sessionStorage.removeItem(Config.name.tokenKey);
       ElementUI.Notification.error({
         title: '请求错误',
@@ -39,7 +54,7 @@ function parseResponse(res) {
       }, 1000)
       return;
     }
-    if (data.code === enums.ResultEnum.SUCCESS.value) {
+    if (data.code === enums.ResultEnum['SUCCESS'].value) {
       resolve(data.data);
     } else {
       reject(data.msg);
@@ -55,7 +70,7 @@ function parseResponse(res) {
  * 若restUrl:/category/{categoryId}/product/{productId}  param:{categoryId:1, productId:2}
  * 则返回 /category/1/product/2 的url
  */
-function parseRestUrl(restUrl, param) {
+function parseRestUrl(restUrl: string, param: any) {
   return restUrl.replace(/\{\w+\}/g, (word) => {
     let key = word.substring(1, word.length - 1);
     let value = param[key];
@@ -75,15 +90,15 @@ function parseRestUrl(restUrl, param) {
  * @param {Object} uri    uri
  * @param {Object} params 参数
  */
-function request(method, url, params) {
+function request(method: string, url: string, params: any): Promise<any> {
   if (!url)
-    return;
+    throw new Error('请求url不能为空');
   // 简单判断该url是否是restful风格
   if (url.indexOf("{") != -1) {
     url = parseRestUrl(url, params);
   }
   setToken();
-  let query = {
+  let query: any = {
     method,
     url: buildApiUrl(url),
   };
@@ -115,11 +130,11 @@ function request(method, url, params) {
  * @param {Object} permission       Permission对象(~/common/Permission.js)，包含url和请求方法
  * @param {Object} params    api请求参数
  */
-function send(permission, params) {
-  return request(permission.method, permission.url, params);
+function send(api: any, params: any): Promise<any> {
+  return request(api.method, api.url, params);
 }
 
-export function getApiUrl(url) {
+export function getApiUrl(url: string) {
   // 只是返回api地址而不做请求，用在上传组件之类的
   return buildApiUrl(url) + '?token=' + sessionStorage.getItem(Config.name.tokenKey);
 }

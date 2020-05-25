@@ -187,8 +187,8 @@
 </template>
 
 <script>
-import { machinePermission } from '../permissions.js'
-import enums from '../enums.js'
+import { machinePermission } from '../permissions'
+import enums from '../enums'
 import { machineApi } from '../api'
 
 export default {

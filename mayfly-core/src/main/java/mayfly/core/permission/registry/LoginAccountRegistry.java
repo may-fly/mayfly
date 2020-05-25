@@ -5,7 +5,7 @@ import mayfly.core.permission.LoginAccount;
 import java.util.concurrent.TimeUnit;
 
 /**
- * 登录账号注册器 泛型<I>表示账号id类型
+ * 登录账号注册器
  *
  * @author meilin.huang
  * @version 1.0

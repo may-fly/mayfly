@@ -68,8 +68,7 @@ public class PermissionServiceImpl implements PermissionService  {
         List<String> permissionCodes = codes.stream().map(p -> p.getStatus().equals(EnableDisableEnum.DISABLE.getValue()) ?
                 LoginAccount.getDisablePermissionCode(p.getCode()) : p.getCode()).collect(Collectors.toList());
         // 保存登录账号信息
-        LoginAccount loginAccount = new LoginAccount().setId(account.getId()).setUsername(account.getUsername())
-                .setPermissions(permissionCodes);
+        LoginAccount loginAccount = LoginAccount.create(account.getId()).username(account.getUsername()).permissions(permissionCodes);
         loginAccountRegistryHandler.saveLoginAccount(token, loginAccount, CacheKey.SESSION_EXPIRE_TIME, TimeUnit.MINUTES);
 
         return LoginSuccessVO.builder().admin(BeanUtils.copyProperties(account, AccountVO.class))

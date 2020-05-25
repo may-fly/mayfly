@@ -10,10 +10,7 @@
       >删除</el-button>
       <div style="float: right">
         <el-select size="small" style=" width:120px" v-model="query.type" placeholder="状态">
-          <el-option
-            label="全部"
-            :value="null"
-          ></el-option>
+          <el-option label="全部" :value="null"></el-option>
           <el-option
             v-for="item in enums.logType"
             :key="item.value"
@@ -25,8 +22,8 @@
           placeholder="请输入账号名"
           size="small"
           style="width: 140px"
-          v-model="query.createAccount"
-          @clear="query.createAccount = null"
+          v-model="query.creator"
+          @clear="query.creator = null"
           clearable
         ></el-input>
         <el-button @click="search(true)" type="success" icon="el-icon-search" size="mini"></el-button>
@@ -39,7 +36,7 @@
           <el-tag type="info" effect="plain">{{ enums.logType.getLabelByValue(scope.row.type) }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column min-width="115" prop="createAccount" label="操作账号"></el-table-column>
+      <el-table-column min-width="115" prop="creator" label="操作账号"></el-table-column>
       <el-table-column min-width="160" prop="createTime" label="操作时间"></el-table-column>
     </el-table>
     <el-pagination
@@ -55,8 +52,8 @@
 </template>
 
 <script>
-import ToolBar from '~/components/tool-bar/tool-bar.vue'
-import HelpHint from '~/components/help-hint/help-hint.vue'
+import ToolBar from '@/components/tool-bar/tool-bar.vue'
+import HelpHint from '@/components/help-hint/help-hint.vue'
 import { logApi } from '../api'
 import enums from '../enums'
 
@@ -69,7 +66,7 @@ export default {
       query: {
         pageNum: 1,
         pageSize: 10,
-        createAccount: null,
+        creator: null,
         type: null
       },
       datas: [],

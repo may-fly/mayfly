@@ -90,21 +90,21 @@
 </template>
 
 <script>
-import ToolBar from "~/components/tool-bar/tool-bar.vue";
-import Info from "./info.vue";
-import { redisPermission, redisKeyPermission } from "../permissions.js";
+import ToolBar from '@/components/tool-bar/tool-bar.vue'
+import Info from './info.vue'
+import { redisPermission, redisKeyPermission } from '../permissions'
 import { redisApi, redisKeyApi } from '../api'
-import { DynamicFormDialog } from "~/components/dynamic-form";
+import { DynamicFormDialog } from '@/components/dynamic-form'
 
 //
 export default {
   data() {
     var validatePort = (rule, value, callback) => {
       if (value > 65535 || value < 1) {
-        callback(new Error("端口号错误"));
+        callback(new Error('端口号错误'))
       }
-      callback();
-    };
+      callback()
+    }
 
     return {
       redisTable: [],
@@ -117,12 +117,12 @@ export default {
         clusterId: null
       },
       redisInfo: {
-        url: ""
+        url: ''
       },
       clusters: [
         {
           id: 0,
-          name: "单机"
+          name: '单机'
         }
       ],
       infoDialog: {
@@ -144,124 +144,124 @@ export default {
           formRows: [
             [
               {
-                type: "input",
-                label: "主机：",
-                name: "host",
-                placeholder: "请输入节点ip",
+                type: 'input',
+                label: '主机：',
+                name: 'host',
+                placeholder: '请输入节点ip',
                 rules: [
                   {
                     required: true,
-                    message: "请输入节点ip",
-                    trigger: ["blur", "change"]
+                    message: '请输入节点ip',
+                    trigger: ['blur', 'change']
                   }
                 ]
               }
             ],
             [
               {
-                type: "input",
-                label: "端口号：",
-                name: "port",
-                placeholder: "请输入节点端口号",
-                inputType: "number",
+                type: 'input',
+                label: '端口号：',
+                name: 'port',
+                placeholder: '请输入节点端口号',
+                inputType: 'number',
                 rules: [
                   {
                     required: true,
-                    message: "请输入节点端口号",
-                    trigger: ["blur", "change"]
+                    message: '请输入节点端口号',
+                    trigger: ['blur', 'change']
                   }
                 ]
               }
             ],
             [
               {
-                type: "input",
-                label: "密码：",
-                name: "pwd",
-                placeholder: "请输入节点密码",
-                inputType: "password"
+                type: 'input',
+                label: '密码：',
+                name: 'pwd',
+                placeholder: '请输入节点密码',
+                inputType: 'password'
               }
             ],
             [
               {
-                type: "input",
-                label: "描述：",
-                name: "description",
-                placeholder: "请输入节点描述",
-                inputType: "textarea"
+                type: 'input',
+                label: '描述：',
+                name: 'description',
+                placeholder: '请输入节点描述',
+                inputType: 'textarea'
               }
             ]
           ]
         },
         formData: null
       }
-    };
+    }
   },
   methods: {
     choose(item) {
       if (!item) {
-        return;
+        return
       }
-      this.currentId = item.id;
-      this.currentData = item;
+      this.currentId = item.id
+      this.currentData = item
     },
     connect() {
-      Req.post("/open/redis/connect", this.form, res => {
-        this.redisInfo = res;
-      });
+      Req.post('/open/redis/connect', this.form, res => {
+        this.redisInfo = res
+      })
     },
     async deleteNode() {
-      await redisApi.del.request({ id: this.currentId });
-      this.$message.success("删除成功");
-      this.search();
+      await redisApi.del.request({ id: this.currentId })
+      this.$message.success('删除成功')
+      this.search()
     },
     manage(row) {
-      this.$router.push(`/redis_operation/${row.clusterId}/${row.id}`);
+      this.$router.push(`/redis_operation/${row.clusterId}/${row.id}`)
     },
     info(id) {
       redisApi.info.request({ id }).then(res => {
-        this.infoDialog.info = res;
-        this.infoDialog.id = id;
-        this.infoDialog.visible = true;
-      });
+        this.infoDialog.info = res
+        this.infoDialog.id = id
+        this.infoDialog.visible = true
+      })
     },
     search() {
       redisApi.list.request(this.params).then(res => {
-        this.redisTable = res;
-      });
+        this.redisTable = res
+      })
     },
     openFormDialog(redis) {
-      let dialogTitle;
+      let dialogTitle
       if (redis) {
-        this.formDialog.formData = this.currentData;
-        dialogTitle = "编辑redis节点";
+        this.formDialog.formData = this.currentData
+        dialogTitle = '编辑redis节点'
       } else {
-        this.formDialog.formData = { port: 6379 };
-        dialogTitle = "添加redis节点";
+        this.formDialog.formData = { port: 6379 }
+        dialogTitle = '添加redis节点'
       }
 
-      this.formDialog.title = dialogTitle;
-      this.formDialog.visible = true;
+      this.formDialog.title = dialogTitle
+      this.formDialog.visible = true
     },
     closeDialog() {
-      this.formDialog.visible = false;
-      this.formDialog.formData = null;
+      this.formDialog.visible = false
+      this.formDialog.formData = null
     },
     submitSuccess() {
-      this.currentId = null;
-      this.currentData = null;
-      this.search();
+      this.currentId = null
+      this.currentData = null
+      this.search()
     }
   },
   mounted() {
-    this.search();
+    this.search()
   },
   components: {
     ToolBar,
     Info,
     DynamicFormDialog
   }
-};
+}
 </script>
 
 <style>

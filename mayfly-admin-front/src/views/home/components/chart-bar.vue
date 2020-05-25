@@ -1,14 +1,12 @@
 <template>
-  <div class="bar-main"
-       id="box"
-       ref="dom"></div>
+  <div class="bar-main" id="box" ref="dom"></div>
 </template>
 
 <script>
-import echarts from 'echarts';
-import tdTheme from './theme.json';
-import { on, off } from '~/common/Utils';
-echarts.registerTheme('tdTheme', tdTheme);
+import echarts from 'echarts'
+import tdTheme from './theme.json'
+import { on, off } from '@/common/Utils'
+echarts.registerTheme('tdTheme', tdTheme)
 export default {
   props: {
     value: Object,
@@ -16,16 +14,16 @@ export default {
     subtext: String
   },
   mounted() {
-    this.initChart();
+    this.initChart()
   },
   methods: {
     resize() {
-      this.dom.resize();
+      this.dom.resize()
     },
     initChart() {
       this.$nextTick(() => {
-        let xAxisData = Object.keys(this.value);
-        let seriesData = Object.values(this.value);
+        let xAxisData = Object.keys(this.value)
+        let seriesData = Object.values(this.value)
         let option = {
           grid: {
             left: '1%',
@@ -120,14 +118,14 @@ export default {
               }
             }
           ]
-        };
-        this.dom = echarts.init(this.$refs.dom, 'tdTheme');
-        this.dom.setOption(option);
-        on(window, 'resize', this.resize);
-      });
+        }
+        this.dom = echarts.init(this.$refs.dom, 'tdTheme')
+        this.dom.setOption(option)
+        on(window, 'resize', this.resize)
+      })
     }
   }
-};
+}
 </script>
 
 <style>

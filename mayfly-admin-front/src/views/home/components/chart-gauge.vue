@@ -1,28 +1,26 @@
 <template>
-  <div class="gauge-main"
-       id="box"
-       ref="dom"></div>
+  <div class="gauge-main" id="box" ref="dom"></div>
 </template>
 
 <script>
-import echarts from 'echarts';
-import tdTheme from './theme.json';
-import { on, off } from '~/common/Utils';
-echarts.registerTheme('tdTheme', tdTheme);
+import echarts from 'echarts'
+import tdTheme from './theme.json'
+import { on, off } from '@/common/Utils'
+echarts.registerTheme('tdTheme', tdTheme)
 export default {
   props: {
     value: Object,
     text: String,
     subtext: String
   },
-  mounted () {
-    this.initChart();
+  mounted() {
+    this.initChart()
   },
   methods: {
-    resize () {
-      this.dom.resize();
+    resize() {
+      this.dom.resize()
     },
-    initChart () {
+    initChart() {
       this.$nextTick(() => {
         let option = {
           grid: {
@@ -44,7 +42,11 @@ export default {
               axisLine: {
                 show: true,
                 lineStyle: {
-                  color: [[0.6, '#4ECB73'], [0.8, '#FBD437'], [1, '#F47F92']],
+                  color: [
+                    [0.6, '#4ECB73'],
+                    [0.8, '#FBD437'],
+                    [1, '#F47F92']
+                  ],
                   width: 16
                 }
               },
@@ -68,14 +70,14 @@ export default {
               data: [{ value: 10 }]
             }
           ]
-        };
-        this.dom = echarts.init(this.$refs.dom, 'tdTheme');
-        this.dom.setOption(option);
-        on(window, 'resize', this.resize);
-      });
+        }
+        this.dom = echarts.init(this.$refs.dom, 'tdTheme')
+        this.dom.setOption(option)
+        on(window, 'resize', this.resize)
+      })
     }
   }
-};
+}
 </script>
 
 <style>

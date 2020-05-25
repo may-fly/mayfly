@@ -1,9 +1,9 @@
 package mayfly.core.permission;
 
+import mayfly.core.base.model.Result;
 import mayfly.core.exception.BusinessException;
 import mayfly.core.permission.registry.PermissionCheckHandler;
 import mayfly.core.permission.registry.SimpleLoginAccountRegistry;
-import mayfly.core.base.model.Result;
 import mayfly.core.util.JsonUtils;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.method.HandlerMethod;
@@ -22,7 +22,12 @@ import java.util.Optional;
  */
 public class PermissionInterceptor implements HandlerInterceptor {
 
-    private static final String TOKEN_PARAM_NAME = "token";
+    private static final String DEFAULT_TOKEN_NAME = "token";
+
+    /**
+     * token参数名
+     */
+    private String tokenParamName = DEFAULT_TOKEN_NAME;
 
     private final PermissionCheckHandler checkHandler;
 
@@ -34,17 +39,22 @@ public class PermissionInterceptor implements HandlerInterceptor {
         this.checkHandler = PermissionCheckHandler.of(loginAccountRegistry);
     }
 
+    public PermissionInterceptor(String tokenParamName, SimpleLoginAccountRegistry loginAccountRegistry) {
+        this.tokenParamName = tokenParamName;
+        this.checkHandler = PermissionCheckHandler.of(loginAccountRegistry);
+    }
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         if (request.getMethod().equals(RequestMethod.OPTIONS.name())) {
             return true;
         }
-        String token = Optional.ofNullable(request.getHeader(TOKEN_PARAM_NAME))
-                .orElse(request.getParameter(TOKEN_PARAM_NAME));
+        String token = Optional.ofNullable(request.getHeader(tokenParamName))
+                .orElse(request.getParameter(tokenParamName));
         try {
             // 判断该用户是否有执行该方法的权限，如果校验通过，返回true
             if (!(handler instanceof HandlerMethod) || checkHandler.hasPermission(token, ((HandlerMethod) handler).getMethod())) {
-                if (!"admin".equals(LoginAccount.get().getUsername()) && !"GET".equals(request.getMethod())) {
+                if (!"admin".equals(LoginAccount.getForContext().getUsername()) && !"GET".equals(request.getMethod())) {
                     sendErrorMessage(response, Result.failure("只可观望"));
                     return false;
                 }
@@ -62,7 +72,7 @@ public class PermissionInterceptor implements HandlerInterceptor {
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
         // 移除ThreadLocal值
-        LoginAccount.remove();
+        LoginAccount.removeForContext();
     }
 
 

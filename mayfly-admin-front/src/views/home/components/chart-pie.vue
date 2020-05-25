@@ -1,30 +1,28 @@
 <template>
-  <div class="pie-main"
-       id="box"
-       ref="dom"></div>
+  <div class="pie-main" id="box" ref="dom"></div>
 </template>
 
 <script>
-import echarts from 'echarts';
-import tdTheme from './theme.json';
-import { on, off } from '~/common/Utils';
-echarts.registerTheme('tdTheme', tdTheme);
+import echarts from 'echarts'
+import tdTheme from './theme.json'
+import { on, off } from '@/common/Utils'
+echarts.registerTheme('tdTheme', tdTheme)
 export default {
   props: {
     value: Array,
     text: String,
     subtext: String
   },
-  mounted () {
-    this.initChart();
+  mounted() {
+    this.initChart()
   },
   methods: {
-    resize () {
-      this.dom.resize();
+    resize() {
+      this.dom.resize()
     },
-    initChart () {
+    initChart() {
       this.$nextTick(() => {
-        let legend = this.value.map(_ => _.name);
+        let legend = this.value.map(_ => _.name)
         let option = {
           title: {
             text: this.text,
@@ -38,11 +36,11 @@ export default {
             trigger: 'item',
             formatter: '{c} ({d}%)',
             // position: ['30%', '90%'],
-            position: function (point, params, dom, rect, size) {
-              console.log(size);
-              let leftWidth = size.viewSize[0] / 2 - size.contentSize[0] / 2;
-              console.log(leftWidth);
-              return { left: leftWidth, bottom: 0 };
+            position: function(point, params, dom, rect, size) {
+              console.log(size)
+              let leftWidth = size.viewSize[0] / 2 - size.contentSize[0] / 2
+              console.log(leftWidth)
+              return { left: leftWidth, bottom: 0 }
             },
             backgroundColor: 'transparent',
             textStyle: {
@@ -90,14 +88,14 @@ export default {
               ]
             }
           ]
-        };
-        this.dom = echarts.init(this.$refs.dom, 'tdTheme');
-        this.dom.setOption(option);
-        on(window, 'resize', this.resize);
-      });
+        }
+        this.dom = echarts.init(this.$refs.dom, 'tdTheme')
+        this.dom.setOption(option)
+        on(window, 'resize', this.resize)
+      })
     }
   }
-};
+}
 </script>
 
 <style>

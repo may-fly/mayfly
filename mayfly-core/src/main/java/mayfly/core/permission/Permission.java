@@ -1,6 +1,10 @@
 package mayfly.core.permission;
 
-import java.lang.annotation.*;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * 权限注解，作用于方法或者类上 <br/><br/>
@@ -20,5 +24,13 @@ public @interface Permission {
      */
     boolean requireCode() default true;
 
+    /**
+     * 权限code
+     */
     String code() default "";
+
+    /**
+     * 拥有该权限的角色
+     */
+    String[] roles() default {};
 }

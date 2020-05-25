@@ -18,7 +18,7 @@
 
 <script>
   import { roleApi } from '../api'
-  import enums from '../enums.js'
+  import enums from '../enums'
   
   export default {
     props: {

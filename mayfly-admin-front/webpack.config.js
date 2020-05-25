@@ -7,7 +7,7 @@ const VueLoaderPlugin = require('vue-loader/lib/plugin')
 
 module.exports = (options = {}) => ({
   entry: {
-    app: './src/main.js'
+    app: './src/main.ts'
   },
   stats: { children: false },
   output: {
@@ -25,6 +25,14 @@ module.exports = (options = {}) => ({
       test: /\.js$/,
       use: ['babel-loader'],
       exclude: /node_modules/,
+    },
+    {
+      test: /\.tsx?$/,
+      loader: 'ts-loader',
+      exclude: /node_modules/,
+      options: {
+        appendTsSuffixTo: [/\.vue$/],
+      }
     },
     {
       test: /\.css$/,
@@ -82,42 +90,21 @@ module.exports = (options = {}) => ({
     }
   },
   plugins: [
-    // new webpack.optimize.SplitChunksPlugin({
-    //   cacheGroups: {
-    //     default: {
-    //       minChunks: 2,
-    //       priority: -20,
-    //       reuseExistingChunk: true,
-    //     },
-    //     //打包重复出现的代码
-    //     vendor: {
-    //       chunks: 'initial',
-    //       minChunks: 2,
-    //       maxInitialRequests: 5, // The default limit is too small to showcase the effect
-    //       minSize: 0, // This is example is too small to create commons chunks
-    //       name: 'vendor'
-    //     },
-    //     //打包第三方类库
-    //     commons: {
-    //       name: "commons",
-    //       chunks: "initial",
-    //       minChunks: Infinity
-    //     }
-    //   }
-    // }),
     new HtmlWebpackPlugin({
       template: 'src/index.html',
       favicon: 'static/favicon.ico'
     }),
-    new webpack.DefinePlugin({
-      __DEV__: options.dev ? true : false
-    }),
+    // new webpack.DefinePlugin({
+    //   __DEV__: options.dev ? true : false
+    // }),
     new VueLoaderPlugin(),
     new webpack.ProgressPlugin()
   ],
   resolve: {
+    // 导入时可忽略.ts等结尾
+    extensions: ['.ts', '.tsx', '.json', '.js'],
     alias: {
-      '~': resolve(__dirname, 'src')
+      '@': resolve(__dirname, 'src')
     }
   },
   devServer: {

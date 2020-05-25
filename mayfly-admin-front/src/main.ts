@@ -3,14 +3,13 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import './assets/css/style.css'
 
-import router from './router'
-import store from './store'
-import Config from './common/config'
-import Permission from './common/Permission'
-import Utils from './common/Utils'
-import sockets from './common/sockets.js'
-
-import App from './App.vue'
+import router from '@/router/index.ts'
+import store from '@/store/index.ts'
+import Config from '@/common/config.ts'
+import Permission from '@/common/Permission.ts'
+import Utils from '@/common/Utils.ts'
+import sockets from '@/common/sockets.ts'
+import App from '@/App.vue'
 
 Vue.prototype.$Permission = Permission
 Vue.prototype.$Config = Config
@@ -25,9 +24,9 @@ Vue.directive('permission', function (el, binding) {
   Permission.checkCodeAndSetDom(binding.value, el);
 })
 
-router.beforeEach((to, from, next) => {
+router.beforeEach((to: any, from: any, next: any) => {
   window.document.title = to.meta.title ? to.meta.title + '-' + Config.name.siteName : Config.name.siteName;
-  
+
   if (to.path == '/login') {
     // 如果是退出登录，则有系统通知socket，需要关闭
     if (Vue.prototype.$SysMsgSocket) {
@@ -36,7 +35,7 @@ router.beforeEach((to, from, next) => {
     }
   }
   if (!Permission.getToken() && to.path != '/login') {
-    next({path: '/login'});
+    next({ path: '/login' });
   } else {
     next();
     // 如果不存在系统通知socket，则连接
@@ -44,9 +43,6 @@ router.beforeEach((to, from, next) => {
       Vue.prototype.$SysMsgSocket = sockets.sysMsgSocket()
     }
   }
-});
-router.afterEach(transition => {
-  
 });
 
 

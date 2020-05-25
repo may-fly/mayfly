@@ -15,7 +15,7 @@ import java.util.List;
  */
 public interface RoleResourceMapper extends BaseMapper<Long, RoleResourceDO> {
 
-    @Select("select rr.create_account AS createAccount, rr.create_time AS createTime, rr.resource_id AS resourceId, r.pid AS resourcePid, " +
+    @Select("select rr.creator AS creator, rr.create_time AS createTime, rr.resource_id AS resourceId, r.pid AS resourcePid, " +
             "r.name AS resourceName, r.type AS type, r.status AS status " +
             "FROM tb_role_resource rr JOIN tb_resource r ON rr.resource_id = r.id " +
             "WHERE rr.role_id = #{roleId} " +

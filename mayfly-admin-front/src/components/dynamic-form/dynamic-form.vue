@@ -89,9 +89,6 @@ export default {
     }
   },
   methods: {
-    // onInputEvent(value) {
-    //   this.$emit('update:formData', this.form)
-    // },
     submit() {
       this.$refs['dynamicForm'].validate(valid => {
         if (valid) {

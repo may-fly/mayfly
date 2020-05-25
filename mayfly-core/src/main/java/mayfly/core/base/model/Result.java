@@ -211,32 +211,32 @@ public final class Result<T> implements Serializable {
         /**
          * 操作成功
          */
-        SUCCESS(200, "SUCCESS"),
+        SUCCESS(200, "success"),
 
         /**
          * 操作失败（通常为业务逻辑错误）
          */
-        FAILURE(400, "FAILURE"),
+        FAILURE(400, "failure"),
 
         /**
          * 参数错误
          */
-        PARAM_ERROR(405, "PARAM_ERROR"),
+        PARAM_ERROR(405, "params error"),
 
         /**
          * 资源未找到
          */
-        NO_FOUND(404, "NO_FOUND"),
+        NO_FOUND(404, "no found"),
 
         /**
          * 服务器异常（其他未知错误）
          */
-        SERVER_ERROR(500, "SERVER_ERROR"),
+        SERVER_ERROR(500, "server error"),
 
         /**
          * 无权限
          */
-        NO_PERMISSION(501, "NO_PERMISSION");
+        NO_PERMISSION(501, "no permission");
 
 
         /**

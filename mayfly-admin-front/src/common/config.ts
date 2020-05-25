@@ -7,10 +7,12 @@ const devSocketUrl = `ws://${devBaseUri}`;
 const proUrl = `http://${prodBaseUri}`;
 const proSocketUrl = `ws://${prodBaseUri}`;
 
+const dev: boolean = process.env.NODE_ENV === "development";
+
 export default {
-  apiUrl: __DEV__ ? devUrl : proUrl,
-  sockeUrl: __DEV__ ? devSocketUrl : proSocketUrl,
-  
+  apiUrl: dev ? devUrl : proUrl,
+  socketUrl: dev ? devSocketUrl : proSocketUrl,
+
   /**
    * 名字命名
    */

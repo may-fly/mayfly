@@ -16,8 +16,8 @@ import java.util.List;
 public interface AccountMapper extends BaseMapper<Long, AccountDO> {
 
     @Select("<script>" +
-            "SELECT id, username, status, create_time AS createTime, update_time AS updateTime, create_account AS createAccount" +
-            ", create_account_id AS createAccountId, update_account AS updateAccount, update_account_id AS updateAccountId, last_login_time AS lastLoginTime " +
+            "SELECT id, username, status, create_time AS createTime, update_time AS updateTime, creator" +
+            ", creator_id AS creatorId, modifier, modifier_id AS modifierId, last_login_time AS lastLoginTime " +
             "FROM tb_account " +
             "<if test='username != null'>" +
                 "WHERE username LIKE CONCAT(#{username}, '%')" +

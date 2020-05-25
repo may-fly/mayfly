@@ -108,10 +108,10 @@
 </template>
 
 <script>
-import ToolBar from '~/components/tool-bar/tool-bar.vue'
+import ToolBar from '@/components/tool-bar/tool-bar.vue'
 import ResourceEdit from './resource-edit.vue'
-import { resourcePermission } from '../permissions.js'
-import enums from '../enums.js'
+import { resourcePermission } from '../permissions'
+import enums from '../enums'
 import { resourceApi } from '../api'
 
 export default {
@@ -264,11 +264,11 @@ export default {
             ' <br/><strong style="margin-right: 18px">权重:</strong>' +
             info.weight +
             ' <br/><strong style="margin-right: 18px">创建人:</strong>' +
-            info.createAccount +
+            info.creator +
             ' <br/><strong style="margin-right: 18px">创建时间:</strong>' +
             info.createTime +
             ' <br/><strong style="margin-right: 18px">修改人:</strong>' +
-            info.updateAccount +
+            info.modifier +
             ' <br/><strong style="margin-right: 18px">修改时间:</strong>' +
             info.updateTime +
             '',
@@ -292,11 +292,11 @@ export default {
           ' <br/><strong style="margin-right: 18px">权重:</strong>' +
           info.weight +
           ' <br/><strong style="margin-right: 18px">创建人:</strong>' +
-          info.createAccount +
+          info.creator +
           ' <br/><strong style="margin-right: 18px">创建时间:</strong>' +
           info.createTime +
           ' <br/><strong style="margin-right: 18px">修改人:</strong>' +
-          info.updateAccount +
+          info.modifier +
           ' <br/><strong style="margin-right: 18px">修改时间:</strong>' +
           info.updateTime +
           '',

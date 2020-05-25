@@ -1,3 +1,4 @@
+import { supplierCarriageLineApi } from '@/service/api/supplier-api';
 <template>
   <div>
     <template v-for="menu in this.menus">
@@ -26,12 +27,13 @@
   </div>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import Vue from 'vue'
+export default Vue.extend({
   props: ['menus'],
   name: 'MenuTree',
   methods: {
-    toPath(menu) {
+    toPath(menu: any) {
       // if (path.startsWith('/')) {
       //   this.$router.push({
       //     path
@@ -42,5 +44,22 @@ export default {
       this.$emit('toPath', menu)
     }
   }
-}
-</script>
+})
+</script>>
+// export default {
+//   props: ['menus'],
+//   name: 'MenuTree',
+//   methods: {
+//     toPath(menu) {
+//       // if (path.startsWith('/')) {
+//       //   this.$router.push({
+//       //     path
+//       //   });
+//       // } else {
+//       //   location.href = path
+//       // }
+//       this.$emit('toPath', menu)
+//     }
+//   }
+// }
+// </script>

@@ -1,4 +1,4 @@
-import Permission from '~/common/Permission'
+import Permission from '@/common/Permission'
 
 /**
  * 权限code

@@ -30,7 +30,7 @@ public class RoleResourceVO implements TreeUtils.TreeNode<Long> {
 
     private LocalDateTime createTime;
 
-    private String createAccount;
+    private String creator;
 
     private List<RoleResourceVO> children;
 

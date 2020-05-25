@@ -91,10 +91,10 @@
 </template>
 
 <script>
-import ToolBar from '~/components/tool-bar/tool-bar.vue'
-import { DynamicFormDialog } from '~/components/dynamic-form'
+import ToolBar from '@/components/tool-bar/tool-bar.vue'
+import { DynamicFormDialog } from '@/components/dynamic-form'
 import FileManage from './file-manage.vue'
-import { machinePermission } from '../permissions.js'
+import { machinePermission } from '../permissions'
 import { machineApi } from '../api'
 
 export default {

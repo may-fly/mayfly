@@ -38,7 +38,7 @@
 
 <script>
 import { accountApi } from '../api'
-import enums from '../enums.js'
+import enums from '../enums'
 export default {
   name: 'AccountEdit',
   props: {

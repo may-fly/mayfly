@@ -69,9 +69,9 @@
         </template>
       </el-table-column>
 
-      <el-table-column min-width="115" prop="createAccount" label="创建账号"></el-table-column>
+      <el-table-column min-width="115" prop="creator" label="创建账号"></el-table-column>
       <el-table-column min-width="160" prop="createTime" label="创建时间"></el-table-column>
-      <el-table-column min-width="115" prop="updateAccount" label="更新账号"></el-table-column>
+      <el-table-column min-width="115" prop="modifier" label="更新账号"></el-table-column>
       <el-table-column min-width="160" prop="updateTime" label="修改时间"></el-table-column>
       <el-table-column min-width="160" prop="lastLoginTime" label="最后登录时间"></el-table-column>
       <el-table-column label="查看更多" min-width="150">
@@ -104,7 +104,7 @@
     <el-dialog width="500px" :title="showRoleDialog.title" :visible.sync="showRoleDialog.visible">
       <el-table border :data="showRoleDialog.accountRoles">
         <el-table-column property="name" label="角色名" width="125"></el-table-column>
-        <el-table-column property="createAccount" label="分配账号" width="125"></el-table-column>
+        <el-table-column property="creator" label="分配账号" width="125"></el-table-column>
         <el-table-column property="createTime" label="分配时间"></el-table-column>
       </el-table>
     </el-dialog>
@@ -142,143 +142,165 @@
   </div>
 </template>
 
-<script>
-import ToolBar from '~/components/tool-bar/tool-bar.vue'
-import HelpHint from '~/components/help-hint/help-hint.vue'
-import { accountPermission } from '../permissions.js'
+<script lang='ts'>
+import { Component, Vue } from 'vue-property-decorator'
+import ToolBar from '@/components/tool-bar/tool-bar.vue'
+import HelpHint from '@/components/help-hint/help-hint.vue'
+import { accountPermission } from '../permissions'
 import RoleEdit from './role-edit.vue'
 import AccountEdit from './account-edit.vue'
 import enums from '../enums'
 import { accountApi } from '../api'
 
-export default {
-  data() {
-    return {
-      enums: enums,
-      permission: accountPermission,
-      chooseId: null,
-      chooseData: null,
-      query: {
-        pageNum: 1,
-        pageSize: 10
-      },
-      datas: [],
-      total: null,
-      showRoleDialog: {
-        title: '',
-        visible: false,
-        accountRoles: []
-      },
-      showResourceDialog: {
-        title: '',
-        visible: false,
-        resources: [],
-        defaultProps: {
-          children: 'children',
-          label: 'name'
-        }
-      },
-      roleDialog: {
-        visible: false,
-        account: {},
-        roles: []
-      },
-      accountDialog: {
-        visible: false,
-        data: false
-      }
-    }
-  },
-  methods: {
-    choose(item) {
-      if (!item) {
-        return
-      }
-      this.chooseId = item.id
-      this.chooseData = item
-    },
-    async search() {
-      let res = await accountApi.list.request(this.query)
-      this.datas = res.list
-      this.total = res.total
-    },
-    async showResources(row) {
-      let showResourceDialog = this.showResourceDialog
-      showResourceDialog.title = '"' + row.username + '" 的菜单&权限'
-      showResourceDialog.resources = []
-      showResourceDialog.resources = await accountApi.resources.request({
-        id: row.id
-      })
-      showResourceDialog.visible = true
-    },
-    async showRoles(row) {
-      let showRoleDialog = this.showRoleDialog
-      showRoleDialog.title = '"' + row.username + '" 的角色信息'
-      showRoleDialog.accountRoles = await accountApi.roles.request({
-        id: row.id
-      })
-      showRoleDialog.visible = true
-    },
-    async changeStatus(row) {
-      let id = row.id
-      let status = row.status ? 1 : 0
-      await accountApi.changeStatus.request({
-        id,
-        status
-      })
-      this.$message.success('操作成功')
-      this.search()
-    },
-    handlePageChange(curPage) {
-      this.query.pageNum = curPage
-      this.search()
-    },
-    roleEdit() {
-      if (!this.chooseId) {
-        this.$message.error('请选择账号')
-      }
-      this.roleDialog.visible = true
-      console.log(this.chooseData)
-      this.roleDialog.account = this.chooseData
-    },
-    editAccount(isAdd = false) {
-      if (isAdd) {
-        this.accountDialog.data = false
-      } else {
-        this.accountDialog.data = this.chooseData
-      }
-      this.accountDialog.visible = true
-    },
-    cancel() {
-      this.roleDialog.visible = false
-      this.roleDialog.account = false
-      this.search()
-    },
-    accountDialogCancel() {
-      this.accountDialog.visible = false
-      setTimeout(() => {
-        this.accountDialog.data = false
-      }, 800)
-    },
-    valChange() {
-      this.accountDialog.visible = false
-      this.search()
-    },
-    deleteAccount() {
-      accountApi.del.request({ id: this.chooseId }).then(res => {
-        this.$message.success('删除成功')
-        this.search()
-      })
-    }
-  },
-  mounted() {
-    this.search()
-  },
+@Component({
+  name: 'account-list',
   components: {
     ToolBar,
     HelpHint,
     RoleEdit,
     AccountEdit
+  }
+})
+export default class AccountList extends Vue {
+  private enums: any = enums
+  private permission: any = accountPermission
+  /**
+   * 选中的id
+   */
+  private chooseId: number | null = null
+  /**
+   * 选中的数据
+   */
+  private chooseData: any | null = null
+  /**
+   * 查询条件
+   */
+  private query = {
+    pageNum: 1,
+    pageSize: 10
+  }
+  private datas: Array<any> = []
+  private total: number = 0
+  private showRoleDialog = {
+    title: '',
+    visible: false,
+    accountRoles: []
+  }
+  private showResourceDialog = {
+    title: '',
+    visible: false,
+    resources: [],
+    defaultProps: {
+      children: 'children',
+      label: 'name'
+    }
+  }
+  private roleDialog = {
+    visible: false,
+    account: null,
+    roles: []
+  }
+  private accountDialog = {
+    visible: false,
+    data: null
+  }
+
+  mounted() {
+    this.search()
+  }
+
+  choose(item: any) {
+    if (!item) {
+      return
+    }
+    this.chooseId = item.id
+    this.chooseData = item
+  }
+
+  async search() {
+    let res: any = await accountApi.list.request(this.query)
+    this.datas = res.list
+    this.total = res.total
+  }
+
+  async showResources(row: any) {
+    let showResourceDialog = this.showResourceDialog
+    showResourceDialog.title = '"' + row.username + '" 的菜单&权限'
+    showResourceDialog.resources = []
+    showResourceDialog.resources = await accountApi.resources.request({
+      id: row.id
+    })
+    showResourceDialog.visible = true
+  }
+
+  async showRoles(row: any) {
+    let showRoleDialog = this.showRoleDialog
+    showRoleDialog.title = '"' + row.username + '" 的角色信息'
+    showRoleDialog.accountRoles = await accountApi.roles.request({
+      id: row.id
+    })
+    showRoleDialog.visible = true
+  }
+
+  async changeStatus(row: any) {
+    let id = row.id
+    let status = row.status ? 1 : 0
+    await accountApi.changeStatus.request({
+      id,
+      status
+    })
+    this.$message.success('操作成功')
+    this.search()
+  }
+
+  handlePageChange(curPage: number) {
+    this.query.pageNum = curPage
+    this.search()
+  }
+
+  roleEdit() {
+    if (!this.chooseId) {
+      this.$message.error('请选择账号')
+    }
+    this.roleDialog.visible = true
+    this.roleDialog.account = this.chooseData
+  }
+
+  editAccount(isAdd = false) {
+    if (isAdd) {
+      this.accountDialog.data = null
+    } else {
+      this.accountDialog.data = this.chooseData
+    }
+    this.accountDialog.visible = true
+  }
+
+  cancel() {
+    this.roleDialog.visible = false
+    this.roleDialog.account = null
+    this.search()
+  }
+
+  accountDialogCancel() {
+    this.accountDialog.visible = false
+    setTimeout(() => {
+      this.accountDialog.data = null
+    }, 800)
+  }
+
+  valChange() {
+    this.accountDialog.visible = false
+    this.search()
+  }
+
+  async deleteAccount() {
+    try {
+      await accountApi.del.request({ id: this.chooseId })
+      this.$message.success('删除成功')
+      this.search()
+    } catch (error) {
+      this.$message.error('刪除失败')
+    }
   }
 }
 </script>

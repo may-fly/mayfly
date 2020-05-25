@@ -13,11 +13,11 @@ public class BaseDO {
     /**
      * 创建账号字段名
      */
-    public static final String CREATE_ACCOUNT = "createAccount";
+    public static final String CREATOR = "creator";
     /**
      * 创建账号id字段名
      */
-    public static final String CREATE_ACCOUNT_ID = "createAccountId";
+    public static final String CREATOR_ID = "creatorId";
     /**
      * 最后更新时间字段名
      */
@@ -25,11 +25,11 @@ public class BaseDO {
     /**
      * 最后更新账号名字段名
      */
-    public static final String UPDATE_ACCOUNT = "updateAccount";
+    public static final String MODIFIER = "modifier";
     /**
      * 最后更新账号id字段名
      */
-    public static final String UPDATE_ACCOUNT_ID = "updateAccountId";
+    public static final String MODIFIER_ID = "modifierId";
 
     /**
      * 唯一标识
@@ -49,22 +49,22 @@ public class BaseDO {
     /**
      * 创建账号id
      */
-    private Long createAccountId;
+    private Long creatorId;
 
     /**
      * 创建账号名
      */
-    private String createAccount;
+    private String creator;
 
     /**
      * 最后更新账号id
      */
-    private Long updateAccountId;
+    private Long modifierId;
 
     /**
      * 最后更新账号名
      */
-    private String updateAccount;
+    private String modifier;
 
     /**
      * 自动设置基本信息，默认id为空时设置新建需要的基本信息
@@ -79,7 +79,7 @@ public class BaseDO {
      * @param isCreate 是否为创建操作
      */
     public void autoSetBaseInfo(boolean isCreate) {
-        autoSetBaseInfo(isCreate, LoginAccount.get());
+        autoSetBaseInfo(isCreate, LoginAccount.getForContext());
     }
 
     /**
@@ -102,11 +102,11 @@ public class BaseDO {
         String account = loginAccount.getUsername();
         Long accountId = loginAccount.getId();
         // 赋值
-        this.updateAccount = account;
-        this.updateAccountId = accountId;
+        this.modifier = account;
+        this.modifierId = accountId;
         if (isCreate) {
-            this.createAccount = account;
-            this.createAccountId = accountId;
+            this.creator = account;
+            this.creatorId = accountId;
         }
     }
 
@@ -136,36 +136,36 @@ public class BaseDO {
         this.updateTime = updateTime;
     }
 
-    public Long getCreateAccountId() {
-        return createAccountId;
+    public Long getCreatorId() {
+        return creatorId;
     }
 
-    public void setCreateAccountId(Long createAccountId) {
-        this.createAccountId = createAccountId;
+    public void setCreatorId(Long creatorId) {
+        this.creatorId = creatorId;
     }
 
-    public String getCreateAccount() {
-        return createAccount;
+    public String getCreator() {
+        return creator;
     }
 
-    public void setCreateAccount(String createAccount) {
-        this.createAccount = createAccount;
+    public void setCreator(String creator) {
+        this.creator = creator;
     }
 
-    public Long getUpdateAccountId() {
-        return updateAccountId;
+    public Long getModifierId() {
+        return modifierId;
     }
 
-    public void setUpdateAccountId(Long updateAccountId) {
-        this.updateAccountId = updateAccountId;
+    public void setModifierId(Long modifierId) {
+        this.modifierId = modifierId;
     }
 
-    public String getUpdateAccount() {
-        return updateAccount;
+    public String getModifier() {
+        return modifier;
     }
 
-    public void setUpdateAccount(String updateAccount) {
-        this.updateAccount = updateAccount;
+    public void setModifier(String modifier) {
+        this.modifier = modifier;
     }
 
     @Override
@@ -174,10 +174,10 @@ public class BaseDO {
                 "id=" + id +
                 ", createTime=" + createTime +
                 ", updateTime=" + updateTime +
-                ", createAccountId=" + createAccountId +
-                ", createAccount='" + createAccount + '\'' +
-                ", updateAccountId=" + updateAccountId +
-                ", updateAccount='" + updateAccount + '\'' +
+                ", creatorId=" + creatorId +
+                ", creator='" + creator + '\'' +
+                ", modifierId=" + modifierId +
+                ", modifier='" + modifier + '\'' +
                 '}';
     }
 }

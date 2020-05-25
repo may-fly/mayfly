@@ -60,43 +60,43 @@ public class PermissionCheckHandler {
         if (StringUtils.isEmpty(token) || (loginAccount = loginAccountRegistry.getLoginAccount(token)) == null) {
             return false;
         }
-        LoginAccount.set(loginAccount);
+        LoginAccount.setToContext(loginAccount);
         PermissionInfo pi = PermissionInfo.parse(method);
-        if (pi == null || !pi.isRequireCode()) {
+        if (pi == null) {
             return true;
         }
 
-        return hasPermission(loginAccount, pi.getPermissionCode());
+        return hasPermission(loginAccount, pi);
     }
 
     /**
      * 判断指定token是否拥有指定权限
      *
      * @param token          token
-     * @param permissionCode permisison code
+     * @param permissionInfo permission info
      * @return true 拥有该权限
      * @throws PermissionDisabledException 权限禁用异常
      */
-    public boolean hasPermission(String token, String permissionCode) throws PermissionDisabledException {
+    public boolean hasPermission(String token, PermissionInfo permissionInfo) throws PermissionDisabledException {
         LoginAccount loginAccount;
         if (StringUtils.isEmpty(token) || (loginAccount = loginAccountRegistry.getLoginAccount(token)) == null) {
             return false;
         }
-        LoginAccount.set(loginAccount);
+        LoginAccount.setToContext(loginAccount);
 
-        return hasPermission(loginAccount, permissionCode);
+        return hasPermission(loginAccount, permissionInfo);
     }
 
     /**
      * 判断用户是否拥有指定权限code
      *
      * @param loginAccount   登录账号
-     * @param permissionCode 权限code
+     * @param permissionInfo 权限info
      * @return true：拥有该权限
      * @throws PermissionDisabledException 若不存在权限code,而存在与之对应的禁用权限code,抛出此异常
      */
-    public boolean hasPermission(LoginAccount loginAccount, String permissionCode) throws PermissionDisabledException {
+    public boolean hasPermission(LoginAccount loginAccount, PermissionInfo permissionInfo) throws PermissionDisabledException {
         // 判断code注册器是否含有该用户的权限code
-        return loginAccount.hasPermission(permissionCode);
+        return loginAccount.hasPermission(permissionInfo);
     }
 }

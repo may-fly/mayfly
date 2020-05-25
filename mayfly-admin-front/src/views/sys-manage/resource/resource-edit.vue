@@ -49,7 +49,7 @@
 
 <script>
 import { resourceApi } from '../api'
-import enums from '../enums.js'
+import enums from '../enums'
 export default {
   name: 'ResourceEdit',
   props: {

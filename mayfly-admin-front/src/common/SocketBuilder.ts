@@ -1,7 +1,9 @@
 class SocketBuilder {
-  
-  constructor(url) {
-    if (typeof(WebSocket) === "undefined") {
+
+  websocket: WebSocket;
+
+  constructor(url: string) {
+    if (typeof (WebSocket) === "undefined") {
       throw new Error('不支持websocket');
     }
     if (!url) {
@@ -10,30 +12,30 @@ class SocketBuilder {
     this.websocket = new WebSocket(url);
   }
 
-  static builder(url) {
+  static builder(url: string) {
     return new SocketBuilder(url);
   }
-  
-  open(onopen) {
+
+  open(onopen: any) {
     this.websocket.onopen = onopen;
     return this;
   }
-  
-  error(onerror) {
+
+  error(onerror: any) {
     this.websocket.onerror = onerror;
     return this;
   }
-  
-  message(onmessage) {
+
+  message(onmessage: any) {
     this.websocket.onmessage = onmessage;
     return this;
   }
-  
-  close(onclose) {
+
+  close(onclose: any) {
     this.websocket.onclose = onclose;
     return this;
   }
-  
+
   build() {
     return this.websocket;
   }
