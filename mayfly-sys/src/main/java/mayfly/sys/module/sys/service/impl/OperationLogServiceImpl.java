@@ -33,7 +33,7 @@ public class OperationLogServiceImpl extends BaseServiceImpl<OperationLogMapper,
 
     @Override
     public void asyncLog(String log, LogTypeEnum type) {
-        asyncLog(log, type, LoginAccount.getForContext());
+        asyncLog(log, type, LoginAccount.getFromContext());
     }
 
     @Override
@@ -47,7 +47,7 @@ public class OperationLogServiceImpl extends BaseServiceImpl<OperationLogMapper,
 
     @Override
     public void asyncUpdateLog(String desc, Object newObj, BaseDO oldObj) {
-        LoginAccount la = LoginAccount.getForContext();
+        LoginAccount la = LoginAccount.getFromContext();
         GlobalThreadPool.execute("asyncUpdateLog", () -> {
             List<String> results = BeanUtils.getFieldValueChangeRecords(newObj, oldObj,
                     field -> !ArrayUtils.contains(ignoreFields, field.getName()))
@@ -67,7 +67,7 @@ public class OperationLogServiceImpl extends BaseServiceImpl<OperationLogMapper,
 
     @Override
     public void asyncDeleteLog(String desc, Object obj) {
-        LoginAccount la = LoginAccount.getForContext();
+        LoginAccount la = LoginAccount.getFromContext();
         GlobalThreadPool.execute("asyncDeleteLog", () -> {
             OperationLogDO logDO = new OperationLogDO().setOperation(desc + " => " + JsonUtils.toJSONString(obj))
                     .setType(LogTypeEnum.DELETE.getValue());

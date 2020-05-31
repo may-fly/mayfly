@@ -18,7 +18,8 @@ public class ValidatorUtils {
      */
     private static final Validator VALIDATOR = Validation.buildDefaultValidatorFactory().getValidator();
 
-    private ValidatorUtils() {}
+    private ValidatorUtils() {
+    }
 
     /**
      * 校验对象是否符合指定校验规则
@@ -27,7 +28,18 @@ public class ValidatorUtils {
      * @return 校验结果
      */
     public static ValidationResult validate(Object obj) {
-        Set<ConstraintViolation<Object>> result = VALIDATOR.validate(obj);
+        return validate(obj, null);
+    }
+
+    /**
+     * 校验对象是否符合指定校验规则
+     *
+     * @param obj        对象
+     * @param groupClass 校验组
+     * @return 校验结果
+     */
+    public static ValidationResult validate(Object obj, Class<?>... groupClass) {
+        Set<ConstraintViolation<Object>> result = groupClass == null ? VALIDATOR.validate(obj) : VALIDATOR.validate(obj, groupClass);
         if (CollectionUtils.isEmpty(result)) {
             return ValidationResult.success();
         }

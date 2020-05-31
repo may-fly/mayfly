@@ -75,14 +75,14 @@ public class LoginAccount implements Serializable {
     /**
      * 获取该线程上下文的登录账号
      */
-    public static LoginAccount getForContext() {
+    public static LoginAccount getFromContext() {
         return CONTEXT.get();
     }
 
     /**
      * 移除登录账号
      */
-    public static void removeForContext() {
+    public static void removeFromContext() {
         CONTEXT.remove();
     }
 
@@ -92,8 +92,8 @@ public class LoginAccount implements Serializable {
      * @return id（上下文没有登录信息则抛没有权限异常）
      */
     public static Long getLoginAccountId() {
-        return Optional.ofNullable(LoginAccount.getForContext()).map(LoginAccount::getId)
-                .orElseThrow(() ->new BusinessRuntimeException(Result.CodeEnum.NO_PERMISSION));
+        return Optional.ofNullable(LoginAccount.getFromContext()).map(LoginAccount::getId)
+                .orElseThrow(() -> new BusinessRuntimeException(Result.CodeEnum.NO_PERMISSION));
     }
 
     /**

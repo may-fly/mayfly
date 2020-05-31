@@ -12,7 +12,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.2.6.RELEASE</version>
+        <version>2.3.0.RELEASE</version>
     </parent>
 
     <modules>
@@ -76,7 +76,7 @@
                 <artifactId>lombok</artifactId>
                 <version>${lombok.version}</version>
             </dependency>
-
+            <!-- 单元测试  -->
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>

@@ -31,8 +31,8 @@ public class BusinessAssert {
         isTrue(object != null, supplier);
     }
 
-    public static <E extends Enum<?> & NameValueEnum<Integer>> void notNull(Object object, E errorEnum) {
-        isTrue(object != null, errorEnum);
+    public static <E extends Enum<?> & NameValueEnum<Integer>> void notNullByEnum(Object object, E errorEnum) {
+        isTrueByEnum(object != null, errorEnum);
     }
 
     /**
@@ -49,8 +49,8 @@ public class BusinessAssert {
         isTrue(object == null, supplier);
     }
 
-    public static <E extends Enum<?> & NameValueEnum<Integer>> void isNull(Object object, E errorEnum) {
-        isTrue(object == null, errorEnum);
+    public static <E extends Enum<?> & NameValueEnum<Integer>> void isNullByEnum(Object object, E errorEnum) {
+        isTrueByEnum(object == null, errorEnum);
     }
 
 
@@ -68,8 +68,8 @@ public class BusinessAssert {
         isTrue(!StringUtils.isEmpty(str), supplier);
     }
 
-    public static <E extends Enum<?> & NameValueEnum<Integer>> void notEmpty(String str, E errorEnum) {
-        isTrue(!StringUtils.isEmpty(str), errorEnum);
+    public static <E extends Enum<?> & NameValueEnum<Integer>> void notEmptyByEnum(String str, E errorEnum) {
+        isTrueByEnum(!StringUtils.isEmpty(str), errorEnum);
     }
 
     /**
@@ -145,7 +145,7 @@ public class BusinessAssert {
      * @param expression boolean表达式
      * @param errorEnum      错误枚举
      */
-    public static <E extends Enum<?> & NameValueEnum<Integer>> void isTrue(boolean expression, E errorEnum) {
+    public static <E extends Enum<?> & NameValueEnum<Integer>> void isTrueByEnum(boolean expression, E errorEnum) {
         if (!expression) {
             throw new BusinessRuntimeException(errorEnum);
         }

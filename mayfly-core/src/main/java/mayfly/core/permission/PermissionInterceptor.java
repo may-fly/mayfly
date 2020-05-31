@@ -54,7 +54,7 @@ public class PermissionInterceptor implements HandlerInterceptor {
         try {
             // 判断该用户是否有执行该方法的权限，如果校验通过，返回true
             if (!(handler instanceof HandlerMethod) || checkHandler.hasPermission(token, ((HandlerMethod) handler).getMethod())) {
-                if (!"admin".equals(LoginAccount.getForContext().getUsername()) && !"GET".equals(request.getMethod())) {
+                if (!"admin".equals(LoginAccount.getFromContext().getUsername()) && !"GET".equals(request.getMethod())) {
                     sendErrorMessage(response, Result.failure("只可观望"));
                     return false;
                 }
@@ -72,7 +72,7 @@ public class PermissionInterceptor implements HandlerInterceptor {
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
         // 移除ThreadLocal值
-        LoginAccount.removeForContext();
+        LoginAccount.removeFromContext();
     }
 
 

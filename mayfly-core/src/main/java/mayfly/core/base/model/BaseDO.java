@@ -79,7 +79,7 @@ public class BaseDO {
      * @param isCreate 是否为创建操作
      */
     public void autoSetBaseInfo(boolean isCreate) {
-        autoSetBaseInfo(isCreate, LoginAccount.getForContext());
+        autoSetBaseInfo(isCreate, LoginAccount.getFromContext());
     }
 
     /**
