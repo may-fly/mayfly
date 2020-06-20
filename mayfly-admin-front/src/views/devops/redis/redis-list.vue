@@ -1,6 +1,6 @@
 <template>
   <div>
-    <ToolBar>
+    <div class="toolbar">
       <el-button
         type="primary"
         icon="el-icon-plus"
@@ -39,7 +39,7 @@
         </el-select>
         <el-button @click="search" type="success" icon="el-icon-search" size="mini"></el-button>
       </div>
-    </ToolBar>
+    </div>
     <el-table :data="redisTable" stripe style="width: 100%" @current-change="choose">
       <el-table-column label="选择" width="50px">
         <template slot-scope="scope">
@@ -90,7 +90,6 @@
 </template>
 
 <script>
-import ToolBar from '@/components/tool-bar/tool-bar.vue'
 import Info from './info.vue'
 import { redisPermission, redisKeyPermission } from '../permissions'
 import { redisApi, redisKeyApi } from '../api'
@@ -257,7 +256,6 @@ export default {
     this.search()
   },
   components: {
-    ToolBar,
     Info,
     DynamicFormDialog
   }

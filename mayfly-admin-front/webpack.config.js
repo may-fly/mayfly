@@ -92,7 +92,7 @@ module.exports = (options = {}) => ({
   plugins: [
     new HtmlWebpackPlugin({
       template: 'src/index.html',
-      favicon: 'static/favicon.ico'
+      favicon: 'src/assets/images/favicon.ico'
     }),
     // new webpack.DefinePlugin({
     //   __DEV__: options.dev ? true : false

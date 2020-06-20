@@ -24,15 +24,21 @@ public class BusinessAssert {
      * @param msg    不满足断言的异常信息
      */
     public static void notNull(Object object, String msg) {
-        isTrue(object != null, msg);
+        if (object == null) {
+            throw newBusinessRuntimeException(msg);
+        }
     }
 
     public static void notNull(Object object, Supplier<String> supplier) {
-        isTrue(object != null, supplier);
+        if (object == null) {
+            throw newBusinessRuntimeException(supplier.get());
+        }
     }
 
     public static <E extends Enum<?> & NameValueEnum<Integer>> void notNullByEnum(Object object, E errorEnum) {
-        isTrueByEnum(object != null, errorEnum);
+        if (object == null) {
+            throw newBusinessRuntimeException(errorEnum);
+        }
     }
 
     /**
@@ -123,7 +129,7 @@ public class BusinessAssert {
      */
     public static void isTrue(boolean expression, String message) {
         if (!expression) {
-            throw new BusinessRuntimeException(message);
+            throw newBusinessRuntimeException(message);
         }
     }
 
@@ -135,7 +141,7 @@ public class BusinessAssert {
      */
     public static void isTrue(boolean expression, Supplier<String> supplier) {
         if (!expression) {
-            throw new BusinessRuntimeException(supplier.get());
+            throw newBusinessRuntimeException(supplier.get());
         }
     }
 
@@ -147,7 +153,27 @@ public class BusinessAssert {
      */
     public static <E extends Enum<?> & NameValueEnum<Integer>> void isTrueByEnum(boolean expression, E errorEnum) {
         if (!expression) {
-            throw new BusinessRuntimeException(errorEnum);
+            throw newBusinessRuntimeException(errorEnum);
         }
+    }
+
+    /**
+     * 创建业务运行时异常对象
+     *
+     * @param msg 异常信息
+     * @return 异常
+     */
+    public static BusinessRuntimeException newBusinessRuntimeException(String msg) {
+        return new BusinessRuntimeException(msg);
+    }
+
+    /**
+     * 创建业务运行时异常对象
+     *
+     * @param errorEnum 错误枚举
+     * @return 异常
+     */
+    public static <E extends Enum<?> & NameValueEnum<Integer>> BusinessRuntimeException newBusinessRuntimeException(E errorEnum) {
+        return new BusinessRuntimeException(errorEnum);
     }
 }

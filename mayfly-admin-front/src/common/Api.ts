@@ -56,9 +56,10 @@ class Api {
   /**    静态方法     **/
 
   /**
-   * 静态工厂，返回Api对象，并设置url与method属性
-   * @param {String} code 权限code（权限标识符）Permission对象必有的属性
-   */
+  * 静态工厂，返回Api对象，并设置url与method属性
+  * @param url url
+  * @param method 请求方法(get,post,put,delete...)
+  */
   static create(url: string, method: string) {
     return new Api(url, method);
   }

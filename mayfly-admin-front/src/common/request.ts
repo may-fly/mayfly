@@ -1,8 +1,8 @@
 import ElementUI from 'element-ui';
 import router from "../router";
 import Axios from 'axios';
-import Config from './config';
-import enums from './enums'
+import Permission from './Permission';
+import config from './config';
 
 export interface Result {
   /**
@@ -19,34 +19,57 @@ export interface Result {
   data?: any;
 }
 
-// 全局设置
-function setToken() {
-  Axios.defaults.headers['token'] = sessionStorage.getItem(Config.name.tokenKey);
+export enum ResultCodeEnum {
+  SUCCESS = 200,
+  ERROR = 400,
+  PARAM_ERROR = 405,
+  SERVER_ERROR = 500,
+  NO_PERMISSION = 501
 }
 
-
-function buildApiUrl(url: string) {
-  return `${Config.apiUrl}${url}`;
-}
+const baseUrl = config.apiUrl
 
 /**
- * 解析服务端返回结果
+ * 通知错误消息
+ * @param msg 错误消息
  */
-function parseResponse(res: any) {
-  return new Promise((resolve, reject) => {
-    if (res.status !== 200) {
-      reject('请求异常');
-      return;
+function notifyErrorMsg(msg: string) {
+  // 错误通知
+  ElementUI.Message.error(msg);
+}
+
+// create an axios instance
+const service = Axios.create({
+  baseURL: baseUrl, // url = base url + request url
+  timeout: 5000 // request timeout
+})
+
+// request interceptor
+service.interceptors.request.use(
+  config => {
+    // do something before request is sent
+    const token = Permission.getToken()
+    if (token) {
+      // 设置token
+      config.headers['token'] = token
     }
+    return config
+  },
+  error => {
+    console.log(error) // for debug
+    return Promise.reject(error)
+  }
+)
+
+// response interceptor
+service.interceptors.response.use(
+  response => {
     // 获取请求返回结果
-    let data: Result = res.data;
+    const data: Result = response.data;
     // 如果提示没有权限，则移除token，使其重新登录
-    if (data.code === enums.ResultEnum['NO_PERMISSION'].value) {
-      sessionStorage.removeItem(Config.name.tokenKey);
-      ElementUI.Notification.error({
-        title: '请求错误',
-        message: '登录超时'
-      });
+    if (data.code === ResultCodeEnum.NO_PERMISSION) {
+      Permission.removeToken()
+      notifyErrorMsg('登录超时')
       setTimeout(() => {
         router.push({
           path: '/login',
@@ -54,14 +77,16 @@ function parseResponse(res: any) {
       }, 1000)
       return;
     }
-    if (data.code === enums.ResultEnum['SUCCESS'].value) {
-      resolve(data.data);
+    if (data.code === ResultCodeEnum.SUCCESS) {
+      return data.data;
     } else {
-      reject(data.msg);
+      return Promise.reject(data);
     }
-  });
-}
-
+  },
+  error => {
+    return Promise.reject(error)
+  }
+)
 
 /**
  * @author: hml
@@ -97,29 +122,23 @@ function request(method: string, url: string, params: any): Promise<any> {
   if (url.indexOf("{") != -1) {
     url = parseRestUrl(url, params);
   }
-  setToken();
-  let query: any = {
+  const query: any = {
     method,
-    url: buildApiUrl(url),
+    url: url,
   };
-  let lowMethod = method.toLowerCase();
+  const lowMethod = method.toLowerCase();
   // post和put使用json格式传参
   if (lowMethod === 'post' || lowMethod === 'put') {
-    query.headers = {
-      'Content-Type': 'application/json;charset=UTF-8'
-    }
+    // query.headers = {
+    //   'Content-Type': 'application/json;charset=UTF-8'
+    // }
     query.data = params;
   } else {
     query.params = params;
   }
-  return Axios.request(query).then(res => parseResponse(res))
+  return service.request(query).then(res => res)
     .catch(e => {
-      if (typeof e == 'object') {
-        ElementUI.Message.error(e.message);
-      } else {
-        ElementUI.Message.error(e);
-      }
-
+      notifyErrorMsg(e.msg || e.message)
       return Promise.reject(e);
     });
 }
@@ -134,9 +153,9 @@ function send(api: any, params: any): Promise<any> {
   return request(api.method, api.url, params);
 }
 
-export function getApiUrl(url: string) {
+function getApiUrl(url: string) {
   // 只是返回api地址而不做请求，用在上传组件之类的
-  return buildApiUrl(url) + '?token=' + sessionStorage.getItem(Config.name.tokenKey);
+  return baseUrl + '?token=' + Permission.getToken();
 }
 
 export default {

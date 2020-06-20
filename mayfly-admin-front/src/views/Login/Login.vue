@@ -110,7 +110,7 @@ export default class Login extends Vue {
       setTimeout(() => {
         //保存用户token以及菜单按钮权限
         this['$Permission'].savePermission(res)
-        this['$notify']({
+        this.$notify({
           title: '登录成功',
           message: '很高兴你使用Mayfly Admin！别忘了给个Star哦。',
           type: 'success'

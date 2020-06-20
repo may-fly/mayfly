@@ -1,6 +1,11 @@
 package mayfly.core.util;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author meilin.huang
@@ -39,6 +44,17 @@ public class CollectionUtils {
      */
     public static <T> boolean contains(Collection<T> collection, T value) {
         return !isEmpty(collection) && collection.contains(value);
+    }
+
+    /**
+     * 使用分隔符将集合元素拼接为字符串
+     *
+     * @param collection collection
+     * @param separator  分隔符
+     * @return 字符串
+     */
+    public static String joinSeparator2String(Collection<?> collection, String separator) {
+        return collection.stream().map(String::valueOf).collect(Collectors.joining(separator));
     }
 
     /**

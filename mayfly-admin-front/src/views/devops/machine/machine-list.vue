@@ -1,6 +1,6 @@
 <template>
   <div>
-    <ToolBar>
+    <div class="toolbar">
       <el-button
         v-permission="permission.machine.code"
         type="primary"
@@ -47,7 +47,7 @@
         ></el-input>
         <el-button @click="search" type="success" icon="el-icon-search" size="mini"></el-button>
       </div>
-    </ToolBar>
+    </div>
 
     <el-table :data="table" stripe style="width: 100%" @current-change="choose">
       <el-table-column label="选择" width="55px">
@@ -91,7 +91,6 @@
 </template>
 
 <script>
-import ToolBar from '@/components/tool-bar/tool-bar.vue'
 import { DynamicFormDialog } from '@/components/dynamic-form'
 import FileManage from './file-manage.vue'
 import { machinePermission } from '../permissions'
@@ -248,7 +247,6 @@ export default {
     this.search()
   },
   components: {
-    ToolBar,
     FileManage,
     DynamicFormDialog
   }

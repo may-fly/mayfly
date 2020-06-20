@@ -1,6 +1,6 @@
 <template>
   <div class="menu">
-    <ToolBar>
+    <div class="toolbar">
       <div>
         <span style="font-size: 14px;">
           <i class="el-icon-info"></i>红色字体表示禁用状态
@@ -13,7 +13,7 @@
         size="mini"
         @click="addResource(false)"
       >添加</el-button>
-    </ToolBar>
+    </div>
     <el-tree
       class="none-select"
       :indent="38"
@@ -108,7 +108,6 @@
 </template>
 
 <script>
-import ToolBar from '@/components/tool-bar/tool-bar.vue'
 import ResourceEdit from './resource-edit.vue'
 import { resourcePermission } from '../permissions'
 import enums from '../enums'
@@ -311,7 +310,6 @@ export default {
     }
   },
   components: {
-    ToolBar,
     ResourceEdit
   },
   mounted: function() {

@@ -151,8 +151,8 @@ export default class App extends Vue {
     this.goToPath(activeName)
   }
 
-  private logout() {
-    api.logout({ token: this['$Permission'].getToken() })
+  private async logout() {
+    await api.logout({ token: this['$Permission'].getToken() })
     sessionStorage.clear()
     this['$router'].push({
       path: '/login'

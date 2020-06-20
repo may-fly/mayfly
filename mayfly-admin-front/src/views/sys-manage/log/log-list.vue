@@ -1,6 +1,6 @@
 <template>
   <div class="role-list">
-    <ToolBar>
+    <div class="toolbar">
       <el-button
         :disabled="currentId == null"
         @click="deleteAccount()"
@@ -28,7 +28,7 @@
         ></el-input>
         <el-button @click="search(true)" type="success" icon="el-icon-search" size="mini"></el-button>
       </div>
-    </ToolBar>
+    </div>
     <el-table :data="datas" border ref="table" show-overflow-tooltip>
       <el-table-column min-width="600" prop="operation" label="操作记录" show-overflow-tooltip></el-table-column>
       <el-table-column min-width="80" prop="type" label="操作类型" align="center">
@@ -52,7 +52,6 @@
 </template>
 
 <script>
-import ToolBar from '@/components/tool-bar/tool-bar.vue'
 import HelpHint from '@/components/help-hint/help-hint.vue'
 import { logApi } from '../api'
 import enums from '../enums'
@@ -98,7 +97,6 @@ export default {
     this.search()
   },
   components: {
-    ToolBar,
     HelpHint
   }
 }

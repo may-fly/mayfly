@@ -9,6 +9,7 @@ import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 /**
  * @author meilin.huang
@@ -66,6 +67,9 @@ public class DefaultGlobalExceptionHandler {
     public Result<?> handleException(Exception e) {
         if (e instanceof HttpRequestMethodNotSupportedException) {
             return Result.serverError("request method error");
+        }
+        if (e instanceof MethodArgumentTypeMismatchException) {
+            return Result.paramError("param type mismatch");
         }
         // 记录未知异常日志
         LOG.error("系统异常：", e);

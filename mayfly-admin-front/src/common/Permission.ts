@@ -48,6 +48,13 @@ class Permission {
   }
 
   /**
+   * 移除token
+   */
+  static removeToken() {
+    sessionStorage.removeItem(Config.name.tokenKey)
+  }
+
+  /**
    * 保存token
    * @param {Object} token token
    */

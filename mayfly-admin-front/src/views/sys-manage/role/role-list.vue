@@ -1,6 +1,6 @@
 <template>
   <div class="role-list">
-    <ToolBar>
+    <div class="toolbar">
       <el-button
         v-permission="permission.role.code"
         type="primary"
@@ -44,7 +44,7 @@
         ></el-input>
         <el-button @click="search" type="success" icon="el-icon-search" size="mini"></el-button>
       </div>
-    </ToolBar>
+    </div>
     <el-table :data="roles" @current-change="choose" border ref="table" style="width: 100%">
       <el-table-column label="选择" width="50px">
         <template slot-scope="scope">
@@ -101,7 +101,6 @@
 </template>
 
 <script>
-import ToolBar from '@/components/tool-bar/tool-bar.vue'
 import HelpHint from '@/components/help-hint/help-hint.vue'
 import RoleEdit from './role-edit.vue'
 import { rolePermission } from '../permissions'
@@ -260,7 +259,6 @@ export default {
     this.search()
   },
   components: {
-    ToolBar,
     HelpHint,
     RoleEdit,
     ResourceEdit,

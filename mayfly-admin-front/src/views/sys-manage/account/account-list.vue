@@ -1,6 +1,6 @@
 <template>
   <div class="role-list">
-    <ToolBar>
+    <div class="toolbar">
       <el-button
         v-permission="permission.account.code"
         type="primary"
@@ -43,7 +43,7 @@
         ></el-input>
         <el-button @click="search()" type="success" icon="el-icon-search" size="mini"></el-button>
       </div>
-    </ToolBar>
+    </div>
     <el-table :data="datas" border ref="table" @current-change="choose" show-overflow-tooltip>
       <el-table-column label="选择" width="50px">
         <template slot-scope="scope">
@@ -132,19 +132,18 @@
       </el-tree>
     </el-dialog>
 
-    <RoleEdit :visible="roleDialog.visible" :account="roleDialog.account" @cancel="cancel()"></RoleEdit>
-    <AccountEdit
+    <role-edit :visible="roleDialog.visible" :account="roleDialog.account" @cancel="cancel()" />
+    <account-edit
       :visible="accountDialog.visible"
       :account="accountDialog.data"
       @cancel="accountDialogCancel()"
       @val-change="valChange()"
-    ></AccountEdit>
+    />
   </div>
 </template>
 
 <script lang='ts'>
 import { Component, Vue } from 'vue-property-decorator'
-import ToolBar from '@/components/tool-bar/tool-bar.vue'
 import HelpHint from '@/components/help-hint/help-hint.vue'
 import { accountPermission } from '../permissions'
 import RoleEdit from './role-edit.vue'
@@ -155,7 +154,6 @@ import { accountApi } from '../api'
 @Component({
   name: 'account-list',
   components: {
-    ToolBar,
     HelpHint,
     RoleEdit,
     AccountEdit

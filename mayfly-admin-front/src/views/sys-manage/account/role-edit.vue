@@ -5,7 +5,7 @@
       :visible="visible"
       :show-close="false"
     >
-      <ToolBar>
+      <div class="toolbar">
         <div style="float: left">
           <el-input
             placeholder="请输入角色名"
@@ -17,7 +17,7 @@
           ></el-input>
           <el-button @click="search" type="success" icon="el-icon-search" size="small"></el-button>
         </div>
-      </ToolBar>
+      </div>
       <el-table :data="allRole" border ref="roleTable" @select="select" style="width: 100%">
         <el-table-column type="selection" width="40"></el-table-column>
         <el-table-column prop="name" label="角色名称"></el-table-column>
@@ -45,7 +45,6 @@
 <script>
 import AllRouter from '@/router/'
 import { roleApi, accountApi } from '../api'
-import ToolBar from '@/components/tool-bar/tool-bar.vue'
 
 export default {
   name: 'RoleEdit',
@@ -155,7 +154,7 @@ export default {
     // })
   },
   components: {
-    ToolBar
+
   }
 }
 </script>

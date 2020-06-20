@@ -1,6 +1,6 @@
 <template>
   <div>
-    <ToolBar>
+    <div class="toolbar">
       <div style="float: left">
         <el-input
           placeholder="请输入key"
@@ -18,7 +18,7 @@
         <!-- <el-button @click="scan()" icon="el-icon-refresh" size="small" plain>刷新</el-button> -->
         <span>keys:{{dbsize}}</span>
       </div>
-    </ToolBar>
+    </div>
     <el-table
       v-loading="loading"
       :data="keys"
@@ -79,7 +79,6 @@
 
 <script>
 // import Api from "../../../api/index.js"
-import ToolBar from '@/components/tool-bar/tool-bar.vue'
 import Req from '@/common/request'
 import enums from '../enums'
 import { redisKeyPermission } from '../permissions'
@@ -224,7 +223,6 @@ export default {
     this.scan()
   },
   components: {
-    ToolBar,
     ValueDialog
   }
 }
