@@ -3,8 +3,8 @@ package mayfly.sys.module.machine.service;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.Session;
 import mayfly.core.base.service.BaseService;
-import mayfly.core.exception.BusinessAssert;
-import mayfly.core.exception.BusinessRuntimeException;
+import mayfly.core.exception.BizAssert;
+import mayfly.core.exception.BizRuntimeException;
 import mayfly.core.util.IOUtils;
 import mayfly.sys.common.utils.ssh.SSHException;
 import mayfly.sys.common.utils.ssh.SSHUtils;
@@ -40,7 +40,7 @@ public interface MachineService extends BaseService<Long, MachineDO> {
         try {
             return SSHUtils.exec(getSession(machineId), cmd);
         } catch (SSHException e) {
-            throw new BusinessRuntimeException(e.getMessage());
+            throw new BizRuntimeException(e.getMessage());
         }
     }
 
@@ -55,7 +55,7 @@ public interface MachineService extends BaseService<Long, MachineDO> {
         try {
             SSHUtils.exec(getSession(machineId), cmd, lineProcessor);
         } catch (SSHException e) {
-            throw new BusinessRuntimeException(e.getMessage());
+            throw new BizRuntimeException(e.getMessage());
         }
     }
 
@@ -68,7 +68,7 @@ public interface MachineService extends BaseService<Long, MachineDO> {
         try {
             SSHUtils.sftpOperate(getSession(machineId), function);
         } catch (SSHException e) {
-            throw new BusinessRuntimeException(e.getMessage());
+            throw new BizRuntimeException(e.getMessage());
         }
     }
 
@@ -81,7 +81,7 @@ public interface MachineService extends BaseService<Long, MachineDO> {
     default Session getSession(Long machineId) {
         return SSHUtils.getSession(Objects.toString(machineId), () -> {
             MachineDO machine = getById(machineId);
-            BusinessAssert.notNull(machine, "机器不存在");
+            BizAssert.notNull(machine, "机器不存在");
             return SessionInfo.builder(machine.getIp()).port(machine.getPort())
                     .password(machine.getPassword()).username(machine.getUsername()).build();
         });

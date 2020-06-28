@@ -2,7 +2,7 @@ package mayfly.sys.module.open.service.impl;
 
 import mayfly.core.captcha.ArithmeticCaptcha;
 import mayfly.core.captcha.CaptchaBuilder;
-import mayfly.core.exception.BusinessAssert;
+import mayfly.core.exception.BizAssert;
 import mayfly.core.util.BracePlaceholder;
 import mayfly.core.util.UUIDUtils;
 import mayfly.sys.common.cache.CacheKey;
@@ -39,7 +39,7 @@ public class OpenServiceImpl implements OpenService {
     public boolean checkCaptcha(String uuid, String captcha) {
         String key = BracePlaceholder.resolve(CacheKey.CAPTCHA_KEY, uuid);
         String text = (String) redisTemplate.opsForValue().get(key);
-        BusinessAssert.notNull(text, "验证码过期");
+        BizAssert.notNull(text, "验证码过期");
         if (!captcha.equalsIgnoreCase(text)) {
             return false;
         }

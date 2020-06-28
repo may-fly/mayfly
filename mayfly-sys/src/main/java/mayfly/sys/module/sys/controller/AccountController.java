@@ -1,6 +1,6 @@
 package mayfly.sys.module.sys.controller;
 
-import mayfly.core.exception.BusinessAssert;
+import mayfly.core.exception.BizAssert;
 import mayfly.core.permission.Permission;
 import mayfly.core.base.model.Result;
 import mayfly.core.util.TreeUtils;
@@ -68,7 +68,7 @@ public class AccountController {
     @Permission
     @PutMapping("/{id}/{status}")
     public Result<?> changeStatus(@PathVariable Long id, @PathVariable Integer status) {
-        BusinessAssert.isTrue(EnumUtils.isExist(EnableDisableEnum.values(), status), "状态值错误");
+        BizAssert.isTrue(EnumUtils.isExist(EnableDisableEnum.values(), status), "状态值错误");
         AccountDO a = new AccountDO().setStatus(status);
         a.setId(id);
         accountService.updateByIdSelective(a);

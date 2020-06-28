@@ -10,7 +10,7 @@ import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 import mayfly.core.cache.Cache;
 import mayfly.core.cache.CacheBuilder;
-import mayfly.core.exception.BusinessRuntimeException;
+import mayfly.core.exception.BizRuntimeException;
 import mayfly.core.util.IOUtils;
 import mayfly.core.util.StringUtils;
 
@@ -61,7 +61,7 @@ public class SSHUtils {
             try {
                 return openSession(sessionInfoSupplier.get());
             } catch (SSHException e) {
-                throw new BusinessRuntimeException("连接失败，请重试：" + e.getMessage());
+                throw new BizRuntimeException("连接失败，请重试：" + e.getMessage());
             }
         }, true);
     }

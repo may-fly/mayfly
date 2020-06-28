@@ -29,19 +29,19 @@ public class LogAspect {
     /**
      * 日志结果消费者（回调）,主要用于保存日志信息等
      */
-    private BiConsumer<LogTypeEnum, String> saveLogConsumer;
+    private BiConsumer<MethodLog.LogLevel, String> saveLogConsumer;
 
     public LogAspect() {
     }
 
-    public LogAspect(BiConsumer<LogTypeEnum, String> saveLogConsumer) {
+    public LogAspect(BiConsumer<MethodLog.LogLevel, String> saveLogConsumer) {
         this.saveLogConsumer = saveLogConsumer;
     }
 
     /**
      * 拦截带有@MethodLog的方法或带有该注解的类
      */
-    @Pointcut("@annotation(mayfly.core.log.MethodLog) || @within(mayfly.core.log.MethodLog)")
+    @Pointcut("@annotation(eatlife.core.log.MethodLog) || @within(eatlife.core.log.MethodLog)")
     private void logPointcut() {
     }
 
@@ -52,7 +52,7 @@ public class LogAspect {
         // 执行回调
         if (saveLogConsumer != null) {
             try {
-                saveLogConsumer.accept(LogTypeEnum.EXCEPTION, errMsg);
+                saveLogConsumer.accept(MethodLog.LogLevel.ERROR, errMsg);
             } catch (Exception ex) {
                 LOG.error("执行log consumer失败：", ex);
             }
@@ -73,7 +73,8 @@ public class LogAspect {
             return result;
         }
 
-        switch (logInfo.getLevel()) {
+        MethodLog.LogLevel level = logInfo.getLevel();
+        switch (level) {
             case DEBUG:
                 LOG.debug(logMsg);
                 break;
@@ -92,7 +93,7 @@ public class LogAspect {
         }
         if (saveLogConsumer != null) {
             try {
-                saveLogConsumer.accept(LogTypeEnum.NORMAN, logMsg);
+                saveLogConsumer.accept(level, logMsg);
             } catch (Exception e) {
                 LOG.error("执行log consumer失败：", e);
             }

@@ -3,7 +3,7 @@ package mayfly.sys.module.redis.service.impl;
 import io.lettuce.core.api.sync.RedisCommands;
 import io.lettuce.core.cluster.api.sync.RedisClusterCommands;
 import mayfly.core.base.service.impl.BaseServiceImpl;
-import mayfly.core.exception.BusinessAssert;
+import mayfly.core.exception.BizAssert;
 import mayfly.core.util.Assert;
 import mayfly.core.util.bean.BeanUtils;
 import mayfly.sys.module.redis.connection.RedisConnectionRegistry;
@@ -38,7 +38,7 @@ public class RedisServiceImpl extends BaseServiceImpl<RedisMapper, Long, RedisDO
         //如果不存在该redis信息，则先连接对应的单机or集群连接
         if (registry.getRedisInfo(redisId) == null) {
             RedisDO redis = getById(redisId);
-            BusinessAssert.notNull(redis, "redis实例不存在！");
+            BizAssert.notNull(redis, "redis实例不存在！");
             if (redis.getClusterId() == RedisInfo.STANDALONE) {
                 registry.registerStandalone(toRedisInfo(redis));
             } else {
@@ -73,7 +73,7 @@ public class RedisServiceImpl extends BaseServiceImpl<RedisMapper, Long, RedisDO
     @Override
     public void delete(long redisId) {
         RedisDO redis = getById(redisId);
-        BusinessAssert.notNull(redis, "节点不存在");
+        BizAssert.notNull(redis, "节点不存在");
 
         if (isStandalone(redis.getClusterId())) {
             registry.remove(redisId, false);
@@ -84,13 +84,13 @@ public class RedisServiceImpl extends BaseServiceImpl<RedisMapper, Long, RedisDO
 
     private RedisInfo toRedisInfo(RedisDO redis) {
         Assert.notNull(redis, "不存在该redis实例！");
-        BusinessAssert.isTrue(isStandalone(redis.getClusterId()), "该redis为集群模式！");
+        BizAssert.isTrue(isStandalone(redis.getClusterId()), "该redis为集群模式！");
         return RedisInfo.builder(redis.getId()).info(redis.getHost(), redis.getPort(), redis.getPwd()).build();
     }
 
     private Set<RedisInfo> toRedisCluster(long clusterId) {
         List<RedisDO> nodes = listByCondition(RedisDO.builder().clusterId(clusterId).build());
-        BusinessAssert.notEmpty(nodes, "不存在该redis集群实例！");
+        BizAssert.notEmpty(nodes, "不存在该redis集群实例！");
         return nodes.stream().map(n -> RedisInfo.builder(n.getId()).clusterId(clusterId).info(n.getHost(), n.getPort(), n.getPwd()).build())
                 .collect(Collectors.toSet());
     }

@@ -1,14 +1,14 @@
 package mayfly.core.permission;
 
 
-import mayfly.core.exception.BusinessException;
+import mayfly.core.exception.BizException;
 
 /**
  * @author meilin.huang
  * @version 1.0
  * @date 2019-03-23 8:39 PM
  */
-public class PermissionDisabledException extends BusinessException {
+public class PermissionDisabledException extends BizException {
     private static final long serialVersionUID = -6476165810262470327L;
 
     public PermissionDisabledException() {

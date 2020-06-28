@@ -10,7 +10,7 @@ import mayfly.core.util.enums.NameValueEnum;
  * @version 1.0
  * @date 2019-01-05 2:19 PM
  */
-public class BusinessRuntimeException extends RuntimeException {
+public class BizRuntimeException extends RuntimeException {
 
     private static final long serialVersionUID = -789021883759549647L;
 
@@ -24,7 +24,7 @@ public class BusinessRuntimeException extends RuntimeException {
      *
      * @param msg 错误消息
      */
-    public BusinessRuntimeException(String msg) {
+    public BizRuntimeException(String msg) {
         super(msg);
         this.errorCode = Result.CodeEnum.FAILURE.getValue();
     }
@@ -33,7 +33,7 @@ public class BusinessRuntimeException extends RuntimeException {
      * @param errorEnum 错误枚举值
      * @param <E>       异常枚举类型
      */
-    public <E extends Enum<?> & NameValueEnum<Integer>> BusinessRuntimeException(E errorEnum) {
+    public <E extends Enum<?> & NameValueEnum<Integer>> BizRuntimeException(E errorEnum) {
         super(errorEnum.getName());
         this.errorCode = errorEnum.getValue();
     }

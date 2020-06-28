@@ -1,7 +1,7 @@
 package mayfly.sys.module.sys.service.impl;
 
 import mayfly.core.base.service.impl.BaseServiceImpl;
-import mayfly.core.exception.BusinessAssert;
+import mayfly.core.exception.BizAssert;
 import mayfly.core.log.MethodLog;
 import mayfly.core.util.StringUtils;
 import mayfly.core.util.TreeUtils;
@@ -57,25 +57,25 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourceMapper, Long, R
     @Override
     public void create(ResourceDO resource) {
         if (resource.getPid() == null || Objects.equals(resource.getPid(), 0L)) {
-            BusinessAssert.equals(resource.getType(), ResourceTypeEnum.MENU.getValue(), "权限资源不能为根节点");
+            BizAssert.equals(resource.getType(), ResourceTypeEnum.MENU.getValue(), "权限资源不能为根节点");
             // 为null的情况默认设为0
             resource.setPid(0L);
         } else {
             ResourceDO pResource = getById(resource.getPid());
-            BusinessAssert.notNull(pResource, "pid不存在！");
-            BusinessAssert.equals(pResource.getType(), ResourceTypeEnum.MENU.getValue(), "权限资源不能添加子节点");
+            BizAssert.notNull(pResource, "pid不存在！");
+            BizAssert.equals(pResource.getType(), ResourceTypeEnum.MENU.getValue(), "权限资源不能添加子节点");
         }
         String code = resource.getCode();
         // 如果是添加菜单，则该父节点不能存在有权限节点
         if (Objects.equals(resource.getType(), ResourceTypeEnum.MENU.getValue())) {
             // 查询指定pid节点下是否有权限节点
-            BusinessAssert.equals(countByCondition(new ResourceDO().setPid(resource.getPid()).setType(ResourceTypeEnum.PERMISSION.getValue()))
+            BizAssert.equals(countByCondition(new ResourceDO().setPid(resource.getPid()).setType(ResourceTypeEnum.PERMISSION.getValue()))
                     , 0L, "该菜单下已有权限资源子节点，不能再添加菜单");
             if (!StringUtils.isEmpty(code)) {
                 checkPermissionCode(code);
             }
         } else {
-            BusinessAssert.notEmpty(code, "权限code不能为空");
+            BizAssert.notEmpty(code, "权限code不能为空");
             checkPermissionCode(code);
         }
         //默认启用
@@ -86,8 +86,8 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourceMapper, Long, R
     @Override
     public void update(ResourceDO resource) {
         ResourceDO old = getById(resource.getId());
-        BusinessAssert.notNull(old, "资源不存在");
-        BusinessAssert.equals(resource.getType(), old.getType(), "资源类型不可变更");
+        BizAssert.notNull(old, "资源不存在");
+        BizAssert.equals(resource.getType(), old.getType(), "资源类型不可变更");
         // 禁止误传修改其父节点
         resource.setPid(null);
 
@@ -96,7 +96,7 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourceMapper, Long, R
         if (!Objects.equals(old.getCode(), code)) {
             // 如果是权限，还需校验非空
             if (Objects.equals(old.getType(), ResourceTypeEnum.PERMISSION.getValue())) {
-                BusinessAssert.notEmpty(code, "权限code不能为空");
+                BizAssert.notEmpty(code, "权限code不能为空");
                 checkPermissionCode(code);
             } else {
                 if (!StringUtils.isEmpty(code)) {
@@ -110,9 +110,9 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourceMapper, Long, R
 
     @Override
     public void changeStatus(Long id, Integer status) {
-        BusinessAssert.isTrue(EnumUtils.isExist(EnableDisableEnum.values(), status), "状态值错误");
+        BizAssert.isTrue(EnumUtils.isExist(EnableDisableEnum.values(), status), "状态值错误");
         ResourceDO resource = getById(id);
-        BusinessAssert.notNull(resource, "该资源不存在");
+        BizAssert.notNull(resource, "该资源不存在");
         // 状态不变直接返回
         if (Objects.equals(status, resource.getStatus())) {
             return;
@@ -125,8 +125,8 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourceMapper, Long, R
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void delete(Long id) {
-        BusinessAssert.equals(countByCondition(new ResourceDO().setPid(id)), 0L, "请先删除该资源的子资源");
-        BusinessAssert.equals(deleteById(id), 1, "删除菜单失败！");
+        BizAssert.equals(countByCondition(new ResourceDO().setPid(id)), 0L, "请先删除该资源的子资源");
+        BizAssert.equals(deleteById(id), 1, "删除菜单失败！");
         // 删除角色资源表中该菜单所关联的所有信息
         roleResourceService.deleteByCondition(new RoleResourceDO().setResourceId(id));
     }
@@ -137,7 +137,7 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourceMapper, Long, R
      * @param code code
      */
     private void checkPermissionCode(String code) {
-        BusinessAssert.isTrue(!code.contains(","), "权限code不能包含','");
-        BusinessAssert.equals(countByCondition(new ResourceDO().setCode(code)), 0L, "该权限code已存在");
+        BizAssert.isTrue(!code.contains(","), "权限code不能包含','");
+        BizAssert.equals(countByCondition(new ResourceDO().setCode(code)), 0L, "该权限code已存在");
     }
 }

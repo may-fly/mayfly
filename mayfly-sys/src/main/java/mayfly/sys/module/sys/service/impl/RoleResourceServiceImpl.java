@@ -1,7 +1,7 @@
 package mayfly.sys.module.sys.service.impl;
 
 import mayfly.core.base.service.impl.BaseServiceImpl;
-import mayfly.core.exception.BusinessAssert;
+import mayfly.core.exception.BizAssert;
 import mayfly.core.util.CollectionUtils;
 import mayfly.core.util.TreeUtils;
 import mayfly.sys.module.sys.controller.vo.RoleResourceVO;
@@ -61,7 +61,7 @@ public class RoleResourceServiceImpl extends BaseServiceImpl<RoleResourceMapper,
             return;
         }
         // 校验资源id正确性，及保存新增的资源id
-        BusinessAssert.equals(resourceService.listByIdIn(addIds).size(), addIds.size(), "存在错误资源id");
+        BizAssert.equals(resourceService.listByIdIn(addIds).size(), addIds.size(), "存在错误资源id");
         List<RoleResourceDO> addValues = new ArrayList<>(addIds.size());
         for (Long id : addIds) {
             RoleResourceDO rr = new RoleResourceDO().setRoleId(roleId).setResourceId(id);

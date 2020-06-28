@@ -1,7 +1,7 @@
 package mayfly.core.permission;
 
 import mayfly.core.base.model.Result;
-import mayfly.core.exception.BusinessException;
+import mayfly.core.exception.BizException;
 import mayfly.core.permission.registry.PermissionCheckHandler;
 import mayfly.core.permission.registry.SimpleLoginAccountRegistry;
 import mayfly.core.util.JsonUtils;
@@ -62,7 +62,7 @@ public class PermissionInterceptor implements HandlerInterceptor {
             }
             // token 过期
             return noPermission(response);
-        } catch (BusinessException e) {
+        } catch (BizException e) {
             //权限禁用or没有权限
             sendErrorMessage(response, Result.error(e.getErrorCode(), e.getMessage()));
             return false;

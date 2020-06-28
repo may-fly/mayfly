@@ -1,6 +1,6 @@
 package mayfly.sys.module.machine.controller;
 
-import mayfly.core.exception.BusinessAssert;
+import mayfly.core.exception.BizAssert;
 import mayfly.core.log.MethodLog;
 import mayfly.core.permission.Permission;
 import mayfly.core.base.model.Result;
@@ -46,7 +46,7 @@ public class MachineFileController {
 
     @GetMapping("/files/{id}/ls")
     public Result<?> ls(@PathVariable Long id, String path) {
-        BusinessAssert.notNull(path, "path不能为空");
+        BizAssert.notNull(path, "path不能为空");
         return Result.success(machineFileService.ls(id, path));
     }
 

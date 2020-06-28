@@ -1,6 +1,6 @@
 package mayfly.sys.module.redis.machine;
 
-import mayfly.core.exception.BusinessRuntimeException;
+import mayfly.core.exception.BizRuntimeException;
 
 
 /**
@@ -23,7 +23,7 @@ public class MachineHandler {
 //            String top = SSHUtils.execute(ip, port, username, password, COMMAND_TOP);
             return "top";
         } catch (Exception e) {
-            throw new BusinessRuntimeException(e.getMessage());
+            throw new BizRuntimeException(e.getMessage());
         }
     }
 

@@ -1,7 +1,7 @@
 package mayfly.sys.module.sys.service.impl;
 
 import mayfly.core.base.service.impl.BaseServiceImpl;
-import mayfly.core.exception.BusinessAssert;
+import mayfly.core.exception.BizAssert;
 import mayfly.core.util.CollectionUtils;
 import mayfly.sys.module.sys.entity.AccountRoleDO;
 import mayfly.sys.module.sys.entity.RoleDO;
@@ -58,7 +58,7 @@ public class AccountRoleServiceImpl extends BaseServiceImpl<AccountRoleMapper, L
         }
         List<AccountRoleDO> ars = new ArrayList<>(addIds.size());
         // 校验资源id正确性，及保存新增的资源id
-        BusinessAssert.equals(roleService.listByIdIn(addIds).size(), addIds.size(), "存在错误角色id");
+        BizAssert.equals(roleService.listByIdIn(addIds).size(), addIds.size(), "存在错误角色id");
         for (Long id : addIds) {
             AccountRoleDO ru = new AccountRoleDO().setRoleId(id).setAccountId(accountId);
             ru.autoSetBaseInfo();

@@ -4,7 +4,7 @@ import io.lettuce.core.KeyScanCursor;
 import io.lettuce.core.ScanArgs;
 import io.lettuce.core.ScanCursor;
 import io.lettuce.core.api.sync.*;
-import mayfly.core.exception.BusinessRuntimeException;
+import mayfly.core.exception.BizRuntimeException;
 import mayfly.core.util.enums.EnumUtils;
 import mayfly.core.util.JsonUtils;
 import mayfly.core.util.StringUtils;
@@ -169,7 +169,7 @@ public class KeyValueCommand {
      */
     public static void setValue(RedisStringCommands<String, byte[]> commands, KeyInfo<String> keyValue) {
         if (!RedisValueTypeEnum.STRING.getValue().equals(keyValue.getType())) {
-            throw new BusinessRuntimeException("value类型不为string类型!");
+            throw new BizRuntimeException("value类型不为string类型!");
         }
         commands.set(keyValue.getKey(), keyValue.getValue().getBytes());
         checkAndSetExpire(castKeyCommands(commands), keyValue);
@@ -177,7 +177,7 @@ public class KeyValueCommand {
 
     public static void sadd(RedisSetCommands<String, byte[]> commands, KeyInfo<Set<String>> keyInfo) {
         if (!RedisValueTypeEnum.SET.getValue().equals(keyInfo.getType())) {
-            throw new BusinessRuntimeException("value类型不为set类型!");
+            throw new BizRuntimeException("value类型不为set类型!");
         }
 
 //        commands.sadd(keyInfo.getKey(), keyInfo.getValue().toArray());

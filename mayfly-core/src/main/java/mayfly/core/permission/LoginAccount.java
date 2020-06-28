@@ -1,7 +1,7 @@
 package mayfly.core.permission;
 
 import mayfly.core.base.model.Result;
-import mayfly.core.exception.BusinessRuntimeException;
+import mayfly.core.exception.BizRuntimeException;
 import mayfly.core.util.ArrayUtils;
 import mayfly.core.util.StringUtils;
 
@@ -93,7 +93,7 @@ public class LoginAccount implements Serializable {
      */
     public static Long getLoginAccountId() {
         return Optional.ofNullable(LoginAccount.getFromContext()).map(LoginAccount::getId)
-                .orElseThrow(() -> new BusinessRuntimeException(Result.CodeEnum.NO_PERMISSION));
+                .orElseThrow(() -> new BizRuntimeException(Result.CodeEnum.NO_PERMISSION));
     }
 
     /**

@@ -1,7 +1,7 @@
 package mayfly.sys.config;
 
 import mayfly.core.log.LogAspect;
-import mayfly.core.log.LogTypeEnum;
+import mayfly.core.log.MethodLog;
 import mayfly.sys.module.sys.service.OperationLogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -28,7 +28,7 @@ public class AopConfig {
     @Bean
     public LogAspect logAspectAndSaveLog() {
         return new LogAspect((type, logMsg) -> {
-            logService.asyncLog(logMsg, type == LogTypeEnum.NORMAN ? mayfly.sys.module.sys.enums.LogTypeEnum.SYS_LOG
+            logService.asyncLog(logMsg, type != MethodLog.LogLevel.ERROR ? mayfly.sys.module.sys.enums.LogTypeEnum.SYS_LOG
                     : mayfly.sys.module.sys.enums.LogTypeEnum.ERR_LOG);
         });
     }

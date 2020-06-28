@@ -2,7 +2,7 @@ package mayfly.sys.module.machine.service.impl;
 
 import com.jcraft.jsch.Session;
 import mayfly.core.base.service.impl.BaseServiceImpl;
-import mayfly.core.exception.BusinessRuntimeException;
+import mayfly.core.exception.BizRuntimeException;
 import mayfly.core.util.bean.BeanUtils;
 import mayfly.sys.common.utils.ssh.SSHException;
 import mayfly.sys.common.utils.ssh.SSHUtils;
@@ -34,7 +34,7 @@ public class MachineServiceImpl extends BaseServiceImpl<MachineMapper, Long, Mac
                     .password(form.getPassword()).username(form.getUsername()).build());
             session.disconnect();
         } catch (SSHException e) {
-            throw new BusinessRuntimeException("信息不正确：" + e.getMessage());
+            throw new BizRuntimeException("信息不正确：" + e.getMessage());
         }
 
         MachineDO machine = BeanUtils.copyProperties(form, MachineDO.class);

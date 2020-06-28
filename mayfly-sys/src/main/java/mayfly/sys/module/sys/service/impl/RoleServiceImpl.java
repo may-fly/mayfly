@@ -1,7 +1,7 @@
 package mayfly.sys.module.sys.service.impl;
 
 import mayfly.core.base.service.impl.BaseServiceImpl;
-import mayfly.core.exception.BusinessAssert;
+import mayfly.core.exception.BizAssert;
 import mayfly.core.log.MethodLog;
 import mayfly.sys.module.sys.entity.AccountRoleDO;
 import mayfly.sys.module.sys.entity.RoleDO;
@@ -35,7 +35,7 @@ public class RoleServiceImpl extends BaseServiceImpl<RoleMapper, Long, RoleDO> i
     @Override
     public void update(RoleDO role) {
         RoleDO old = getById(role.getId());
-        BusinessAssert.notNull(old, "角色不存在");
+        BizAssert.notNull(old, "角色不存在");
         updateByIdSelective(role);
         logService.asyncUpdateLog("修改角色", role, old);
     }
@@ -44,7 +44,7 @@ public class RoleServiceImpl extends BaseServiceImpl<RoleMapper, Long, RoleDO> i
     @Override
     public void delete(Long id) {
         RoleDO role = getById(id);
-        BusinessAssert.notNull(role, "角色不存在");
+        BizAssert.notNull(role, "角色不存在");
         // 删除角色关联的用户角色信息
         accountRoleService.deleteByCondition(new AccountRoleDO().setRoleId(id));
         // 删除角色关联的资源信息

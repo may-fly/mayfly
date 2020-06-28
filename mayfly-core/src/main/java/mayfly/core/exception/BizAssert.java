@@ -15,7 +15,9 @@ import java.util.function.Supplier;
  * @version 1.0
  * @date 2019-07-14 18:24
  */
-public class BusinessAssert {
+public final class BizAssert {
+
+    private BizAssert() {}
 
     /**
      * 断言对象不为空
@@ -25,19 +27,19 @@ public class BusinessAssert {
      */
     public static void notNull(Object object, String msg) {
         if (object == null) {
-            throw newBusinessRuntimeException(msg);
+            throw newBizRuntimeException(msg);
         }
     }
 
     public static void notNull(Object object, Supplier<String> supplier) {
         if (object == null) {
-            throw newBusinessRuntimeException(supplier.get());
+            throw newBizRuntimeException(supplier.get());
         }
     }
 
     public static <E extends Enum<?> & NameValueEnum<Integer>> void notNullByEnum(Object object, E errorEnum) {
         if (object == null) {
-            throw newBusinessRuntimeException(errorEnum);
+            throw newBizRuntimeException(errorEnum);
         }
     }
 
@@ -48,15 +50,21 @@ public class BusinessAssert {
      * @param msg    不满足断言的异常信息
      */
     public static void isNull(Object object, String msg) {
-        isTrue(object == null, msg);
+        if (object != null) {
+            throw newBizRuntimeException(msg);
+        }
     }
 
     public static void isNull(Object object, Supplier<String> supplier) {
-        isTrue(object == null, supplier);
+        if (object != null) {
+            throw newBizRuntimeException(supplier.get());
+        }
     }
 
     public static <E extends Enum<?> & NameValueEnum<Integer>> void isNullByEnum(Object object, E errorEnum) {
-        isTrueByEnum(object == null, errorEnum);
+        if (object != null) {
+            throw newBizRuntimeException(errorEnum);
+        }
     }
 
 
@@ -67,15 +75,21 @@ public class BusinessAssert {
      * @param msg 不满足断言的异常信息
      */
     public static void notEmpty(String str, String msg) {
-        isTrue(!StringUtils.isEmpty(str), msg);
+        if (StringUtils.isEmpty(str)) {
+            throw newBizRuntimeException(msg);
+        }
     }
 
     public static void notEmpty(String str, Supplier<String> supplier) {
-        isTrue(!StringUtils.isEmpty(str), supplier);
+        if (StringUtils.isEmpty(str)) {
+            throw newBizRuntimeException(supplier.get());
+        }
     }
 
     public static <E extends Enum<?> & NameValueEnum<Integer>> void notEmptyByEnum(String str, E errorEnum) {
-        isTrueByEnum(!StringUtils.isEmpty(str), errorEnum);
+        if (StringUtils.isEmpty(str)) {
+            throw newBizRuntimeException(errorEnum);
+        }
     }
 
     /**
@@ -85,7 +99,21 @@ public class BusinessAssert {
      * @param msg        不满足断言的异常信息
      */
     public static void notEmpty(Collection<?> collection, String msg) {
-        isTrue(!CollectionUtils.isEmpty(collection), msg);
+        if (CollectionUtils.isEmpty(collection)) {
+            throw newBizRuntimeException(msg);
+        }
+    }
+
+    /**
+     * 断言集合不为空
+     *
+     * @param collection 集合
+     * @param supplier   不满足断言的异常信息提供者
+     */
+    public static void notEmpty(Collection<?> collection, Supplier<String> supplier) {
+        if (CollectionUtils.isEmpty(collection)) {
+            throw newBizRuntimeException(supplier.get());
+        }
     }
 
     /**
@@ -95,7 +123,21 @@ public class BusinessAssert {
      * @param msg        不满足断言的异常信息
      */
     public static void empty(Collection<?> collection, String msg) {
-        isTrue(CollectionUtils.isEmpty(collection), msg);
+        if (CollectionUtils.isNotEmpty(collection)) {
+            throw newBizRuntimeException(msg);
+        }
+    }
+
+    /**
+     * 断言集合为空
+     *
+     * @param collection 集合
+     * @param msg        不满足断言的异常信息
+     */
+    public static void empty(Collection<?> collection, Supplier<String> supplier) {
+        if (CollectionUtils.isNotEmpty(collection)) {
+            throw newBizRuntimeException(supplier.get());
+        }
     }
 
     /**
@@ -106,7 +148,9 @@ public class BusinessAssert {
      * @param msg 错误消息
      */
     public static void equals(Object o1, Object o2, String msg) {
-        isTrue(Objects.equals(o1, o2), msg);
+        if (!Objects.equals(o1, o2)) {
+            throw newBizRuntimeException(msg);
+        }
     }
 
     /**
@@ -117,7 +161,22 @@ public class BusinessAssert {
      * @param msgSupplier 错误消息提供器
      */
     public static void equals(Object o1, Object o2, Supplier<String> msgSupplier) {
-        isTrue(Objects.equals(o1, o2), msgSupplier);
+        if (!Objects.equals(o1, o2)) {
+            throw newBizRuntimeException(msgSupplier.get());
+        }
+    }
+
+    /**
+     * 断言两个对象必须相等
+     *
+     * @param o1        对象1
+     * @param o2        对象2
+     * @param errorEnum 错误枚举
+     */
+    public static <E extends Enum<?> & NameValueEnum<Integer>> void equalsByEnum(Object o1, Object o2, E errorEnum) {
+        if (!Objects.equals(o1, o2)) {
+            throw newBizRuntimeException(errorEnum);
+        }
     }
 
 
@@ -129,7 +188,7 @@ public class BusinessAssert {
      */
     public static void isTrue(boolean expression, String message) {
         if (!expression) {
-            throw newBusinessRuntimeException(message);
+            throw newBizRuntimeException(message);
         }
     }
 
@@ -141,7 +200,7 @@ public class BusinessAssert {
      */
     public static void isTrue(boolean expression, Supplier<String> supplier) {
         if (!expression) {
-            throw newBusinessRuntimeException(supplier.get());
+            throw newBizRuntimeException(supplier.get());
         }
     }
 
@@ -149,11 +208,11 @@ public class BusinessAssert {
      * 断言一个boolean表达式为true，用于需要大量拼接字符串以及一些其他操作等
      *
      * @param expression boolean表达式
-     * @param errorEnum      错误枚举
+     * @param errorEnum  错误枚举
      */
     public static <E extends Enum<?> & NameValueEnum<Integer>> void isTrueByEnum(boolean expression, E errorEnum) {
         if (!expression) {
-            throw newBusinessRuntimeException(errorEnum);
+            throw newBizRuntimeException(errorEnum);
         }
     }
 
@@ -163,8 +222,8 @@ public class BusinessAssert {
      * @param msg 异常信息
      * @return 异常
      */
-    public static BusinessRuntimeException newBusinessRuntimeException(String msg) {
-        return new BusinessRuntimeException(msg);
+    public static BizRuntimeException newBizRuntimeException(String msg) {
+        return new BizRuntimeException(msg);
     }
 
     /**
@@ -173,7 +232,7 @@ public class BusinessAssert {
      * @param errorEnum 错误枚举
      * @return 异常
      */
-    public static <E extends Enum<?> & NameValueEnum<Integer>> BusinessRuntimeException newBusinessRuntimeException(E errorEnum) {
-        return new BusinessRuntimeException(errorEnum);
+    public static <E extends Enum<?> & NameValueEnum<Integer>> BizRuntimeException newBizRuntimeException(E errorEnum) {
+        return new BizRuntimeException(errorEnum);
     }
 }

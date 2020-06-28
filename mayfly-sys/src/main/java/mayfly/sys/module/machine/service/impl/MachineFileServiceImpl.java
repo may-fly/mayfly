@@ -1,7 +1,7 @@
 package mayfly.sys.module.machine.service.impl;
 
 import mayfly.core.base.service.impl.BaseServiceImpl;
-import mayfly.core.exception.BusinessAssert;
+import mayfly.core.exception.BizAssert;
 import mayfly.core.permission.LoginAccount;
 import mayfly.core.thread.GlobalThreadPool;
 import mayfly.core.util.bean.BeanUtils;
@@ -65,7 +65,7 @@ public class MachineFileServiceImpl extends BaseServiceImpl<MachineFileMapper, L
 
     @Override
     public void updateFileContent(Long confId, String path, String content) {
-        BusinessAssert.notEmpty(content, "内容不能为空");
+        BizAssert.notEmpty(content, "内容不能为空");
         MachineFileDO file = getById(confId);
         checkPath(path, file);
 
@@ -76,7 +76,7 @@ public class MachineFileServiceImpl extends BaseServiceImpl<MachineFileMapper, L
     public MachineFileDO create(Long machineId, MachineFileForm form) {
         boolean isFile = Objects.equals(form.getType(), MachineFileTypeEnum.FILE.getValue());
         String res = machineService.exec(machineId, isFile ? ShellCmd.fileExist(form.getPath()) : ShellCmd.directoryExist(form.getPath()));
-        BusinessAssert.equals(res, "1\n", () -> isFile ? "该文件不存在" : "该目录不存在");
+        BizAssert.equals(res, "1\n", () -> isFile ? "该文件不存在" : "该目录不存在");
 
         MachineFileDO file = BeanUtils.copyProperties(form, MachineFileDO.class);
         file.setMachineId(machineId);
@@ -171,13 +171,13 @@ public class MachineFileServiceImpl extends BaseServiceImpl<MachineFileMapper, L
      * @param file
      */
     private void checkPath(String path, MachineFileDO file) {
-        BusinessAssert.notNull(file, "配置信息不存在");
+        BizAssert.notNull(file, "配置信息不存在");
         if (isDirectory(file)) {
             // 访问的文件路径必须是在配置的子目录下
-            BusinessAssert.isTrue(path.startsWith(file.getPath()), "无法访问该文件");
+            BizAssert.isTrue(path.startsWith(file.getPath()), "无法访问该文件");
         } else {
-            BusinessAssert.equals(path, file.getPath(), "文件路径错误");
-            BusinessAssert.isTrue(isFile(file), "该路径为目录，非文件");
+            BizAssert.equals(path, file.getPath(), "文件路径错误");
+            BizAssert.isTrue(isFile(file), "该路径为目录，非文件");
         }
     }
 }

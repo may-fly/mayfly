@@ -2,7 +2,7 @@ package mayfly.sys.module.sys.service.impl;
 
 import mayfly.core.base.model.PageResult;
 import mayfly.core.base.service.impl.BaseServiceImpl;
-import mayfly.core.exception.BusinessAssert;
+import mayfly.core.exception.BizAssert;
 import mayfly.core.log.MethodLog;
 import mayfly.core.util.DigestUtils;
 import mayfly.core.util.bean.BeanUtils;
@@ -48,8 +48,8 @@ public class AccountServiceImpl extends BaseServiceImpl<AccountMapper, Long, Acc
         AccountDO condition = new AccountDO().setUsername(adminForm.getUsername())
                 .setPassword(DigestUtils.md5DigestAsHex(adminForm.getPassword()));
         AccountDO account = getByCondition(condition);
-        BusinessAssert.notNull(account, "用户名或密码错误！");
-        BusinessAssert.equals(account.getStatus(), EnableDisableEnum.ENABLE.getValue(), "该账号已被禁用");
+        BizAssert.notNull(account, "用户名或密码错误！");
+        BizAssert.equals(account.getStatus(), EnableDisableEnum.ENABLE.getValue(), "该账号已被禁用");
 
         // 更新最后登录时间
         AccountDO updateDo = new AccountDO().setLastLoginTime(LocalDateTime.now());
@@ -67,7 +67,7 @@ public class AccountServiceImpl extends BaseServiceImpl<AccountMapper, Long, Acc
 
     @Override
     public void create(AccountForm accountForm) {
-        BusinessAssert.equals(countByCondition(new AccountDO().setUsername(accountForm.getUsername())), 0L,
+        BizAssert.equals(countByCondition(new AccountDO().setUsername(accountForm.getUsername())), 0L,
                 "该用户名已存在");
         AccountDO account = BeanUtils.copyProperties(accountForm, AccountDO.class);
         account.setPassword(DigestUtils.md5DigestAsHex(accountForm.getPassword()));

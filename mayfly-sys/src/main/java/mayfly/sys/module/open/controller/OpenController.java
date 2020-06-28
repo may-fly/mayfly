@@ -1,6 +1,6 @@
 package mayfly.sys.module.open.controller;
 
-import mayfly.core.exception.BusinessAssert;
+import mayfly.core.exception.BizAssert;
 import mayfly.core.base.model.Result;
 import mayfly.sys.module.open.controller.form.AccountLoginForm;
 import mayfly.sys.module.open.service.OpenService;
@@ -39,7 +39,7 @@ public class OpenController {
 
     @PostMapping("/login")
     public Result<?> login(@RequestBody @Valid AccountLoginForm loginForm) {
-        BusinessAssert.isTrue(openService.checkCaptcha(loginForm.getUuid(), loginForm.getCaptcha()), "验证码错误");
+        BizAssert.isTrue(openService.checkCaptcha(loginForm.getUuid(), loginForm.getCaptcha()), "验证码错误");
         AccountDO result = accountService.login(loginForm);
         return Result.success(permissionService.saveIdAndPermission(result));
     }

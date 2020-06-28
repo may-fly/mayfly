@@ -1,6 +1,6 @@
 package mayfly.sys.module.db.connection;
 
-import mayfly.core.exception.BusinessRuntimeException;
+import mayfly.core.exception.BizRuntimeException;
 import mayfly.core.util.BracePlaceholder;
 import mayfly.core.cache.Cache;
 import mayfly.core.cache.CacheBuilder;
@@ -46,14 +46,14 @@ public class DbConnection {
         if (Objects.equals(db.getType(), DbTypeEnum.MYSQL.getValue())) {
             return BracePlaceholder.resolveByObject(MYSQL_URL_TEMP, db);
         }
-        throw new BusinessRuntimeException("数据库类型错误");
+        throw new BizRuntimeException("数据库类型错误");
     }
 
     public static Connection getConnection(String url, String username, String password) {
         try {
             return DriverManager.getConnection(url, username, password);
         } catch (SQLException e) {
-           throw new BusinessRuntimeException("连接失败");
+           throw new BizRuntimeException("连接失败");
         }
     }
 
