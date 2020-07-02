@@ -1,1 +1,1 @@
-export { default } from './account-list.vue';
+export { default } from './AccountList.vue';

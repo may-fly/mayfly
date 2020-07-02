@@ -134,9 +134,8 @@
 
     <role-edit :visible="roleDialog.visible" :account="roleDialog.account" @cancel="cancel()" />
     <account-edit
-      :visible="accountDialog.visible"
-      :account="accountDialog.data"
-      @cancel="accountDialogCancel()"
+      :visible.sync="accountDialog.visible"
+      :account.sync="accountDialog.data"
       @val-change="valChange()"
     />
   </div>
@@ -144,10 +143,10 @@
 
 <script lang='ts'>
 import { Component, Vue } from 'vue-property-decorator'
-import HelpHint from '@/components/help-hint/help-hint.vue'
+import HelpHint from '@/components/help-hint/HelpHint.vue'
 import { accountPermission } from '../permissions'
-import RoleEdit from './role-edit.vue'
-import AccountEdit from './account-edit.vue'
+import RoleEdit from './RoleEdit.vue'
+import AccountEdit from './AccountEdit.vue'
 import enums from '../enums'
 import { accountApi } from '../api'
 
@@ -277,13 +276,6 @@ export default class AccountList extends Vue {
     this.roleDialog.visible = false
     this.roleDialog.account = null
     this.search()
-  }
-
-  accountDialogCancel() {
-    this.accountDialog.visible = false
-    setTimeout(() => {
-      this.accountDialog.data = null
-    }, 800)
   }
 
   valChange() {

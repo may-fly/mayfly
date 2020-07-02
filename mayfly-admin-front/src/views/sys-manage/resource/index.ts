@@ -1,1 +1,1 @@
-export { default } from './resource-list.vue';
+export { default } from './ResourceList.vue';

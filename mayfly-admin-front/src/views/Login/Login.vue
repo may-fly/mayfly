@@ -62,7 +62,7 @@ import sockets from '@/common/sockets'
 import { Component, Vue } from 'vue-property-decorator'
 
 @Component({
-  name: 'login'
+  name: 'Login'
 })
 export default class Login extends Vue {
   private captchaImage: string = ''

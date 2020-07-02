@@ -1,2 +1,2 @@
-export { default as DynamicForm } from './dynamic-form.vue';
-export { default as DynamicFormDialog } from './dynamic-form-dialog.vue';
+export { default as DynamicForm } from './DynamicForm.vue';
+export { default as DynamicFormDialog } from './DynamicFormDialog.vue';

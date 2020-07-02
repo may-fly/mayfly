@@ -23,6 +23,7 @@ export const roleApi = {
 export const accountApi = {
     list: Api.create("/sys/accounts", 'get'),
     save: Api.create("/sys/accounts", 'post'),
+    update: Api.create("/sys/accounts/{id}", 'put'),
     del: Api.create("/sys/accounts/{id}", 'delete'),
     changeStatus: Api.create("/sys/accounts/{id}/{status}", 'put'),
     roleIds: Api.create("/sys/accounts/{id}/roleIds", 'get'),

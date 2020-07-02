@@ -73,8 +73,8 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import EuiFooter from '@/views/layout/footer.vue'
-import MenuTree from './menu-tree.vue'
+import EuiFooter from '@/views/layout/Footer.vue'
+import MenuTree from './MenuTree.vue'
 import api from '@/common/openApi'
 
 @Component({

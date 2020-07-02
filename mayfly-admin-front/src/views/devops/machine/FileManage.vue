@@ -186,248 +186,262 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import { Component, Vue, Prop, Watch } from 'vue-property-decorator'
 import { machinePermission } from '../permissions'
 import enums from '../enums'
 import { machineApi } from '../api'
 
-export default {
-  name: 'FileManage',
-  props: {
-    visible: Boolean,
-    machineId: [Number],
-    title: String
-  },
-  data() {
-    return {
-      permission: machinePermission,
-      addFile: machineApi.addConf,
-      delFile: machineApi.delConf,
-      updateFileContent: machineApi.updateFileContent,
-      uploadFile: machineApi.uploadFile,
-      files: machineApi.files,
-      enums: enums,
-      activeName: 'conf-file',
-      token: sessionStorage.getItem('token'),
-      form: {
-        id: null,
-        type: null,
-        name: '',
-        remark: ''
-      },
-      fileTable: [],
-      btnLoading: false,
-      fileContent: {
-        fileId: null,
-        content: '',
-        contentVisible: false,
-        dialogTitle: '',
-        path: ''
-      },
-      tree: {
-        title: '',
-        visible: false,
-        folder: {},
-        node: {},
-        resolve: {}
-      },
-      props: {
-        label: 'name',
-        children: 'zones',
-        isLeaf: 'leaf'
-      }
-    }
-  },
-  watch: {
-    machineId: {
-      handler: function() {
-        if (this.machineId) {
-          this.getFiles()
-        }
-      },
-      deep: true
-    }
-  },
-  methods: {
-    async getFiles() {
-      let res = await this.files.request({ id: this.machineId })
-      this.fileTable = res
+@Component({
+  name: 'FileManage'
+})
+export default class FileManage extends Vue {
+  @Prop()
+  visible: Boolean
+  @Prop()
+  machineId: [Number]
+  @Prop()
+  title: String
+
+  permission = machinePermission
+  addFile = machineApi.addConf
+  delFile = machineApi.delConf
+  updateFileContent = machineApi.updateFileContent
+  uploadFile = machineApi.uploadFile
+  files = machineApi.files
+  enums = enums
+  activeName = 'conf-file'
+  token = sessionStorage.getItem('token')
+  form = {
+    id: null,
+    type: null,
+    name: '',
+    remark: ''
+  }
+  fileTable: any[] = []
+  btnLoading = false
+  fileContent = {
+    fileId: 0,
+    content: '',
+    contentVisible: false,
+    dialogTitle: '',
+    path: ''
+  }
+  tree = {
+    title: '',
+    visible: false,
+    folder: { id: 0 },
+    node: {
+      childNodes: []
     },
-    /**
-     * tab切换触发事件
-     * @param {Object} tab
-     * @param {Object} event
-     */
-    handleClick(tab, event) {
-      // if (tab.name == 'file-manage') {
-      //   this.fileManage.node.childNodes = [];
-      //   this.loadNode(this.fileManage.node, this.fileManage.resolve);
-      // }
-    },
-    add() {
-      // 往数组头部添加元素
-      this.fileTable = [{}].concat(this.fileTable)
-    },
-    async addFiles(row) {
-      row.machineId = this.machineId
-      await this.addFile.request(row)
-      this.$message.success('添加成功')
+    resolve: {}
+  }
+  props = {
+    label: 'name',
+    children: 'zones',
+    isLeaf: 'leaf'
+  }
+
+  @Watch('machineId', { deep: true })
+  onDataChange() {
+    if (this.machineId) {
       this.getFiles()
-    },
-    deleteRow(idx, row) {
-      if (row.id) {
-        this.$confirm(`此操作将删除 [${row.name}], 是否继续?`, '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          // 删除配置文件
-          this.delFile
-            .request({
-              machineId: this.machineId,
-              id: row.id
-            })
-            .then(res => {
-              this.fileTable.splice(idx, 1)
-            })
-        })
-      } else {
-        this.fileTable.splice(idx, 1)
-      }
-    },
-    getConf(row) {
-      if (row.type == 1) {
-        this.tree.folder = row
-        this.tree.title = row.name
-        this.tree.node.childNodes = []
-        this.loadNode(this.tree.node, this.tree.resolve)
-        this.tree.visible = true
-        return
-      }
-      this.getFileContent(row.id, row.path)
-    },
-    async getFileContent(fileId, path) {
-      let res = await machineApi.fileContent.request({
-        fileId,
-        path
-      })
-      this.fileContent.content = res
-      this.fileContent.fileId = fileId
-      this.fileContent.dialogTitle = path
-      this.fileContent.path = path
-      this.fileContent.contentVisible = true
-    },
-    async updateContent() {
-      await this.updateFileContent.request({
-        content: this.fileContent.content,
-        id: this.fileContent.fileId,
-        path: this.fileContent.path
-      })
-      this.$message.success('修改成功')
-      this.fileContent.contentVisible = false
-      this.fileContent.content = ''
-    },
-    /**
-     * 关闭取消按钮触发的事件
-     */
-    handleClose() {
-      this.$emit('cancel')
-      this.activeName = 'conf-file'
-      this.fileTable = []
-      this.tree.folder = {}
-    },
+    }
+  }
 
-    /**
-     * 加载文件树节点
-     * @param {Object} node
-     * @param {Object} resolve
-     */
-    async loadNode(node, resolve) {
-      if (typeof resolve !== 'function') {
-        return
-      }
-      if (node.level === 0) {
-        this.tree.node = node
-        this.tree.resolve = resolve
+  async getFiles() {
+    let res = await this.files.request({ id: this.machineId })
+    this.fileTable = res
+  }
 
-        let folder = this.tree.folder
-        let path = folder ? folder.path : '/'
-        return resolve([
-          {
-            name: path,
-            type: 'd',
-            path: path
-          }
-        ])
-      }
+  /**
+   * tab切换触发事件
+   * @param {Object} tab
+   * @param {Object} event
+   */
+  // handleClick(tab, event) {
+  //   // if (tab.name == 'file-manage') {
+  //   //   this.fileManage.node.childNodes = [];
+  //   //   this.loadNode(this.fileManage.node, this.fileManage.resolve);
+  //   // }
+  // }
 
-      let path
-      let data = node.data
-      // 只有在第一级节点时，name==path，即上述level==0时设置的
-      if (!data || data.name == data.path) {
-        path = this.tree.folder.path
-      } else {
-        path = data.path
-      }
+  add() {
+    // 往数组头部添加元素
+    this.fileTable = [{}].concat(this.fileTable)
+  }
 
-      let res = await machineApi.lsFile.request({
-        fileId: this.tree.folder.id,
-        path
-      })
-      for (let file of res) {
-        let type = file.type
-        if (type != 'd') {
-          file.leaf = true
-        }
-      }
-      return resolve(res)
-    },
-    deleteFile(node, data) {
-      let file = data.path
-      this.$confirm(`此操作将删除 [${file}], 是否继续?`, '提示', {
+  async addFiles(row: any) {
+    row.machineId = this.machineId
+    await this.addFile.request(row)
+    this.$message.success('添加成功')
+    this.getFiles()
+  }
+
+  deleteRow(idx: any, row: any) {
+    if (row.id) {
+      this.$confirm(`此操作将删除 [${row.name}], 是否继续?`, '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
+      }).then(() => {
+        // 删除配置文件
+        this.delFile
+          .request({
+            machineId: this.machineId,
+            id: row.id
+          })
+          .then(res => {
+            this.fileTable.splice(idx, 1)
+          })
       })
-        .then(() => {
-          machineApi.rmFile
-            .request({ fileId: this.tree.folder.id, path: file })
-            .then(res => {
-              this.$message.success('删除成功')
-              this.$refs.fileTree.remove(node)
-            })
-        })
-        .catch(() => {})
-    },
-    uploadSuccess(res) {
-      if (res.success) {
-        this.$message.success('文件上传中...')
-      } else {
-        this.$message.error(res.msg)
-      }
-    },
-    dontOperate(data) {
-      let path = data.path + data.name
-      let ls = [
-        '/',
-        '//',
-        '/usr',
-        '/opt',
-        '/run',
-        '/etc',
-        '/proc',
-        '/var',
-        '/mnt',
-        '/boot',
-        '/dev',
-        '/home',
-        '/media',
-        '/root'
-      ]
-      return ls.indexOf(path) != -1
+    } else {
+      this.fileTable.splice(idx, 1)
     }
-  },
-  components: {}
+  }
+
+  getConf(row: any) {
+    if (row.type == 1) {
+      this.tree.folder = row
+      this.tree.title = row.name
+      const treeNode = (this.tree.node.childNodes = [])
+      this.loadNode(this.tree.node, this.tree.resolve)
+      this.tree.visible = true
+      return
+    }
+    this.getFileContent(row.id, row.path)
+  }
+
+  async getFileContent(fileId: number, path: string) {
+    let res = await machineApi.fileContent.request({
+      fileId,
+      path
+    })
+    this.fileContent.content = res
+    this.fileContent.fileId = fileId
+    this.fileContent.dialogTitle = path
+    this.fileContent.path = path
+    this.fileContent.contentVisible = true
+  }
+
+  async updateContent() {
+    await this.updateFileContent.request({
+      content: this.fileContent.content,
+      id: this.fileContent.fileId,
+      path: this.fileContent.path
+    })
+    this.$message.success('修改成功')
+    this.fileContent.contentVisible = false
+    this.fileContent.content = ''
+  }
+
+  /**
+   * 关闭取消按钮触发的事件
+   */
+  handleClose() {
+    this.$emit('update:visible', false)
+    this.$emit('update:machineId', null)
+    this.$emit('cancel')
+    this.activeName = 'conf-file'
+    this.fileTable = []
+    this.tree.folder = { id: 0 }
+  }
+
+  /**
+   * 加载文件树节点
+   * @param {Object} node
+   * @param {Object} resolve
+   */
+  async loadNode(node: any, resolve: any) {
+    if (typeof resolve !== 'function') {
+      return
+    }
+
+    let folder: any = this.tree.folder
+    if (node.level === 0) {
+      this.tree.node = node
+      this.tree.resolve = resolve
+
+      // let folder: any = this.tree.folder
+      let path = folder ? folder.path : '/'
+      return resolve([
+        {
+          name: path,
+          type: 'd',
+          path: path
+        }
+      ])
+    }
+
+    let path
+    let data = node.data
+    // 只有在第一级节点时，name==path，即上述level==0时设置的
+    if (!data || data.name == data.path) {
+      path = folder.path
+    } else {
+      path = data.path
+    }
+
+    let res = await machineApi.lsFile.request({
+      fileId: folder.id,
+      path
+    })
+    for (let file of res) {
+      let type = file.type
+      if (type != 'd') {
+        file.leaf = true
+      }
+    }
+    return resolve(res)
+  }
+
+  deleteFile(node: any, data: any) {
+    let file = data.path
+    this.$confirm(`此操作将删除 [${file}], 是否继续?`, '提示', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning'
+    })
+      .then(() => {
+        machineApi.rmFile
+          .request({ fileId: this.tree.folder.id, path: file })
+          .then(res => {
+            this.$message.success('删除成功')
+            const fileTree: any = this.$refs.fileTree
+            fileTree.remove(node)
+          })
+      })
+      .catch(() => {})
+  }
+
+  uploadSuccess(res: any) {
+    if (res.success) {
+      this.$message.success('文件上传中...')
+    } else {
+      this.$message.error(res.msg)
+    }
+  }
+
+  dontOperate(data: any) {
+    let path = data.path + data.name
+    let ls = [
+      '/',
+      '//',
+      '/usr',
+      '/opt',
+      '/run',
+      '/etc',
+      '/proc',
+      '/var',
+      '/mnt',
+      '/boot',
+      '/dev',
+      '/home',
+      '/media',
+      '/root'
+    ]
+    return ls.indexOf(path) != -1
+  }
 }
 </script>
 <style lang="less">

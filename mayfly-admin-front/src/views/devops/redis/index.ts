@@ -1,1 +1,1 @@
-export { default } from './redis-list.vue';
+export { default } from './RedisList.vue';

@@ -5,7 +5,7 @@ Vue.use(Router)
 
 let constantRoutes: RouteConfig[] = [{
   path: '/',
-  component: () => import("@/views/layout/app.vue"),
+  component: () => import("@/views/layout/App.vue"),
   meta: {
     title: '首页',
     keepAlive: false,
@@ -80,7 +80,7 @@ let constantRoutes: RouteConfig[] = [{
       title: 'redis管理',
       keepAlive: true
     },
-    component: () => import('@/views/devops/redis/redis-operation.vue')
+    component: () => import('@/views/devops/redis/RedisOperation.vue')
   },
     //个人中心，可能有修改密码，头像修改等路由
     // Personal.index,
@@ -94,7 +94,7 @@ let constantRoutes: RouteConfig[] = [{
     keepAlive: false
   },
   components: {
-    blank: () => import('@/views/login/login.vue')
+    blank: () => import('@/views/login/Login.vue')
   }
 },
 

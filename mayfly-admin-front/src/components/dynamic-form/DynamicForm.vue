@@ -65,76 +65,78 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'DynamicForm',
-  props: {
-    formInfo: Object,
-    formData: [Object, Boolean]
-  },
-  data() {
-    return {
-      form: {},
-      submitDisabled: false
+<script lang="ts">
+import { Component, Vue, Prop, Watch } from 'vue-property-decorator'
+@Component({
+  name: 'DynamicForm'
+})
+export default class DynamicForm extends Vue {
+  @Prop()
+  formInfo: Object
+  @Prop()
+  formData: [Object, Boolean]
+
+  form = {}
+  submitDisabled = false
+
+  @Watch('formData', { deep: true })
+  onRoleChange() {
+    if (this.formData) {
+      this.form = { ...this.formData }
     }
-  },
-  watch: {
-    formData: {
-      handler: function() {
-        if (this.formData) {
-          this.form = { ...this.formData }
-        }
-      },
-      deep: true
-    }
-  },
-  methods: {
-    submit() {
-      this.$refs['dynamicForm'].validate(valid => {
-        if (valid) {
-          // 提交的表单数据
-          let subform = { ...this.form }
-          let operation = this.form.id
-            ? this.formInfo.updateApi
-            : this.formInfo.createApi
-          if (operation) {
-            this.submitDisabled = true
-            operation.request(this.form).then(
-              res => {
-                this.$message.success('保存成功')
-                this.$emit('submitSuccess', subform)
-                this.submitDisabled = false
-                // this.cancel()
-              },
-              e => {
-                this.submitDisabled = false
-              }
-            )
-          } else {
-            this.$message.error('表单未设置对应的提交权限')
-          }
+  }
+
+  submit() {
+    const dynamicForm: any = this.$refs['dynamicForm']
+    dynamicForm.validate((valid: boolean) => {
+      if (valid) {
+        // 提交的表单数据
+        let subform = { ...this.form }
+        let operation = this.form['id']
+          ? this.formInfo['updateApi']
+          : this.formInfo['createApi']
+        if (operation) {
+          this.submitDisabled = true
+          operation.request(this.form).then(
+            (res: any) => {
+              this.$message.success('保存成功')
+              this.$emit('submitSuccess', subform)
+              this.submitDisabled = false
+              // this.cancel()
+            },
+            (e: any) => {
+              this.submitDisabled = false
+            }
+          )
         } else {
-          return false
+          this.$message.error('表单未设置对应的提交权限')
         }
-      })
-    },
-    reset() {
-      this.$emit('reset')
-      this.resetFieldsAndData()
-    },
-    /**
-     * 重置表单以及表单数据
-     */
-    resetFieldsAndData() {
-      // 对整个表单进行重置，将所有字段值重置为初始值并移除校验结果
-      this.$refs['dynamicForm'].resetFields()
-      // 重置表单数据
-      this.form = {}
-    }
-  },
+      } else {
+        return false
+      }
+    })
+  }
+
+  reset() {
+    this.$emit('reset')
+    this.resetFieldsAndData()
+  }
+
+  /**
+   * 重置表单以及表单数据
+   */
+  resetFieldsAndData() {
+    // 对整个表单进行重置，将所有字段值重置为初始值并移除校验结果
+    const df: any = this.$refs['dynamicForm']
+    df.resetFields()
+    // 重置表单数据
+    this.form = {}
+  }
+
   mounted() {
     // 组件可能还没有初始化，第一次初始化的时候无法watch对象
     this.form = { ...this.formData }
   }
+
 }
 </script>

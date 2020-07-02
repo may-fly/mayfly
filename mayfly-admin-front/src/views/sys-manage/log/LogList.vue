@@ -51,54 +51,57 @@
   </div>
 </template>
 
-<script>
-import HelpHint from '@/components/help-hint/help-hint.vue'
+<script lang="ts">
+import { Component, Vue } from 'vue-property-decorator'
+import HelpHint from '@/components/help-hint/HelpHint.vue'
 import { logApi } from '../api'
 import enums from '../enums'
 
-export default {
-  data() {
-    return {
-      enums: enums,
-      currentId: null,
-      currentData: null,
-      query: {
-        pageNum: 1,
-        pageSize: 10,
-        creator: null,
-        type: null
-      },
-      datas: [],
-      total: null
-    }
-  },
-  methods: {
-    choose(item) {
-      if (!item) {
-        return
-      }
-      this.currentId = item.id
-      this.currentData = item
-    },
-    async search(resetPageNum) {
-      if (resetPageNum) {
-        this.query.pageNum = 1
-      }
-      let res = await logApi.list.request(this.query)
-      this.datas = res.list
-      this.total = res.total
-    },
-    handlePageChange(curPage) {
-      this.query.pageNum = curPage
-      this.search()
-    }
-  },
-  mounted() {
-    this.search()
-  },
+@Component({
+  name: 'LogList',
   components: {
     HelpHint
   }
+})
+export default class LogList extends Vue {
+  enums = enums
+  currentId = null
+  currentData = null
+  query = {
+    pageNum: 1,
+    pageSize: 10,
+    creator: null,
+    type: null
+  }
+  datas = []
+  total = null
+
+  mounted() {
+    this.search(false)
+  }
+
+  choose(item: any) {
+    if (!item) {
+      return
+    }
+    this.currentId = item.id
+    this.currentData = item
+  }
+
+  async search(resetPageNum: boolean) {
+    if (resetPageNum) {
+      this.query.pageNum = 1
+    }
+    let res = await logApi.list.request(this.query)
+    this.datas = res.list
+    this.total = res.total
+  }
+
+  handlePageChange(curPage: number) {
+    this.query.pageNum = curPage
+    this.search(false)
+  }
+
 }
 </script>
 <style lang="less">

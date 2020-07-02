@@ -1,1 +1,1 @@
-export { default } from './role-list.vue';
+export { default } from './RoleList.vue';

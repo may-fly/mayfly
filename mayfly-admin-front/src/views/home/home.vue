@@ -35,13 +35,13 @@
 </template>
 
 <script>
-import ActivePlate from '@/components/active-plate/active-plate.vue'
-import HomeCard from './components/card.vue'
-import ChartPie from './components/chart-pie.vue'
-import ChartLine from './components/chart-line.vue'
-import ChartGauge from './components/chart-gauge.vue'
-import ChartBar from './components/chart-bar.vue'
-import ChartFunnel from './components/chart-funnel.vue'
+import ActivePlate from '@/components/active-plate/ActivePlate.vue'
+import HomeCard from './components/Card.vue'
+import ChartPie from './components/ChartPie.vue'
+import ChartLine from './components/ChartLine.vue'
+import ChartGauge from './components/ChartGauge.vue'
+import ChartBar from './components/ChartBar.vue'
+import ChartFunnel from './components/ChartFunnel.vue'
 
 export default {
   name: 'Home',

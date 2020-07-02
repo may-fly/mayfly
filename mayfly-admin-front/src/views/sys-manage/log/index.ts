@@ -1,1 +1,1 @@
-export { default } from './log-list.vue';
+export { default } from './LogList.vue';

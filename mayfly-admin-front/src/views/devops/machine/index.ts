@@ -1,1 +1,1 @@
-export { default } from './machine-list.vue';
+export { default } from './MachineList.vue';
