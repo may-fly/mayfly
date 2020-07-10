@@ -1,7 +1,6 @@
 package mayfly.core.util;
 
 
-import java.lang.reflect.Array;
 import java.time.temporal.TemporalAccessor;
 import java.util.Collection;
 import java.util.Date;
@@ -13,28 +12,6 @@ import java.util.Map;
  * @date 2019-04-18 09:47
  */
 public class ObjectUtils {
-
-    /**
-     * 所有数组元素向上转型
-     *
-     * @param objs  转换前对象数组
-     * @param clazz 转换后数组对象类型
-     * @param <T>
-     * @return
-     */
-    @SuppressWarnings("unchecked")
-    public static <T> T[] cast(Object[] objs, Class<T> clazz) {
-        int length = objs.length;
-        if (length == 0) {
-            return (T[]) new Object[0];
-        }
-        T[] newArr = (T[]) Array.newInstance(clazz, objs.length);
-        for (int i = 0; i < length; i++) {
-            newArr[i] = clazz.cast(objs[i]);
-        }
-
-        return newArr;
-    }
 
     //---------------------------------------------------------------------
     // 对象类型判断

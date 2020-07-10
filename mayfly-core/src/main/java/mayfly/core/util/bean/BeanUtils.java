@@ -276,7 +276,7 @@ public class BeanUtils {
 
         Class<? extends Enum> enumClass = convertAnno.enumConverter();
         if (enumClass != FieldValueConvert.DefaultEnum.class) {
-            return EnumUtils.getNameByValue(ObjectUtils.cast(enumClass.getEnumConstants(), NameValueEnum.class), value);
+            return EnumUtils.getNameByValue((NameValueEnum[]) enumClass.getEnumConstants(), value);
         }
 
         return value;

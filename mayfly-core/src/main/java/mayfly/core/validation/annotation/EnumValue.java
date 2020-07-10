@@ -1,6 +1,5 @@
 package mayfly.core.validation.annotation;
 
-import mayfly.core.util.ObjectUtils;
 import mayfly.core.util.enums.EnumUtils;
 import mayfly.core.util.enums.NameValueEnum;
 import mayfly.core.util.enums.ValueEnum;
@@ -77,14 +76,14 @@ public @interface EnumValue {
             String enumsPlaceholderValue;
             // 如果是NameValueEnum类型，则返回的错误信息带有name属性值
             if (NameValueEnum.class.isAssignableFrom(enumClass)) {
-                NameValueEnum[] nameValueEnums = ObjectUtils.cast(enums, NameValueEnum.class);
+                NameValueEnum[] nameValueEnums = (NameValueEnum[]) enums;
                 if (EnumUtils.isExist(nameValueEnums, value)) {
                     return true;
                 }
                 enumsPlaceholderValue = Arrays.stream(nameValueEnums).map(nv -> nv.getValue() + ":" + nv.getName())
                         .collect(Collectors.joining(", "));
             } else {
-                ValueEnum[] valueEnums = ObjectUtils.cast(enums, ValueEnum.class);
+                ValueEnum[] valueEnums = (ValueEnum[]) enums;
                 if (EnumUtils.isExist(valueEnums, value)) {
                     return true;
                 }

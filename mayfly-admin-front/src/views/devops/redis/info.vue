@@ -1,7 +1,7 @@
 <template>
   <div>
-    <el-dialog title="info" :visible="visible" :show-close="true" width="35%" @close="close()">
-      <el-collapse v-model="name">
+    <el-dialog :title="title" :visible="visible" :show-close="true" width="35%" @close="close()">
+      <el-collapse>
         <el-collapse-item title="Server(Redis服务器的一般信息)" name="server">
           <div class="row">
             <span class="title">redis_version(版本):</span>
@@ -83,23 +83,23 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import { Component, Vue, Prop } from 'vue-property-decorator'
 import Req from '@/common/request'
-export default {
-  props: {
-    visible: Boolean,
-    info: Object
-  },
-  data() {
-    return {
-      name: ''
-    }
-  },
-  methods: {
-    close() {
-      this.name = ''
-      this.$emit('close')
-    }
+@Component({
+  name: 'Info'
+})
+export default class Info extends Vue {
+  @Prop()
+  title: string
+  @Prop()
+  visible: Boolean
+  @Prop()
+  info: Object
+
+  close() {
+    this.$emit('update:visible', false)
+    this.$emit('close')
   }
 }
 </script>

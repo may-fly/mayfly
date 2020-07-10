@@ -132,7 +132,7 @@ public final class BizAssert {
      * 断言集合为空
      *
      * @param collection 集合
-     * @param msg        不满足断言的异常信息
+     * @param supplier   不满足断言的异常信息提供器
      */
     public static void empty(Collection<?> collection, Supplier<String> supplier) {
         if (CollectionUtils.isNotEmpty(collection)) {

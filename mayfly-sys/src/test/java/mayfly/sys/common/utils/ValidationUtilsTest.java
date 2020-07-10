@@ -30,18 +30,18 @@ public class ValidationUtilsTest {
     static class User {
         String name;
 
-        @EnumValue(value = ResourceTypeEnum.class, message = "资源类型错误，可选值为【{enums}】")
+        @EnumValue(value = ResourceTypeEnum.class, name = "type")
         Integer type;
 
-        @EnumValue(TestEnum.class)
+        @EnumValue(value = TestEnum.class, name = "type2")
         Integer type2;
     }
 
     @Test
     public void testValidate() {
         User user = new User();
-        user.type = 4;
-        user.type2 = 2;
+        user.type = 3;
+        user.type2 = 1;
         ValidationResult res = ValidatorUtils.validate(user);
         System.out.println(res);
     }
