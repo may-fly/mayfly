@@ -16,7 +16,7 @@
             <i class="el-icon-arrow-down el-icon--right"></i>
           </span>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item @click.native="this['$router'].push('/personal')">
+            <el-dropdown-item @click.native="this.$router.push('/personal')">
               <i style="padding-right: 8px" class="fa fa-cog"></i>个人中心
             </el-dropdown-item>
             <el-dropdown-item @click.native="logout">
@@ -73,14 +73,12 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import EuiFooter from '@/views/layout/Footer.vue'
 import MenuTree from './MenuTree.vue'
 import api from '@/common/openApi'
 
 @Component({
-  name: 'app',
+  name: 'App',
   components: {
-    EuiFooter,
     MenuTree
   }
 })
@@ -108,8 +106,7 @@ export default class App extends Vue {
     }
     this.iframe = false
     this.iframeSrc = null
-    this['$router']
-      .push({
+    this.$router.push({
         path
       })
       .catch((err: any) => {})
@@ -152,9 +149,9 @@ export default class App extends Vue {
   }
 
   private async logout() {
-    await api.logout({ token: this['$Permission'].getToken() })
+    await api.logout({ token: this.$Permission.getToken() })
     sessionStorage.clear()
-    this['$router'].push({
+    this.$router.push({
       path: '/login'
     })
   }
@@ -170,7 +167,7 @@ export default class App extends Vue {
       this.username = JSON.parse(user).username
     }
 
-    this.addTab(this['$route'].path, this['$route'].meta.title)
+    this.addTab(this.$route.path, this.$route.meta.title)
   }
 }
 </script>>

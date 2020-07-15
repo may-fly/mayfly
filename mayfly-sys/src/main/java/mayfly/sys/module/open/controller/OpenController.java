@@ -2,6 +2,7 @@ package mayfly.sys.module.open.controller;
 
 import mayfly.core.base.model.Result;
 import mayfly.core.exception.BizAssert;
+import mayfly.core.thread.GlobalThreadPool;
 import mayfly.core.util.DateUtils;
 import mayfly.core.util.HttpUtils;
 import mayfly.core.util.JsonUtils;
@@ -58,7 +59,7 @@ public class OpenController {
     public Result<?> login(@RequestBody @Valid AccountLoginForm loginForm) {
         BizAssert.isTrue(openService.checkCaptcha(loginForm.getUuid(), loginForm.getCaptcha()), "验证码错误");
         AccountDO result = accountService.login(loginForm);
-        saveLoginLog(result);
+        GlobalThreadPool.execute(() -> saveLoginLog(result));
         return Result.success(permissionService.saveIdAndPermission(result));
     }
 

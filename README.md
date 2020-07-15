@@ -1,31 +1,40 @@
 # mayfly
 
-## 介绍
+### 介绍
 mayfly前后端分离的后台系统(包含按钮级别的权限管理，以及权限禁用，触发按钮置灰禁用状态等)。后续计划补上机器管理及Redis单机以及集群管理（已完成部分接口以及界面）
 
+### 项目地址
+github: <https://github.com/may-fly/mayfly>
+gitee: <https://gitee.com/objs/mayfly>
 
-## 系统环境
-- 前端：node，  vue，  element-ui
-- 后端：jdk11，  SpringBoot，  Mybatis
+### 系统环境及框架
+- 前端：typescript，  vue，  element-ui
+- 后端：jdk8及以上（HttpUtils依赖jdk11），  SpringBoot，  Mybatis
 - DB： mysql，  redis
+- 部署：[Jenkins+Docker+Springboot持续集成部署](https://www.jianshu.com/p/1401e2fe4711)
 
-## 模块介绍
-> mayfly-account-front
-前端系统
+### 模块介绍
+> mayfly-account-front（前端系统）
 
-> mayfly-core
-后端核心模块，包括一些常用的uitls，BaseMapper（无需第三方插件包，详见博客：[Mybatis之通用Mapper（基于mybatis的Provider机制无需第三方插件包）](https://www.jianshu.com/p/5fcea00f439d)），BaseService以及权限检验，参数校验器，日志处理等。
 
-> mayfly-sys
-后端系统主要模块，包含各功能模块对应的Service和Controller等
+> mayfly-core（后端核心模块）
+- 常用的各种uitls
+- BaseMapper（无需第三方插件包，详见博客：[Mybatis之通用Mapper（基于mybatis的Provider机制无需第三方插件包）](https://www.jianshu.com/p/5fcea00f439d)）
+、BaseService、BaseDO、Result、PageResult
+- 基于javax.validation自定义的枚举（`EnumValue`）、日期范围（`DateTimeRange DateRange`）等参数校验注解
+- 权限检验相关
+- 日志切面等
 
-## 演示环境
+> mayfly-sys（后端系统模块）
+包含各功能模块对应的Service和Controller等
+
+### 演示环境
 地址：<http://mayfly.1yue.net>
 账号：test、test2、meilin.huang 密码：123456
 
-## 项目特点 
+### 项目特点 
 
-- ### 方法日志记录(记录方法出入参以及执行时间或异常)
+- #### 方法日志记录(记录方法出入参以及执行时间或异常)
 日志记录采用AOP（mayfly.sys.aop.log.LogAspect）类进行拦截带有@MethodLog注解的所有方法或者带有@MethodLog类下的所有方法，进行出入参以及运行时间的记录，
 也包含异常日志的记录，也可以设置按指定的日志级别打印日志.
 使用方式大致如下：
@@ -49,7 +58,7 @@ public class PermissionServiceImpl{}
 ![日志输出](https://images.gitee.com/uploads/images/2020/0311/104645_3955cb50_1240250.png "日志输出.png")
 
 
-- ### 自定义参数校验器(支持入参枚举值自动校验等)
+- #### 自定义参数校验器(支持入参枚举值自动校验等)
 参数校验采用AOP拦截所有Controller中的方法带有mayfly.common.validation.annotation.Valid注解的参数，并校验对应的参数字段注解以及值。
 
 给需要校验的参数字段添加相应的校验规则：
@@ -126,7 +135,7 @@ Controller方法参数校验用法：
 ![参数前加@Valid注解](https://images.gitee.com/uploads/images/2019/0329/131943_438c4935_1240250.png "屏幕截图.png")
 
 
-- ### 自定义权限校验注解(控制后端接口以及前端列表按钮权限)
+- #### 自定义权限校验注解(控制后端接口以及前端列表按钮权限)
 系统使用自定义权限注解@mayfly.core.permission.Permission来控制用户的操作权限（即后端接口调用的权限，可实时禁用以及删除权限），和通过权限code控制前端页面的列表权限以及按钮权限（显示与否，以及是否为禁用状态。前端通过VUE的自定义指令v-permission进行按钮的控制，详情可见前端模块：mayfly-account-front ）。
 ```
 /**
@@ -141,14 +150,14 @@ public class PermissionController
 具体如何拦截以及实时启用禁用可见对应拦截器:mayfly.sys.interceptor.PermissionInterceptor
 
 
-- ### 基于断言对业务逻辑判断
+- #### 基于断言对业务逻辑判断
 系统中的业务逻辑判断都采用断言的方式进行判断，减少逻辑代码中大量的if代码
 
 ```
     public void update(ResourceDO resource) {
         ResourceDO old = getById(resource.getId());
-        BusinessAssert.notNull(old, "资源不存在");
-        BusinessAssert.equals(resource.getType(), old.getType(), "资源类型不可变更");
+        BizAssert.notNull(old, "资源不存在");
+        BizAssert.equals(resource.getType(), old.getType(), "资源类型不可变更");
         // 禁止误传修改其父节点
         resource.setPid(null);
 
@@ -168,17 +177,17 @@ public class PermissionController
      *  检验权限code
      */
     private void checkPermissionCode(String code) {
-        BusinessAssert.notEmpty(code, "权限code不能为空");
-        BusinessAssert.state(!code.contains(","), "权限code不能包含','");
-        BusinessAssert.equals(countByCondition(new ResourceDO().setCode(code)), 0L, "该权限code已存在");
+        BizAssert.notEmpty(code, "权限code不能为空");
+        BizAssert.state(!code.contains(","), "权限code不能包含','");
+        BizAssert.equals(countByCondition(new ResourceDO().setCode(code)), 0L, "该权限code已存在");
     }
 
 ```
 
-- ### 前端枚举值统一管理维护
+- #### 前端枚举值统一管理维护
 具体细节可见前端模块：mayfly-account-front 或者博客：https://www.jianshu.com/p/75516ec4f366
 
-## 系统部分页面
+### 系统部分页面
 
 1.菜单&权限管理页
 ![菜单&权限管理页](https://images.gitee.com/uploads/images/2020/0311/104924_bb08cd6d_1240250.png "菜单&权限管理页.png")
