@@ -70,7 +70,7 @@ public class PlaceholderResolver {
      * @param values  按照模板占位符索引位置设置对应的值
      * @return
      */
-    public String resolve(String content, String... values) {
+    public String resolve(String content, String[] values) {
         int start = content.indexOf(this.placeholderPrefix);
         if (start == -1) {
             return content;
@@ -97,7 +97,7 @@ public class PlaceholderResolver {
      * @param values  按照模板占位符索引位置设置对应的值
      * @return
      */
-    public String resolve(String content, Object[] values) {
+    public String resolve(String content, Object... values) {
         return resolve(content, Stream.of(values).map(String::valueOf).toArray(String[]::new));
     }
 

@@ -3,6 +3,7 @@ package mayfly.core.util;
 import com.alibaba.fastjson.JSON;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * json字符串转换工具
@@ -36,6 +37,16 @@ public class JsonUtils {
      */
     public static <T> T parseObject(String json, Class<T> clazz) {
         return JSON.parseObject(json, clazz);
+    }
+
+    /**
+     * 解析json为map
+     *
+     * @param json json
+     * @return map
+     */
+    public static Map<String, Object> parse(String json) {
+        return JSON.parseObject(json);
     }
 
     /**

@@ -17,7 +17,7 @@ import { supplierCarriageLineApi } from '@/service/api/supplier-api';
       <el-menu-item
         @click="toPath(menu)"
         :key="menu.id"
-        :index="!menu.code ? menu.id + '' : menu.code"
+        :index="!menu.path ? menu.id + '' : menu.path"
         v-else
       >
         <i class="iconfont" :class="menu.icon"></i>

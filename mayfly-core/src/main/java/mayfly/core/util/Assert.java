@@ -23,14 +23,20 @@ public class Assert {
         notEmpty(string, messageSupplier.get());
     }
 
-    public static <T> void notNull(T object, String message) {
+    public static void notNull(Object object, String message) {
         if (object == null) {
             throw new IllegalArgumentException(message);
         }
     }
 
-    public static <T> void notNull(T object, Supplier<String> messageSupplier) {
+    public static void notNull(Object object, Supplier<String> messageSupplier) {
         notNull(object, messageSupplier.get());
+    }
+
+    public static <T extends RuntimeException> void notNull2(Object object, Supplier<T> exceptionSupplier) {
+        if (object == null) {
+            throw exceptionSupplier.get();
+        }
     }
 
     public static <T> void notEmpty(T[] array, String message) {

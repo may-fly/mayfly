@@ -26,6 +26,9 @@ import java.time.format.DateTimeFormatter;
 @Constraint(validatedBy = DateRange.DateRangeValidator.class)
 public @interface DateRange {
 
+    /**
+     * 最小时间范围（为负数即为前n unit）
+     */
     int min() default 0;
 
     int max() default Integer.MAX_VALUE;
@@ -39,6 +42,11 @@ public @interface DateRange {
      * 作用于字符串时，指定的格式，只能包含年月日不包含时间
      */
     String pattern() default "yyyy-MM-dd";
+
+    /**
+     * 是否忽略更小的单位，即比当前指定的unit更小的单位（如unit为Month，则忽略Days）
+     */
+    boolean ignoreLowerUnit() default false;
 
     /**
      * 错误提示
@@ -70,6 +78,11 @@ public @interface DateRange {
             LocalDate ta = getByValue(value);
             if (ta == null) {
                 return false;
+            }
+            // 忽略更小单位时，计算两个时间的单位差值比较即可
+            if (dateRange.ignoreLowerUnit()) {
+                long between = RangeUnit.getBetween(dateRange.unit(), LocalDate.now(), ta);
+                return between >= dateRange.min() && between <= dateRange.max();
             }
 
             LocalDate now = LocalDate.now();

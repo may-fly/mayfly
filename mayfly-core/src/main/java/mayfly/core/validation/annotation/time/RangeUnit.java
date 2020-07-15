@@ -46,4 +46,25 @@ public enum RangeUnit {
         }
     }
 
+    public static long getBetween(RangeUnit unit, Temporal date, Temporal date2) {
+        switch (unit) {
+            case DAYS:
+                return ChronoUnit.DAYS.between(date, date2);
+            case MONTH:
+                return ChronoUnit.MONTHS.between(date, date2);
+            case YEAR:
+                return ChronoUnit.YEARS.between(date, date2);
+            case WEEKS:
+                return ChronoUnit.WEEKS.between(date, date2);
+            case HOURS:
+                return ChronoUnit.HOURS.between(date, date2);
+            case MINUTES:
+                return ChronoUnit.MINUTES.between(date, date2);
+            case SECOND:
+                return ChronoUnit.SECONDS.between(date, date2);
+            default:
+                return 0;
+        }
+    }
+
 }
