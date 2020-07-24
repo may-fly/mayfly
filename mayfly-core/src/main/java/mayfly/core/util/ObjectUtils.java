@@ -5,6 +5,7 @@ import java.time.temporal.TemporalAccessor;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * @author meilin.huang
@@ -12,6 +13,18 @@ import java.util.Map;
  * @date 2019-04-18 09:47
  */
 public class ObjectUtils {
+
+    /**
+     * 如果obj为null，则返回默认值，不为null，则返回obj
+     *
+     * @param obj          obj
+     * @param defaultValue 默认值
+     * @param <T>          值泛型
+     * @return obj不为null 返回obj，否则返回默认值
+     */
+    public static <T> T defaultIfNull(T obj, T defaultValue) {
+        return Optional.ofNullable(obj).orElse(defaultValue);
+    }
 
     //---------------------------------------------------------------------
     // 对象类型判断

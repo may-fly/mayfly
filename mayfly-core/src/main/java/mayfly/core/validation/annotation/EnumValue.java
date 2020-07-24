@@ -45,7 +45,7 @@ public @interface EnumValue {
     /**
      * 错误提示
      */
-    String message() default "{name}枚举值错误，可选值为[{enums}]";
+    String message() default "{name}枚举值错误，可选值为{enums}";
 
     /**
      * 用于分组校验
@@ -73,27 +73,24 @@ public @interface EnumValue {
             }
 
             Enum<? extends ValueEnum>[] enums = enumClass.getEnumConstants();
+            ValueEnum[] valueEnums = (ValueEnum[]) enums;
+            if (EnumUtils.isExist(valueEnums, value)) {
+                return true;
+            }
+
             String enumsPlaceholderValue;
             // 如果是NameValueEnum类型，则返回的错误信息带有name属性值
             if (NameValueEnum.class.isAssignableFrom(enumClass)) {
-                NameValueEnum[] nameValueEnums = (NameValueEnum[]) enums;
-                if (EnumUtils.isExist(nameValueEnums, value)) {
-                    return true;
-                }
-                enumsPlaceholderValue = Arrays.stream(nameValueEnums).map(nv -> nv.getValue() + ":" + nv.getName())
+                enumsPlaceholderValue = Arrays.stream((NameValueEnum[]) enums).map(nv -> nv.getValue() + ":" + nv.getName())
                         .collect(Collectors.joining(", "));
             } else {
-                ValueEnum[] valueEnums = (ValueEnum[]) enums;
-                if (EnumUtils.isExist(valueEnums, value)) {
-                    return true;
-                }
                 enumsPlaceholderValue = Arrays.stream(valueEnums).map(nv -> Objects.toString(nv.getValue()))
                         .collect(Collectors.joining(", "));
             }
 
             // 添加枚举值占位符值参数，校验失败的时候可用
             HibernateConstraintValidatorContext hibernateContext = context.unwrap(HibernateConstraintValidatorContext.class);
-            hibernateContext.addMessageParameter("enums", enumsPlaceholderValue);
+            hibernateContext.addMessageParameter("enums", "[" + enumsPlaceholderValue + "]");
             return false;
         }
     }

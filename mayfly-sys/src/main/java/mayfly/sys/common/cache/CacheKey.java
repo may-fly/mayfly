@@ -9,7 +9,7 @@ public interface CacheKey {
     /**
      * token过期时间
      */
-    Integer SESSION_EXPIRE_TIME = 30;
+    Integer SESSION_EXPIRE_TIME = 120;
 
     /**
      * 验证码过期时间

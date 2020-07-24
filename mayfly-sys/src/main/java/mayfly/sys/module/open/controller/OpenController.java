@@ -1,5 +1,6 @@
 package mayfly.sys.module.open.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import mayfly.core.base.model.Result;
 import mayfly.core.exception.BizAssert;
 import mayfly.core.thread.GlobalThreadPool;
@@ -8,6 +9,7 @@ import mayfly.core.util.HttpUtils;
 import mayfly.core.util.JsonUtils;
 import mayfly.core.util.MapUtils;
 import mayfly.core.util.PlaceholderResolver;
+import mayfly.sys.config.MailProperties;
 import mayfly.sys.module.open.controller.form.AccountLoginForm;
 import mayfly.sys.module.open.service.OpenService;
 import mayfly.sys.module.sys.entity.AccountDO;
@@ -24,7 +26,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.Map;
@@ -34,6 +35,7 @@ import java.util.Map;
  * @version 1.0
  * @date 2019-07-06 15:03
  */
+@Slf4j
 @RestController
 @RequestMapping("/open")
 public class OpenController {
@@ -49,6 +51,8 @@ public class OpenController {
     private OpenService openService;
     @Autowired
     private OperationLogService operationLogService;
+    @Autowired
+    private MailProperties mailProperties;
 
     @GetMapping("/captcha")
     public Result<?> captcha() {
@@ -59,24 +63,25 @@ public class OpenController {
     public Result<?> login(@RequestBody @Valid AccountLoginForm loginForm) {
         BizAssert.isTrue(openService.checkCaptcha(loginForm.getUuid(), loginForm.getCaptcha()), "验证码错误");
         AccountDO result = accountService.login(loginForm);
-        GlobalThreadPool.execute(() -> saveLoginLog(result));
+        saveLoginLog(result);
         return Result.success(permissionService.saveIdAndPermission(result));
     }
 
     private void saveLoginLog(AccountDO accountDO) {
-        try {
-            HttpServletRequest request = ((ServletRequestAttributes) (RequestContextHolder.currentRequestAttributes())).getRequest();
-            String ipAddr = request.getRemoteAddr();
-            Map<String, Object> res = JsonUtils.parse(HttpUtils.get(PlaceholderResolver.getDefaultResolver().resolve(IP_API, ipAddr)));
-            if ("fail".equals(MapUtils.getString(res, "status"))) {
-                return;
+        String ipAddr = ((ServletRequestAttributes) (RequestContextHolder.currentRequestAttributes())).getRequest().getRemoteAddr();
+        GlobalThreadPool.execute(() -> {
+            try {
+                Map<String, Object> res = JsonUtils.parse(HttpUtils.get(PlaceholderResolver.getDefaultResolver().resolve(IP_API, ipAddr)));
+                if ("fail".equals(MapUtils.getString(res, "status"))) {
+                    return;
+                }
+                String log = PlaceholderResolver.getDefaultResolver().resolve(LOGIN_LOG_TEMP, accountDO.getUsername(),
+                        DateUtils.defaultFormat(LocalDateTime.now()), MapUtils.getString(res, "regionName"), MapUtils.getString(res, "city"),
+                        ipAddr);
+                operationLogService.asyncLog(log, LogTypeEnum.SYS_LOG);
+            } catch (Exception e) {
+                log.error("执行登录日志保存异常", e);
             }
-            String log = PlaceholderResolver.getDefaultResolver().resolve(LOGIN_LOG_TEMP, accountDO.getUsername(),
-                    DateUtils.defaultFormat(LocalDateTime.now()), MapUtils.getString(res, "regionName"), MapUtils.getString(res, "city"),
-                    ipAddr);
-            operationLogService.asyncLog(log, LogTypeEnum.SYS_LOG);
-        } catch (Exception e) {
-            // skip
-        }
+        });
     }
 }

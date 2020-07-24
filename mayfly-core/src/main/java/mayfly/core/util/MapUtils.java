@@ -82,8 +82,8 @@ public final class MapUtils {
      * @param key key
      * @return boolean
      */
-    public static <K, V> boolean getBoolean(Map<K, V> map, K key) {
-        return getBoolean(map, key, false);
+    public static <K, V> Boolean getBoolean(Map<K, V> map, K key) {
+        return getBoolean(map, key, null);
     }
 
     /**
@@ -93,7 +93,7 @@ public final class MapUtils {
      * @param key key
      * @return boolean
      */
-    public static <K, V> boolean getBoolean(Map<K, V> map, K key, boolean defaultValue) {
+    public static <K, V> Boolean getBoolean(Map<K, V> map, K key, Boolean defaultValue) {
         if (map == null) {
             return defaultValue;
         }

@@ -3,8 +3,10 @@ package mayfly.core.exception;
 import mayfly.core.base.model.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
+import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -74,6 +76,13 @@ public class DefaultGlobalExceptionHandler {
         }
         if (e instanceof MissingServletRequestParameterException) {
             return Result.paramError("param not present");
+        }
+        if (e instanceof HttpMediaTypeNotSupportedException) {
+            return Result.paramError(e.getMessage());
+        }
+        if (e instanceof HttpMessageNotReadableException) {
+            LOG.error("参数解析错误：", e);
+            return Result.paramError("param parse error");
         }
         // 记录未知异常日志
         LOG.error("系统异常：", e);

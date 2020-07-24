@@ -42,14 +42,14 @@ public final class DateUtils {
      * @return   格式化后日期字符串
      */
     public static String defaultFormat(TemporalAccessor temporalAccessor) {
+        if (temporalAccessor instanceof LocalDateTime) {
+            return formatDate(temporalAccessor, defaultDateTimeFormatter);
+        }
         if (temporalAccessor instanceof LocalDate) {
             return formatDate(temporalAccessor, defaultDateFormat);
         }
         if (temporalAccessor instanceof LocalTime) {
             return formatDate(temporalAccessor, defaultTimeFormat);
-        }
-        if (temporalAccessor instanceof LocalDateTime) {
-            return formatDate(temporalAccessor, defaultDateTimeFormatter);
         }
         return null;
     }

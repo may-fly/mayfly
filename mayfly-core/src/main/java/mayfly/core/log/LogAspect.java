@@ -1,5 +1,6 @@
 package mayfly.core.log;
 
+import mayfly.core.thread.GlobalThreadPool;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.AfterThrowing;
@@ -29,13 +30,13 @@ public class LogAspect {
     /**
      * 日志结果消费者（回调）,主要用于保存日志信息等
      */
-    private BiConsumer<MethodLog.LogLevel, String> saveLogConsumer;
+    private BiConsumer<MethodLog.LogLevel, String> logConsumer;
 
     public LogAspect() {
     }
 
-    public LogAspect(BiConsumer<MethodLog.LogLevel, String> saveLogConsumer) {
-        this.saveLogConsumer = saveLogConsumer;
+    public LogAspect(BiConsumer<MethodLog.LogLevel, String> logConsumer) {
+        this.logConsumer = logConsumer;
     }
 
     /**
@@ -50,13 +51,7 @@ public class LogAspect {
         LogHandler.LogInfo logInfo = handler.getLogInfo(((MethodSignature) jp.getSignature()).getMethod());
         String errMsg = logInfo.getExceptionLogMsg(LogHandler.LogResult.exception(jp.getArgs(), e));
         // 执行回调
-        if (saveLogConsumer != null) {
-            try {
-                saveLogConsumer.accept(MethodLog.LogLevel.ERROR, errMsg);
-            } catch (Exception ex) {
-                LOG.error("执行log consumer失败：", ex);
-            }
-        }
+        execLogConsumer(MethodLog.LogLevel.ERROR, errMsg);
         LOG.error(errMsg);
     }
 
@@ -91,14 +86,26 @@ public class LogAspect {
                 LOG.info(logMsg);
                 break;
         }
-        if (saveLogConsumer != null) {
-            try {
-                saveLogConsumer.accept(level, logMsg);
-            } catch (Exception e) {
-                LOG.error("执行log consumer失败：", e);
-            }
-        }
+        execLogConsumer(level, logMsg);
         return result;
+    }
+
+    /**
+     * 执行日志消息消费者
+     *
+     * @param level  日志级别
+     * @param logMsg 日志内容
+     */
+    private void execLogConsumer(MethodLog.LogLevel level, String logMsg) {
+        if (logConsumer != null) {
+            GlobalThreadPool.execute(() -> {
+                try {
+                    logConsumer.accept(level, logMsg);
+                } catch (Exception e) {
+                    LOG.error("执行log consumer失败：", e);
+                }
+            });
+        }
     }
 
     /**
