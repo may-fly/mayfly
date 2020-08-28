@@ -23,7 +23,7 @@ public class ObjectUtils {
      * @return obj不为null 返回obj，否则返回默认值
      */
     public static <T> T defaultIfNull(T obj, T defaultValue) {
-        return Optional.ofNullable(obj).orElse(defaultValue);
+        return obj != null ? obj : defaultValue;
     }
 
     //---------------------------------------------------------------------

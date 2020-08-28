@@ -5,6 +5,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -60,11 +62,22 @@ public class FileUtils {
     /**
      * 解压<br>
      *
-     * @param inputStream zip文件流，包含编码信息
+     * @param inputStream zip文件流，包含编码信息，默认utf8编码
      * @return 解压的目录
      */
     public static List<ZipFileContent> unzip(InputStream inputStream) {
-        return unzip(new ZipInputStream(inputStream));
+        return unzip(inputStream, StandardCharsets.UTF_8);
+    }
+
+    /**
+     * 解压<br>
+     *
+     * @param inputStream zip文件流，包含编码信息
+     * @param charset     字符编码
+     * @return 解压的目录
+     */
+    public static List<ZipFileContent> unzip(InputStream inputStream, Charset charset) {
+        return unzip(new ZipInputStream(inputStream, charset));
     }
 
     /**
@@ -77,17 +90,9 @@ public class FileUtils {
         try {
             List<ZipFileContent> zips = new ArrayList<>();
             ZipEntry zipEntry;
-            String rootDirectoryName = null;
             while ((zipEntry = zipStream.getNextEntry()) != null) {
                 if (!zipEntry.isDirectory()) {
-                    String filename = zipEntry.getName();
-                    if (rootDirectoryName == null || filename.startsWith(rootDirectoryName)) {
-                        zips.add(new ZipFileContent(zipEntry.getName(), zipStream));
-                    }
-                } else {
-                    if (rootDirectoryName == null) {
-                        rootDirectoryName = zipEntry.getName();
-                    }
+                    zips.add(new ZipFileContent(zipEntry.getName(), zipStream));
                 }
             }
             return zips;

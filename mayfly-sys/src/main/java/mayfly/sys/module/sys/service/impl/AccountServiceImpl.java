@@ -51,11 +51,6 @@ public class AccountServiceImpl extends BaseServiceImpl<AccountMapper, Long, Acc
         BizAssert.notNull(account, "用户名或密码错误！");
         BizAssert.equals(account.getStatus(), EnableDisableEnum.ENABLE.getValue(), "该账号已被禁用");
 
-        // 更新最后登录时间
-        AccountDO updateDo = new AccountDO().setLastLoginTime(LocalDateTime.now());
-        updateDo.setId(account.getId());
-        mapper.updateByPrimaryKeySelective(updateDo);
-
         return account;
     }
 

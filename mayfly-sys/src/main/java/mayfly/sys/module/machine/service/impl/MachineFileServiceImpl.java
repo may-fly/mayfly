@@ -58,8 +58,7 @@ public class MachineFileServiceImpl extends BaseServiceImpl<MachineFileMapper, L
     public String getFileContent(Long fileId, String path) {
         MachineFileDO file = getById(fileId);
         checkPath(path, file);
-
-        return machineService.exec(file.getMachineId(), "cat " + path);
+        return machineService.runShell(file.getMachineId(), "read_text_file", path);
 
     }
 
@@ -68,7 +67,6 @@ public class MachineFileServiceImpl extends BaseServiceImpl<MachineFileMapper, L
         BizAssert.notEmpty(content, "内容不能为空");
         MachineFileDO file = getById(confId);
         checkPath(path, file);
-
         machineService.exec(file.getMachineId(), "echo '" + content + "' >" + path);
     }
 
@@ -151,7 +149,6 @@ public class MachineFileServiceImpl extends BaseServiceImpl<MachineFileMapper, L
     public void rmFile(Long fileId, String path) {
         MachineFileDO file = getById(fileId);
         checkPath(path, file);
-
         machineService.exec(file.getMachineId(), "rm -rf " + path);
     }
 

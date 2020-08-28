@@ -71,6 +71,11 @@ public class OpenController {
         String ipAddr = ((ServletRequestAttributes) (RequestContextHolder.currentRequestAttributes())).getRequest().getRemoteAddr();
         GlobalThreadPool.execute(() -> {
             try {
+                // 更新最后登录时间
+                AccountDO updateDo = new AccountDO().setLastLoginTime(LocalDateTime.now());
+                updateDo.setId(accountDO.getId());
+                accountService.updateByIdSelective(updateDo);
+
                 Map<String, Object> res = JsonUtils.parse(HttpUtils.get(PlaceholderResolver.getDefaultResolver().resolve(IP_API, ipAddr)));
                 if ("fail".equals(MapUtils.getString(res, "status"))) {
                     return;

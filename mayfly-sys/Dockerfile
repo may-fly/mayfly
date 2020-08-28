@@ -1,5 +1,6 @@
 FROM sapmachine/jdk11
 VOLUME /tmp
+ENV LANG C.UTF-8
 # dockerfile-maven-plugin配置
 ARG JAR_FILE
 # 将jar包添加到容器中并更名为app.jar

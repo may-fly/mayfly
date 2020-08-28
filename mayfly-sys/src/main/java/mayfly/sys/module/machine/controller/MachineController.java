@@ -24,7 +24,6 @@ import javax.validation.Valid;
  * @version 1.0
  * @date 2019-11-04 3:07 下午
  */
-@MethodLog("机器管理：")
 @Permission(code = "machine")
 @RestController
 @RequestMapping("/devops/machines")
@@ -39,19 +38,32 @@ public class MachineController {
         return Result.success(BeanUtils.copyProperties(machineService.listAll(), MachineVO.class));
     }
 
+    @GetMapping("/{id}/sysinfo")
+    public Result<?> info(@PathVariable Long id) {
+        return Result.success(machineService.runShell(id, "system_info"));
+    }
+
+    @GetMapping("/{id}/top")
+    public Result<?> top(@PathVariable Long id) {
+        return Result.success(machineService.getTopInfo(id));
+    }
+
+    @MethodLog("机器管理：新增机器")
     @PostMapping()
     public Result<?> save(@RequestBody @Valid MachineForm form) {
         machineService.create(form);
         return Result.success();
     }
 
+    @MethodLog("机器管理：更新机器")
     @PutMapping("/{id}")
-    public Result<?> save(@PathVariable Long id, @RequestBody @Valid MachineForm form) {
+    public Result<?> update(@PathVariable Long id, @RequestBody @Valid MachineForm form) {
         form.setId(id);
         machineService.create(form);
         return Result.success();
     }
 
+    @MethodLog("机器管理：删除机器")
     @DeleteMapping("/{machineId}")
     public Result<?> delete(@PathVariable Long machineId) {
         machineService.deleteById(machineId);

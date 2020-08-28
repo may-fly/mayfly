@@ -11,6 +11,7 @@ import mayfly.sys.common.utils.ssh.SSHUtils;
 import mayfly.sys.common.utils.ssh.SessionInfo;
 import mayfly.sys.module.machine.controller.form.MachineForm;
 import mayfly.sys.module.machine.entity.MachineDO;
+import mayfly.sys.module.machine.service.impl.MachineServiceImpl;
 
 import java.util.Objects;
 import java.util.function.Function;
@@ -28,6 +29,23 @@ public interface MachineService extends BaseService<Long, MachineDO> {
      * @param form 机器信息
      */
     void create(MachineForm form);
+
+    /**
+     * 执行shell目录下的shell脚本
+     *
+     * @param machineId     机器id
+     * @param shellFileName shell文件名
+     * @return 执行结果
+     */
+    String runShell(Long machineId, String shellFileName, Object... param);
+
+    /**
+     * 获取top信息
+     *
+     * @param machineId 机器id
+     * @return
+     */
+    MachineServiceImpl.TopInfo getTopInfo(Long machineId);
 
 
     /**

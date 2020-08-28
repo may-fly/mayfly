@@ -75,7 +75,7 @@ public class SSHUtils {
     public static Session openSession(SessionInfo info) throws SSHException {
         final Session session = createSession(info);
         try {
-            session.connect(7000);
+            session.connect(50000);
         } catch (JSchException e) {
             throw new SSHException(e);
         }

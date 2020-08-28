@@ -32,4 +32,30 @@ public class BracePlaceholder {
     public static String resolveByRule(String content, Function<String, String> rule) {
         return resolver.resolveByRule(content, rule);
     }
+
+    public static void reverTemplate(String temp, String content, Map<String, String> res) {
+        int index = temp.indexOf("{");
+        int endIndex = temp.indexOf("}") + 1;
+
+        String next = temp.substring(endIndex).trim();
+        int nextContain= next.indexOf("{");
+        String nexIndexValue = next;
+        if (nextContain != -1) {
+            nexIndexValue = next.substring(0, nextContain);
+        }
+        String key = temp.substring(index + 1, endIndex - 1);
+
+        int valueLastIndex;
+        if ("".equals(nexIndexValue)) {
+            valueLastIndex = content.length();
+        } else {
+            valueLastIndex = content.indexOf(nexIndexValue);
+        }
+        String value = content.substring(index, valueLastIndex).trim();
+        res.put(key, value);
+
+        if (nextContain != -1) {
+            reverTemplate(next, content.substring(content.indexOf(value)  + value.length(), content.length()).trim(), res);
+        }
+    }
 }
