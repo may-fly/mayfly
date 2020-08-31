@@ -1,52 +1,32 @@
 <template>
   <div>
-    <el-row>
-      <el-col>
-        <HomeCard desc="Base info" title="基础信息">
-          <ActivePlate :infoList="infoCardData" />
-        </HomeCard>
-      </el-col>
-    </el-row>
     <el-row :gutter="20">
-      <el-col :lg="6" :md="24">
-        <HomeCard desc="Task info" title="任务">
-          <ChartPie :value.sync="taskData" />
-        </HomeCard>
-      </el-col>
-      <el-col :lg="6" :md="24">
-        <HomeCard desc="Mem info" title="内存">
-          <ChartPie :value.sync="memData" />
-        </HomeCard>
-      </el-col>
-      <el-col :lg="6" :md="24">
-        <HomeCard desc="Swap info" title="CPU">
-          <ChartPie :value.sync="cpuData" />
-        </HomeCard>
-      </el-col>
+      监控周期：
+      <el-select @change="changeMonitorTime" size="small" v-model="timeOptionValue" placeholder="请选择">
+        <el-option
+          v-for="item in timeOptions"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+        ></el-option>
+      </el-select>
     </el-row>
-
-    <!-- <el-row :gutter="20">
-      <el-col :lg="18" :md="24">
-        <HomeCard desc="User active" title="每周用户活跃量">
-          <ChartLine :value="lineData" />
-        </HomeCard>
-      </el-col>
-    </el-row>-->
 
     <el-row :gutter="20">
       <el-col :lg="12" :md="24">
-        <ChartContinuou :value="this.data" title="内存" />
+        <ChartContinuou :value="this.memData" title="内存" />
       </el-col>
       <el-col :lg="12" :md="24">
-        <ChartContinuou  :value="this.data" title="CPU" />
+        <ChartContinuou :value="this.cpuData" title="CPU" />
       </el-col>
     </el-row>
 
     <el-row :gutter="20">
       <el-col :lg="12" :md="24">
-        <HomeCard desc="load info" title="负载情况">
-          <BaseChart :option="this.loadChartOption" />
-        </HomeCard>
+        <!-- <HomeCard desc="load info" title="负载情况">
+          <BaseChart :option="this.loadChartOption" title="负载情况" />
+        </HomeCard>-->
+        <BaseChart ref="loadChart" :option="this.loadChartOption" title="负载情况" />
       </el-col>
       <el-col :lg="12" :md="24">
         <ChartContinuou :value="this.data" title="磁盘IO" />
@@ -86,61 +66,35 @@ export default class Monitor extends Vue {
   @Prop()
   machineId: number
 
-  timer: number
-
-  infoCardData = [
+  timeOptions = [
     {
-      title: 'total task',
-      icon: 'md-person-add',
-      count: 0,
-      color: '#11A0F8',
+      value: 0,
+      label: '今天',
     },
-    { title: '总内存', icon: 'md-locate', count: '', color: '#FFBB44 ' },
     {
-      title: '可用内存',
-      icon: 'md-help-circle',
-      count: '',
-      color: '#FFBB44',
+      value: 7,
+      label: '最近7天',
     },
-    { title: '空闲交换空间', icon: 'md-share', count: 657, color: '#91AFC8' },
     {
-      title: '使用中交换空间',
-      icon: 'md-chatbubbles',
-      count: 12,
-      color: '#91AFC8',
+      value: 15,
+      label: '最近15天',
     },
-    { title: '1分钟负载', icon: 'md-map', count: 14, color: '#91A118' },
-    { title: '5分钟负载', icon: 'md-map', count: 14, color: '#91A118' },
-    { title: '15分钟负载', icon: 'md-map', count: 14, color: '#91A118' },
-  ]
-  taskData = [
-    { value: 0, name: '运行中', color: '#3AA1FFB' },
-    { value: 0, name: '睡眠中', color: '#36CBCB' },
-    { value: 0, name: '结束', color: '#4ECB73' },
-    { value: 0, name: '僵尸', color: '#F47F92' },
   ]
 
-  memData = [
-    { value: 0, name: '空闲', color: '#3AA1FFB' },
-    { value: 0, name: '使用中', color: '#36CBCB' },
-    { value: 0, name: '缓存', color: '#4ECB73' },
-  ]
+  timeOptionValue = 0
 
-  swapData = [
-    { value: 0, name: '空闲', color: '#3AA1FFB' },
-    { value: 0, name: '使用中', color: '#36CBCB' },
-  ]
+  cpuData = new Array<any>()
 
-  cpuData = [
-    { value: 0, name: '用户空间', color: '#3AA1FFB' },
-    { value: 0, name: '内核空间', color: '#36CBCB' },
-    { value: 0, name: '改变优先级', color: '#4ECB73' },
-    { value: 0, name: '空闲率', color: '#4ECB73' },
-    { value: 0, name: '等待IO', color: '#4ECB73' },
-    { value: 0, name: '硬中断', color: '#4ECB73' },
-    { value: 0, name: '软中断', color: '#4ECB73' },
-    { value: 0, name: '虚拟机', color: '#4ECB73' },
-  ]
+  memData = new Array<any>()
+
+  oneMinLoadavg = new Array<any>()
+
+  fiveMinLoadavg = new Array<any>()
+
+  fifMinLoadavg = new Array<any>()
+
+  times = new Array<string>()
+
   data = [
     ['06/05 15:01', 116.12],
     ['06/05 15:06', 129.21],
@@ -194,12 +148,6 @@ export default class Monitor extends Vue {
     ['2000-07-24', 60],
   ]
 
-  dateList = this.data.map(function (item) {
-    return item[0]
-  })
-  valueList = this.data.map(function (item) {
-    return item[1]
-  })
   loadChartOption = {
     // Make gradient line here
     visualMap: [
@@ -211,6 +159,12 @@ export default class Monitor extends Vue {
         max: 400,
       },
     ],
+    title: [
+      {
+        left: 'left',
+        text: '负载情况',
+      },
+    ],
     legend: {
       data: ['1分钟', '5分钟', '15分钟'],
     },
@@ -219,7 +173,7 @@ export default class Monitor extends Vue {
     },
     xAxis: [
       {
-        data: this.dateList,
+        data: this.times,
       },
     ],
     yAxis: [
@@ -233,92 +187,65 @@ export default class Monitor extends Vue {
         name: '1分钟',
         type: 'line',
         showSymbol: false,
-        data: this.valueList,
+        data: this.oneMinLoadavg,
       },
       {
         name: '5分钟',
         type: 'line',
         showSymbol: false,
-        data: [100, 22, 33, 121, 32, 332, 322, 222, 232],
+        data: this.fiveMinLoadavg,
       },
       {
         name: '15分钟',
         type: 'line',
         showSymbol: true,
-        data: [130, 222, 373, 135, 456, 332, 333, 343, 342],
+        data: this.fifMinLoadavg,
       },
     ],
-  }
-
-  lineData = {
-    Mon: 13253,
-    Tue: 34235,
-    Wed: 26321,
-    Thu: 12340,
-    Fri: 24643,
-    Sat: 1322,
-    Sun: 1324,
   }
 
   @Watch('machineId', { deep: true })
   onDataChange() {
     if (this.machineId) {
-      this.intervalGetTop()
+      this.clearData()
+      this.getMonitors()
     }
+  }
+
+  clearData() {
+    this.cpuData = []
+    this.memData = []
+    this.times = []
+    this.oneMinLoadavg = []
+    this.fiveMinLoadavg = []
+    this.fifMinLoadavg = []
+  }
+
+  changeMonitorTime() {
+    this.clearData()
+    this.getMonitors()
+  }
+
+  async getMonitors() {
+    const monitors = await machineApi.monitors.request({
+      id: this.machineId,
+      type: this.timeOptionValue,
+    })
+    for (const m of monitors) {
+      const time: string = m.createTime
+      this.times.push(time)
+      this.cpuData.push([time, m.cpuRateAvg])
+      this.memData.push([time, m.memRateAvg])
+      this.oneMinLoadavg.push(m.oneMinLoadavg)
+      this.fiveMinLoadavg.push(m.fiveMinLoadavg)
+      this.fifMinLoadavg.push(m.fifMinLoadavg)
+    }
+    const loadChartRef: any = this.$refs['loadChart']
+    loadChartRef.initChart()
   }
 
   mounted() {
-    this.intervalGetTop()
-  }
-
-  beforeDestroy() {
-    this.cancelInterval()
-  }
-
-  cancelInterval() {
-    clearInterval(this.timer)
-    this.timer = 0
-  }
-
-  startInterval() {
-    if (!this.timer) {
-      this.timer = setInterval(this.getTop, 3000)
-    }
-  }
-
-  intervalGetTop() {
-    this.getTop()
-    this.startInterval()
-  }
-
-  async getTop() {
-    const topInfo = await machineApi.top.request({ id: this.machineId })
-    this.infoCardData[0].count = topInfo.totalTask
-    this.infoCardData[1].count = Math.round(topInfo.totalMem / 1024) + 'M'
-    this.infoCardData[2].count = Math.round(topInfo.availMem / 1024) + 'M'
-    this.infoCardData[3].count = Math.round(topInfo.freeSwap / 1024) + 'M'
-    this.infoCardData[4].count = Math.round(topInfo.usedSwap / 1024) + 'M'
-    this.infoCardData[5].count = topInfo.oneMinLoadavg
-    this.infoCardData[6].count = topInfo.fiveMinLoadavg
-    this.infoCardData[7].count = topInfo.fifteenMinLoadavg
-
-    this.taskData[0].value = topInfo.runningTask
-    this.taskData[1].value = topInfo.sleepingTask
-    this.taskData[2].value = topInfo.stoppedTask
-    this.taskData[3].value = topInfo.zombieTask
-
-    this.memData[0].value = Math.round(topInfo.freeMem / 1024)
-    this.memData[1].value = Math.round(topInfo.usedMem / 1024)
-    this.memData[2].value = Math.round(topInfo.cacheMem / 1024)
-
-    this.cpuData[0].value = topInfo.cpuUs
-    this.cpuData[1].value = topInfo.cpuSy
-    this.cpuData[2].value = topInfo.cpuNi
-    this.cpuData[3].value = topInfo.cpuId
-    this.cpuData[4].value = topInfo.cpuWa
-    this.cpuData[5].value = topInfo.cpuHi
-    this.cpuData[6].value = topInfo.cpuSi
-    this.cpuData[7].value = topInfo.cpuSt
+    this.getMonitors()
   }
 }
 </script>

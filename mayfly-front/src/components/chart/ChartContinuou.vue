@@ -16,6 +16,15 @@ export default {
   mounted() {
     this.initChart()
   },
+  watch: {
+    value: {
+      handler: function (val, oldval) {
+        this.value = val
+        this.initChart()
+      },
+      deep: true, //对象内部的属性监听，也叫深度监听
+    },
+  },
   methods: {
     resize() {
       this.dom.resize()

@@ -41,7 +41,7 @@ function notifyErrorMsg(msg: string) {
 // create an axios instance
 const service = Axios.create({
   baseURL: baseUrl, // url = base url + request url
-  timeout: 5000 // request timeout
+  timeout: 25000 // request timeout
 })
 
 // request interceptor

@@ -1,6 +1,7 @@
 package mayfly.core.util;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -35,6 +36,31 @@ public class CollectionUtils {
     }
 
     /**
+     * 创建arraylist
+     *
+     * @param size size
+     * @param ele  元素
+     * @param <T>  元素类型
+     * @return ArrayList
+     */
+    public static <T> List<T> newArrayList(int size, T... ele) {
+        List<T> al = new ArrayList<>(size);
+        al.addAll(Arrays.asList(ele));
+        return al;
+    }
+
+    /**
+     * 创建arraylist
+     *
+     * @param ele  元素
+     * @param <T>  元素类型
+     * @return ArrayList
+     */
+    public static <T> List<T> newArrayList(T... ele) {
+        return new ArrayList<>(Arrays.asList(ele));
+    }
+
+    /**
      * 判断一个集合中是否存在指定元素
      *
      * @param collection 集合对象
@@ -60,10 +86,10 @@ public class CollectionUtils {
     /**
      * 根据比较器比较两个collection中哪些是新增的对象以及删除的对象和没有改变的对象
      *
-     * @param newCollection    新list
-     * @param oldCollection    旧list
-     * @param comparator 集合对象比较器
-     * @param <T>        集合元素泛型对象
+     * @param newCollection 新list
+     * @param oldCollection 旧list
+     * @param comparator    集合对象比较器
+     * @param <T>           集合元素泛型对象
      * @return 比较结果 {@link CompareResult}
      */
     public static <T> CompareResult<T> compare(Collection<T> newCollection, Collection<T> oldCollection, Comparator<T> comparator) {

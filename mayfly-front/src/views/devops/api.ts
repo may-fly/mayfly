@@ -5,6 +5,7 @@ export const machineApi = {
     list: Api.create("/devops/machines", 'get'),
     info: Api.create("/devops/machines/{id}/sysinfo", 'get'),
     top: Api.create("/devops/machines/{id}/top", 'get'),
+    monitors: Api.create("/devops/machines/{id}/{type}/monitors", 'get'),
     // 保存按钮
     save: Api.create("/devops/machines", 'post'),
     update: Api.create("/devops/machines/{id}", 'put'),

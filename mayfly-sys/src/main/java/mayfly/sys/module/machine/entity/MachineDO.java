@@ -25,4 +25,9 @@ public class MachineDO extends BaseDO {
     private String username;
 
     private String password;
+
+    /**
+     * 是否需要监控机器信息
+     */
+    private Integer needMonitor;
 }

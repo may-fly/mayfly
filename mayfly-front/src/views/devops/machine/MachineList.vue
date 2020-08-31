@@ -58,7 +58,19 @@
         </template>
       </el-table-column>
       <el-table-column prop="name" label="名称" width></el-table-column>
-      <el-table-column prop="ip" label="IP" width></el-table-column>
+      <el-table-column prop="ip" label="IP" width>
+        <template slot-scope="scope">
+          <el-popover placement="bottom-start" width="250px" trigger="click">
+            <div style="white-space: pre-line;">{{machineInfo}}</div>
+            <el-link
+              type="primary"
+              @click="showInfo(scope.row.id)"
+              slot="reference"
+              :underline="false"
+            >{{scope.row.ip}}</el-link>
+          </el-popover>
+        </template>
+      </el-table-column>
       <el-table-column prop="port" label="端口" width></el-table-column>
       <el-table-column prop="username" label="用户名"></el-table-column>
       <el-table-column prop="createTime" label="创建时间"></el-table-column>
@@ -67,12 +79,12 @@
         <template slot-scope="scope">
           <el-button
             type="primary"
-            @click="info(scope.row.id)"
+            @click="top(scope.row.id)"
             :ref="scope.row"
             icom="el-icon-tickets"
             size="mini"
             plain
-          >info</el-button>
+          >top</el-button>
           <el-button
             type="primary"
             @click="monitor(scope.row.id)"
@@ -92,17 +104,17 @@
       </el-table-column>
     </el-table>
 
-    <FileManage
+    <file-manage
       :title="dialog.title"
       :visible.sync="dialog.visible"
       :machineId.sync="dialog.machineId"
     />
 
-    <el-dialog title="基本信息" :visible.sync="infoDialog.visible" width="30%">
-      <div style="white-space: pre-line;">{{infoDialog.info}}</div>
+    <el-dialog @close="closeTop" title="Top信息" :visible.sync="topDialog.visible" width="70%">
+      <top-info ref="topDialog" :machineId="topDialog.machineId" />
     </el-dialog>
 
-    <el-dialog @close="closeMonitor" title="监控信息" :visible.sync="monitorDialog.visible" width="60%">
+    <el-dialog title="监控信息" :visible.sync="monitorDialog.visible" width="70%">
       <monitor ref="monitorDialog" :machineId="monitorDialog.machineId" />
     </el-dialog>
 
@@ -123,13 +135,15 @@ import FileManage from './FileManage.vue'
 import { machinePermission } from '../permissions'
 import { machineApi } from '../api'
 import Monitor from './Monitor.vue'
+import TopInfo from './TopInfo.vue'
 
 @Component({
   name: 'MachineList',
   components: {
     FileManage,
     DynamicFormDialog,
-    Monitor
+    Monitor,
+    TopInfo,
   },
 })
 export default class MachineList extends Vue {
@@ -141,11 +155,12 @@ export default class MachineList extends Vue {
     host: null,
     clusterId: null,
   }
-  infoDialog = {
-    visible: false,
-    info: '',
-  }
+  machineInfo = {}
   monitorDialog = {
+    visible: false,
+    machineId: 0,
+  }
+  topDialog = {
     visible: false,
     machineId: 0,
   }
@@ -248,34 +263,34 @@ export default class MachineList extends Vue {
     this.currentData = item
   }
 
-  async info(id: number) {
+  async showInfo(id: number) {
     const res = await machineApi.info.request({ id })
-    this.infoDialog.info = res
-    this.infoDialog.visible = true
-    // res.data
-    // this.$alert(res, '机器基本信息', {
-    //   type: 'info',
-    //   dangerouslyUseHTMLString: false,
-    //   closeOnClickModal: true,
-    //   showConfirmButton: false,
-    // }).catch((r) => {
-    //   console.log(r)
-    // })
+    this.machineInfo = res
   }
 
   monitor(id: number) {
     this.monitorDialog.machineId = id
     this.monitorDialog.visible = true
+    // // 如果重复打开同一个则开启定时任务
+    // const md: any = this.$refs['monitorDialog']
+    // if (md) {
+    //   md.startInterval()
+    // }
+  }
+
+  top(id: number) {
+    this.topDialog.machineId = id
+    this.topDialog.visible = true
     // 如果重复打开同一个则开启定时任务
-    const md: any = this.$refs['monitorDialog']
+    const md: any = this.$refs['topDialog']
     if (md) {
       md.startInterval()
     }
   }
 
-  closeMonitor() {
+  closeTop() {
     // 关闭窗口，取消定时任务
-    const md: any = this.$refs['monitorDialog']
+    const md: any = this.$refs['topDialog']
     md.cancelInterval()
   }
 
@@ -311,8 +326,7 @@ export default class MachineList extends Vue {
   }
 
   async search() {
-    let res = await machineApi.list.request(this.params)
-    this.table = res
+    this.table = await machineApi.list.request(this.params)
   }
 }
 </script>

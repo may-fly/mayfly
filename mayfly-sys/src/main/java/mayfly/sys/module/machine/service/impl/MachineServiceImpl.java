@@ -6,6 +6,7 @@ import lombok.experimental.Accessors;
 import mayfly.core.base.service.impl.BaseServiceImpl;
 import mayfly.core.exception.BizAssert;
 import mayfly.core.exception.BizRuntimeException;
+import mayfly.core.util.ArrayUtils;
 import mayfly.core.util.BracePlaceholder;
 import mayfly.core.util.IOUtils;
 import mayfly.core.util.ResourceUtils;
@@ -59,7 +60,7 @@ public class MachineServiceImpl extends BaseServiceImpl<MachineMapper, Long, Mac
     @Override
     public String runShell(Long machineId, String shellFileName, Object... param) {
         String shellContent = getShellContent(shellFileName);
-        if (param != null) {
+        if (!ArrayUtils.isEmpty(param)) {
             shellContent = String.format(shellContent, param);
         }
         BizAssert.notEmpty(shellContent, "不存在该shell脚本");
@@ -69,13 +70,8 @@ public class MachineServiceImpl extends BaseServiceImpl<MachineMapper, Long, Mac
     @Override
     public TopInfo getTopInfo(Long machineId) {
         String res = exec(machineId, "top -b -n 1 | head -5");
-        String topTemp = "top - {upAndUsers},  load average: {loadavg}\n" +
-                "Tasks:{totalTask} total,{runningTask} running,{sleepingTask} sleeping,{stoppedTask} stopped,{zombieTask} zombie\n" +
-                "%Cpu(s):{cpuUs} us,{cpuSy} sy,{cpuNi} ni,{cpuId} id,{cpuWa} wa,{cpuHi} hi,{cpuSi} si,{cpuSt} st\n" +
-                "KiB Mem :{totalMem} total,{freeMem} free,{usedMem} used,{cacheMem} buff/cache\n" +
-                "KiB Swap:{totalSwap} total,{freeSwap} free,{usedSwap} used. {availMem} avail Mem";
         Map<String, String> re = new HashMap<>();
-        BracePlaceholder.reverTemplate(topTemp, res, re);
+        BracePlaceholder.reverTemplate(TopInfo.TOP_TEMP, res, re);
 
         //17:14:07 up 5 days,  6:30,  2
         String timeUpAndUserStr = re.get("upAndUsers");
@@ -135,6 +131,12 @@ public class MachineServiceImpl extends BaseServiceImpl<MachineMapper, Long, Mac
     @Accessors(chain = true)
     @Data
     public static class TopInfo {
+        public static final String TOP_TEMP = "top - {upAndUsers},  load average: {loadavg}\n" +
+                "Tasks:{totalTask} total,{runningTask} running,{sleepingTask} sleeping,{stoppedTask} stopped,{zombieTask} zombie\n" +
+                "%Cpu(s):{cpuUs} us,{cpuSy} sy,{cpuNi} ni,{cpuId} id,{cpuWa} wa,{cpuHi} hi,{cpuSi} si,{cpuSt} st\n" +
+                "KiB Mem :{totalMem} total,{freeMem} free,{usedMem} used,{cacheMem} buff/cache\n" +
+                "KiB Swap:{totalSwap} total,{freeSwap} free,{usedSwap} used. {availMem} avail Mem";
+
         private String time;
         // 从本次开机到现在经过的时间
         private String up;
