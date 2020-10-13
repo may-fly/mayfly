@@ -35,7 +35,7 @@
         <alibaba.fastjson.version>1.2.54</alibaba.fastjson.version>
         <lombok.version>1.18.12</lombok.version>
         <mail.version>1.6.2</mail.version>
-        <junit.version>4.12</junit.version>
+        <junit.version>4.13.1</junit.version>
         <dockerfile.plugin.version>1.4.10</dockerfile.plugin.version>
     </properties>
 
