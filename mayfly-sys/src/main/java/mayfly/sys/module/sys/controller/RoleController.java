@@ -1,11 +1,14 @@
 package mayfly.sys.module.sys.controller;
 
+import mayfly.core.base.model.PageResult;
+import mayfly.core.base.model.Response2Result;
+import mayfly.core.exception.BizAssert;
 import mayfly.core.permission.Permission;
-import mayfly.core.base.model.Result;
 import mayfly.core.util.bean.BeanUtils;
 import mayfly.sys.common.enums.EnableDisableEnum;
 import mayfly.sys.module.sys.controller.form.RoleForm;
 import mayfly.sys.module.sys.controller.query.RoleQuery;
+import mayfly.sys.module.sys.controller.vo.RoleResourceVO;
 import mayfly.sys.module.sys.entity.RoleDO;
 import mayfly.sys.module.sys.service.RoleResourceService;
 import mayfly.sys.module.sys.service.RoleService;
@@ -29,6 +32,7 @@ import java.util.stream.Stream;
  * @version 1.0
  * @date 2018-12-20 9:31 AM
  */
+@Response2Result
 @Permission(code = "role")
 @RestController
 @RequestMapping("/sys/roles")
@@ -40,52 +44,49 @@ public class RoleController {
     private RoleResourceService roleResourceService;
 
     @GetMapping()
-    public Result<?> list(RoleQuery query) {
-        return Result.success().with(roleService.listByCondition(BeanUtils.copyProperties(query, RoleDO.class), query));
+    public PageResult<RoleDO> list(RoleQuery query) {
+        return roleService.listByCondition(BeanUtils.copyProperties(query, RoleDO.class), query);
     }
 
     @PostMapping()
-    public Result<?> save(@Valid @RequestBody RoleForm roleForm) {
+    public int save(@Valid @RequestBody RoleForm roleForm) {
         RoleDO role = BeanUtils.copyProperties(roleForm, RoleDO.class);
         role.setStatus(EnableDisableEnum.ENABLE.getValue());
-        return Result.success(roleService.insert(role));
+        return roleService.insert(role);
     }
 
     @PutMapping("/{id}")
-    public Result<?> update(@PathVariable Long id, @Valid @RequestBody RoleForm roleForm) {
+    public void update(@PathVariable Long id, @Valid @RequestBody RoleForm roleForm) {
         roleForm.setId(id);
         roleService.update(BeanUtils.copyProperties(roleForm, RoleDO.class));
-        return Result.success();
     }
 
     @Permission
     @DeleteMapping("/{id}")
-    public Result<?> delete(@PathVariable Long id) {
+    public void delete(@PathVariable Long id) {
         roleService.delete(id);
-        return Result.success();
     }
 
     @GetMapping("/{id}/resourceIds")
-    public Result<?> roleResourceIds(@PathVariable Long id) {
-        return Result.success(roleResourceService.listResourceId(id));
+    public List<Long> roleResourceIds(@PathVariable Long id) {
+        return roleResourceService.listResourceId(id);
     }
 
     @GetMapping("/{id}/resources")
-    public Result<?> roleResources(@PathVariable Long id) {
-        return Result.success(roleResourceService.listResource(id));
+    public List<RoleResourceVO> roleResources(@PathVariable Long id) {
+        return roleResourceService.listResource(id);
     }
 
     @Permission
     @PostMapping("/{id}/resources")
-    public Result<?> saveResources(@PathVariable Long id, @RequestBody RoleForm roleForm) {
+    public void saveResources(@PathVariable Long id, @RequestBody RoleForm roleForm) {
         List<Long> ids;
         try {
             ids = Stream.of(roleForm.getResourceIds().split(",")).map(Long::valueOf)
                     .distinct().collect(Collectors.toList());
         } catch (Exception e) {
-            return Result.paramError("资源id列表参数错误！");
+            throw BizAssert.newBizRuntimeException("资源id列表参数错误！");
         }
         roleResourceService.saveResource(id, ids);
-        return Result.success();
     }
 }

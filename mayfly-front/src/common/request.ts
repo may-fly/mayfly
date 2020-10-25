@@ -1,8 +1,9 @@
 import ElementUI from 'element-ui';
 import router from "../router";
-import Axios from 'axios';
+import Axios, { AxiosRequestConfig } from 'axios';
 import Permission from './Permission';
 import config from './config';
+import md5 from 'js-md5';
 
 export interface Result {
   /**
@@ -44,6 +45,21 @@ const service = Axios.create({
   timeout: 25000 // request timeout
 })
 
+function getSign(config: AxiosRequestConfig): string {
+  console.log(config)
+  const method = config.method
+  let signParams
+  if (method == 'post' || method == 'put') {
+    signParams = JSON.stringify(config.data)
+  } else {
+    signParams = config.params
+  }
+  if (signParams) {
+    return md5(signParams + '1111')
+  }
+  return md5('1111')
+}
+
 // request interceptor
 service.interceptors.request.use(
   config => {
@@ -53,13 +69,28 @@ service.interceptors.request.use(
       // 设置token
       config.headers['token'] = token
     }
+    // let sign;
+    
+    // const data = config.data
+    // if (data) {
+    //   sign = md5(JSON.stringify(data) + "1111")
+    // }
+    // const params = config.params
+    // console.log(JSON.stringify(data))
+    // if (params) {
+    //   sign = md5(params + "1111");
+    // } else {
+    //   sign = md5('1111')
+    // }
+    config.headers['sign'] = getSign(config)
     return config
   },
   error => {
-    console.log(error) // for debug
+    console.log(error)// for debug
     return Promise.reject(error)
   }
 )
+
 
 // response interceptor
 service.interceptors.response.use(

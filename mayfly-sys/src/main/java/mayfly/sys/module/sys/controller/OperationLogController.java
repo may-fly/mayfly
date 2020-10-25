@@ -1,7 +1,8 @@
 package mayfly.sys.module.sys.controller;
 
+import mayfly.core.base.model.PageResult;
+import mayfly.core.base.model.Response2Result;
 import mayfly.core.permission.Permission;
-import mayfly.core.base.model.Result;
 import mayfly.core.util.bean.BeanUtils;
 import mayfly.sys.module.sys.controller.query.OperationLogQuery;
 import mayfly.sys.module.sys.entity.OperationLogDO;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author meilin.huang
  * @date 2020-03-05 4:05 下午
  */
+@Response2Result
 @Permission(code = "log")
 @RestController
 @RequestMapping("/sys/logs")
@@ -24,7 +26,7 @@ public class OperationLogController {
     private OperationLogService operationLogService;
 
     @GetMapping
-    public Result<?> list(OperationLogQuery query) {
-        return operationLogService.listByCondition(BeanUtils.copyProperties(query, OperationLogDO.class), query).toResult();
+    public PageResult<OperationLogDO> list(OperationLogQuery query) {
+        return operationLogService.listByCondition(BeanUtils.copyProperties(query, OperationLogDO.class), query);
     }
 }

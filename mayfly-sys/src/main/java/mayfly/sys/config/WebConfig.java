@@ -1,7 +1,8 @@
 package mayfly.sys.config;
 
-import mayfly.core.exception.DefaultGlobalExceptionHandler;
+import mayfly.core.exception.DefaultGlobalExceptionHandlerAndResultAdvice;
 import mayfly.core.permission.PermissionInterceptor;
+import mayfly.sys.config.sign.SignInterceptor;
 import mayfly.sys.module.sys.service.PermissionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -17,13 +18,14 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * @date 2018/6/27 下午3:52
  */
 @Configuration
-public class MvcConfig implements WebMvcConfigurer {
+public class WebConfig implements WebMvcConfigurer {
 
     @Autowired
     private PermissionService permissionService;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(new SignInterceptor()).addPathPatterns("/**");
         registry.addInterceptor(new PermissionInterceptor(permissionService))
                 .addPathPatterns("/sys/**", "/devops/**");
     }
@@ -38,11 +40,12 @@ public class MvcConfig implements WebMvcConfigurer {
     }
 
     /**
-     * 全局异常处理器
+     * 全局异常处理器以及统一结果返回
+     *
      * @return GlobalExceptionHandler
      */
     @Bean
-    public DefaultGlobalExceptionHandler globalExceptionHandler() {
-        return new DefaultGlobalExceptionHandler();
+    public DefaultGlobalExceptionHandlerAndResultAdvice globalExceptionHandler() {
+        return new DefaultGlobalExceptionHandlerAndResultAdvice();
     }
 }

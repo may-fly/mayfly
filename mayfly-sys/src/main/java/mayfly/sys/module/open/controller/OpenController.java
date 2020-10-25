@@ -1,7 +1,7 @@
 package mayfly.sys.module.open.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import mayfly.core.base.model.Result;
+import mayfly.core.base.model.Response2Result;
 import mayfly.core.exception.BizAssert;
 import mayfly.core.thread.GlobalThreadPool;
 import mayfly.core.util.DateUtils;
@@ -11,7 +11,9 @@ import mayfly.core.util.MapUtils;
 import mayfly.core.util.PlaceholderResolver;
 import mayfly.sys.config.MailProperties;
 import mayfly.sys.module.open.controller.form.AccountLoginForm;
+import mayfly.sys.module.open.controller.vo.CaptchaVO;
 import mayfly.sys.module.open.service.OpenService;
+import mayfly.sys.module.sys.controller.vo.LoginSuccessVO;
 import mayfly.sys.module.sys.entity.AccountDO;
 import mayfly.sys.module.sys.enums.LogTypeEnum;
 import mayfly.sys.module.sys.service.AccountService;
@@ -35,6 +37,7 @@ import java.util.Map;
  * @version 1.0
  * @date 2019-07-06 15:03
  */
+@Response2Result
 @Slf4j
 @RestController
 @RequestMapping("/open")
@@ -54,17 +57,19 @@ public class OpenController {
     @Autowired
     private MailProperties mailProperties;
 
+    //    @NeedSign()
     @GetMapping("/captcha")
-    public Result<?> captcha() {
-        return Result.success(openService.generateCaptcha());
+    public CaptchaVO captcha() {
+        return openService.generateCaptcha();
     }
 
+    //    @NeedSign()
     @PostMapping("/login")
-    public Result<?> login(@RequestBody @Valid AccountLoginForm loginForm) {
+    public LoginSuccessVO login(@RequestBody @Valid AccountLoginForm loginForm) {
         BizAssert.isTrue(openService.checkCaptcha(loginForm.getUuid(), loginForm.getCaptcha()), "验证码错误");
         AccountDO result = accountService.login(loginForm);
         saveLoginLog(result);
-        return Result.success(permissionService.saveIdAndPermission(result));
+        return permissionService.saveIdAndPermission(result);
     }
 
     private void saveLoginLog(AccountDO accountDO) {

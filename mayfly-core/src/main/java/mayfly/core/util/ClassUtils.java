@@ -1,11 +1,33 @@
 package mayfly.core.util;
 
+import org.springframework.lang.Nullable;
+
 /**
  * @author meilin.huang
  * @version 1.0
  * @date 2020-01-14 10:26 上午
  */
 public class ClassUtils {
+
+    /**
+     * 判断类名是否存在在classpath路径下
+     *
+     * @param className   类名
+     * @param classLoader class loader
+     * @return 是否存在
+     */
+    public static boolean isPresent(String className, ClassLoader classLoader) {
+        try {
+            Class.forName(className, false, classLoader);
+            return true;
+        } catch (IllegalAccessError err) {
+            throw new IllegalStateException("Readability mismatch in inheritance hierarchy of class [" +
+                    className + "]: " + err.getMessage(), err);
+        } catch (Throwable ex) {
+            // Typically ClassNotFoundException or NoClassDefFoundError...
+            return false;
+        }
+    }
 
     /**
      * 获取ClassLoader

@@ -1,8 +1,9 @@
 package mayfly.sys.module.sys.controller;
 
+import mayfly.core.base.model.PageResult;
+import mayfly.core.base.model.Response2Result;
 import mayfly.core.exception.BizAssert;
 import mayfly.core.permission.Permission;
-import mayfly.core.base.model.Result;
 import mayfly.core.util.TreeUtils;
 import mayfly.core.util.bean.BeanUtils;
 import mayfly.core.util.enums.EnumUtils;
@@ -11,6 +12,8 @@ import mayfly.sys.module.sys.controller.form.AccountForm;
 import mayfly.sys.module.sys.controller.form.RoleUserForm;
 import mayfly.sys.module.sys.controller.query.AccountQuery;
 import mayfly.sys.module.sys.controller.vo.AccountRoleVO;
+import mayfly.sys.module.sys.controller.vo.AccountVO;
+import mayfly.sys.module.sys.controller.vo.ResourceListVO;
 import mayfly.sys.module.sys.entity.AccountDO;
 import mayfly.sys.module.sys.service.AccountRoleService;
 import mayfly.sys.module.sys.service.AccountService;
@@ -37,6 +40,7 @@ import java.util.stream.Stream;
  * @date 2018/6/27 下午4:44
  */
 @Permission(code = "account")
+@Response2Result
 @RestController
 @RequestMapping("/sys/accounts")
 public class AccountController {
@@ -49,72 +53,66 @@ public class AccountController {
     private ResourceService resourceService;
 
     @GetMapping()
-    public Result<?> list(AccountQuery accountQuery) {
-        return accountService.listByQuery(accountQuery).toResult();
+    public PageResult<AccountVO> list(AccountQuery accountQuery) {
+        return accountService.listByQuery(accountQuery);
     }
 
     @PostMapping()
-    public Result<?> save(@Valid @RequestBody AccountForm accountForm) {
+    public void save(@Valid @RequestBody AccountForm accountForm) {
         accountService.create(accountForm);
-        return Result.success();
     }
 
     @PutMapping("/{id}")
-    public Result<?> update(@PathVariable Long id, @Valid @RequestBody AccountForm accountForm) {
+    public void update(@PathVariable Long id, @Valid @RequestBody AccountForm accountForm) {
         accountService.create(accountForm);
-        return Result.success();
     }
 
     @Permission
     @PutMapping("/{id}/{status}")
-    public Result<?> changeStatus(@PathVariable Long id, @PathVariable Integer status) {
+    public void changeStatus(@PathVariable Long id, @PathVariable Integer status) {
         BizAssert.isTrue(EnumUtils.isExist(EnableDisableEnum.values(), status), "状态值错误");
         AccountDO a = new AccountDO().setStatus(status);
         a.setId(id);
         accountService.updateByIdSelective(a);
-        return Result.success();
     }
 
     @Permission
     @DeleteMapping("/{id}")
-    public Result<?> delete(@PathVariable Long id) {
+    public void delete(@PathVariable Long id) {
         accountService.deleteById(id);
-        return Result.success();
     }
 
     @GetMapping("/{id}/roleIds")
-    public Result<?> roleIds(@PathVariable Long id) {
-        return Result.success(accountRoleService.listRoleIdByAccountId(id));
+    public List<Long> roleIds(@PathVariable Long id) {
+        return accountRoleService.listRoleIdByAccountId(id);
     }
 
     @GetMapping("/{id}/roles")
-    public Result<?> roles(@PathVariable Long id) {
-        return Result.success(BeanUtils.copyProperties(accountRoleService.listRoleByAccountId(id), AccountRoleVO.class));
+    public List<AccountRoleVO> roles(@PathVariable Long id) {
+        return BeanUtils.copyProperties(accountRoleService.listRoleByAccountId(id), AccountRoleVO.class);
     }
 
     @GetMapping("/{id}/resources")
-    public Result<?> resources(@PathVariable Long id) {
-        return Result.success(TreeUtils.generateTrees(resourceService.listByAccountId(id)));
+    public List<ResourceListVO> resources(@PathVariable Long id) {
+        return TreeUtils.generateTrees(resourceService.listByAccountId(id));
     }
 
     @Permission
     @PostMapping("/{id}/roles")
-    public Result<?> saveRoles(@PathVariable Long id, @RequestBody RoleUserForm adminForm) {
+    public void saveRoles(@PathVariable Long id, @RequestBody RoleUserForm adminForm) {
         List<Long> ids;
         try {
             ids = Stream.of(adminForm.getRoleIds().split(",")).map(Long::valueOf).collect(Collectors.toList());
         } catch (Exception e) {
-            return Result.paramError("roleIds参数错误！");
+            throw BizAssert.newBizRuntimeException("roleIds参数错误！");
         }
         accountRoleService.saveRoles(id, ids);
-        return Result.success();
     }
 
     @Permission(requireCode = false)
     @PostMapping("/logout/{token}")
-    public Result<?> logout(@PathVariable String token) {
+    public void logout(@PathVariable String token) {
         accountService.logout(token);
-        return Result.success();
     }
 
 }

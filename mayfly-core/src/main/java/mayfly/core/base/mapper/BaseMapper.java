@@ -665,8 +665,8 @@ public interface BaseMapper<I, E> {
          * @return      带有下划线字段将其转换为"字段 AS pojo属性名"形式
          */
         public static String selectColumnName(Field field) {
-            String camel = StringUtils.camel2Underscore(field.getName());
-            return camel.contains("_") ? camel + " AS " + field.getName() : camel;
+            String camel = columnName(field);
+            return camel.contains("_") ? camel + " AS `" + field.getName() + "`" : camel;
         }
 
         /**
@@ -676,7 +676,7 @@ public interface BaseMapper<I, E> {
          * @return  字段对应的column
          */
         public static String columnName(Field field) {
-            return StringUtils.camel2Underscore(field.getName());
+            return "`" + StringUtils.camel2Underscore(field.getName()) + "`";
         }
 
         /**
