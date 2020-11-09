@@ -1,5 +1,6 @@
 package mayfly.core.exception;
 
+import mayfly.core.base.model.Result;
 import mayfly.core.util.CollectionUtils;
 import mayfly.core.util.StringUtils;
 import mayfly.core.util.enums.NameValueEnum;
@@ -9,7 +10,7 @@ import java.util.Objects;
 import java.util.function.Supplier;
 
 /**
- * 业务断言
+ * 业务断言类，不满足断言条件的都抛{@link BizRuntimeException}（默认错误码为{@link Result.CodeEnum#FAILURE}）
  *
  * @author meilin.huang
  * @version 1.0
@@ -17,7 +18,8 @@ import java.util.function.Supplier;
  */
 public final class BizAssert {
 
-    private BizAssert() {}
+    private BizAssert() {
+    }
 
     /**
      * 断言对象不为空
@@ -26,21 +28,27 @@ public final class BizAssert {
      * @param msg    不满足断言的异常信息
      */
     public static void notNull(Object object, String msg) {
-        if (object == null) {
-            throw newBizRuntimeException(msg);
-        }
+        isTrue(object != null, msg);
     }
 
+    /**
+     * 断言对象不为空
+     *
+     * @param object   对象
+     * @param supplier 错误消息供应器
+     */
     public static void notNull(Object object, Supplier<String> supplier) {
-        if (object == null) {
-            throw newBizRuntimeException(supplier.get());
-        }
+        isTrue(object != null, supplier);
     }
 
-    public static <E extends Enum<?> & NameValueEnum<Integer>> void notNullByEnum(Object object, E errorEnum) {
-        if (object == null) {
-            throw newBizRuntimeException(errorEnum);
-        }
+    /**
+     * 断言对象不能为空
+     *
+     * @param object    对象
+     * @param errorEnum 错误枚举值
+     */
+    public static void notNull(Object object, NameValueEnum<?> errorEnum) {
+        isTrue(object != null, errorEnum);
     }
 
     /**
@@ -50,21 +58,27 @@ public final class BizAssert {
      * @param msg    不满足断言的异常信息
      */
     public static void isNull(Object object, String msg) {
-        if (object != null) {
-            throw newBizRuntimeException(msg);
-        }
+        isTrue(object == null, msg);
     }
 
+    /**
+     * 断言对象为空
+     *
+     * @param object   obj
+     * @param supplier 错误消息提供器
+     */
     public static void isNull(Object object, Supplier<String> supplier) {
-        if (object != null) {
-            throw newBizRuntimeException(supplier.get());
-        }
+        isTrue(object == null, supplier);
     }
 
-    public static <E extends Enum<?> & NameValueEnum<Integer>> void isNullByEnum(Object object, E errorEnum) {
-        if (object != null) {
-            throw newBizRuntimeException(errorEnum);
-        }
+    /**
+     * 断言对象为空
+     *
+     * @param object    obj
+     * @param errorEnum 错误枚举
+     */
+    public static void isNull(Object object, NameValueEnum<?> errorEnum) {
+        isTrue(object == null, errorEnum);
     }
 
 
@@ -75,21 +89,27 @@ public final class BizAssert {
      * @param msg 不满足断言的异常信息
      */
     public static void notEmpty(String str, String msg) {
-        if (StringUtils.isEmpty(str)) {
-            throw newBizRuntimeException(msg);
-        }
+        isTrue(!StringUtils.isEmpty(str), msg);
     }
 
+    /**
+     * 断言字符串不为空
+     *
+     * @param str      字符串
+     * @param supplier 错误消息供应器
+     */
     public static void notEmpty(String str, Supplier<String> supplier) {
-        if (StringUtils.isEmpty(str)) {
-            throw newBizRuntimeException(supplier.get());
-        }
+        isTrue(!StringUtils.isEmpty(str), supplier);
     }
 
-    public static <E extends Enum<?> & NameValueEnum<Integer>> void notEmptyByEnum(String str, E errorEnum) {
-        if (StringUtils.isEmpty(str)) {
-            throw newBizRuntimeException(errorEnum);
-        }
+    /**
+     * 断言字符串不为空
+     *
+     * @param str       字符串
+     * @param errorEnum 错误枚举
+     */
+    public static void notEmpty(String str, NameValueEnum<?> errorEnum) {
+        isTrue(!StringUtils.isEmpty(str), errorEnum);
     }
 
     /**
@@ -99,9 +119,7 @@ public final class BizAssert {
      * @param msg        不满足断言的异常信息
      */
     public static void notEmpty(Collection<?> collection, String msg) {
-        if (CollectionUtils.isEmpty(collection)) {
-            throw newBizRuntimeException(msg);
-        }
+        isTrue(CollectionUtils.isNotEmpty(collection), msg);
     }
 
     /**
@@ -111,9 +129,17 @@ public final class BizAssert {
      * @param supplier   不满足断言的异常信息提供者
      */
     public static void notEmpty(Collection<?> collection, Supplier<String> supplier) {
-        if (CollectionUtils.isEmpty(collection)) {
-            throw newBizRuntimeException(supplier.get());
-        }
+        isTrue(CollectionUtils.isNotEmpty(collection), supplier);
+    }
+
+    /**
+     * 断言集合不为空
+     *
+     * @param collection 集合
+     * @param errorEnum  错误枚举
+     */
+    public static void notEmpty(Collection<?> collection, NameValueEnum<?> errorEnum) {
+        isTrue(CollectionUtils.isNotEmpty(collection), errorEnum);
     }
 
     /**
@@ -123,9 +149,7 @@ public final class BizAssert {
      * @param msg        不满足断言的异常信息
      */
     public static void empty(Collection<?> collection, String msg) {
-        if (CollectionUtils.isNotEmpty(collection)) {
-            throw newBizRuntimeException(msg);
-        }
+        isTrue(CollectionUtils.isEmpty(collection), msg);
     }
 
     /**
@@ -135,9 +159,17 @@ public final class BizAssert {
      * @param supplier   不满足断言的异常信息提供器
      */
     public static void empty(Collection<?> collection, Supplier<String> supplier) {
-        if (CollectionUtils.isNotEmpty(collection)) {
-            throw newBizRuntimeException(supplier.get());
-        }
+        isTrue(CollectionUtils.isEmpty(collection), supplier);
+    }
+
+    /**
+     * 断言集合为空
+     *
+     * @param collection 集合
+     * @param errorEnum  错误枚举
+     */
+    public static void empty(Collection<?> collection, NameValueEnum<?> errorEnum) {
+        isTrue(CollectionUtils.isEmpty(collection), errorEnum);
     }
 
     /**
@@ -148,9 +180,7 @@ public final class BizAssert {
      * @param msg 错误消息
      */
     public static void equals(Object o1, Object o2, String msg) {
-        if (!Objects.equals(o1, o2)) {
-            throw newBizRuntimeException(msg);
-        }
+        isTrue(Objects.equals(o1, o2), msg);
     }
 
     /**
@@ -161,9 +191,7 @@ public final class BizAssert {
      * @param msgSupplier 错误消息提供器
      */
     public static void equals(Object o1, Object o2, Supplier<String> msgSupplier) {
-        if (!Objects.equals(o1, o2)) {
-            throw newBizRuntimeException(msgSupplier.get());
-        }
+        isTrue(Objects.equals(o1, o2), msgSupplier);
     }
 
     /**
@@ -173,10 +201,8 @@ public final class BizAssert {
      * @param o2        对象2
      * @param errorEnum 错误枚举
      */
-    public static <E extends Enum<?> & NameValueEnum<Integer>> void equalsByEnum(Object o1, Object o2, E errorEnum) {
-        if (!Objects.equals(o1, o2)) {
-            throw newBizRuntimeException(errorEnum);
-        }
+    public static void equals(Object o1, Object o2, NameValueEnum<?> errorEnum) {
+        isTrue(Objects.equals(o1, o2), errorEnum);
     }
 
 
@@ -210,7 +236,7 @@ public final class BizAssert {
      * @param expression boolean表达式
      * @param errorEnum  错误枚举
      */
-    public static <E extends Enum<?> & NameValueEnum<Integer>> void isTrueByEnum(boolean expression, E errorEnum) {
+    public static void isTrue(boolean expression, NameValueEnum<?> errorEnum) {
         if (!expression) {
             throw newBizRuntimeException(errorEnum);
         }
@@ -232,7 +258,8 @@ public final class BizAssert {
      * @param errorEnum 错误枚举
      * @return 异常
      */
-    public static <E extends Enum<?> & NameValueEnum<Integer>> BizRuntimeException newBizRuntimeException(E errorEnum) {
+    @SuppressWarnings("all")
+    public static BizRuntimeException newBizRuntimeException(NameValueEnum errorEnum) {
         return new BizRuntimeException(errorEnum);
     }
 }

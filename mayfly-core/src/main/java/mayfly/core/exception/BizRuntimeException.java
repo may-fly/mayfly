@@ -31,9 +31,8 @@ public class BizRuntimeException extends RuntimeException {
 
     /**
      * @param errorEnum 错误枚举值
-     * @param <E>       异常枚举类型
      */
-    public <E extends Enum<?> & NameValueEnum<Integer>> BizRuntimeException(E errorEnum) {
+    public BizRuntimeException(NameValueEnum<Integer> errorEnum) {
         super(errorEnum.getName());
         this.errorCode = errorEnum.getValue();
     }
