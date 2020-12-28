@@ -1,5 +1,6 @@
 package mayfly.sys.common.websocket;
 
+import mayfly.core.base.model.CommonCodeEnum;
 import mayfly.core.base.model.Result;
 import mayfly.core.util.enums.ValueEnum;
 
@@ -38,7 +39,7 @@ public enum MessageTypeEnum implements ValueEnum<Integer> {
      * @return websocket message
      */
     public String toMsg(Object data) {
-        return WebSocketMessage.msg(this, Result.CodeEnum.SUCCESS, data);
+        return WebSocketMessage.msg(this, CommonCodeEnum.SUCCESS, data);
     }
 
     @Override

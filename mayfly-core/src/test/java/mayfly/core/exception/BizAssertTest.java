@@ -1,5 +1,6 @@
 package mayfly.core.exception;
 
+import mayfly.core.base.model.CodeMessage;
 import mayfly.core.base.model.Result;
 import mayfly.core.util.enums.NameValueEnum;
 import org.junit.Test;
@@ -8,7 +9,7 @@ import static org.junit.Assert.*;
 
 public class BizAssertTest {
 
-    enum ErrorCode implements NameValueEnum<Integer> {
+    enum ErrorCode implements CodeMessage {
         SERVER_ERROR(500, "服务器异常"),
 
         NOT_FOUND(404, "资源未找到");
@@ -23,12 +24,12 @@ public class BizAssertTest {
         }
 
         @Override
-        public String getName() {
+        public String getMessage() {
             return this.name;
         }
 
         @Override
-        public Integer getValue() {
+        public Integer getCode() {
             return this.code;
         }
     }

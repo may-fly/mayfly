@@ -1,7 +1,7 @@
 package mayfly.core.exception;
 
-import mayfly.core.base.model.Result;
-import mayfly.core.util.enums.NameValueEnum;
+import mayfly.core.base.model.CodeMessage;
+import mayfly.core.base.model.CommonCodeEnum;
 
 /**
  * 业务逻辑运行时异常
@@ -20,23 +20,28 @@ public class BizRuntimeException extends RuntimeException {
     private final Integer errorCode;
 
     /**
-     * 默认错误code为 {@linkplain mayfly.core.base.model.Result.CodeEnum#FAILURE}
+     * 默认错误code为 {@linkplain mayfly.core.base.model.CommonCodeEnum#FAILURE}
      *
      * @param msg 错误消息
      */
-    public BizRuntimeException(String msg) {
-        super(msg);
-        this.errorCode = Result.CodeEnum.FAILURE.getValue();
+    public BizRuntimeException(String msg, Object... params) {
+        super(String.format(msg, params));
+        this.errorCode = CommonCodeEnum.FAILURE.getCode();
     }
 
     /**
-     * @param errorEnum 错误枚举值
+     * @param errorMsg 错误消息
      */
-    public BizRuntimeException(NameValueEnum<Integer> errorEnum) {
-        super(errorEnum.getName());
-        this.errorCode = errorEnum.getValue();
+    public BizRuntimeException(CodeMessage errorMsg, Object... params) {
+        super(errorMsg.getMessage(params));
+        this.errorCode = errorMsg.getCode();
     }
 
+    /**
+     * 获取错误码
+     *
+     * @return error code
+     */
     public Integer getErrorCode() {
         return errorCode;
     }

@@ -30,7 +30,6 @@ import java.util.Objects;
  * @author hml
  * @date 2018/6/27 下午4:09
  */
-@MethodLog("资源管理:")
 @Service
 public class ResourceServiceImpl extends BaseServiceImpl<ResourceMapper, Long, ResourceDO> implements ResourceService {
 
@@ -47,13 +46,14 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourceMapper, Long, R
         return BeanUtils.copyProperties(mapper.selectByAccountId(userId), ResourceListVO.class);
     }
 
-    @MethodLog(value = "获取资源树", level = MethodLog.LogLevel.DEBUG)
+    @MethodLog(value = "获取资源树", resultLevel = MethodLog.LogLevel.DEBUG)
     @Override
     public List<ResourceListVO> listResource() {
         return TreeUtils.generateTrees(BeanUtils.copyProperties(listAll("pid ASC, weight ASC"),
                 ResourceListVO.class));
     }
 
+    @MethodLog(value = "创建资源")
     @Override
     public void create(ResourceDO resource) {
         if (resource.getPid() == null || Objects.equals(resource.getPid(), 0L)) {
@@ -83,6 +83,7 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourceMapper, Long, R
         insert(resource);
     }
 
+    @MethodLog("更新资源")
     @Override
     public void update(ResourceDO resource) {
         ResourceDO old = getById(resource.getId());
@@ -108,6 +109,7 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourceMapper, Long, R
         operationLogService.asyncUpdateLog("更新权限&菜单", resource, old);
     }
 
+    @MethodLog("修改资源状态")
     @Override
     public void changeStatus(Long id, Integer status) {
         BizAssert.isTrue(EnumUtils.isExist(EnableDisableEnum.values(), status), "状态值错误");
@@ -122,6 +124,7 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourceMapper, Long, R
         updateByIdSelective(resource);
     }
 
+    @MethodLog("删除资源")
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void delete(Long id) {

@@ -20,30 +20,20 @@ public class ValidatorUtils {
 
     private ValidatorUtils() {
     }
-
-    /**
-     * 校验对象是否符合指定校验规则
-     *
-     * @param obj 对象
-     * @return 校验结果
-     */
-    public static ValidationResult validate(Object obj) {
-        return validate(obj, null);
-    }
-
+    
     /**
      * 校验对象是否符合指定校验规则
      *
      * @param obj        对象
      * @param groupClass 校验组
-     * @return 校验结果
+     * @return 校验结果字符串数组，为null则为符合约束校验
      */
-    public static ValidationResult validate(Object obj, Class<?>... groupClass) {
-        Set<ConstraintViolation<Object>> result = groupClass == null ? VALIDATOR.validate(obj) : VALIDATOR.validate(obj, groupClass);
+    public static String[] validate(Object obj, Class<?>... groupClass) {
+        Set<ConstraintViolation<Object>> result = VALIDATOR.validate(obj, groupClass);
         if (CollectionUtils.isEmpty(result)) {
-            return ValidationResult.success();
+            return null;
         }
 
-        return ValidationResult.error(result.stream().map(ConstraintViolation::getMessage).toArray(String[]::new));
+        return result.stream().map(ConstraintViolation::getMessage).toArray(String[]::new);
     }
 }

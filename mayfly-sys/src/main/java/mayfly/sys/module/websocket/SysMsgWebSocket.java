@@ -1,6 +1,7 @@
 package mayfly.sys.module.websocket;
 
 import lombok.extern.slf4j.Slf4j;
+import mayfly.core.base.model.CommonCodeEnum;
 import mayfly.core.base.model.Result;
 import mayfly.core.permission.LoginAccount;
 import mayfly.sys.common.utils.SpringUtils;
@@ -46,7 +47,7 @@ public class SysMsgWebSocket {
         Long userId = Optional.ofNullable(SpringUtils.getBean(PermissionService.class).getLoginAccount(token))
                 .map(LoginAccount::getId).orElse(null);
         if (userId == null) {
-            WebSocketUtils.sendText(session, MessageTypeEnum.ERROR.toMsg(Result.CodeEnum.NO_PERMISSION.getName()));
+            WebSocketUtils.sendText(session, MessageTypeEnum.ERROR.toMsg(CommonCodeEnum.NO_PERMISSION.getCode()));
             return;
         }
         registry.putSession(userId, session);

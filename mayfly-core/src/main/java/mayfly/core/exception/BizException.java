@@ -1,5 +1,7 @@
 package mayfly.core.exception;
 
+import mayfly.core.base.model.CodeMessage;
+import mayfly.core.base.model.CommonCodeEnum;
 import mayfly.core.base.model.Result;
 import mayfly.core.util.enums.NameValueEnum;
 
@@ -20,22 +22,21 @@ public class BizException extends Exception {
     private final Integer errorCode;
 
     /**
-     * 默认错误code为 {@linkplain mayfly.core.base.model.Result.CodeEnum#FAILURE}
+     * 默认错误code为 {@linkplain mayfly.core.base.model.CommonCodeEnum#FAILURE}
      *
      * @param msg 错误消息
      */
     public BizException(String msg) {
         super(msg);
-        this.errorCode = Result.CodeEnum.FAILURE.getValue();
+        this.errorCode = CommonCodeEnum.FAILURE.getCode();
     }
 
     /**
      * @param errorEnum 错误枚举值
-     * @param <E>       异常枚举类型
      */
-    public <E extends Enum<?> & NameValueEnum<Integer>> BizException(E errorEnum) {
-        super(errorEnum.getName());
-        this.errorCode =errorEnum.getValue();
+    public BizException(CodeMessage errorEnum) {
+        super(errorEnum.getMessage());
+        this.errorCode = errorEnum.getCode();
     }
 
     public Integer getErrorCode() {
