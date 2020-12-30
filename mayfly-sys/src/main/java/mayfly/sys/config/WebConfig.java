@@ -1,7 +1,8 @@
 package mayfly.sys.config;
 
-import mayfly.core.exception.DefaultGlobalExceptionHandlerAndResultAdvice;
+import mayfly.core.web.DefaultGlobalExceptionHandler;
 import mayfly.core.permission.PermissionInterceptor;
+import mayfly.core.web.ResponseAdvice;
 import mayfly.sys.config.sign.SignInterceptor;
 import mayfly.sys.module.sys.service.PermissionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +46,17 @@ public class WebConfig implements WebMvcConfigurer {
      * @return GlobalExceptionHandler
      */
     @Bean
-    public DefaultGlobalExceptionHandlerAndResultAdvice globalExceptionHandler() {
-        return new DefaultGlobalExceptionHandlerAndResultAdvice();
+    public DefaultGlobalExceptionHandler globalExceptionHandler() {
+        return new DefaultGlobalExceptionHandler();
+    }
+
+    /**
+     * 统一包装成功返回结果集
+     *
+     * @return response advice
+     */
+    @Bean
+    public ResponseAdvice responseAdvice() {
+        return new ResponseAdvice();
     }
 }

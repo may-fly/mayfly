@@ -1,7 +1,6 @@
 package mayfly.sys.common.utils;
 
 import mayfly.core.util.enums.ValueEnum;
-import mayfly.core.validation.ValidationResult;
 import mayfly.core.validation.ValidatorUtils;
 import mayfly.core.validation.annotation.EnumValue;
 import mayfly.sys.module.sys.enums.ResourceTypeEnum;
@@ -70,7 +69,7 @@ public class ValidationUtilsTest {
         user.type2 = 1;
         user.strType = "T1";
         user.iType = 2;
-        ValidationResult res = ValidatorUtils.validate(user);
+        String[] res = ValidatorUtils.validate(user);
         System.out.println(res);
     }
 }

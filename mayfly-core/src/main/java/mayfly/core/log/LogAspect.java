@@ -48,7 +48,7 @@ public class LogAspect {
     /**
      * 执行时间模板
      */
-    public static final String TIME_MSG_TEMP = "-> ";
+    public static final String TIME_MSG_TEMP = " -> ";
 
     /**
      * 异常信息模板
@@ -145,7 +145,7 @@ public class LogAspect {
             }
             invokeInfo.append("arg").append(i).append(": ").append(args[i]);
         }
-        return invokeInfo.append(") ").toString();
+        return invokeInfo.append(")").toString();
     }
 
     private String[] getTags(MethodLog ml) {
