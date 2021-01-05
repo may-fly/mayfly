@@ -2,9 +2,9 @@ package mayfly.core.base.service.impl;
 
 
 import mayfly.core.base.mapper.BaseMapper;
-import mayfly.core.base.model.BaseDO;
-import mayfly.core.base.model.PageQuery;
-import mayfly.core.base.model.PageResult;
+import mayfly.core.model.BaseDO;
+import mayfly.core.model.PageQuery;
+import mayfly.core.model.result.PageResult;
 import mayfly.core.base.service.BaseService;
 import mayfly.core.util.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;

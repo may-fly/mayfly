@@ -1,8 +1,8 @@
 package mayfly.core.web;
 
-import mayfly.core.base.model.PageResult;
-import mayfly.core.base.model.Response2Result;
-import mayfly.core.base.model.Result;
+import mayfly.core.model.result.PageResult;
+import mayfly.core.model.result.Response2Result;
+import mayfly.core.model.result.Result;
 import mayfly.core.util.JsonUtils;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;

@@ -1,7 +1,7 @@
 package mayfly.core.exception;
 
-import mayfly.core.base.model.CodeMessage;
-import mayfly.core.base.model.CommonCodeEnum;
+import mayfly.core.model.result.CodeMessage;
+import mayfly.core.model.result.CommonCodeEnum;
 import mayfly.core.util.CollectionUtils;
 import mayfly.core.util.StringUtils;
 

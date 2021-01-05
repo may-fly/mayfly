@@ -7,6 +7,7 @@ import io.lettuce.core.cluster.api.StatefulRedisClusterConnection;
 import io.lettuce.core.cluster.api.sync.RedisClusterCommands;
 import io.lettuce.core.cluster.models.partitions.Partitions;
 import io.lettuce.core.cluster.models.partitions.RedisClusterNode;
+import mayfly.core.exception.BizAssert;
 import mayfly.core.exception.BizRuntimeException;
 import mayfly.core.util.StringUtils;
 import mayfly.sys.module.redis.connection.RedisConnectionRegistry;
@@ -256,7 +257,7 @@ public class ClusterCommand {
         RedisClusterNode rmNode = getNode(clusterId, rmNodeId);
         if (rmNode.is(RedisClusterNode.NodeFlag.MASTER) && !rmNode.getSlots().isEmpty()) {
             LOG.error("请先将该master分支上的slots移除！ url: {}:{}", rmNode.getUri().getHost(), rmNode.getUri().getPort());
-            throw new BizRuntimeException("请先将该master分支上的slots移除！");
+            throw BizAssert.newBizRuntimeException("请先将该master分支上的slots移除！");
         }
 
         getNodes(clusterId).stream().filter(node -> {
@@ -282,13 +283,13 @@ public class ClusterCommand {
     private static void forget(int clusterId, RedisClusterNode myselfNode, RedisClusterNode rmNode) {
         if (rmNode.getNodeId().equals(myselfNode.getNodeId())) {
             LOG.error("不能删除自己！ url: {}:{}", myselfNode.getUri().getHost(), myselfNode.getUri().getPort());
-            throw new BizRuntimeException("不能删除自己！");
+            throw BizAssert.newBizRuntimeException("不能删除自己！");
         }
 
         if (myselfNode.is(RedisClusterNode.NodeFlag.SLAVE)) {
             if (myselfNode.getSlaveOf().equals(rmNode.getNodeId())) {
                 LOG.error("不能删除自身的master节点！ url: {}:{}", myselfNode.getUri().getHost(), myselfNode.getUri().getPort());
-                throw new BizRuntimeException("不能删除自身的master节点！");
+                throw BizAssert.newBizRuntimeException("不能删除自身的master节点！");
             }
         }
 
@@ -343,10 +344,10 @@ public class ClusterCommand {
                 myId = getCmds().clusterMyId();
             } catch (RedisConnectionException e) {
                 LOG.error("redis连接失败， {}:{}", host, port, e);
-                throw new BizRuntimeException("redis连接失败！ url: " + host + ":" + port);
+                throw BizAssert.newBizRuntimeException("redis连接失败！ url: " + host + ":" + port);
             } catch (RedisCommandExecutionException e) {
                 LOG.error("该节点不支持集群， {}:{}", host, port, e);
-                throw new BizRuntimeException("该节点不支持集群，请在redis.conf中启用'cluster-enabled yes！' 节点: " + host + ":" + port);
+                throw BizAssert.newBizRuntimeException("该节点不支持集群，请在redis.conf中启用'cluster-enabled yes！' 节点: " + host + ":" + port);
             }
         }
 

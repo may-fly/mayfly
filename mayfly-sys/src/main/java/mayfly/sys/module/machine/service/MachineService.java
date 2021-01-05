@@ -58,7 +58,7 @@ public interface MachineService extends BaseService<Long, MachineDO> {
         try {
             return SSHUtils.exec(getSession(machineId), cmd);
         } catch (SSHException e) {
-            throw new BizRuntimeException(e.getMessage());
+            throw BizAssert.newBizRuntimeException(e.getMessage());
         }
     }
 
@@ -73,7 +73,7 @@ public interface MachineService extends BaseService<Long, MachineDO> {
         try {
             SSHUtils.exec(getSession(machineId), cmd, lineProcessor);
         } catch (SSHException e) {
-            throw new BizRuntimeException(e.getMessage());
+            throw BizAssert.newBizRuntimeException(e.getMessage());
         }
     }
 
@@ -86,7 +86,7 @@ public interface MachineService extends BaseService<Long, MachineDO> {
         try {
             SSHUtils.sftpOperate(getSession(machineId), function);
         } catch (SSHException e) {
-            throw new BizRuntimeException(e.getMessage());
+            throw BizAssert.newBizRuntimeException(e.getMessage());
         }
     }
 

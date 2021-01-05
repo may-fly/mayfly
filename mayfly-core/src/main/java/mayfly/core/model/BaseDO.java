@@ -1,4 +1,4 @@
-package mayfly.core.base.model;
+package mayfly.core.model;
 
 import mayfly.core.permission.LoginAccount;
 

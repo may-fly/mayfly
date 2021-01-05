@@ -1,4 +1,4 @@
-package mayfly.core.base.model;
+package mayfly.core.model.result;
 
 /**
  * 公共结果码枚举类

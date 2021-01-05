@@ -1,7 +1,6 @@
 package mayfly.core.permission;
 
-import mayfly.core.base.model.CommonCodeEnum;
-import mayfly.core.base.model.Result;
+import mayfly.core.model.result.CommonCodeEnum;
 import mayfly.core.exception.BizRuntimeException;
 import mayfly.core.util.ArrayUtils;
 import mayfly.core.util.StringUtils;

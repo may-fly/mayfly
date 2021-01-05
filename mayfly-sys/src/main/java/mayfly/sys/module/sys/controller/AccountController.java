@@ -1,7 +1,7 @@
 package mayfly.sys.module.sys.controller;
 
-import mayfly.core.base.model.PageResult;
-import mayfly.core.base.model.Response2Result;
+import mayfly.core.model.result.PageResult;
+import mayfly.core.model.result.Response2Result;
 import mayfly.core.exception.BizAssert;
 import mayfly.core.permission.Permission;
 import mayfly.core.util.TreeUtils;

@@ -1,6 +1,6 @@
 package mayfly.sys.module.machine.controller;
 
-import mayfly.core.base.model.Response2Result;
+import mayfly.core.model.result.Response2Result;
 import mayfly.core.log.MethodLog;
 import mayfly.core.permission.Permission;
 import mayfly.core.util.bean.BeanUtils;

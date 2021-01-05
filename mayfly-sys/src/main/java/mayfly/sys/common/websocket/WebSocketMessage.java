@@ -1,8 +1,7 @@
 package mayfly.sys.common.websocket;
 
 import lombok.Data;
-import mayfly.core.base.model.CodeMessage;
-import mayfly.core.base.model.Result;
+import mayfly.core.model.result.CodeMessage;
 import mayfly.core.util.JsonUtils;
 
 /**

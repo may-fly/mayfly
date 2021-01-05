@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import mayfly.core.base.mapper.annotation.Table;
-import mayfly.core.base.model.BaseDO;
+import mayfly.core.model.BaseDO;
 
 /**
  * @author meilin.huang

@@ -6,7 +6,7 @@ import lombok.ToString;
 import lombok.experimental.Accessors;
 import mayfly.core.base.mapper.annotation.NoColumn;
 import mayfly.core.base.mapper.annotation.Table;
-import mayfly.core.base.model.BaseDO;
+import mayfly.core.model.BaseDO;
 
 /**
  *  权限

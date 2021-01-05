@@ -1,6 +1,7 @@
 package mayfly.sys.module.sys.controller;
 
-import mayfly.core.base.model.Response2Result;
+import mayfly.core.model.result.Response2Result;
+import mayfly.core.log.MethodLog;
 import mayfly.core.permission.Permission;
 import mayfly.core.util.bean.BeanUtils;
 import mayfly.sys.module.sys.controller.form.ResourceForm;
@@ -48,11 +49,13 @@ public class ResourceController {
 
     @Permission
     @PostMapping()
+    @MethodLog("新增资源")
     public void save(@RequestBody @Valid ResourceForm resourceForm) {
         resourceService.create(BeanUtils.copyProperties(resourceForm, ResourceDO.class));
     }
 
     @Permission
+    @MethodLog("更新资源信息")
     @PutMapping("/{id}")
     public void update(@PathVariable Long id, @RequestBody @Valid ResourceForm resourceForm) {
         ResourceDO resource = BeanUtils.copyProperties(resourceForm, ResourceDO.class);
@@ -61,12 +64,14 @@ public class ResourceController {
     }
 
     @PutMapping("/{id}/{status}")
+    @MethodLog("修改资源状态")
     public void changeStatus(@PathVariable Long id, @PathVariable Integer status) {
         resourceService.changeStatus(id, status);
     }
 
     @Permission
     @DeleteMapping("/{id}")
+    @MethodLog("删除资源")
     public void delete(@PathVariable Long id) {
         resourceService.delete(id);
     }

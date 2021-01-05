@@ -1,6 +1,6 @@
 package mayfly.sys.module.sys.service.impl;
 
-import mayfly.core.base.model.BaseDO;
+import mayfly.core.model.BaseDO;
 import mayfly.core.base.service.impl.BaseServiceImpl;
 import mayfly.core.permission.LoginAccount;
 import mayfly.core.thread.GlobalThreadPool;

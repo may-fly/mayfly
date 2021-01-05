@@ -1,4 +1,4 @@
-package mayfly.core.base.model;
+package mayfly.core.model.result;
 
 import java.io.Serializable;
 import java.util.Objects;

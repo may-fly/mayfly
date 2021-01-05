@@ -1,7 +1,7 @@
 package mayfly.sys.module.sys.service;
 
 
-import mayfly.core.base.model.PageResult;
+import mayfly.core.model.result.PageResult;
 import mayfly.core.base.service.BaseService;
 import mayfly.sys.module.open.controller.form.AccountLoginForm;
 import mayfly.sys.module.sys.controller.form.AccountForm;

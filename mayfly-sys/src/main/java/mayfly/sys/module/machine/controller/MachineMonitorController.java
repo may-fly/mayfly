@@ -1,6 +1,6 @@
 package mayfly.sys.module.machine.controller;
 
-import mayfly.core.base.model.Response2Result;
+import mayfly.core.model.result.Response2Result;
 import mayfly.core.exception.BizAssert;
 import mayfly.core.util.enums.EnumUtils;
 import mayfly.sys.module.machine.enums.MonitorTimeEnum;

@@ -2,7 +2,7 @@ package mayfly.sys.module.sys.controller.vo;
 
 import lombok.Getter;
 import lombok.Setter;
-import mayfly.core.base.model.BaseDO;
+import mayfly.core.model.BaseDO;
 
 import java.time.LocalDateTime;
 

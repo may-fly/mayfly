@@ -4,7 +4,7 @@ import io.lettuce.core.api.sync.BaseRedisCommands;
 import io.lettuce.core.api.sync.RedisKeyCommands;
 import mayfly.core.log.MethodLog;
 import mayfly.core.permission.Permission;
-import mayfly.core.base.model.Result;
+import mayfly.core.model.result.Result;
 import mayfly.core.util.StringUtils;
 import mayfly.core.util.bean.BeanUtils;
 import mayfly.sys.module.redis.commands.KeyInfo;

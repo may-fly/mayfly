@@ -1,16 +1,12 @@
 package mayfly.core.exception;
 
-import mayfly.core.base.model.CodeMessage;
-import mayfly.core.base.model.Result;
-import mayfly.core.util.enums.NameValueEnum;
+import mayfly.core.model.result.CodeMessage;
 import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 public class BizAssertTest {
 
     enum ErrorCode implements CodeMessage {
-        SERVER_ERROR(500, "服务器异常"),
+        SERVER_ERROR(500, "服务器异常: %s"),
 
         NOT_FOUND(404, "资源未找到");
 
@@ -39,6 +35,6 @@ public class BizAssertTest {
         String test = null;
 //        BizAssert.notNull(test, "test不能为空");
 //        BizAssert.notNull(test, () -> "test不能为空");
-        BizAssert.notNull(test, ErrorCode.SERVER_ERROR);
+        BizAssert.notNull(test, ErrorCode.SERVER_ERROR, "server error");
     }
 }

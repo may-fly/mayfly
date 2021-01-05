@@ -50,7 +50,7 @@ public class MachineServiceImpl extends BaseServiceImpl<MachineMapper, Long, Mac
                     .password(form.getPassword()).username(form.getUsername()).build());
             session.disconnect();
         } catch (SSHException e) {
-            throw new BizRuntimeException("信息不正确：" + e.getMessage());
+            throw BizAssert.newBizRuntimeException("信息不正确：" + e.getMessage());
         }
 
         MachineDO machine = BeanUtils.copyProperties(form, MachineDO.class);

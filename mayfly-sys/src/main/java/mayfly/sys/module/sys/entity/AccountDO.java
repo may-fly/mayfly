@@ -5,7 +5,7 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 import mayfly.core.base.mapper.annotation.Table;
-import mayfly.core.base.model.BaseDO;
+import mayfly.core.model.BaseDO;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;

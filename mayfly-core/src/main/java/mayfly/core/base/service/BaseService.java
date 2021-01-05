@@ -1,9 +1,9 @@
 package mayfly.core.base.service;
 
 
-import mayfly.core.base.model.BaseDO;
-import mayfly.core.base.model.PageQuery;
-import mayfly.core.base.model.PageResult;
+import mayfly.core.model.BaseDO;
+import mayfly.core.model.PageQuery;
+import mayfly.core.model.result.PageResult;
 
 import java.util.List;
 

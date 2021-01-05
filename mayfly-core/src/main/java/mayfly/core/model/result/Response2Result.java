@@ -1,4 +1,4 @@
-package mayfly.core.base.model;
+package mayfly.core.model.result;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

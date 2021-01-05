@@ -1,6 +1,6 @@
 package mayfly.sys.module.sys.service;
 
-import mayfly.core.base.model.BaseDO;
+import mayfly.core.model.BaseDO;
 import mayfly.core.base.service.BaseService;
 import mayfly.core.permission.LoginAccount;
 import mayfly.sys.module.sys.entity.OperationLogDO;

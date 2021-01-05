@@ -1,5 +1,6 @@
 package mayfly.sys.module.redis.machine;
 
+import mayfly.core.exception.BizAssert;
 import mayfly.core.exception.BizRuntimeException;
 import mayfly.sys.common.utils.ssh.SSHUtils;
 
@@ -24,7 +25,7 @@ public class MachineHandler {
 //            String top = SSHUtils.execute(ip, port, username, password, COMMAND_TOP);
             return "top";
         } catch (Exception e) {
-            throw new BizRuntimeException(e.getMessage());
+            throw BizAssert.newBizRuntimeException(e.getMessage());
         }
     }
 

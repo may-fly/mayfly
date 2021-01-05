@@ -1,6 +1,6 @@
 package mayfly.core.web;
 
-import mayfly.core.base.model.Result;
+import mayfly.core.model.result.Result;
 import mayfly.core.exception.BizException;
 import mayfly.core.exception.BizRuntimeException;
 import mayfly.core.util.ThrowableUtils;

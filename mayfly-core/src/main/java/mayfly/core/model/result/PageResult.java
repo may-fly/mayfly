@@ -1,6 +1,7 @@
-package mayfly.core.base.model;
+package mayfly.core.model.result;
 
 import com.github.pagehelper.PageHelper;
+import mayfly.core.model.PageQuery;
 import mayfly.core.util.bean.BeanUtils;
 
 import java.util.Collections;

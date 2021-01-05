@@ -3,7 +3,7 @@ package mayfly.sys.module.sys.controller.query;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import mayfly.core.base.model.PageQuery;
+import mayfly.core.model.PageQuery;
 
 /**
  * @author meilin.huang

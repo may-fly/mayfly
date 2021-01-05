@@ -32,6 +32,16 @@ Vue.directive('permission', function (el, binding) {
   Permission.checkCodeAndSetDom(binding.value, el);
 })
 
+// 全局error处理
+Vue.config.errorHandler = function (err, vm, info) {
+  // 如果是断言错误，则进行提示即可
+  if (err.name == 'AssertError') {
+    ElementUI.Message.error(err.message)
+  } else {
+    console.error(err, info)
+  }
+}
+
 new Vue({
   router,
   store,

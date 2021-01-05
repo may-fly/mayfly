@@ -1,9 +1,7 @@
 package mayfly.core.exception;
 
-import mayfly.core.base.model.CodeMessage;
-import mayfly.core.base.model.CommonCodeEnum;
-import mayfly.core.base.model.Result;
-import mayfly.core.util.enums.NameValueEnum;
+import mayfly.core.model.result.CodeMessage;
+import mayfly.core.model.result.CommonCodeEnum;
 
 /**
  * 业务逻辑异常
@@ -22,7 +20,7 @@ public class BizException extends Exception {
     private final Integer errorCode;
 
     /**
-     * 默认错误code为 {@linkplain mayfly.core.base.model.CommonCodeEnum#FAILURE}
+     * 默认错误code为 {@linkplain CommonCodeEnum#FAILURE}
      *
      * @param msg 错误消息
      */

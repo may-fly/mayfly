@@ -1,4 +1,4 @@
-package mayfly.core.base.model;
+package mayfly.core.model.result;
 
 /**
  * 结果码及消息接口
