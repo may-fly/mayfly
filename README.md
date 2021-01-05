@@ -14,7 +14,7 @@ gitee: <https://gitee.com/objs/mayfly>
 - 部署：[Jenkins+Docker+Springboot持续集成部署](https://www.jianshu.com/p/1401e2fe4711)
 
 ### 模块介绍
-> mayfly-account-front（前端系统）
+> mayfly-front（前端系统）
 
 
 > mayfly-core（后端核心模块）
@@ -45,21 +45,24 @@ gitee: <https://gitee.com/objs/mayfly>
 */
 @MethodLog(value = "获取权限列表", time = true)
 @GetMapping("/v1/permissions")
-public Result list(PermissionForm condition, @Valid PageForm pageQuery){}
+public Result list(PermissionQuery condition){}
 
 
 /**
-*也可以用于类上,如下，在DEBUG级别下打印日志
+*也可以用于类上,如下，只有在DEBUG级别下才会打印返回值【在返回值为列表时可用，防止记录过多日志】
 */
-@MethodLog(level = MethodLog.LogLevel.DEBUG)
+@MethodLog(resultLevel = MethodLog.LogLevel.DEBUG)
 public class PermissionServiceImpl{}
 ```
 打印结果如图：
-![日志输出](https://images.gitee.com/uploads/images/2020/0311/104645_3955cb50_1240250.png "日志输出.png")
+正常日志：
+![正常日志](https://images.gitee.com/uploads/images/2021/0105/145732_56963e85_1240250.png "日志.png")
+
+异常日志：业务异常只打印与本系统相关的堆栈信息，即只打印以本项目包开头的类调用堆栈信息
+![异常日志](https://images.gitee.com/uploads/images/2021/0105/145526_e0a16cf0_1240250.png "异常日志.png")
 
 
-- #### 自定义参数校验器(支持入参枚举值自动校验等)
-参数校验采用AOP拦截所有Controller中的方法带有mayfly.common.validation.annotation.Valid注解的参数，并校验对应的参数字段注解以及值。
+- #### 自定义常用参数校验注解(如入参枚举值，时间范围校验等)
 
 给需要校验的参数字段添加相应的校验规则：
 ```
@@ -78,7 +81,7 @@ public class PermissionForm {
     /**
      * method不能为空且只能是MethodEnum中对应的枚举值value
      */
-    @EnumValue(clazz = MethodEnum.class)
+    @EnumValue(MethodEnum.class)
     @NotNull
     private Integer method;
 
@@ -88,7 +91,7 @@ public class PermissionForm {
     /**
      * status只能是StatusEnum中(声明如下)对应的枚举值value
      */
-    @EnumValue(clazz = StatusEnum.class)
+    @EnumValue(StatusEnum.class)
     private Integer status;   
 }
 
@@ -129,10 +132,6 @@ public enum StatusEnum implements NameValueEnum<Integer> {
     }
 }
 ```
-更多可使用的参数字段校验规则，详见：mayfly.core.validation.annotation包
-
-Controller方法参数校验用法：
-![参数前加@Valid注解](https://images.gitee.com/uploads/images/2019/0329/131943_438c4935_1240250.png "屏幕截图.png")
 
 
 - #### 自定义权限校验注解(控制后端接口以及前端列表按钮权限)
@@ -151,9 +150,12 @@ public class PermissionController
 
 
 - #### 基于断言对业务逻辑判断
-系统中的业务逻辑判断都采用断言的方式进行判断，减少逻辑代码中大量的if代码
+系统中的业务逻辑判断都采用断言的方式进行判断，减少逻辑代码中大量的if代码。分布式系统可对不同业务模块定义不同错误码，方便问题溯源
 
 ```
+    // 可全局设置系统不满足断言条件时的默认错误码
+    BizAssert.setDefaultError(xxxxxx)
+
     public void update(ResourceDO resource) {
         ResourceDO old = getById(resource.getId());
         BizAssert.notNull(old, "资源不存在");
@@ -185,9 +187,14 @@ public class PermissionController
 ```
 
 - #### 前端枚举值统一管理维护
-具体细节可见前端模块：mayfly-account-front 或者博客：https://www.jianshu.com/p/75516ec4f366
+具体细节可见前端模块：mayfly-front 或者博客：https://www.jianshu.com/p/75516ec4f366
+
+- #### 前端断言方式校验参数并错误提示
+具体细节可见前端模块：mayfly-front 或者博客：https://www.jianshu.com/p/e6fb858bfbf7
+
 
 ### 系统部分页面
+
 
 1.菜单&权限管理页
 ![菜单&权限管理页](https://images.gitee.com/uploads/images/2020/0311/104924_bb08cd6d_1240250.png "菜单&权限管理页.png")
