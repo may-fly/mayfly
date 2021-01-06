@@ -21,13 +21,18 @@ public final class ThrowableUtils {
         return stringWriter.toString();
     }
 
+    /**
+     * 获取指定层级堆栈信心
+     *
+     * @param e     异常信息
+     * @param level 堆栈层级
+     * @return 堆栈信息
+     */
     public static String getStackTraceByLevel(Throwable e, int level) {
-        StackTraceElement[] trace = e.getStackTrace();
-        StringBuilder s = new StringBuilder();
-        s.append(e);
+        StringBuilder s = new StringBuilder("\n").append(e);
         int start = 0;
-        for (StackTraceElement traceElement : trace) {
-            s.append("\tat ").append(traceElement);
+        for (StackTraceElement traceElement : e.getStackTrace()) {
+            s.append("\n\tat ").append(traceElement);
             if (++start == level) {
                 break;
             }
@@ -43,10 +48,8 @@ public final class ThrowableUtils {
      * @return 堆栈信息
      */
     public static String getStackTraceByPn(Throwable e, String packagePrefix) {
-        StackTraceElement[] trace = e.getStackTrace();
-        StringBuilder s = new StringBuilder();
-        s.append("\n").append(e);
-        for (StackTraceElement traceElement : trace) {
+        StringBuilder s = new StringBuilder("\n").append(e);
+        for (StackTraceElement traceElement : e.getStackTrace()) {
             if (!traceElement.getClassName().startsWith(packagePrefix)) {
                 break;
             }
@@ -54,5 +57,4 @@ public final class ThrowableUtils {
         }
         return s.toString();
     }
-
 }
