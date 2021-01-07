@@ -26,7 +26,7 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new SignInterceptor()).addPathPatterns("/**");
+//        registry.addInterceptor(new SignInterceptor()).addPathPatterns("/**");
         registry.addInterceptor(new PermissionInterceptor(permissionService))
                 .addPathPatterns("/sys/**", "/devops/**");
     }
