@@ -1,5 +1,5 @@
 <template>
-  <div style="height: 550px" id="xterm" class="xterm" />
+  <div style="height: 600px" id="xterm" class="xterm" />
 </template>
 
 <script>

@@ -17,7 +17,7 @@ public class GlobalThreadPool {
     /**
      * 设置为 CPU 最大核心数
      */
-    private static final int CORE_SIZE = Runtime.getRuntime().availableProcessors();
+    private static final int CORE_SIZE = Runtime.getRuntime().availableProcessors() * 10;
 
     /**
      * 线程名前缀

@@ -1,11 +1,9 @@
 package mayfly.sys.module.websocket;
 
 import lombok.extern.slf4j.Slf4j;
-import mayfly.core.model.result.CommonCodeEnum;
 import mayfly.core.permission.LoginAccount;
 import mayfly.core.thread.GlobalThreadPool;
 import mayfly.sys.common.utils.SpringUtils;
-import mayfly.sys.common.websocket.MessageTypeEnum;
 import mayfly.sys.common.websocket.WebSocketUtils;
 import mayfly.sys.module.machine.webssh.WebSshService;
 import mayfly.sys.module.sys.service.PermissionService;
@@ -18,7 +16,6 @@ import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
-import java.util.Optional;
 
 /**
  * @author meilin.huang

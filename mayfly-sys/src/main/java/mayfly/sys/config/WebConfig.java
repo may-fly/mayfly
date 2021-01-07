@@ -1,9 +1,8 @@
 package mayfly.sys.config;
 
-import mayfly.core.web.DefaultGlobalExceptionHandler;
 import mayfly.core.permission.PermissionInterceptor;
+import mayfly.core.web.DefaultGlobalExceptionHandler;
 import mayfly.core.web.ResponseAdvice;
-import mayfly.sys.config.sign.SignInterceptor;
 import mayfly.sys.module.sys.service.PermissionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

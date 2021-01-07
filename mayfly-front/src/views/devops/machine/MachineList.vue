@@ -152,7 +152,7 @@
       id="terminal"
       title="终端"
       :visible.sync="terminalDialog.visible"
-      width="60%"
+      width="70%"
       :close-on-click-modal="false"
       @close="closeTermnial"
     >
