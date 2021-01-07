@@ -196,19 +196,22 @@ public class PermissionController
 ### 系统部分页面
 
 
-1.菜单&权限管理页
+菜单&权限管理页
 ![菜单&权限管理页](https://images.gitee.com/uploads/images/2020/0311/104924_bb08cd6d_1240250.png "菜单&权限管理页.png")
 
-2.角色分配菜单&权限页
+角色分配菜单&权限页
 ![角色分配菜单&权限页](https://images.gitee.com/uploads/images/2020/0311/104949_3c61e72f_1240250.png "屏幕截图.png")
 
-3.操作日志
+操作日志
 ![操作日志](https://images.gitee.com/uploads/images/2020/0311/105025_2d59ed81_1240250.png "操作日志.png")
 
-4.机器文件管理
+机器ssh终端
+![机器ssh终端](https://images.gitee.com/uploads/images/2021/0107/111858_d55c5fae_1240250.png "机器ssh终端.png")
+
+机器文件管理
 ![机器文件管理](https://images.gitee.com/uploads/images/2020/0311/110243_fdd2ff21_1240250.png "机器文件管理.png")
 ![机器文件管理](https://images.gitee.com/uploads/images/2020/0311/105100_a1b58e35_1240250.png "机器文件管理.png")
 
-5.redis基本操作
+redis基本操作
 ![redis基本操作](https://images.gitee.com/uploads/images/2020/0311/110550_b18f0b76_1240250.png "redis基本操作.png")
 ![redis基本操作](https://images.gitee.com/uploads/images/2020/0311/105230_7281f9e2_1240250.png "redis基本操作.png")
