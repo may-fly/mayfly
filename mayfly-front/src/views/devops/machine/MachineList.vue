@@ -8,7 +8,8 @@
         size="mini"
         @click="openFormDialog(false)"
         plain
-      >添加</el-button>
+        >添加</el-button
+      >
       <el-button
         v-permission="permission.machine.code"
         type="primary"
@@ -17,7 +18,8 @@
         :disabled="currentId == null"
         @click="openFormDialog(currentData)"
         plain
-      >编辑</el-button>
+        >编辑</el-button
+      >
       <el-button
         v-permission="permission.machine.code"
         :disabled="currentId == null"
@@ -25,7 +27,8 @@
         type="danger"
         icon="el-icon-delete"
         size="mini"
-      >删除</el-button>
+        >删除</el-button
+      >
       <el-button
         v-permission="permission.machine.code"
         type="success"
@@ -33,19 +36,25 @@
         @click="fileManage(currentData)"
         size="mini"
         plain
-      >文件管理</el-button>
+        >文件管理</el-button
+      >
 
-      <div style="float: right;">
+      <div style="float: right">
         <el-input
           placeholder="host"
           size="mini"
-          style="width: 140px;"
+          style="width: 140px"
           v-model="params.host"
           @clear="search"
           plain
           clearable
         ></el-input>
-        <el-button @click="search" type="success" icon="el-icon-search" size="mini"></el-button>
+        <el-button
+          @click="search"
+          type="success"
+          icon="el-icon-search"
+          size="mini"
+        ></el-button>
       </div>
     </div>
 
@@ -61,13 +70,14 @@
       <el-table-column prop="ip" label="IP" width>
         <template slot-scope="scope">
           <el-popover placement="bottom-start" width="250px" trigger="click">
-            <div style="white-space: pre-line;">{{machineInfo}}</div>
+            <div style="white-space: pre-line">{{ machineInfo }}</div>
             <el-link
               type="primary"
               @click="showInfo(scope.row.id)"
               slot="reference"
               :underline="false"
-            >{{scope.row.ip}}</el-link>
+              >{{ scope.row.ip }}</el-link
+            >
           </el-popover>
         </template>
       </el-table-column>
@@ -84,7 +94,8 @@
             icom="el-icon-tickets"
             size="mini"
             plain
-          >top</el-button>
+            >top</el-button
+          >
           <el-button
             type="primary"
             @click="monitor(scope.row.id)"
@@ -92,14 +103,24 @@
             icom="el-icon-tickets"
             size="mini"
             plain
-          >监控</el-button>
+            >监控</el-button
+          >
+          <el-button
+            type="success"
+            @click="showTerminal(scope.row)"
+            :ref="scope.row"
+            size="mini"
+            plain
+            >终端</el-button
+          >
           <el-button
             type="success"
             @click="serviceManager(scope.row)"
             :ref="scope.row"
             size="mini"
             plain
-          >服务管理</el-button>
+            >服务管理</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
@@ -110,12 +131,32 @@
       :machineId.sync="dialog.machineId"
     />
 
-    <el-dialog @close="closeTop" title="Top信息" :visible.sync="topDialog.visible" width="70%">
+    <el-dialog
+      @close="closeTop"
+      title="Top信息"
+      :visible.sync="topDialog.visible"
+      width="70%"
+    >
       <top-info ref="topDialog" :machineId="topDialog.machineId" />
     </el-dialog>
 
-    <el-dialog title="监控信息" :visible.sync="monitorDialog.visible" width="70%">
+    <el-dialog
+      title="监控信息"
+      :visible.sync="monitorDialog.visible"
+      width="70%"
+    >
       <monitor ref="monitorDialog" :machineId="monitorDialog.machineId" />
+    </el-dialog>
+
+    <el-dialog
+      id="terminal"
+      title="终端"
+      :visible.sync="terminalDialog.visible"
+      width="60%"
+      :close-on-click-modal="false"
+      @close="closeTermnial"
+    >
+      <ssh-terminal ref="terminal" :machineId="terminalDialog.machineId" />
     </el-dialog>
 
     <dynamic-form-dialog
@@ -136,6 +177,7 @@ import { machinePermission } from '../permissions'
 import { machineApi } from '../api'
 import Monitor from './Monitor.vue'
 import TopInfo from './TopInfo.vue'
+import SshTerminal from './SshTerminal.vue'
 
 @Component({
   name: 'MachineList',
@@ -144,6 +186,7 @@ import TopInfo from './TopInfo.vue'
     DynamicFormDialog,
     Monitor,
     TopInfo,
+    SshTerminal,
   },
 })
 export default class MachineList extends Vue {
@@ -163,6 +206,11 @@ export default class MachineList extends Vue {
   topDialog = {
     visible: false,
     machineId: 0,
+  }
+  terminalDialog = {
+    visible: false,
+    socketUri: '',
+    machineId: '',
   }
   dialog = {
     machineId: null,
@@ -294,6 +342,18 @@ export default class MachineList extends Vue {
     md.cancelInterval()
   }
 
+  showTerminal(row: any) {
+    this.terminalDialog.machineId = row.id
+    this.terminalDialog.visible = true
+  }
+
+  closeTermnial() {
+    this.terminalDialog.visible = false
+    this.terminalDialog.machineId = ''
+    const t: any = this.$refs['terminal']
+    t.closeAll()
+  }
+
   openFormDialog(redis: any) {
     let dialogTitle
     if (redis) {
@@ -332,4 +392,7 @@ export default class MachineList extends Vue {
 </script>
 
 <style>
+#terminal .el-dialog__body {
+  padding: 2px 2px;
+}
 </style>

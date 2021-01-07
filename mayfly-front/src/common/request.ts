@@ -3,7 +3,6 @@ import router from "../router";
 import Axios, { AxiosRequestConfig } from 'axios';
 import Permission from './Permission';
 import config from './config';
-import md5 from 'js-md5';
 
 export interface Result {
   /**
@@ -45,19 +44,19 @@ const service = Axios.create({
   timeout: 25000 // request timeout
 })
 
-function getSign(config: AxiosRequestConfig): string {
-  console.log(config)
-  const method = config.method
-  let signParams
-  if (method == 'post' || method == 'put') {
-    signParams = JSON.stringify(config.data)
-  } else {
-    signParams = config.params
-  }
-  if (signParams) {
-    return md5(signParams + '1111')
-  }
-  return md5('1111')
+function getSign(config: AxiosRequestConfig) {
+  // console.log(config)
+  // const method = config.method
+  // let signParams
+  // if (method == 'post' || method == 'put') {
+  //   signParams = JSON.stringify(config.data)
+  // } else {
+  //   signParams = config.params
+  // }
+  // if (signParams) {
+  //   return md5(signParams + '1111')
+  // }
+  // return md5('1111')
 }
 
 // request interceptor
