@@ -1,7 +1,7 @@
 # mayfly
 
 ### 介绍
-mayfly前后端分离的后台系统(包含按钮级别的权限管理，以及权限禁用，触发按钮置灰禁用状态等)。后续计划补上机器管理及Redis单机以及集群管理（已完成部分接口以及界面）
+mayfly前后端分离的后台系统(包含按钮级别的权限管理，以及权限禁用，触发按钮置灰禁用状态等)。机器管理[webssh, 文件管理，监控等]及Redis单机以及集群管理（已完成部分接口以及界面）
 
 ### 项目地址
 github: <https://github.com/may-fly/mayfly>
@@ -206,7 +206,7 @@ public class PermissionController
 ![操作日志](https://images.gitee.com/uploads/images/2020/0311/105025_2d59ed81_1240250.png "操作日志.png")
 
 机器ssh终端
-![机器ssh终端](https://images.gitee.com/uploads/images/2021/0107/111858_d55c5fae_1240250.png "机器ssh终端.png")
+![机器ssh终端](https://images.gitee.com/uploads/images/2021/0107/155551_1265ba17_1240250.png "机器ssh终端.png")
 
 机器文件管理
 ![机器文件管理](https://images.gitee.com/uploads/images/2020/0311/110243_fdd2ff21_1240250.png "机器文件管理.png")
