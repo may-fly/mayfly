@@ -212,6 +212,9 @@ public class PermissionController
 ![机器文件管理](https://images.gitee.com/uploads/images/2020/0311/110243_fdd2ff21_1240250.png "机器文件管理.png")
 ![机器文件管理](https://images.gitee.com/uploads/images/2020/0311/105100_a1b58e35_1240250.png "机器文件管理.png")
 
+dbms
+![数据查询](https://images.gitee.com/uploads/images/2021/0301/105401_4f56b45d_1240250.png "数据查询.png")
+
 redis基本操作
 ![redis基本操作](https://images.gitee.com/uploads/images/2020/0311/110550_b18f0b76_1240250.png "redis基本操作.png")
 ![redis基本操作](https://images.gitee.com/uploads/images/2020/0311/105230_7281f9e2_1240250.png "redis基本操作.png")
