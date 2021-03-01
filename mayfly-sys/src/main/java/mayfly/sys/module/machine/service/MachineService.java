@@ -4,7 +4,6 @@ import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.Session;
 import mayfly.core.base.service.BaseService;
 import mayfly.core.exception.BizAssert;
-import mayfly.core.exception.BizRuntimeException;
 import mayfly.core.util.IOUtils;
 import mayfly.sys.common.utils.ssh.SSHException;
 import mayfly.sys.common.utils.ssh.SSHUtils;
@@ -58,7 +57,7 @@ public interface MachineService extends BaseService<Long, MachineDO> {
         try {
             return SSHUtils.exec(getSession(machineId), cmd);
         } catch (SSHException e) {
-            throw BizAssert.newBizRuntimeException(e.getMessage());
+            throw BizAssert.newException(e.getMessage());
         }
     }
 
@@ -73,7 +72,7 @@ public interface MachineService extends BaseService<Long, MachineDO> {
         try {
             SSHUtils.exec(getSession(machineId), cmd, lineProcessor);
         } catch (SSHException e) {
-            throw BizAssert.newBizRuntimeException(e.getMessage());
+            throw BizAssert.newException(e.getMessage());
         }
     }
 
@@ -86,7 +85,7 @@ public interface MachineService extends BaseService<Long, MachineDO> {
         try {
             SSHUtils.sftpOperate(getSession(machineId), function);
         } catch (SSHException e) {
-            throw BizAssert.newBizRuntimeException(e.getMessage());
+            throw BizAssert.newException(e.getMessage());
         }
     }
 

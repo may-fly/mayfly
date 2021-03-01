@@ -1,9 +1,8 @@
 package mayfly.core.log;
 
-import mayfly.core.exception.BizRuntimeException;
+import mayfly.core.exception.BizException;
 import mayfly.core.permission.LoginAccount;
 import mayfly.core.thread.GlobalThreadPool;
-import mayfly.core.util.ArrayUtils;
 import mayfly.core.util.StringUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -79,8 +78,8 @@ public class LogAspect {
         Method method = ((MethodSignature) jp.getSignature()).getMethod();
         MethodLog methodLog = getMethodLog(method);
         String logMsg = getInvokeInfo(method, methodLog, jp.getArgs()) + EXCEPTION_FLAG;
-        if (e instanceof BizRuntimeException) {
-            BizRuntimeException bizE = (BizRuntimeException) e;
+        if (e instanceof BizException) {
+            BizException bizE = (BizException) e;
             logMsg = logMsg + "[errCode:" + bizE.getErrorCode() + ", errMsg:" + bizE.getMessage() + "]";
         } else {
             logMsg = logMsg + "sysErr: " + e.getMessage();
@@ -152,7 +151,7 @@ public class LogAspect {
         List<String> tags = new ArrayList<>();
         LoginAccount la = LoginAccount.getFromContext();
         if (la != null) {
-            tags.add("uid=" + la.getId() + ", " + "uname=" + la.getUsername());
+            tags.add(String.format("uid=%s, uname=%s", la.getId(), la.getUsername()));
         }
         String value = ml.value();
         if (!StringUtils.isEmpty(value)) {

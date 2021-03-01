@@ -12,7 +12,9 @@ public enum  DbTypeEnum implements NameValueEnum<Integer> {
     /**
      * mysql
      */
-    MYSQL(1, "mysql");
+    MYSQL(1, "mysql"),
+
+    ORACLE(2, "oracle");
 
     private Integer value;
     private String name;

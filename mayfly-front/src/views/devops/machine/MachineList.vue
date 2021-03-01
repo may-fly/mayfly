@@ -150,7 +150,7 @@
 
     <el-dialog
       id="terminal"
-      title="终端"
+      :title="terminalDialog.title"
       :visible.sync="terminalDialog.visible"
       width="70%"
       :close-on-click-modal="false"
@@ -209,7 +209,7 @@ export default class MachineList extends Vue {
   }
   terminalDialog = {
     visible: false,
-    socketUri: '',
+    title: '',
     machineId: '',
   }
   dialog = {
@@ -344,6 +344,7 @@ export default class MachineList extends Vue {
 
   showTerminal(row: any) {
     this.terminalDialog.machineId = row.id
+       this.terminalDialog.title = `${row.name} [${row.ip}]`
     this.terminalDialog.visible = true
   }
 

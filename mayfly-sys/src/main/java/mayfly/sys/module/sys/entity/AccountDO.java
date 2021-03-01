@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @ToString
-@Table("tb_account")
+@Table("t_account")
 public class AccountDO extends BaseDO implements Serializable {
 
     private static final long serialVersionUID = -5172351936029693334L;

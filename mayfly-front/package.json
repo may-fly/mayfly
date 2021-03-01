@@ -19,7 +19,9 @@
     "vue-router": "^3.2.0",
     "vuex": "^3.4.0",
     "xterm": "^4.9.0",
-    "xterm-addon-fit": "^0.4.0"
+    "xterm-addon-fit": "^0.4.0",
+    "sql-formatter": "^2.3.3",
+    "vue-codemirror": "^4.0.6"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^2.33.0",

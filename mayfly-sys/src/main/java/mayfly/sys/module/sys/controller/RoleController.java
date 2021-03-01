@@ -1,5 +1,6 @@
 package mayfly.sys.module.sys.controller;
 
+import mayfly.core.log.MethodLog;
 import mayfly.core.model.result.PageResult;
 import mayfly.core.model.result.Response2Result;
 import mayfly.core.exception.BizAssert;
@@ -48,6 +49,7 @@ public class RoleController {
         return roleService.listByCondition(BeanUtils.copyProperties(query, RoleDO.class), query);
     }
 
+    @MethodLog("新建角色")
     @PostMapping()
     public int save(@Valid @RequestBody RoleForm roleForm) {
         RoleDO role = BeanUtils.copyProperties(roleForm, RoleDO.class);
@@ -55,12 +57,14 @@ public class RoleController {
         return roleService.insert(role);
     }
 
+    @MethodLog("更新角色")
     @PutMapping("/{id}")
     public void update(@PathVariable Long id, @Valid @RequestBody RoleForm roleForm) {
         roleForm.setId(id);
         roleService.update(BeanUtils.copyProperties(roleForm, RoleDO.class));
     }
 
+    @MethodLog("删除角色")
     @Permission
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
@@ -79,13 +83,14 @@ public class RoleController {
 
     @Permission
     @PostMapping("/{id}/resources")
+    @MethodLog("保存角色资源")
     public void saveResources(@PathVariable Long id, @RequestBody RoleForm roleForm) {
         List<Long> ids;
         try {
             ids = Stream.of(roleForm.getResourceIds().split(",")).map(Long::valueOf)
                     .distinct().collect(Collectors.toList());
         } catch (Exception e) {
-            throw BizAssert.newBizRuntimeException("资源id列表参数错误！");
+            throw BizAssert.newException("资源id列表参数错误！");
         }
         roleResourceService.saveResource(id, ids);
     }

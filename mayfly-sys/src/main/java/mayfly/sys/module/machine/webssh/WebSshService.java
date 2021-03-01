@@ -33,7 +33,6 @@ public class WebSshService {
 
     public void recvMsg(String buffer, Session session) {
         WebSshRecvMsg msg = JsonUtils.parseObject(buffer, WebSshRecvMsg.class);
-        Long machineId = msg.getMachineId();
         if (msg.getType().equals(WebSshRecvMsg.CMD)) {
             Channel channel = CHANNEL_MAP.get(session.getId());
             try {
@@ -62,7 +61,7 @@ public class WebSshService {
         try (InputStream inputStream = channel.getInputStream()) {
             //循环读取
             byte[] buffer = new byte[1024];
-            int i = 0;
+            int i;
             //如果没有数据来，线程会一直阻塞在这个地方等待数据。
             while ((i = inputStream.read(buffer)) != -1) {
                 sendMessage(webSocketSession, Arrays.copyOfRange(buffer, 0, i));

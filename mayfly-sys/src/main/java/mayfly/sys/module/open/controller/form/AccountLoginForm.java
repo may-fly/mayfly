@@ -25,4 +25,14 @@ public class AccountLoginForm {
 
     @NotBlank(message = "uuid不能为空")
     private String uuid;
+
+    @Override
+    public String toString() {
+        return "AccountLoginForm{" +
+                "username='" + username + '\'' +
+                ", password=' ******" + '\'' +
+                ", captcha='******" + '\'' +
+                ", uuid='" + uuid + '\'' +
+                '}';
+    }
 }

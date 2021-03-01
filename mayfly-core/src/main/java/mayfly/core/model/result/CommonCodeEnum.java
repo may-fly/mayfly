@@ -20,7 +20,7 @@ public enum CommonCodeEnum implements CodeMessage {
     /**
      * 参数错误
      */
-    PARAM_ERROR(405, "%s"),
+    PARAM_ERROR(405, "参数错误"),
 
     /**
      * 资源未找到

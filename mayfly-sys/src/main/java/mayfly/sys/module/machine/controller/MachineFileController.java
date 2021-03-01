@@ -86,7 +86,7 @@ public class MachineFileController {
         try {
             machineFileService.uploadFile(form.getFileId(), form.getPath() + "/" + file.getOriginalFilename(), file.getInputStream());
         } catch (IOException e) {
-            throw BizAssert.newBizRuntimeException(e.getMessage());
+            throw BizAssert.newException(e.getMessage());
         }
     }
 

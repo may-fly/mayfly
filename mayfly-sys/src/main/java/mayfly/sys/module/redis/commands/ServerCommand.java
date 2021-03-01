@@ -3,7 +3,6 @@ package mayfly.sys.module.redis.commands;
 import io.lettuce.core.api.sync.RedisCommands;
 import io.lettuce.core.api.sync.RedisServerCommands;
 import mayfly.core.exception.BizAssert;
-import mayfly.core.exception.BizRuntimeException;
 import mayfly.core.util.Assert;
 import mayfly.core.util.StringUtils;
 import mayfly.sys.module.redis.connection.RedisConnectionRegistry;
@@ -74,7 +73,7 @@ public class ServerCommand {
 
         if (!StringUtils.isEmpty(param.valuePattern)) {
             if (!value.matches(param.valuePattern)) {
-                throw BizAssert.newBizRuntimeException("value值不正确！");
+                throw BizAssert.newException("value值不正确！");
             }
         }
         RedisCommands cmds = getCmds(redisId);

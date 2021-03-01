@@ -41,7 +41,7 @@ function notifyErrorMsg(msg: string) {
 // create an axios instance
 const service = Axios.create({
   baseURL: baseUrl, // url = base url + request url
-  timeout: 25000 // request timeout
+  timeout: 50000 // request timeout
 })
 
 function getSign(config: AxiosRequestConfig) {

@@ -99,7 +99,7 @@ public @interface EnumValue {
                     setErrorEnumPlaceholderValue(values, context);
                     return false;
                 }
-                throw BizAssert.newBizRuntimeException("@EnumValue只支持Integer和String类型的枚举值参数，暂不支持其他类型！");
+                throw BizAssert.newException("@EnumValue只支持Integer和String类型的枚举值参数，暂不支持其他类型！");
             }
 
             if (EnumUtils.isExist((ValueEnum[]) enumValue.value().getEnumConstants(), value)) {

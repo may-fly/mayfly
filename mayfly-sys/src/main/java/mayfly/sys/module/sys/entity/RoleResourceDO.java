@@ -17,7 +17,7 @@ import mayfly.core.model.BaseDO;
 @Setter
 @ToString(callSuper = true)
 @Accessors(chain = true)
-@Table("tb_role_resource")
+@Table("t_role_resource")
 @NoColumn(fields = {BaseDO.UPDATE_TIME, BaseDO.MODIFIER, BaseDO.MODIFIER_ID})
 public class RoleResourceDO extends BaseDO {
 

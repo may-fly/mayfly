@@ -2,7 +2,6 @@ package mayfly.core.web;
 
 import mayfly.core.model.result.Result;
 import mayfly.core.exception.BizException;
-import mayfly.core.exception.BizRuntimeException;
 import mayfly.core.util.ThrowableUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,18 +27,11 @@ public class DefaultGlobalExceptionHandler {
     private static final Logger LOG = LoggerFactory.getLogger(DefaultGlobalExceptionHandler.class);
 
     /************  统一异常处理 ***********/
-
-    @ExceptionHandler(BizRuntimeException.class)
-    public Result<?> handleBusinessRuntimeException(BizRuntimeException e) {
-        LOG.error("业务异常：{}", ThrowableUtils.getStackTraceByPn(e, "mayfly."));
-        // 如果是业务逻辑异常则无需记录日志，错误提示即可
-        return Result.error(e.getErrorCode(), e.getMessage());
-    }
-
+    
     @ExceptionHandler(BizException.class)
     public Result<?> handleBusinessException(BizException e) {
+        // 只记录与本系统相关的类调用堆栈信息
         LOG.error("业务异常：{}", ThrowableUtils.getStackTraceByPn(e, "mayfly."));
-        // 如果是业务逻辑异常则无需记录日志，错误提示即可
         return Result.error(e.getErrorCode(), e.getMessage());
     }
 

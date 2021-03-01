@@ -17,7 +17,7 @@ public interface RoleResourceMapper extends BaseMapper<Long, RoleResourceDO> {
 
     @Select("select rr.creator AS creator, rr.create_time AS createTime, rr.resource_id AS resourceId, r.pid AS resourcePid, " +
             "r.name AS resourceName, r.type AS type, r.status AS status " +
-            "FROM tb_role_resource rr JOIN tb_resource r ON rr.resource_id = r.id " +
+            "FROM t_role_resource rr JOIN t_resource r ON rr.resource_id = r.id " +
             "WHERE rr.role_id = #{roleId} " +
             "ORDER BY r.pid ASC, r.weight ASC")
     List<RoleResourceVO> selectResourceByRoleId(@Param("roleId") Long roleId);

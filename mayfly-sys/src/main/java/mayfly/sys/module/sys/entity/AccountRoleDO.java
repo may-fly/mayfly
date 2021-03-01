@@ -18,7 +18,7 @@ import mayfly.core.model.BaseDO;
 @Setter
 @ToString
 @Accessors(chain = true)
-@Table("tb_account_role")
+@Table("t_account_role")
 @NoColumn(fields = {BaseDO.UPDATE_TIME, BaseDO.MODIFIER, BaseDO.MODIFIER_ID})
 public class AccountRoleDO extends BaseDO {
     private Long accountId;

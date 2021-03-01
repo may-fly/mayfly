@@ -21,7 +21,7 @@ import java.util.List;
 @Setter
 @ToString
 @Accessors(chain = true)
-@Table("tb_resource")
+@Table("t_resource")
 public class ResourceDO extends BaseDO implements Serializable {
 
     private static final long serialVersionUID = 6346288647519202567L;

@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 import mayfly.core.base.service.impl.BaseServiceImpl;
 import mayfly.core.exception.BizAssert;
-import mayfly.core.exception.BizRuntimeException;
 import mayfly.core.util.ArrayUtils;
 import mayfly.core.util.BracePlaceholder;
 import mayfly.core.util.IOUtils;
@@ -22,7 +21,6 @@ import mayfly.sys.module.machine.service.MachineService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.InputStream;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
@@ -50,7 +48,7 @@ public class MachineServiceImpl extends BaseServiceImpl<MachineMapper, Long, Mac
                     .password(form.getPassword()).username(form.getUsername()).build());
             session.disconnect();
         } catch (SSHException e) {
-            throw BizAssert.newBizRuntimeException("信息不正确：" + e.getMessage());
+            throw BizAssert.newException("信息不正确：" + e.getMessage());
         }
 
         MachineDO machine = BeanUtils.copyProperties(form, MachineDO.class);
@@ -121,7 +119,7 @@ public class MachineServiceImpl extends BaseServiceImpl<MachineMapper, Long, Mac
                 try {
                     return IOUtils.read(url.openStream());
                 } catch (Exception e) {
-                    throw BizAssert.newBizRuntimeException("读取shell文件失败");
+                    throw BizAssert.newException("读取shell文件失败");
                 }
             }
             return null;

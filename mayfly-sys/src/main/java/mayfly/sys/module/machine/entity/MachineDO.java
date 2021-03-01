@@ -14,7 +14,7 @@ import mayfly.core.model.BaseDO;
 @Getter
 @Setter
 @ToString(callSuper = true)
-@Table("tb_machine")
+@Table("t_machine")
 public class MachineDO extends BaseDO {
     private String name;
 

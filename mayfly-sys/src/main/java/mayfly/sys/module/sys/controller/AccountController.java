@@ -1,5 +1,6 @@
 package mayfly.sys.module.sys.controller;
 
+import mayfly.core.log.MethodLog;
 import mayfly.core.model.result.PageResult;
 import mayfly.core.model.result.Response2Result;
 import mayfly.core.exception.BizAssert;
@@ -57,16 +58,19 @@ public class AccountController {
         return accountService.listByQuery(accountQuery);
     }
 
+    @MethodLog("新建账号")
     @PostMapping()
     public void save(@Valid @RequestBody AccountForm accountForm) {
         accountService.create(accountForm);
     }
 
+    @MethodLog("更新账号")
     @PutMapping("/{id}")
     public void update(@PathVariable Long id, @Valid @RequestBody AccountForm accountForm) {
         accountService.create(accountForm);
     }
 
+    @MethodLog("修改账号状态")
     @Permission
     @PutMapping("/{id}/{status}")
     public void changeStatus(@PathVariable Long id, @PathVariable Integer status) {
@@ -76,6 +80,7 @@ public class AccountController {
         accountService.updateByIdSelective(a);
     }
 
+    @MethodLog("删除账号")
     @Permission
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
@@ -104,7 +109,7 @@ public class AccountController {
         try {
             ids = Stream.of(adminForm.getRoleIds().split(",")).map(Long::valueOf).collect(Collectors.toList());
         } catch (Exception e) {
-            throw BizAssert.newBizRuntimeException("roleIds参数错误！");
+            throw BizAssert.newException("roleIds参数错误！");
         }
         accountRoleService.saveRoles(id, ids);
     }

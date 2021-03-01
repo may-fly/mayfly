@@ -502,7 +502,7 @@ public interface BaseMapper<I, E> {
         /**
          * 表前缀
          */
-        private static final String TABLE_PREFIX = "tb_";
+        private static final String TABLE_PREFIX = "t_";
 
         /**
          * 主键名

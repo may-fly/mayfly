@@ -15,7 +15,7 @@ import java.util.List;
 public interface AccountRoleMapper extends BaseMapper<Long, AccountRoleDO> {
 
     @Select("SELECT r.status, r.name, ar.create_time AS createTime, ar.creator AS creator " +
-            "FROM tb_role r JOIN tb_account_role ar ON r.id = ar.role_id AND ar.account_id = #{accountId} " +
+            "FROM t_role r JOIN t_account_role ar ON r.id = ar.role_id AND ar.account_id = #{accountId} " +
             "ORDER BY ar.create_time DESC")
     List<RoleDO> selectRoleByAccountId(Long accountId);
 }

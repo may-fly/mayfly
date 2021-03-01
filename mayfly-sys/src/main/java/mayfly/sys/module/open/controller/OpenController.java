@@ -1,6 +1,7 @@
 package mayfly.sys.module.open.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import mayfly.core.log.MethodLog;
 import mayfly.core.model.result.Response2Result;
 import mayfly.core.exception.BizAssert;
 import mayfly.core.thread.GlobalThreadPool;
@@ -63,8 +64,8 @@ public class OpenController {
         return openService.generateCaptcha();
     }
 
-    //    @NeedSign()
     @PostMapping("/login")
+    @MethodLog(value = "用户登录", resultLevel = MethodLog.LogLevel.NONE)
     public LoginSuccessVO login(@RequestBody @Valid AccountLoginForm loginForm) {
         BizAssert.isTrue(openService.checkCaptcha(loginForm.getUuid(), loginForm.getCaptcha()), "验证码错误");
         AccountDO result = accountService.login(loginForm);

@@ -2,7 +2,6 @@ package mayfly.core.captcha;
 
 import mayfly.core.captcha.base.BaseCaptcha;
 import mayfly.core.exception.BizAssert;
-import mayfly.core.exception.BizRuntimeException;
 
 /**
  * 验证码建造器
@@ -61,7 +60,7 @@ public class CaptchaBuilder<T extends BaseCaptcha> {
         try {
             captcha.setFont(font);
         } catch (Exception e) {
-            throw BizAssert.newBizRuntimeException("字体错误");
+            throw BizAssert.newException("字体错误");
         }
         return this;
     }

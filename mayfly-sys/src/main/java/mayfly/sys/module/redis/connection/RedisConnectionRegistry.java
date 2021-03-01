@@ -14,7 +14,6 @@ import io.lettuce.core.codec.RedisCodec;
 import mayfly.core.cache.Cache;
 import mayfly.core.cache.CacheBuilder;
 import mayfly.core.exception.BizAssert;
-import mayfly.core.exception.BizRuntimeException;
 import mayfly.core.util.Assert;
 import mayfly.core.util.IOUtils;
 import org.slf4j.Logger;
@@ -138,7 +137,7 @@ public class RedisConnectionRegistry {
     public StatefulRedisClusterConnection<String, byte[]> getClusterConnection(long clusterId) {
         return Optional.ofNullable(connectionCache.get(getClusterKey(clusterId)))
                 .map(x -> (StatefulRedisClusterConnection<String, byte[]>) x.getRequireConnection())
-                .orElseThrow(() -> BizAssert.newBizRuntimeException("不存在该集群连接实例！"));
+                .orElseThrow(() -> BizAssert.newException("不存在该集群连接实例！"));
     }
 
 
@@ -263,7 +262,7 @@ public class RedisConnectionRegistry {
                 try {
                     connection = ((RedisClient) redisClient).connect(byteCodec);
                 } catch (RedisConnectionException e) {
-                    throw BizAssert.newBizRuntimeException("无法连接redis实例！");
+                    throw BizAssert.newException("无法连接redis实例！");
                 }
             } else {
                 Set<RedisURI> uris = redisInfos.stream().map(RedisInfo::getUri).collect(Collectors.toSet());
@@ -271,10 +270,10 @@ public class RedisConnectionRegistry {
                 try {
                     connection = ((RedisClusterClient) redisClient).connect(byteCodec);
                 } catch (RedisConnectionException e) {
-                    throw BizAssert.newBizRuntimeException("无法连接redis集群！");
+                    throw BizAssert.newException("无法连接redis集群！");
                 } catch (Exception ce) {
                     LOG.error("连接redis集群失败！", ce);
-                    throw BizAssert.newBizRuntimeException("连接redis集群失败！");
+                    throw BizAssert.newException("连接redis集群失败！");
                 }
             }
             return this;

@@ -1,7 +1,7 @@
 package mayfly.core.permission;
 
-import mayfly.core.model.result.Result;
 import mayfly.core.exception.BizException;
+import mayfly.core.model.result.Result;
 import mayfly.core.permission.registry.PermissionCheckHandler;
 import mayfly.core.permission.registry.SimpleLoginAccountRegistry;
 import mayfly.core.util.JsonUtils;

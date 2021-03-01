@@ -7,6 +7,7 @@ import 'element-ui/lib/theme-chalk/index.css'
 import './assets/css/style.css'
 import Permission from '@/common/Permission.ts'
 import Utils from '@/common/Utils.ts'
+import { bind } from '@/common/drog.js'
 
 // import ECharts from 'vue-echarts' // 在 webpack 环境下指向 components/ECharts.vue
 
@@ -30,6 +31,10 @@ Vue.prototype.$Utils = Utils
  */
 Vue.directive('permission', function (el, binding) {
   Permission.checkCodeAndSetDom(binding.value, el);
+})
+
+Vue.directive('dialogDrag', {
+  bind
 })
 
 // 全局error处理

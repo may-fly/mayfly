@@ -16,7 +16,7 @@ import mayfly.core.model.BaseDO;
 @Setter
 @ToString(callSuper = true)
 @Accessors(chain = true)
-@Table("tb_machine_monitor")
+@Table("t_machine_monitor")
 @NoColumn(fields = {BaseDO.CREATOR, BaseDO.CREATOR_ID, BaseDO.UPDATE_TIME, BaseDO.MODIFIER, BaseDO.MODIFIER_ID})
 public class MachineMonitorDO extends BaseDO {
 

@@ -14,7 +14,7 @@ import mayfly.core.model.BaseDO;
 @Getter
 @Setter
 @Accessors(chain = true)
-@Table("tb_sys_operation_log")
+@Table("t_sys_operation_log")
 @NoColumn(fields = {BaseDO.UPDATE_TIME, BaseDO.MODIFIER, BaseDO.MODIFIER_ID})
 public class OperationLogDO extends BaseDO {
 

@@ -1,7 +1,7 @@
 package mayfly.sys.module.sys.controller;
 
-import mayfly.core.model.result.Response2Result;
 import mayfly.core.log.MethodLog;
+import mayfly.core.model.result.Response2Result;
 import mayfly.core.permission.Permission;
 import mayfly.core.util.bean.BeanUtils;
 import mayfly.sys.module.sys.controller.form.ResourceForm;

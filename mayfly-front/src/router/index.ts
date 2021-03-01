@@ -79,6 +79,15 @@ const routes: Array<RouteConfig> = [
         component: () => import('@/views/devops/machine')
       },
       {
+        path: 'db-select-data',
+        name: 'dbs',
+        meta: {
+          title: 'DBMS',
+          keepAlive: false
+        },
+        component: () => import('@/views/devops/db/SelectData.vue')
+      },
+      {
         path: '/redis',
         name: 'redis',
         meta: {
