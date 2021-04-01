@@ -56,7 +56,7 @@ public class PermissionInterceptor implements HandlerInterceptor {
             // 判断该用户是否有执行该方法的权限，如果校验通过，返回true
             if (!(handler instanceof HandlerMethod) || checkHandler.hasPermission(token, ((HandlerMethod) handler).getMethod())) {
                 if (!"admin".equals(LoginAccount.getFromContext().getUsername()) && !"GET".equals(request.getMethod())) {
-                    sendErrorMessage(response, CommonCodeEnum.NO_PERMISSION.toResult("非admin用户只可观望"));
+                    sendErrorMessage(response, CommonCodeEnum.PARAM_ERROR.toResult("非admin用户只可观望"));
                     return false;
                 }
                 return true;
