@@ -24,10 +24,10 @@ public final class BizAssert {
     /**
      * 设置默认错误消息，可根据不同模块设置不同错误码，方便问题溯源
      *
-     * @param defaultErrorCode 默认错误码
+     * @param errorCode 默认错误码
      */
-    public static void setDefaultErrorCode(Integer defaultErrorCode) {
-        defaultErrorCode = defaultErrorCode;
+    public static void setDefaultErrorCode(Integer errorCode) {
+        defaultErrorCode = errorCode;
     }
 
     private BizAssert() {

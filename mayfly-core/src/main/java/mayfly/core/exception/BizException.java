@@ -1,7 +1,6 @@
 package mayfly.core.exception;
 
 import mayfly.core.model.result.CodeMessage;
-import mayfly.core.model.result.CommonCodeEnum;
 
 /**
  * 业务逻辑运行时异常

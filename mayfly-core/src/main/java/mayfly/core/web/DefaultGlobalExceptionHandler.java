@@ -1,5 +1,6 @@
 package mayfly.core.web;
 
+import mayfly.core.model.result.CommonCodeEnum;
 import mayfly.core.model.result.Result;
 import mayfly.core.exception.BizException;
 import mayfly.core.util.ThrowableUtils;
@@ -32,7 +33,7 @@ public class DefaultGlobalExceptionHandler {
     public Result<?> handleBusinessException(BizException e) {
         // 只记录与本系统相关的类调用堆栈信息
         LOG.error("业务异常：{}", ThrowableUtils.getStackTraceByPn(e, "mayfly."));
-        return Result.error(e.getErrorCode(), e.getMessage());
+        return Result.of(e.getErrorCode(), e.getMessage());
     }
 
     /**
@@ -45,9 +46,9 @@ public class DefaultGlobalExceptionHandler {
     public Object validExceptionHandler(BindException e) {
         FieldError fieldError = e.getBindingResult().getFieldError();
         if (fieldError == null) {
-            return Result.serverError();
+            return CommonCodeEnum.SERVER_ERROR.toResult();
         }
-        return Result.paramError(fieldError.getDefaultMessage());
+        return CommonCodeEnum.PARAM_ERROR.toResult(fieldError.getDefaultMessage());
     }
 
     /**
@@ -60,32 +61,33 @@ public class DefaultGlobalExceptionHandler {
     public Object validExceptionHandler(MethodArgumentNotValidException e) {
         FieldError fieldError = e.getBindingResult().getFieldError();
         if (fieldError == null) {
-            return Result.serverError();
+            return CommonCodeEnum.SERVER_ERROR.toResult();
         }
-        return Result.paramError(fieldError.getDefaultMessage());
+        return CommonCodeEnum.PARAM_ERROR.toResult(fieldError.getDefaultMessage());
     }
 
     @ExceptionHandler(Exception.class)
     public Result<?> handleException(Exception e) {
+        CommonCodeEnum paramError = CommonCodeEnum.PARAM_ERROR;
         if (e instanceof HttpRequestMethodNotSupportedException) {
-            return Result.serverError("request method error");
+            return paramError.toResult("request method error");
         }
         if (e instanceof MethodArgumentTypeMismatchException) {
-            return Result.paramError("param type mismatch");
+            return paramError.toResult("param type mismatch");
         }
         if (e instanceof MissingServletRequestParameterException) {
-            return Result.paramError("param not present");
+            return paramError.toResult("param not present");
         }
         if (e instanceof HttpMediaTypeNotSupportedException) {
-            return Result.paramError(e.getMessage());
+            return paramError.toResult(e.getMessage());
         }
         if (e instanceof HttpMessageNotReadableException) {
             LOG.error("参数解析错误：", e);
-            return Result.paramError("param parse error");
+            return paramError.toResult("param parse error");
         }
         // 记录未知异常日志
         LOG.error("系统异常：", e);
-        return Result.serverError();
+        return CommonCodeEnum.SERVER_ERROR.toResult();
     }
 
 }

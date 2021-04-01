@@ -3,6 +3,7 @@ package mayfly.sys.module.redis.controller;
 import io.lettuce.core.api.sync.BaseRedisCommands;
 import io.lettuce.core.api.sync.RedisKeyCommands;
 import mayfly.core.log.MethodLog;
+import mayfly.core.model.result.CommonCodeEnum;
 import mayfly.core.permission.Permission;
 import mayfly.core.model.result.Result;
 import mayfly.core.util.StringUtils;
@@ -48,7 +49,7 @@ public class RedisController {
     @GetMapping("/{cluster}/{id}/value")
     public Result<?> value(@PathVariable Boolean cluster, @PathVariable Long id, String key) {
         if (StringUtils.isEmpty(key)) {
-            return Result.paramError("key不能为空!");
+            return CommonCodeEnum.PARAM_ERROR.toResult("key不能为空!");
         }
         return Result.success(KeyValueCommand.value(getKeyCmd(cluster, id), key));
     }
@@ -65,7 +66,7 @@ public class RedisController {
     @DeleteMapping("/{cluster}/{id}")
     public Result<?> delete(@PathVariable Boolean cluster, @PathVariable Long id, String key) {
         if (StringUtils.isEmpty(key)) {
-            return Result.paramError("key不能为空！");
+            return CommonCodeEnum.PARAM_ERROR.toResult("key不能为空！");
         }
         KeyValueCommand.del(getKeyCmd(cluster, id), key);
         return Result.success();

@@ -31,4 +31,24 @@ public interface CodeMessage {
     default String getMessage(Object... params) {
         return String.format(getMessage(), params);
     }
+
+    /**
+     * 转换为Result
+     *
+     * @param message 消息
+     * @return {@linkplain Result}
+     */
+    default Result<?> toResult(String message) {
+        return Result.of(this, message);
+    }
+
+    /**
+     * 转换为Result
+     *
+     * @param params 消息占位符参数
+     * @return {@linkplain Result}
+     */
+    default Result<?> toResult(Object... params) {
+        return Result.of(this, params);
+    }
 }

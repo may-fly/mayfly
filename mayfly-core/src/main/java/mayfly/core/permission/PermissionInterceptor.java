@@ -1,6 +1,7 @@
 package mayfly.core.permission;
 
 import mayfly.core.exception.BizException;
+import mayfly.core.model.result.CommonCodeEnum;
 import mayfly.core.model.result.Result;
 import mayfly.core.permission.registry.PermissionCheckHandler;
 import mayfly.core.permission.registry.SimpleLoginAccountRegistry;
@@ -50,12 +51,12 @@ public class PermissionInterceptor implements HandlerInterceptor {
             return true;
         }
         String token = Optional.ofNullable(request.getHeader(tokenParamName))
-                .orElse(request.getParameter(tokenParamName));
+                .orElseGet(() -> request.getParameter(tokenParamName));
         try {
             // 判断该用户是否有执行该方法的权限，如果校验通过，返回true
             if (!(handler instanceof HandlerMethod) || checkHandler.hasPermission(token, ((HandlerMethod) handler).getMethod())) {
                 if (!"admin".equals(LoginAccount.getFromContext().getUsername()) && !"GET".equals(request.getMethod())) {
-                    sendErrorMessage(response, Result.failure("只可观望"));
+                    sendErrorMessage(response, CommonCodeEnum.NO_PERMISSION.toResult("非admin用户只可观望"));
                     return false;
                 }
                 return true;
@@ -64,7 +65,7 @@ public class PermissionInterceptor implements HandlerInterceptor {
             return noPermission(response);
         } catch (BizException e) {
             //权限禁用or没有权限
-            sendErrorMessage(response, Result.error(e.getErrorCode(), e.getMessage()));
+            sendErrorMessage(response, Result.of(e.getErrorCode(), e.getMessage()));
             return false;
         }
     }
@@ -77,7 +78,7 @@ public class PermissionInterceptor implements HandlerInterceptor {
 
 
     public static boolean noPermission(HttpServletResponse response) {
-        sendErrorMessage(response, Result.withoutPermission());
+        sendErrorMessage(response, CommonCodeEnum.NO_PERMISSION.toResult());
         return false;
     }
 
