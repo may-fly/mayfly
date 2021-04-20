@@ -2,7 +2,6 @@ package mayfly.sys.module.sys.service.impl;
 
 import mayfly.core.base.service.impl.BaseServiceImpl;
 import mayfly.core.exception.BizAssert;
-import mayfly.core.log.MethodLog;
 import mayfly.core.util.StringUtils;
 import mayfly.core.util.TreeUtils;
 import mayfly.core.util.bean.BeanUtils;
@@ -40,20 +39,17 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourceMapper, Long, R
     @Autowired
     private OperationLogService operationLogService;
 
-    @MethodLog(level = MethodLog.LogLevel.NONE)
     @Override
     public List<ResourceListVO> listByAccountId(Long userId) {
         return BeanUtils.copyProperties(mapper.selectByAccountId(userId), ResourceListVO.class);
     }
 
-    @MethodLog(value = "获取资源树", resultLevel = MethodLog.LogLevel.DEBUG)
     @Override
     public List<ResourceListVO> listResource() {
         return TreeUtils.generateTrees(BeanUtils.copyProperties(listAll("pid ASC, weight ASC"),
                 ResourceListVO.class));
     }
 
-    @MethodLog(value = "创建资源")
     @Override
     public void create(ResourceDO resource) {
         if (resource.getPid() == null || Objects.equals(resource.getPid(), 0L)) {
@@ -83,7 +79,6 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourceMapper, Long, R
         insert(resource);
     }
 
-    @MethodLog("更新资源")
     @Override
     public void update(ResourceDO resource) {
         ResourceDO old = getById(resource.getId());
@@ -109,7 +104,6 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourceMapper, Long, R
         operationLogService.asyncUpdateLog("更新权限&菜单", resource, old);
     }
 
-    @MethodLog("修改资源状态")
     @Override
     public void changeStatus(Long id, Integer status) {
         BizAssert.isTrue(EnumUtils.isExist(EnableDisableEnum.values(), status), "状态值错误");
@@ -124,7 +118,6 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourceMapper, Long, R
         updateByIdSelective(resource);
     }
 
-    @MethodLog("删除资源")
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void delete(Long id) {

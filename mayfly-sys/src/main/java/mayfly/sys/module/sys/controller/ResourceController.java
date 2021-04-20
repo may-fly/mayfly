@@ -37,6 +37,7 @@ public class ResourceController {
     @Autowired
     private ResourceService resourceService;
 
+    @MethodLog(value = "获取资源树", resultLevel = MethodLog.LogLevel.DEBUG)
     @GetMapping()
     public List<ResourceListVO> list(ResourceQuery queryForm) {
         return resourceService.listResource();

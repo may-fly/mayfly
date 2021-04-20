@@ -39,7 +39,7 @@ public interface CodeMessage {
      * @return {@linkplain Result}
      */
     default Result<?> toResult(String message) {
-        return Result.of(this, message);
+        return Result.of(this.getCode(), message);
     }
 
     /**

@@ -54,7 +54,7 @@ public class RedisController {
         return Result.success(KeyValueCommand.value(getKeyCmd(cluster, id), key));
     }
 
-    @MethodLog(value = "新增redis key value")
+    @MethodLog("新增redis key value")
     @PostMapping("/{cluster}/{id}/value")
     public Result<?> addKeyValue(@PathVariable Boolean cluster, @PathVariable Long id, @Valid KeyValueForm keyValue) {
         BaseRedisCommands<String, byte[]> cmds = cluster ? redisService.getClusterCmds(id) : redisService.getCmds(id);

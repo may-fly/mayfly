@@ -34,13 +34,11 @@ public class AccountServiceImpl extends BaseServiceImpl<AccountMapper, Long, Acc
     private PermissionService permissionService;
 
 
-    @MethodLog(value = "获取账号列表", level = MethodLog.LogLevel.DEBUG)
     @Override
     public PageResult<AccountVO> listByQuery(AccountQuery query) {
         return PageResult.withPageHelper(query, () -> mapper.selectByQuery(query), AccountVO.class);
     }
 
-    @MethodLog(level = MethodLog.LogLevel.NONE)
     @Override
     public AccountDO login(AccountLoginForm adminForm) {
         AccountDO condition = new AccountDO().setUsername(adminForm.getUsername())
@@ -52,7 +50,6 @@ public class AccountServiceImpl extends BaseServiceImpl<AccountMapper, Long, Acc
         return account;
     }
 
-    @MethodLog(level = MethodLog.LogLevel.NONE)
     @Override
     public void logout(String token) {
         permissionService.removeToken(token);

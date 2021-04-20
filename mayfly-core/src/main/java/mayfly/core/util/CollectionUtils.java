@@ -43,6 +43,7 @@ public class CollectionUtils {
      * @param <T>  元素类型
      * @return ArrayList
      */
+    @SafeVarargs
     public static <T> List<T> newArrayList(int size, T... ele) {
         List<T> al = new ArrayList<>(size);
         al.addAll(Arrays.asList(ele));
@@ -56,6 +57,7 @@ public class CollectionUtils {
      * @param <T>  元素类型
      * @return ArrayList
      */
+    @SafeVarargs
     public static <T> List<T> newArrayList(T... ele) {
         return new ArrayList<>(Arrays.asList(ele));
     }

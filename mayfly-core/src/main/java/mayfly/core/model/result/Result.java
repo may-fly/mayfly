@@ -62,17 +62,6 @@ public final class Result<T> implements Serializable {
         return new Result<T>(resultEnum.getCode(), params == null ? resultEnum.getMessage() : resultEnum.getMessage(params));
     }
 
-    /**
-     * 操作结果对象简单工厂 <br/>
-     * 可扩展结果操作码和操作结果消息(即实现{@link CodeMessage}接口的枚举类即可)
-     *
-     * @param resultEnum 结果枚举类
-     * @return 结果对象
-     */
-    public static <T> Result<T> of(CodeMessage resultEnum, String msg) {
-        return new Result<T>(resultEnum.getCode(), msg);
-    }
-
     //---------------------------------------------------------------------
     // 各种结果对象的简单工厂，可使用Result.<T>success()调用返回指定泛型data值的对象(防止部分编译警告)
     //---------------------------------------------------------------------
