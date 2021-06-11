@@ -37,7 +37,7 @@ import java.util.List;
 @Response2Result
 @RestController
 @RequestMapping("/machines")
-@Permission(code = "machineFile")
+@Permission(code = "machine:file")
 public class MachineFileController {
 
     @Autowired
@@ -62,6 +62,7 @@ public class MachineFileController {
         return new String(machineFileService.getFileContent(id, path));
     }
 
+    @Permission(code = "machine:file:write")
     @MethodLog("机器文件下载")
     @GetMapping("/{machineId}/files/{id}/download")
     public void download(@PathVariable Long id, String path, @NoNeedLogParam HttpServletResponse response) {
@@ -69,7 +70,7 @@ public class MachineFileController {
         WebUtils.downloadStream(response, FileUtils.getFileNameByPath(path), bytes);
     }
 
-    @Permission
+    @Permission(code = "machine:file:write")
     @MethodLog("修改文件内容")
     @PostMapping("/{machineId}/files/{id}/write")
     public void updateFileContent(@PathVariable Long id, @RequestBody @Valid MachineConfContentForm form) {
@@ -100,7 +101,7 @@ public class MachineFileController {
         }
     }
 
-    @Permission
+    @Permission(code = "machine:file:rm")
     @DeleteMapping("/files/{fileId}/rm")
     public void rm(@PathVariable Long fileId, String path) {
         machineFileService.rmFile(fileId, path);

@@ -1,1 +1,1 @@
-var e="/vue-next-admin-preview/assets/404.e2f3d91a.png";export{e as _};
+var s="assets/404.e2f3d91a.png";export{s as _};
