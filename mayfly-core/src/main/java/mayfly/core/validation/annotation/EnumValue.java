@@ -118,6 +118,10 @@ public @interface EnumValue {
          */
         @SuppressWarnings({"rawtypes"})
         private void setErrorEnumPlaceholderValue(Object[] values, ConstraintValidatorContext context) {
+            String message = enumValue.message();
+            if (!"{name}".equals(message) && !"{enum}".equals(message)) {
+                return;
+            }
             Class<? extends Enum<? extends ValueEnum>> enumClass = enumValue.value();
 
             String enumsPlaceholderValue;

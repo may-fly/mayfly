@@ -51,7 +51,7 @@ public class RoleController {
 
     @MethodLog("新建角色")
     @PostMapping()
-    public int save(@Valid @RequestBody RoleForm roleForm) {
+    public int add(@Valid @RequestBody RoleForm roleForm) {
         RoleDO role = BeanUtils.copyProperties(roleForm, RoleDO.class);
         role.setStatus(EnableDisableEnum.ENABLE.getValue());
         return roleService.insert(role);
@@ -67,7 +67,7 @@ public class RoleController {
     @MethodLog("删除角色")
     @Permission
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
+    public void del(@PathVariable Long id) {
         roleService.delete(id);
     }
 

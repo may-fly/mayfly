@@ -26,13 +26,11 @@ public class ResourceListVO implements TreeUtils.TreeNode<Long> {
 
     private String name;
 
-    private String icon;
-
     private String code;
 
-    private String url;
-
     private Integer status;
+
+    private String meta;
 
     private List<ResourceListVO> children;
 

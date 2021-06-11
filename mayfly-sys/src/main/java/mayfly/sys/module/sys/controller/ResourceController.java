@@ -1,14 +1,17 @@
 package mayfly.sys.module.sys.controller;
 
+import mayfly.core.exception.BizAssert;
 import mayfly.core.log.MethodLog;
 import mayfly.core.model.result.Response2Result;
 import mayfly.core.permission.Permission;
+import mayfly.core.util.JsonUtils;
 import mayfly.core.util.bean.BeanUtils;
 import mayfly.sys.module.sys.controller.form.ResourceForm;
 import mayfly.sys.module.sys.controller.query.ResourceQuery;
 import mayfly.sys.module.sys.controller.vo.ResourceDetailVO;
 import mayfly.sys.module.sys.controller.vo.ResourceListVO;
 import mayfly.sys.module.sys.entity.ResourceDO;
+import mayfly.sys.module.sys.enums.ResourceTypeEnum;
 import mayfly.sys.module.sys.service.ResourceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -37,7 +40,6 @@ public class ResourceController {
     @Autowired
     private ResourceService resourceService;
 
-    @MethodLog(value = "获取资源树", resultLevel = MethodLog.LogLevel.DEBUG)
     @GetMapping()
     public List<ResourceListVO> list(ResourceQuery queryForm) {
         return resourceService.listResource();
@@ -51,8 +53,13 @@ public class ResourceController {
     @Permission
     @PostMapping()
     @MethodLog("新增资源")
-    public void save(@RequestBody @Valid ResourceForm resourceForm) {
-        resourceService.create(BeanUtils.copyProperties(resourceForm, ResourceDO.class));
+    public void add(@RequestBody @Valid ResourceForm resourceForm) {
+        ResourceDO resource = BeanUtils.copyProperties(resourceForm, ResourceDO.class);
+        if (ResourceTypeEnum.MENU.getValue().equals(resourceForm.getType())) {
+            BizAssert.notNull(resourceForm.getMeta(), "菜单元数据不能为空");
+            resource.setMeta(JsonUtils.toJSONString(resourceForm.getMeta()));
+        }
+        resourceService.create(resource);
     }
 
     @Permission
@@ -60,6 +67,11 @@ public class ResourceController {
     @PutMapping("/{id}")
     public void update(@PathVariable Long id, @RequestBody @Valid ResourceForm resourceForm) {
         ResourceDO resource = BeanUtils.copyProperties(resourceForm, ResourceDO.class);
+        if (ResourceTypeEnum.MENU.getValue().equals(resourceForm.getType())) {
+            BizAssert.notNull(resourceForm.getMeta(), "菜单元数据不能为空");
+            resource.setMeta(JsonUtils.toJSONString(resourceForm.getMeta()));
+        }
+
         resource.setId(id);
         resourceService.update(resource);
     }
@@ -73,7 +85,7 @@ public class ResourceController {
     @Permission
     @DeleteMapping("/{id}")
     @MethodLog("删除资源")
-    public void delete(@PathVariable Long id) {
+    public void del(@PathVariable Long id) {
         resourceService.delete(id);
     }
 }

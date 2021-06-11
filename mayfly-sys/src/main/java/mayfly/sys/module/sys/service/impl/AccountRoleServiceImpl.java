@@ -13,7 +13,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -45,9 +47,9 @@ public class AccountRoleServiceImpl extends BaseServiceImpl<AccountRoleMapper, L
 
         //和之前存的角色列表id比较，哪些是新增，哪些是修改以及不变的
         CollectionUtils.CompareResult<Long> compareResult = CollectionUtils
-                .compare(roleIds, oldRoles, (Long i1, Long i2) -> i1.equals(i2) ? 0 : 1);
-        List<Long> delIds = compareResult.getDelValue();
-        List<Long> addIds = compareResult.getAddValue();
+                .compare(new HashSet<>(roleIds), new HashSet<>(oldRoles), (Long i1, Long i2) -> i1.equals(i2) ? 0 : 1);
+        Set<Long> delIds = compareResult.getDelValue();
+        Set<Long> addIds = compareResult.getAddValue();
 
         delIds.forEach(r -> {
             deleteByCondition(new AccountRoleDO().setAccountId(accountId).setRoleId(r));
@@ -58,7 +60,7 @@ public class AccountRoleServiceImpl extends BaseServiceImpl<AccountRoleMapper, L
         }
         List<AccountRoleDO> ars = new ArrayList<>(addIds.size());
         // 校验资源id正确性，及保存新增的资源id
-        BizAssert.equals(roleService.listByIdIn(addIds).size(), addIds.size(), "存在错误角色id");
+        BizAssert.equals(roleService.listByIdIn(new ArrayList<>(addIds)).size(), addIds.size(), "存在错误角色id");
         for (Long id : addIds) {
             AccountRoleDO ru = new AccountRoleDO().setRoleId(id).setAccountId(accountId);
             ru.autoSetBaseInfo();

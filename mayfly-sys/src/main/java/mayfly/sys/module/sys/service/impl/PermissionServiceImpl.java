@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
  * @date 2018/6/26 上午9:49
  */
 @Service
-public class PermissionServiceImpl implements PermissionService  {
+public class PermissionServiceImpl implements PermissionService {
 
     @Autowired
     private RedisTemplate redisTemplate;
@@ -56,23 +56,25 @@ public class PermissionServiceImpl implements PermissionService  {
         // 含有权限code的列表
         List<ResourceListVO> codes = new ArrayList<>();
         for (ResourceListVO r : resources) {
-            if (!StringUtils.isEmpty(r.getCode())) {
-                codes.add(r);
-            }
             if (Objects.equals(r.getType(), ResourceTypeEnum.MENU.getValue())) {
                 menus.add(r);
+            } else {
+                if (!StringUtils.isEmpty(r.getCode())) {
+                    codes.add(r);
+                }
             }
         }
 
-        // 获取所有含有权限code的资源，如果权限被禁用，将会在code后加上:0标志，用于保存服务端进行校验
-        List<String> permissionCodes = codes.stream().map(p -> p.getStatus().equals(EnableDisableEnum.DISABLE.getValue()) ?
-                LoginAccount.getDisablePermissionCode(p.getCode()) : p.getCode()).collect(Collectors.toList());
+        // 获取所有含有权限code的资源，如果权限被禁用则不返回
+        List<String> permissionCodes = codes.stream()
+                .filter(c -> c.getStatus().equals(EnableDisableEnum.ENABLE.getValue()))
+                .map(ResourceListVO::getCode).collect(Collectors.toList());
         // 保存登录账号信息
         LoginAccount loginAccount = LoginAccount.create(account.getId()).username(account.getUsername()).permissions(permissionCodes);
         loginAccountRegistryHandler.saveLoginAccount(token, loginAccount, CacheKey.SESSION_EXPIRE_TIME, TimeUnit.MINUTES);
 
         return LoginSuccessVO.builder().admin(BeanUtils.copyProperties(account, AccountVO.class))
-                .token(token).menus(TreeUtils.generateTrees(menus)).codes(codes).build();
+                .token(token).menus(TreeUtils.generateTrees(menus)).codes(permissionCodes).build();
     }
 
     @Override

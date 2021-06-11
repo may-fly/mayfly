@@ -14,7 +14,7 @@ import java.util.List;
  */
 public interface ResourceMapper extends BaseMapper<Long, ResourceDO> {
 
-    @Select("SELECT m.id, m.pid, m.weight, m.name, m.code, m.icon, m.type, m.status, m.url " +
+    @Select("SELECT m.id, m.pid, m.weight, m.name, m.code, m.type, m.status, m.meta " +
             "FROM t_resource m WHERE " +
             "m.id IN " +
             "(SELECT DISTINCT(rmb.resource_id) " +

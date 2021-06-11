@@ -1,9 +1,8 @@
 package mayfly.sys.module.sys.service.impl;
 
-import mayfly.core.model.result.PageResult;
 import mayfly.core.base.service.impl.BaseServiceImpl;
 import mayfly.core.exception.BizAssert;
-import mayfly.core.log.MethodLog;
+import mayfly.core.model.result.PageResult;
 import mayfly.core.util.DigestUtils;
 import mayfly.core.util.bean.BeanUtils;
 import mayfly.sys.common.enums.EnableDisableEnum;
@@ -24,7 +23,6 @@ import org.springframework.stereotype.Service;
  * @version 1.0
  * @date 2019-07-06 14:57
  */
-@MethodLog(value = "账号管理:")
 @Service
 public class AccountServiceImpl extends BaseServiceImpl<AccountMapper, Long, AccountDO> implements AccountService {
 

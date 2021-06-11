@@ -9,6 +9,7 @@ import mayfly.sys.module.sys.enums.ResourceTypeEnum;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.Map;
 
 /**
  * @author meilin.huang
@@ -27,13 +28,11 @@ public class ResourceForm {
 
     private String code;
 
-    private String url;
+    private Map<String, Object> meta;
 
     @NotNull
     @EnumValue(value = ResourceTypeEnum.class, name = "资源类型")
     private Integer type;
-
-    private String icon;
 
     @NotNull
     private Integer weight;

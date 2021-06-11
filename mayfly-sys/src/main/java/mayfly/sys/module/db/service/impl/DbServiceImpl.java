@@ -85,7 +85,12 @@ public class DbServiceImpl extends BaseServiceImpl<DbMapper, Long, DbDO> impleme
             while (rs.next()) {
                 Map<String, Object> r = new LinkedHashMap<>();
                 for (int i = 1; i <= count; i++) {
-                    r.put(rs.getMetaData().getColumnName(i), rs.getString(i));
+                    String columnName = rs.getMetaData().getColumnName(i);
+                    String value = rs.getString(i);
+                    if ("password".equalsIgnoreCase(columnName)) {
+                        value = "******";
+                    }
+                    r.put(columnName, value);
                 }
                 res.add(r);
             }

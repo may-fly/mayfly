@@ -26,7 +26,7 @@ import javax.websocket.server.ServerEndpoint;
 @ServerEndpoint(WebSshSocket.URI)
 public class WebSshSocket {
 
-    public static final String URI = "/machines/{machineId}/ssh/{token}";
+    public static final String URI = "/machines/{machineId}/terminal/{token}";
 
     private WebSshService webSshService;
 

@@ -5,14 +5,13 @@ import mayfly.core.model.result.CommonCodeEnum;
 import mayfly.core.model.result.Result;
 import mayfly.core.permission.registry.PermissionCheckHandler;
 import mayfly.core.permission.registry.SimpleLoginAccountRegistry;
-import mayfly.core.util.JsonUtils;
+import mayfly.core.web.WebUtils;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.PrintWriter;
 import java.util.Optional;
 
 /**
@@ -88,17 +87,9 @@ public class PermissionInterceptor implements HandlerInterceptor {
      * @param response  response
      */
     public static void sendErrorMessage(HttpServletResponse response, Result<?> result) {
-        response.setContentType("application/json; charset=utf-8");
         response.setHeader("Access-Control-Allow-Origin", "*");
         response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE, PUT");
         response.setHeader("Access-Control-Max-Age", "3600");
-        try {
-            PrintWriter writer = response.getWriter();
-            writer.print(JsonUtils.toJSONString(result));
-            writer.close();
-            response.flushBuffer();
-        } catch (Exception e) {
-            //skip
-        }
+        WebUtils.writeJson(response, result);
     }
 }

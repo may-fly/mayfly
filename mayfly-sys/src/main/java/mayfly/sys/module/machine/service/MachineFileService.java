@@ -24,13 +24,13 @@ public interface MachineFileService extends BaseService<Long, MachineFileDO> {
     List<MachineFileDO> listByMachineId(Long machineId);
 
     /**
-     * 获取配置文件内容
+     * 获取文件内容
      *
      * @param fileId id
      * @param path   路径
      * @return 文件内容
      */
-    String getFileContent(Long fileId, String path);
+    byte[] getFileContent(Long fileId, String path);
 
     /**
      * 更新文件内容

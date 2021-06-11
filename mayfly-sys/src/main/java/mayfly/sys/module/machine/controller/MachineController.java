@@ -1,9 +1,10 @@
 package mayfly.sys.module.machine.controller;
 
-import mayfly.core.model.result.Response2Result;
 import mayfly.core.log.MethodLog;
+import mayfly.core.model.PageQuery;
+import mayfly.core.model.result.PageResult;
+import mayfly.core.model.result.Response2Result;
 import mayfly.core.permission.Permission;
-import mayfly.core.util.bean.BeanUtils;
 import mayfly.sys.module.machine.controller.form.MachineForm;
 import mayfly.sys.module.machine.controller.vo.MachineVO;
 import mayfly.sys.module.machine.service.MachineService;
@@ -19,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.util.List;
 
 /**
  * @author meilin.huang
@@ -29,7 +29,7 @@ import java.util.List;
 @Response2Result
 @Permission(code = "machine")
 @RestController
-@RequestMapping("/devops/machines")
+@RequestMapping("/machines")
 public class MachineController {
 
     @Autowired
@@ -37,8 +37,8 @@ public class MachineController {
 
     @MethodLog(value = "获取机器列表", level = MethodLog.LogLevel.DEBUG)
     @GetMapping()
-    public List<MachineVO> list() {
-        return BeanUtils.copyProperties(machineService.listAll(), MachineVO.class);
+    public PageResult<MachineVO> list(PageQuery query) {
+        return PageResult.withPageHelper(query, () -> machineService.listAll() , MachineVO.class);
     }
 
     @GetMapping("/{id}/sysinfo")
@@ -53,7 +53,7 @@ public class MachineController {
 
     @MethodLog("机器管理：新增机器")
     @PostMapping()
-    public void save(@RequestBody @Valid MachineForm form) {
+    public void add(@RequestBody @Valid MachineForm form) {
         machineService.create(form);
     }
 
@@ -66,7 +66,7 @@ public class MachineController {
 
     @MethodLog("机器管理：删除机器")
     @DeleteMapping("/{machineId}")
-    public void delete(@PathVariable Long machineId) {
+    public void del(@PathVariable Long machineId) {
         machineService.deleteById(machineId);
     }
 }

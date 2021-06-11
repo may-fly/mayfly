@@ -81,9 +81,9 @@ public interface MachineService extends BaseService<Long, MachineDO> {
      *
      * @param machineId 机器id
      */
-    default void sftpOperate(Long machineId, Function<ChannelSftp, Void> function) {
+    default  <T> T sftpOperate(Long machineId, Function<ChannelSftp, T> function) {
         try {
-            SSHUtils.sftpOperate(getSession(machineId), function);
+            return SSHUtils.sftpOperate(getSession(machineId), function);
         } catch (SSHException e) {
             throw BizAssert.newException(e.getMessage());
         }

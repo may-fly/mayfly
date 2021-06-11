@@ -1,5 +1,6 @@
 package mayfly.core.web;
 
+import mayfly.core.model.result.NoResponse2Result;
 import mayfly.core.model.result.PageResult;
 import mayfly.core.model.result.Response2Result;
 import mayfly.core.model.result.Result;
@@ -29,9 +30,15 @@ public class ResponseAdvice implements ResponseBodyAdvice<Object> {
      */
     @Override
     public boolean supports(MethodParameter methodParameter, Class<? extends HttpMessageConverter<?>> converterType) {
-        Method method;
+        Method method = methodParameter.getMethod();
+        if (method == null) {
+            return true;
+        }
+        if (method.isAnnotationPresent(NoResponse2Result.class)) {
+            return false;
+        }
         return methodParameter.getDeclaringClass().isAnnotationPresent(Response2Result.class)
-                || ((method = methodParameter.getMethod()) != null && method.isAnnotationPresent(Response2Result.class));
+                || method.isAnnotationPresent(Response2Result.class);
     }
 
     /**

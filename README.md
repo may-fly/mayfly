@@ -8,13 +8,13 @@ github: <https://github.com/may-fly/mayfly>
 gitee: <https://gitee.com/objs/mayfly>
 
 ### 系统环境及框架
-- 前端：typescript，  vue，  element-ui
+- 前端：typescript，  vue3，  element-plus
 - 后端：jdk8及以上（HttpUtils依赖jdk11），  SpringBoot，  Mybatis
 - DB： mysql，  redis
 - 部署：[Jenkins+Docker+Springboot持续集成部署](https://www.jianshu.com/p/1401e2fe4711)
 
 ### 模块介绍
-> mayfly-front（前端系统）
+> mayfly-web（前端系统）
 
 
 > mayfly-core（后端核心模块）

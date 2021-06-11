@@ -34,13 +34,11 @@ public class ResourceDO extends BaseDO implements Serializable {
 
     private String name;
 
-    private String icon;
-
     private String code;
 
-    private String url;
-
     private Integer status;
+
+    private String meta;
 
     @NoColumn
     private List<ResourceDO> children;

@@ -36,9 +36,9 @@ public class WebSshService {
         if (msg.getType().equals(WebSshRecvMsg.CMD)) {
             Channel channel = CHANNEL_MAP.get(session.getId());
             try {
-                trans2Ssh(channel, msg.getCmd());
+                trans2Ssh(channel, msg.getMsg());
             } catch (Exception e) {
-                log.error("执行命令 :'{}' 失败", msg.getCmd(), e);
+                log.error("执行命令 :'{}' 失败", msg.getMsg(), e);
                 close(session);
             }
             return;

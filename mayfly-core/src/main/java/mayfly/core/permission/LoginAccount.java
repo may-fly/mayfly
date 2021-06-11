@@ -1,7 +1,7 @@
 package mayfly.core.permission;
 
-import mayfly.core.model.result.CommonCodeEnum;
 import mayfly.core.exception.BizException;
+import mayfly.core.model.result.CommonCodeEnum;
 import mayfly.core.util.ArrayUtils;
 import mayfly.core.util.StringUtils;
 
@@ -48,7 +48,9 @@ public class LoginAccount implements Serializable {
      */
     private static final ThreadLocal<LoginAccount> CONTEXT = new ThreadLocal<>();
 
-    public LoginAccount() {}
+    public LoginAccount() {
+    }
+
     public LoginAccount(Long id) {
         this.id = id;
     }
@@ -118,14 +120,7 @@ public class LoginAccount implements Serializable {
         if (StringUtils.isEmpty(permissionCode)) {
             return false;
         }
-        String[] codes = this.permissions;
-        if (ArrayUtils.contains(codes, permissionCode)) {
-            return true;
-        }
-        if (ArrayUtils.contains(codes, getDisablePermissionCode(permissionCode))) {
-            throw new PermissionDisabledException();
-        }
-        return false;
+        return ArrayUtils.contains(this.permissions, permissionCode);
     }
 
     /**
@@ -145,16 +140,6 @@ public class LoginAccount implements Serializable {
             }
         }
         return false;
-    }
-
-    /**
-     * 获取权限code对应的禁用code,即code + ":" + 0
-     *
-     * @param code code
-     * @return 禁用code
-     */
-    public static String getDisablePermissionCode(String code) {
-        return code + CODE_STATUS_SEPARATOR + 0;
     }
 
 

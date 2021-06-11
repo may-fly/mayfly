@@ -19,11 +19,9 @@ public class ResourceDetailVO extends BaseDO {
 
     private String name;
 
-    private String icon;
-
     private String code;
 
-    private String url;
+    private String meta;
 
     private Integer status;
 

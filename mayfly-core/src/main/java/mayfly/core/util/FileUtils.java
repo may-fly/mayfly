@@ -60,6 +60,17 @@ public class FileUtils {
     }
 
     /**
+     * 根据文件全路径获取获取文件名，如 /usr/local/test.jpg 返回test.jpg
+     *
+     * @param filepath 文件路径名
+     * @return 文件名，不包含后缀类型
+     */
+    public static String getFileNameByPath(String filepath) {
+        int lastIndexOf = filepath.lastIndexOf("/");
+        return lastIndexOf == -1 ? filepath : filepath.substring(lastIndexOf + 1);
+    }
+
+    /**
      * 解压<br>
      *
      * @param inputStream zip文件流，包含编码信息，默认utf8编码

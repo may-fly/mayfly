@@ -4,6 +4,7 @@ import mayfly.core.base.service.impl.BaseServiceImpl;
 import mayfly.core.exception.BizAssert;
 import mayfly.core.permission.LoginAccount;
 import mayfly.core.thread.GlobalThreadPool;
+import mayfly.core.util.IOUtils;
 import mayfly.core.util.bean.BeanUtils;
 import mayfly.sys.common.utils.ssh.ShellCmd;
 import mayfly.sys.common.websocket.MessageTypeEnum;
@@ -22,6 +23,7 @@ import mayfly.sys.module.websocket.SysMsgWebSocket;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -55,11 +57,17 @@ public class MachineFileServiceImpl extends BaseServiceImpl<MachineFileMapper, L
     }
 
     @Override
-    public String getFileContent(Long fileId, String path) {
+    public byte[] getFileContent(Long fileId, String path) {
         MachineFileDO file = getById(fileId);
         checkPath(path, file);
-        return machineService.runShell(file.getMachineId(), "read_text_file", path);
-
+        return machineService.sftpOperate(file.getMachineId(), channelSftp -> {
+           try {
+               InputStream inputStream = channelSftp.get(path);
+               return IOUtils.readByte(inputStream, true);
+           } catch (Exception e) {
+               throw BizAssert.newException("读取文件失败");
+           }
+        });
     }
 
     @Override
@@ -67,7 +75,15 @@ public class MachineFileServiceImpl extends BaseServiceImpl<MachineFileMapper, L
         BizAssert.notEmpty(content, "内容不能为空");
         MachineFileDO file = getById(confId);
         checkPath(path, file);
-        machineService.exec(file.getMachineId(), "echo '" + content + "' >" + path);
+
+        machineService.sftpOperate(file.getMachineId(), channelSftp -> {
+            try {
+                channelSftp.put(new ByteArrayInputStream(content.getBytes()), path);
+                return null;
+            } catch (Exception e) {
+                throw BizAssert.newException("写入文件内容失败");
+            }
+        });
     }
 
     @Override
@@ -91,7 +107,7 @@ public class MachineFileServiceImpl extends BaseServiceImpl<MachineFileMapper, L
         List<LsVO> ls = new ArrayList<>(16);
         String pathPrefix = path.endsWith("/") ? path : path + "/";
         // -rw-r--r-- 1 root root      433 Mar  3 14:07 Dockerfile 解析该文本格式
-        machineService.exec(machineFile.getMachineId(), "ls -Alh " + path, (lineNum, lineContent) -> {
+        machineService.exec(machineFile.getMachineId(), "ls -Al " + path, (lineNum, lineContent) -> {
             if (lineNum == 1) {
                 return;
             }
@@ -149,7 +165,14 @@ public class MachineFileServiceImpl extends BaseServiceImpl<MachineFileMapper, L
     public void rmFile(Long fileId, String path) {
         MachineFileDO file = getById(fileId);
         checkPath(path, file);
-        machineService.exec(file.getMachineId(), "rm -rf " + path);
+        machineService.sftpOperate(file.getMachineId(), channelSftp -> {
+            try {
+                channelSftp.rm(path);
+                return null;
+            } catch (Exception e) {
+                throw BizAssert.newException("删除文件失败");
+            }
+        });
     }
 
 

@@ -1,9 +1,12 @@
 package mayfly.sys.module.machine.controller;
 
-import mayfly.core.model.result.Response2Result;
 import mayfly.core.exception.BizAssert;
 import mayfly.core.log.MethodLog;
+import mayfly.core.log.NoNeedLogParam;
+import mayfly.core.model.result.Response2Result;
 import mayfly.core.permission.Permission;
+import mayfly.core.util.FileUtils;
+import mayfly.core.web.WebUtils;
 import mayfly.sys.module.machine.controller.form.MachineConfContentForm;
 import mayfly.sys.module.machine.controller.form.MachineFileForm;
 import mayfly.sys.module.machine.controller.form.UploadForm;
@@ -16,12 +19,12 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
@@ -33,7 +36,7 @@ import java.util.List;
  */
 @Response2Result
 @RestController
-@RequestMapping("/devops/machines")
+@RequestMapping("/machines")
 @Permission(code = "machineFile")
 public class MachineFileController {
 
@@ -48,20 +51,27 @@ public class MachineFileController {
         return machineFileService.listByMachineId(machineId);
     }
 
-    @GetMapping("/files/{id}/ls")
+    @GetMapping("/{machineId}/files/{id}/read-dir")
     public List<LsVO> ls(@PathVariable Long id, String path) {
         BizAssert.notNull(path, "path不能为空");
         return machineFileService.ls(id, path);
     }
 
-    @GetMapping("/files/{id}/cat")
+    @GetMapping("/{machineId}/files/{id}/read")
     public String cat(@PathVariable Long id, String path) {
-        return machineFileService.getFileContent(id, path);
+        return new String(machineFileService.getFileContent(id, path));
+    }
+
+    @MethodLog("机器文件下载")
+    @GetMapping("/{machineId}/files/{id}/download")
+    public void download(@PathVariable Long id, String path, @NoNeedLogParam HttpServletResponse response) {
+        byte[] bytes = machineFileService.getFileContent(id, path);
+        WebUtils.downloadStream(response, FileUtils.getFileNameByPath(path), bytes);
     }
 
     @Permission
     @MethodLog("修改文件内容")
-    @PutMapping("/files/{id}")
+    @PostMapping("/{machineId}/files/{id}/write")
     public void updateFileContent(@PathVariable Long id, @RequestBody @Valid MachineConfContentForm form) {
         machineFileService.updateFileContent(id, form.getPath(), form.getContent());
     }

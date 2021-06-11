@@ -17,7 +17,7 @@ public class WebSshRecvMsg {
 
     public static final Integer RESIZE = 2;
 
-    private String cmd;
+    private String msg;
 
     private Integer type;
 

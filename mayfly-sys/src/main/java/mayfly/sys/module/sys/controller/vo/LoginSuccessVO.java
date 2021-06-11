@@ -24,5 +24,5 @@ public class LoginSuccessVO {
 
     private List<ResourceListVO> menus;
 
-    private List<ResourceListVO> codes;
+    private List<String> codes;
 }

@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -94,8 +96,8 @@ public class CollectionUtils {
      * @param <T>           集合元素泛型对象
      * @return 比较结果 {@link CompareResult}
      */
-    public static <T> CompareResult<T> compare(Collection<T> newCollection, Collection<T> oldCollection, Comparator<T> comparator) {
-        List<T> unmodifiedValue = new ArrayList<>();
+    public static <T> CompareResult<T> compare(Set<T> newCollection, Set<T> oldCollection, Comparator<T> comparator) {
+        Set<T> unmodifiedValue = new HashSet<>();
 
         Iterator<T> newIte = newCollection.iterator();
         while (newIte.hasNext()) {
@@ -113,7 +115,7 @@ public class CollectionUtils {
             }
         }
 
-        return new CompareResult<T>(new ArrayList<>(newCollection), new ArrayList<>(oldCollection), unmodifiedValue);
+        return new CompareResult<T>(newCollection, oldCollection, unmodifiedValue);
     }
 
 
@@ -126,31 +128,31 @@ public class CollectionUtils {
         /**
          * 新增的对象列表
          */
-        private final List<T> addValue;
+        private final Set<T> addValue;
         /**
          * 删除的对象列表
          */
-        private final List<T> delValue;
+        private final Set<T> delValue;
         /**
          * 没有改变的对象列表
          */
-        private final List<T> unmodifiedValue;
+        private final Set<T> unmodifiedValue;
 
-        public CompareResult(List<T> addValue, List<T> delValue, List<T> unmodifiedValue) {
+        public CompareResult(Set<T> addValue, Set<T> delValue, Set<T> unmodifiedValue) {
             this.addValue = addValue;
             this.delValue = delValue;
             this.unmodifiedValue = unmodifiedValue;
         }
 
-        public List<T> getDelValue() {
+        public Set<T> getDelValue() {
             return delValue;
         }
 
-        public List<T> getAddValue() {
+        public Set<T> getAddValue() {
             return addValue;
         }
 
-        public List<T> getUnmodifiedValue() {
+        public Set<T> getUnmodifiedValue() {
             return unmodifiedValue;
         }
     }

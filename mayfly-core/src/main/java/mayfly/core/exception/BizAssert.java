@@ -338,6 +338,17 @@ public final class BizAssert {
     }
 
     /**
+     * 创建业务运行时异常对象，并将异常的message填充进参数msg
+     *
+     * @param msg 异常信息，可使用 '%s' 接受异常消息
+     * @param e   包装异常
+     * @return 异常
+     */
+    public static BizException newException(String msg, Exception e) {
+        return new BizException(defaultErrorCode, String.format(msg, e.getMessage()));
+    }
+
+    /**
      * 创建业务运行时异常对象
      *
      * @param errorEnum 错误枚举
