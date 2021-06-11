@@ -7,6 +7,9 @@ mayfly前后端分离的后台系统(包含按钮级别的权限管理，以及�
 github: <https://github.com/may-fly/mayfly>
 gitee: <https://gitee.com/objs/mayfly>
 
+### golang版
+<https://gitee.com/objs/mayfly-go>
+
 ### 系统环境及框架
 - 前端：typescript，  vue3，  element-plus
 - 后端：jdk8及以上（HttpUtils依赖jdk11），  SpringBoot，  Mybatis
@@ -195,26 +198,32 @@ public class PermissionController
 
 ### 系统部分页面
 
-
+#### 系统管理
 菜单&权限管理页
-![菜单&权限管理页](https://images.gitee.com/uploads/images/2020/0311/104924_bb08cd6d_1240250.png "菜单&权限管理页.png")
+![菜单&权限管理页](https://images.gitee.com/uploads/images/2021/0611/155833_662f2f18_1240250.png "屏幕截图.png")
 
 角色分配菜单&权限页
-![角色分配菜单&权限页](https://images.gitee.com/uploads/images/2020/0311/104949_3c61e72f_1240250.png "屏幕截图.png")
+![角色分配菜单&权限页](https://images.gitee.com/uploads/images/2021/0611/155919_c3aaa930_1240250.png "屏幕截图.png")
 
 操作日志
 ![操作日志](https://images.gitee.com/uploads/images/2020/0311/105025_2d59ed81_1240250.png "操作日志.png")
 
+#### 机器管理
 机器ssh终端
-![机器ssh终端](https://images.gitee.com/uploads/images/2021/0107/155551_1265ba17_1240250.png "机器ssh终端.png")
+![机器ssh终端](https://images.gitee.com/uploads/images/2021/0611/160010_4aac05c1_1240250.png "屏幕截图.png")
 
 机器文件管理
-![机器文件管理](https://images.gitee.com/uploads/images/2020/0311/110243_fdd2ff21_1240250.png "机器文件管理.png")
-![机器文件管理](https://images.gitee.com/uploads/images/2020/0311/105100_a1b58e35_1240250.png "机器文件管理.png")
+![机器文件管理](https://images.gitee.com/uploads/images/2021/0611/160118_70c7ac58_1240250.png "屏幕截图.png")
 
-dbms
+文件树查看
+![文件树查看](https://images.gitee.com/uploads/images/2021/0611/160141_15e3a4ae_1240250.png "屏幕截图.png")
+
+文件内容查看与编辑
+![文件内容查看](https://images.gitee.com/uploads/images/2021/0611/160222_61ad25a0_1240250.png "屏幕截图.png")
+
+#### dbms
 ![数据查询](https://images.gitee.com/uploads/images/2021/0301/105401_4f56b45d_1240250.png "数据查询.png")
 
-redis基本操作
+#### redis基本操作
 ![redis基本操作](https://images.gitee.com/uploads/images/2020/0311/110550_b18f0b76_1240250.png "redis基本操作.png")
 ![redis基本操作](https://images.gitee.com/uploads/images/2020/0311/105230_7281f9e2_1240250.png "redis基本操作.png")
