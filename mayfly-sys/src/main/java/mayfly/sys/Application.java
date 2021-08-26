@@ -8,7 +8,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @author hml
  * @date 2018/6/7 下午5:21
  */
-//@EnableScheduling
 @SpringBootApplication
 @MapperScan(basePackages = "mayfly.**.mapper")
 public class Application {

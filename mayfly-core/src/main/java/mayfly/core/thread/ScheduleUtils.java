@@ -16,18 +16,18 @@ import java.util.concurrent.TimeUnit;
  */
 public class ScheduleUtils {
 
-    private static int corePoolSize = 1;
+    private static final int CORE_POOL_SIZE = 2;
 
     /**
      * 定时任务线程池
      */
-    private static ScheduledExecutorService schedule = Executors.newScheduledThreadPool(corePoolSize
+    private static final ScheduledExecutorService SCHEDULE = Executors.newScheduledThreadPool(CORE_POOL_SIZE
             , ThreadFactoryBuilder.newBuilder("mayfly-schedule").daemon(true).build());
 
     /**
      * 存定时任务结果
      */
-    private static Map<String, ScheduledFuture<?>> scheduledFutureMap = new ConcurrentHashMap<>();
+    private static final Map<String, ScheduledFuture<?>> scheduledFutureMap = new ConcurrentHashMap<>();
 
     static {
         //定期检查map中是否有已经执行完成的，有则移除
@@ -50,7 +50,7 @@ public class ScheduleUtils {
      * @param timeUnit
      */
     public static void schedule(String id, Runnable runnable, long time, TimeUnit timeUnit) {
-        scheduledFutureMap.put(id, schedule.schedule(runnable, time, timeUnit));
+        scheduledFutureMap.put(id, SCHEDULE.schedule(runnable, time, timeUnit));
     }
 
     /**
@@ -62,7 +62,7 @@ public class ScheduleUtils {
      * @param timeUnit
      */
     public static void scheduleAtFixedRate(String id, Runnable runnable, long initialDelay, long time, TimeUnit timeUnit) {
-        scheduledFutureMap.put(id, schedule.scheduleAtFixedRate(runnable, initialDelay, time, timeUnit));
+        scheduledFutureMap.put(id, SCHEDULE.scheduleAtFixedRate(runnable, initialDelay, time, timeUnit));
     }
 
     public static boolean containSchedule(String id) {
@@ -85,7 +85,7 @@ public class ScheduleUtils {
     }
 
     public static void shutdownNow() {
-        schedule.shutdownNow();
+        SCHEDULE.shutdownNow();
         scheduledFutureMap.clear();
     }
 }

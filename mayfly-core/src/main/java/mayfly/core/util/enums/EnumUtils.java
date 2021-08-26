@@ -96,9 +96,9 @@ public final class EnumUtils {
      */
     @SuppressWarnings("unchecked")
     public static <E extends Enum<? extends ValueEnum<V>>, V> E getEnumByValue(E[] enums, V value) {
-        for (Enum<? extends ValueEnum<V>> e : enums) {
+        for (E e : enums) {
             if (((ValueEnum<V>) e).getValue().equals(value)) {
-                return (E) e;
+                return e;
             }
         }
         return null;

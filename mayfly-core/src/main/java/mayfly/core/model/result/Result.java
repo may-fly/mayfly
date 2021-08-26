@@ -17,7 +17,7 @@ public final class Result<T> implements Serializable {
     /**
      * 操作结果码
      */
-    private Integer code;
+    private String code;
 
     /**
      * 操作结果消息
@@ -29,13 +29,13 @@ public final class Result<T> implements Serializable {
      */
     private T data;
 
-    private Result(Integer code, String msg, T data) {
+    private Result(String code, String msg, T data) {
         this.code = code;
         this.msg = msg;
         this.data = data;
     }
 
-    private Result(Integer code, String msg) {
+    private Result(String code, String msg) {
         this.code = code;
         this.msg = msg;
     }
@@ -47,7 +47,7 @@ public final class Result<T> implements Serializable {
      * @param <T>  实体类型
      * @return result
      */
-    public static <T> Result<T> of(Integer code, String msg) {
+    public static <T> Result<T> of(String code, String msg) {
         return new Result<T>(code, msg);
     }
 
@@ -111,7 +111,7 @@ public final class Result<T> implements Serializable {
     // getter setter toString
     //---------------------------------------------------------------------
 
-    public Integer getCode() {
+    public String getCode() {
         return code;
     }
 
@@ -123,7 +123,7 @@ public final class Result<T> implements Serializable {
         return data;
     }
 
-    public void setCode(Integer code) {
+    public void setCode(String code) {
         this.code = code;
     }
 

@@ -113,9 +113,6 @@ public class LogAspect {
             case WARN:
                 LOG.warn(logMsg);
                 break;
-            case INFO:
-                LOG.info(logMsg);
-                break;
             case ERROR:
                 LOG.error(logMsg);
                 break;

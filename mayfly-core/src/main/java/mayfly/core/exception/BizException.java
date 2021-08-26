@@ -9,43 +9,22 @@ import mayfly.core.model.result.CodeMessage;
  * @version 1.0
  * @date 2019-01-05 2:19 PM
  */
-public class BizException extends RuntimeException {
+public class BizException extends BaseException {
 
     private static final long serialVersionUID = -789021883759549647L;
-
-    /**
-     * 异常码
-     */
-    private Integer errorCode;
-
-    protected BizException(String msg) {
-        super(msg);
-    }
 
     /**
      * @param errorMsg 错误消息
      */
     public BizException(CodeMessage errorMsg, Object... params) {
-        super(params == null ? errorMsg.getMessage() : errorMsg.getMessage(params));
-        this.errorCode = errorMsg.getCode();
+        super(errorMsg, params);
     }
-
 
     /**
      * @param errCode 错误code
      * @param msg     错误消息
      */
-    public BizException(Integer errCode, String msg) {
-        super(msg);
-        this.errorCode = errCode;
-    }
-
-    /**
-     * 获取错误码
-     *
-     * @return error code
-     */
-    public Integer getErrorCode() {
-        return errorCode;
+    public BizException(String errCode, String msg) {
+        super(errCode, msg);
     }
 }

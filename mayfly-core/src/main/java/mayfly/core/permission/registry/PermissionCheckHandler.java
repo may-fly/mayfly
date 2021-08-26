@@ -1,7 +1,6 @@
 package mayfly.core.permission.registry;
 
 import mayfly.core.permission.LoginAccount;
-import mayfly.core.permission.PermissionDisabledException;
 import mayfly.core.permission.PermissionInfo;
 import mayfly.core.util.StringUtils;
 
@@ -53,9 +52,8 @@ public class PermissionCheckHandler {
      * @param token  请求token
      * @param method 用户访问的方法
      * @return true 拥有该权限
-     * @throws PermissionDisabledException 权限禁用异常
      */
-    public boolean hasPermission(String token, Method method) throws PermissionDisabledException {
+    public boolean hasPermission(String token, Method method) {
         LoginAccount loginAccount;
         if (StringUtils.isEmpty(token) || (loginAccount = loginAccountRegistry.getLoginAccount(token)) == null) {
             return false;
@@ -75,9 +73,8 @@ public class PermissionCheckHandler {
      * @param token          token
      * @param permissionInfo permission info
      * @return true 拥有该权限
-     * @throws PermissionDisabledException 权限禁用异常
      */
-    public boolean hasPermission(String token, PermissionInfo permissionInfo) throws PermissionDisabledException {
+    public boolean hasPermission(String token, PermissionInfo permissionInfo) {
         LoginAccount loginAccount;
         if (StringUtils.isEmpty(token) || (loginAccount = loginAccountRegistry.getLoginAccount(token)) == null) {
             return false;
@@ -93,9 +90,8 @@ public class PermissionCheckHandler {
      * @param loginAccount   登录账号
      * @param permissionInfo 权限info
      * @return true：拥有该权限
-     * @throws PermissionDisabledException 若不存在权限code,而存在与之对应的禁用权限code,抛出此异常
      */
-    public boolean hasPermission(LoginAccount loginAccount, PermissionInfo permissionInfo) throws PermissionDisabledException {
+    public boolean hasPermission(LoginAccount loginAccount, PermissionInfo permissionInfo) {
         // 判断code注册器是否含有该用户的权限code
         return loginAccount.hasPermission(permissionInfo);
     }

@@ -1,10 +1,10 @@
 <template>
-    <el-form class="login-content-form">
-        <el-form-item>
+    <el-form ref="loginFormRef" :model="loginForm" :rules="rules" class="login-content-form">
+        <el-form-item prop="username">
             <el-input type="text" placeholder="请输入用户名" prefix-icon="el-icon-user" v-model="loginForm.username" clearable autocomplete="off">
             </el-input>
         </el-form-item>
-        <el-form-item>
+        <el-form-item prop="password">
             <el-input
                 type="password"
                 placeholder="请输入密码"
@@ -15,7 +15,7 @@
             >
             </el-input>
         </el-form-item>
-        <el-form-item>
+        <el-form-item prop="captcha">
             <el-row :gutter="15">
                 <el-col :span="16">
                     <el-input
@@ -26,7 +26,7 @@
                         v-model="loginForm.captcha"
                         clearable
                         autocomplete="off"
-                        @keyup.enter="onSignIn"
+                        @keyup.enter="login"
                     ></el-input>
                 </el-col>
                 <el-col :span="8">
@@ -44,7 +44,7 @@
             </el-row>
         </el-form-item>
         <el-form-item>
-            <el-button type="primary" class="login-content-submit" round @click="onSignIn" :loading="loading.signIn">
+            <el-button type="primary" class="login-content-submit" round @click="login" :loading="loading.signIn">
                 <span>登 录</span>
             </el-button>
         </el-form-item>
@@ -52,7 +52,7 @@
 </template>
 
 <script lang="ts">
-import { toRefs, reactive, defineComponent, computed, onMounted } from 'vue';
+import { toRefs, ref, reactive, defineComponent, computed, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus';
 import { initAllFun, initBackEndControlRoutesFun } from '@/router/index.ts';
@@ -67,6 +67,7 @@ export default defineComponent({
         const store = useStore();
         const route = useRoute();
         const router = useRouter();
+        const loginFormRef: any = ref(null);
         const state = reactive({
             captchaImage: '',
             loginForm: {
@@ -74,6 +75,11 @@ export default defineComponent({
                 password: '123456',
                 captcha: '',
                 uuid: '',
+            },
+            rules: {
+                username: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
+                password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
+                captcha: [{ required: true, message: '请输入验证码', trigger: 'blur' }],
             },
             loading: {
                 signIn: false,
@@ -95,6 +101,17 @@ export default defineComponent({
             return formatAxis(new Date());
         });
 
+        // 校验登录表单并登录
+        const login = () => {
+            loginFormRef.value.validate((valid: boolean) => {
+                if (valid) {
+                    onSignIn();
+                } else {
+                    return false;
+                }
+            });
+        };
+
         // 登录
         const onSignIn = async () => {
             state.loading.signIn = true;
@@ -107,6 +124,8 @@ export default defineComponent({
                 setSession('menus', loginRes.menus);
             } catch (e) {
                 state.loading.signIn = false;
+                state.loginForm.captcha = '';
+                getCaptcha();
                 return;
             }
             // 用户信息模拟数据
@@ -150,10 +169,12 @@ export default defineComponent({
                 ElMessage.success(`${currentTimeInfo}，欢迎回来！`);
             }, 300);
         };
+        
         return {
             getCaptcha,
             currentTime,
-            onSignIn,
+            loginFormRef,
+            login,
             ...toRefs(state),
         };
     },

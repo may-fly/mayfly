@@ -16,7 +16,7 @@ export const machineApi = {
     // 获取配置文件列表
     files: Api.create("/machines/{id}/files", 'get'),
     lsFile: Api.create("/machines/{machineId}/files/{fileId}/read-dir", 'get'),
-    rmFile: Api.create("/machines/{machineId}/files/{fileId}/remove", 'delete'),
+    rmFile: Api.create("/machines/{machineId}/files/{fileId}/rm", 'delete'),
     uploadFile: Api.create("/machines/files/upload", 'post'),
     fileContent: Api.create("/machines/{machineId}/files/{fileId}/read", 'get'),
     // 修改文件内容

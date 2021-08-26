@@ -6,15 +6,15 @@ import org.junit.Test;
 public class BizAssertTest {
 
     enum ErrorCode implements CodeMessage {
-        SERVER_ERROR(500, "服务器异常: %s"),
+        SERVER_ERROR("500", "服务器异常: %s"),
 
-        NOT_FOUND(404, "资源未找到");
+        NOT_FOUND("404", "资源未找到");
 
-        private final Integer code;
+        private final String code;
 
         private final String name;
 
-        ErrorCode(Integer code, String name) {
+        ErrorCode(String code, String name) {
             this.code = code;
             this.name = name;
         }
@@ -25,7 +25,7 @@ public class BizAssertTest {
         }
 
         @Override
-        public Integer getCode() {
+        public String getCode() {
             return this.code;
         }
     }

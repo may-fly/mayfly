@@ -102,7 +102,7 @@ public class MachineFileController {
     }
 
     @Permission(code = "machine:file:rm")
-    @DeleteMapping("/files/{fileId}/rm")
+    @DeleteMapping("/{machineId}/files/{fileId}/rm")
     public void rm(@PathVariable Long fileId, String path) {
         machineFileService.rmFile(fileId, path);
     }

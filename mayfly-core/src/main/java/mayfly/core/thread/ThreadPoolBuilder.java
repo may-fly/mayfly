@@ -2,6 +2,7 @@ package mayfly.core.thread;
 
 import mayfly.core.util.StringUtils;
 
+import java.util.Objects;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -222,12 +223,8 @@ public class ThreadPoolBuilder {
         final int maxPoolSize = builder.maxPoolSize;
         final long keepAliveTime = builder.keepAliveTime;
         final BlockingQueue<Runnable> workQueue;
-        if (builder.workQueue != null) {
-            workQueue = builder.workQueue;
-        } else {
-            // corePoolSize为0则要使用SynchronousQueue避免无限阻塞
-            workQueue = (corePoolSize <= 0) ? new SynchronousQueue<Runnable>() : new LinkedBlockingQueue<Runnable>();
-        }
+        // corePoolSize为0则要使用SynchronousQueue避免无限阻塞
+        workQueue = Objects.requireNonNullElseGet(builder.workQueue, () -> (corePoolSize <= 0) ? new SynchronousQueue<Runnable>() : new LinkedBlockingQueue<Runnable>());
 
         String threadName;
         final ThreadFactory threadFactory = (builder.threadFactory != null) ?

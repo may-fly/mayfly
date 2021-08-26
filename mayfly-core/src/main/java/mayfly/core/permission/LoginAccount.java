@@ -37,12 +37,6 @@ public class LoginAccount implements Serializable {
      */
     private String[] roles;
 
-
-    /**
-     * 权限码与状态分割符号
-     */
-    public static final String CODE_STATUS_SEPARATOR = ":";
-
     /**
      * 线程上下文，用于保存到登录账号信息
      */
@@ -104,7 +98,7 @@ public class LoginAccount implements Serializable {
      * @param permissionInfo 权限信息
      * @return true：有
      */
-    public boolean hasPermission(PermissionInfo permissionInfo) throws PermissionDisabledException {
+    public boolean hasPermission(PermissionInfo permissionInfo) {
         if (!permissionInfo.isRequireCode()) {
             return true;
         }

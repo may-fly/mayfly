@@ -19,14 +19,14 @@ import java.util.function.Supplier;
  */
 public final class BizAssert {
 
-    public static Integer defaultErrorCode = CommonCodeEnum.PARAM_ERROR.getCode();
+    public static String defaultErrorCode = CommonCodeEnum.PARAM_ERROR.getCode();
 
     /**
      * 设置默认错误消息，可根据不同模块设置不同错误码，方便问题溯源
      *
      * @param errorCode 默认错误码
      */
-    public static void setDefaultErrorCode(Integer errorCode) {
+    public static void setDefaultErrorCode(String errorCode) {
         defaultErrorCode = errorCode;
     }
 

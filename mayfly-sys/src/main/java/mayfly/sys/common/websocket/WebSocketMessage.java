@@ -25,6 +25,6 @@ public class WebSocketMessage<T> {
     }
 
     public static <T> String msg(MessageTypeEnum type, CodeMessage result, T data) {
-        return JsonUtils.toJSONString(new WebSocketMessage<T>(type.getValue(), result.getCode(), data));
+        return JsonUtils.toJSONString(new WebSocketMessage<T>(type.getValue(), Integer.parseInt(result.getCode()), data));
     }
 }

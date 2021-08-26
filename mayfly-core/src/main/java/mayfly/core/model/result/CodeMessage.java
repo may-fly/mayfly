@@ -13,7 +13,7 @@ public interface CodeMessage {
      *
      * @return code
      */
-    Integer getCode();
+    String getCode();
 
     /**
      * 返回结果消息
