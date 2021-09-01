@@ -200,7 +200,7 @@ export default defineComponent({
                     .request({
                         id: data.id,
                     })
-                    .then((res) => {
+                    .then(() => {
                         ElMessage.success('删除成功！');
                         search();
                     });
@@ -215,6 +215,7 @@ export default defineComponent({
                 dialog.typeDisabled = true;
                 dialog.data.type = state.menuTypeValue;
                 dialog.title = '添加顶级菜单';
+                dialog.visible = true;
                 return;
             }
             // 添加子菜单，把当前菜单id作为新增菜单pid
@@ -256,7 +257,7 @@ export default defineComponent({
             state.dialogForm.title = '修改“' + data.name + '”菜单';
         };
 
-        const valChange = (data: any) => {
+        const valChange = () => {
             search();
             state.dialogForm.visible = false;
         };

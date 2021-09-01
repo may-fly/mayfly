@@ -11,7 +11,7 @@ export interface Result {
     /**
      * 响应码
      */
-    code: number;
+    code: string;
     /**
      * 响应消息
      */

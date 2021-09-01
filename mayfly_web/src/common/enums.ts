@@ -5,15 +5,15 @@ interface BaseEnum {
 
 const success: BaseEnum = {
     name: 'success',
-    value: 200
+    value: "200"
 }
 
 export enum ResultEnum {
-    SUCCESS = 200,
-    ERROR = 400,
-    PARAM_ERROR = 405,
-    SERVER_ERROR = 500,
-    NO_PERMISSION = 501
+    SUCCESS = "200",
+    ERROR = "400",
+    PARAM_ERROR = "405",
+    SERVER_ERROR = "500",
+    NO_PERMISSION = "501"
 }
 // /**
 //  * 全局公共枚举类
