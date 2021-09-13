@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
  * @author: hml
  * @date: 2018/6/15 下午3:54
  */
-@Configuration
+@Configuration(proxyBeanMethods = false)
 public class DruidConfig {
 
     @Autowired

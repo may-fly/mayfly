@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
  * @author meilin.huang
  * @date 2020-03-01 12:44 下午
  */
-@Configuration
+@Configuration(proxyBeanMethods = false)
 public class AopConfig {
 
     @Autowired

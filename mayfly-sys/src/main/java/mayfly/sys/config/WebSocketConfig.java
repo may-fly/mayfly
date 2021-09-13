@@ -9,7 +9,7 @@ import org.springframework.web.socket.server.standard.ServerEndpointExporter;
  * @version 1.0
  * @date 2019-03-27 6:52 PM
  */
-@Configuration
+@Configuration(proxyBeanMethods = false)
 public class WebSocketConfig {
     @Bean
     public ServerEndpointExporter serverEndpointExporter() {

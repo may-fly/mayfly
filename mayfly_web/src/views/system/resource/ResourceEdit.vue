@@ -1,64 +1,85 @@
 <template>
     <div class="menu-dialog">
-        <el-dialog :title="title" :destroy-on-close="true" v-model="visible" width="700px">
+        <el-dialog :title="title" :destroy-on-close="true" v-model="dialogVisible" width="850px">
             <el-form :model="form" :inline="true" ref="menuForm" :rules="rules" label-width="95px" size="small">
-                <el-form-item prop="type" label="类型" required>
-                    <el-select v-model="form.type" :disabled="typeDisabled" placeholder="请选择" width="50px">
-                        <el-option v-for="item in enums.ResourceTypeEnum" :key="item.value" :label="item.label" :value="item.value"> </el-option>
-                    </el-select>
-                </el-form-item>
-
-                <el-form-item prop="name" label="名称" required>
-                    <el-input v-model.trim="form.name" placeholder="资源名[菜单名]" auto-complete="off"></el-input>
-                </el-form-item>
-
-                <el-form-item prop="code" label="path|code">
-                    <el-input v-model.trim="form.code" placeholder="菜单为路由path"></el-input>
-                </el-form-item>
-
-                <el-form-item label="序号" prop="weight" required>
-                    <el-input v-model.trim="form.weight" type="number" placeholder="请输入序号"></el-input>
-                </el-form-item>
-
-                <el-form-item v-if="form.type === enums.ResourceTypeEnum.MENU.value" label="图标">
-                    <icon-selector v-model="form.meta.icon" :isAllOn="true" />
-                </el-form-item>
-
-                <el-form-item v-if="form.type === enums.ResourceTypeEnum.MENU.value" prop="code" label="路由名">
-                    <el-input v-model.trim="form.meta.routeName" placeholder="请输入路由名称"></el-input>
-                </el-form-item>
-
-                <el-form-item v-if="form.type === enums.ResourceTypeEnum.MENU.value" prop="code" label="组件">
-                    <el-input v-model.trim="form.meta.component" placeholder="请输入组件名"></el-input>
-                </el-form-item>
-
-                <el-form-item v-if="form.type === enums.ResourceTypeEnum.MENU.value" prop="code" label="是否缓存">
-                    <el-select v-model="form.meta.isKeepAlive" placeholder="请选择">
-                        <el-option v-for="item in trueFalseOption" :key="item.value" :label="item.label" :value="item.value"> </el-option>
-                    </el-select>
-                </el-form-item>
-
-                <el-form-item v-if="form.type === enums.ResourceTypeEnum.MENU.value" prop="code" label="是否隐藏">
-                    <el-select v-model="form.meta.isHide" placeholder="请选择" width="50px">
-                        <el-option v-for="item in trueFalseOption" :key="item.value" :label="item.label" :value="item.value"> </el-option>
-                    </el-select>
-                </el-form-item>
-
-                <el-form-item v-if="form.type === enums.ResourceTypeEnum.MENU.value" prop="code" label="tag不可删除">
-                    <el-select v-model="form.meta.isAffix" placeholder="请选择">
-                        <el-option v-for="item in trueFalseOption" :key="item.value" :label="item.label" :value="item.value"> </el-option>
-                    </el-select>
-                </el-form-item>
-
-                <el-form-item v-if="form.type === enums.ResourceTypeEnum.MENU.value" prop="code" label="是否iframe">
-                    <el-select @change="changeIsIframe" v-model="form.meta.isIframe" placeholder="请选择">
-                        <el-option v-for="item in trueFalseOption" :key="item.value" :label="item.label" :value="item.value"> </el-option>
-                    </el-select>
-                </el-form-item>
-
-                <el-form-item v-if="form.type === enums.ResourceTypeEnum.MENU.value && form.meta.isIframe" prop="code" label="iframe地址">
-                    <el-input v-model.trim="form.meta.link" placeholder="请输入iframe url"></el-input>
-                </el-form-item>
+                <el-row :gutter="10">
+                    <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4" class="mb20">
+                        <el-form-item prop="type" label="类型" required>
+                            <el-select v-model="form.type" :disabled="typeDisabled" placeholder="请选择" width="w100">
+                                <el-option v-for="item in enums.ResourceTypeEnum" :key="item.value" :label="item.label" :value="item.value">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4" class="mb20">
+                        <el-form-item prop="name" label="名称" required>
+                            <el-input v-model.trim="form.name" placeholder="资源名[菜单名]" auto-complete="off"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4" class="mb20">
+                        <el-form-item prop="code" label="path|code">
+                            <el-input v-model.trim="form.code" placeholder="菜单不带/自动拼接父路径"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4" class="mb20">
+                        <el-form-item label="序号" prop="weight" required>
+                            <el-input v-model.trim="form.weight" type="number" placeholder="请输入序号"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4" class="mb20">
+                        <el-form-item v-if="form.type === enums.ResourceTypeEnum.MENU.value" label="图标">
+                            <icon-selector v-model="form.meta.icon" :isAllOn="true" />
+                        </el-form-item>
+                    </el-col>
+                    <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4" class="mb20">
+                        <el-form-item v-if="form.type === enums.ResourceTypeEnum.MENU.value" prop="code" label="路由名">
+                            <el-input v-model.trim="form.meta.routeName" placeholder="请输入路由名称"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4" class="mb20">
+                        <el-form-item v-if="form.type === enums.ResourceTypeEnum.MENU.value" prop="code" label="组件">
+                            <el-input v-model.trim="form.meta.component" placeholder="请输入组件名"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4" class="mb20">
+                        <el-form-item v-if="form.type === enums.ResourceTypeEnum.MENU.value" prop="code" label="是否缓存">
+                            <el-select v-model="form.meta.isKeepAlive" placeholder="请选择" width="w100">
+                                <el-option v-for="item in trueFalseOption" :key="item.value" :label="item.label" :value="item.value"> </el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4" class="mb20">
+                        <el-form-item v-if="form.type === enums.ResourceTypeEnum.MENU.value" prop="code" label="是否隐藏">
+                            <el-select v-model="form.meta.isHide" placeholder="请选择" width="w100">
+                                <el-option v-for="item in trueFalseOption" :key="item.value" :label="item.label" :value="item.value"> </el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4" class="mb20">
+                        <el-form-item v-if="form.type === enums.ResourceTypeEnum.MENU.value" prop="code" label="tag不可删除">
+                            <el-select v-model="form.meta.isAffix" placeholder="请选择" width="w100">
+                                <el-option v-for="item in trueFalseOption" :key="item.value" :label="item.label" :value="item.value"> </el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4" class="mb20">
+                        <el-form-item v-if="form.type === enums.ResourceTypeEnum.MENU.value" prop="code" label="是否iframe">
+                            <el-select @change="changeIsIframe" v-model="form.meta.isIframe" placeholder="请选择" width="w100">
+                                <el-option v-for="item in trueFalseOption" :key="item.value" :label="item.label" :value="item.value"> </el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4" class="mb20">
+                        <el-form-item
+                            v-if="form.type === enums.ResourceTypeEnum.MENU.value && form.meta.isIframe"
+                            prop="code"
+                            label="iframe地址"
+                            width="w100"
+                        >
+                            <el-input v-model.trim="form.meta.link" placeholder="请输入iframe url"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
             </el-form>
 
             <div style="text-align: center" class="dialog-footer mt10">
@@ -121,7 +142,7 @@ export default defineComponent({
                     value: false,
                 },
             ],
-            visible: false,
+            dialogVisible: false,
             //弹出框对象
             dialogForm: {
                 title: '',
@@ -172,8 +193,8 @@ export default defineComponent({
             },
         });
 
-        watch(props, (newValue, oldValue) => {
-            state.visible = newValue.visible;
+        watch(props, (newValue) => {
+            state.dialogVisible = newValue.visible;
             if (newValue.data) {
                 state.form = { ...newValue.data };
             } else {
@@ -211,7 +232,7 @@ export default defineComponent({
             let p = submitForm.id ? resourceApi.update : resourceApi.save;
             menuForm.value.validate((valid: any) => {
                 if (valid) {
-                    p.request(submitForm).then((res) => {
+                    p.request(submitForm).then(() => {
                         emit('val-change', submitForm);
                         state.btnLoading = true;
                         ElMessage.success('保存成功');

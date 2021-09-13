@@ -13,7 +13,7 @@ import java.time.format.DateTimeFormatter;
  * @author meilin.huang
  * @date 2020-03-18 10:21 上午
  */
-@Configuration
+@Configuration(proxyBeanMethods = false)
 public class LocalDateTimeSerializerConfig {
 
     @Value("${spring.jackson.date-format:yyyy-MM-dd HH:mm:ss}")

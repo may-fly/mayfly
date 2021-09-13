@@ -155,7 +155,7 @@ export default defineComponent({
             state.chooseData = item;
         };
 
-        const roleEditChange = (data: any) => {
+        const roleEditChange = () => {
             ElMessage.success('修改成功！');
             search();
         };
