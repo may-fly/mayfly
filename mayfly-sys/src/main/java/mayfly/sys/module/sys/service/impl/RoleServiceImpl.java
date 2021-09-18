@@ -2,7 +2,7 @@ package mayfly.sys.module.sys.service.impl;
 
 import mayfly.core.base.service.impl.BaseServiceImpl;
 import mayfly.core.exception.BizAssert;
-import mayfly.core.log.MethodLog;
+import mayfly.core.log.Log;
 import mayfly.sys.module.sys.entity.AccountRoleDO;
 import mayfly.sys.module.sys.entity.RoleDO;
 import mayfly.sys.module.sys.entity.RoleResourceDO;
@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @version 1.0
  * @date 2018-12-07 4:13 PM
  */
-@MethodLog("角色管理:")
+@Log("角色管理:")
 @Service
 public class RoleServiceImpl extends BaseServiceImpl<RoleMapper, Long, RoleDO> implements RoleService {
 

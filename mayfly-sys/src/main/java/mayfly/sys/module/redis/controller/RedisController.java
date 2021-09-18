@@ -2,7 +2,7 @@ package mayfly.sys.module.redis.controller;
 
 import io.lettuce.core.api.sync.BaseRedisCommands;
 import io.lettuce.core.api.sync.RedisKeyCommands;
-import mayfly.core.log.MethodLog;
+import mayfly.core.log.Log;
 import mayfly.core.model.result.CommonCodeEnum;
 import mayfly.core.permission.Permission;
 import mayfly.core.model.result.Result;
@@ -36,7 +36,7 @@ public class RedisController {
     @Autowired
     private RedisService redisService;
 
-    @MethodLog(level = MethodLog.LogLevel.DEBUG)
+    @Log(level = Log.LogLevel.DEBUG)
     @GetMapping("/{cluster}/{id}/scan")
     public Result<?> scan(@PathVariable Boolean cluster, @PathVariable Long id, @Valid ScanForm scanForm) {
         RedisKeyCommands<String, byte[]> cmds = getKeyCmd(cluster, id);
@@ -45,7 +45,7 @@ public class RedisController {
         return Result.success(scan);
     }
 
-    @MethodLog(value = "查询redis value", resultLevel = MethodLog.LogLevel.DEBUG)
+    @Log(value = "查询redis value", resLevel = Log.LogLevel.DEBUG)
     @GetMapping("/{cluster}/{id}/value")
     public Result<?> value(@PathVariable Boolean cluster, @PathVariable Long id, String key) {
         if (StringUtils.isEmpty(key)) {
@@ -54,7 +54,7 @@ public class RedisController {
         return Result.success(KeyValueCommand.value(getKeyCmd(cluster, id), key));
     }
 
-    @MethodLog("新增redis key value")
+    @Log("新增redis key value")
     @PostMapping("/{cluster}/{id}/value")
     public Result<?> addKeyValue(@PathVariable Boolean cluster, @PathVariable Long id, @Valid KeyValueForm keyValue) {
         BaseRedisCommands<String, byte[]> cmds = cluster ? redisService.getClusterCmds(id) : redisService.getCmds(id);
@@ -62,7 +62,7 @@ public class RedisController {
         return Result.success();
     }
 
-    @MethodLog("删除key")
+    @Log("删除key")
     @DeleteMapping("/{cluster}/{id}")
     public Result<?> delete(@PathVariable Boolean cluster, @PathVariable Long id, String key) {
         if (StringUtils.isEmpty(key)) {

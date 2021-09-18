@@ -179,4 +179,18 @@ public @interface EnumValue {
         }
     }
 
+    enum DefaultNameValueEnum implements NameValueEnum<Integer> {
+        ;
+
+        @Override
+        public Integer getValue() {
+            return 0;
+        }
+
+        @Override
+        public String getName() {
+            return null;
+        }
+    }
+
 }

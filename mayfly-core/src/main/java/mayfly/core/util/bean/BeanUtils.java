@@ -14,6 +14,7 @@ import java.beans.PropertyDescriptor;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -137,7 +138,7 @@ public class BeanUtils {
             String fieldName = nf.getName();
             // 旧值不存在指定字段，直接跳过
             Field oldObjFiled = ReflectionUtils.getField(oldObjClass, fieldName, nf.getType());
-            if (oldObjFiled == null) {
+            if (oldObjFiled == null || Modifier.isStatic(oldObjFiled.getModifiers())) {
                 continue;
             }
             Object newValue = ReflectionUtils.getFieldValue(nf, newObj);

@@ -142,7 +142,7 @@
                                 <div class="personal-edit-safe-item-left-value">当前密码强度：强</div>
                             </div>
                             <div class="personal-edit-safe-item-right">
-                                <el-button @click="testClick" type="text">立即修改</el-button>
+                                <el-button type="text">立即修改</el-button>
                             </div>
                         </div>
                     </div>
@@ -217,7 +217,7 @@ export default {
         const getUserInfos = computed(() => {
             return store.state.userInfos.userInfos;
         });
-        
+
         return {
             currentTime,
             getUserInfos,

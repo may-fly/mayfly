@@ -2,6 +2,7 @@ package mayfly.sys.module.sys.service.impl;
 
 import mayfly.core.base.service.impl.BaseServiceImpl;
 import mayfly.core.exception.BizAssert;
+import mayfly.core.log.LogContext;
 import mayfly.core.util.StringUtils;
 import mayfly.core.util.TreeUtils;
 import mayfly.core.util.bean.BeanUtils;
@@ -82,6 +83,8 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourceMapper, Long, R
     @Override
     public void update(ResourceDO resource) {
         ResourceDO old = getById(resource.getId());
+        LogContext.setOldObj(old);
+
         BizAssert.notNull(old, "资源不存在");
         BizAssert.equals(resource.getType(), old.getType(), "资源类型不可变更");
         // 禁止误传修改其父节点

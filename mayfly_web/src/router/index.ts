@@ -49,7 +49,6 @@ export function initBackEndControlRoutesFun() {
         // const oldRoutes = res; // 获取接口原始路由（未处理component）
     }
     dynamicRoutes[0].children = backEndRouterConverter(menuRoute); // 处理路由（component）
-    console.log('parse route', dynamicRoutes[0].children)
     // 添加404界面
     router.addRoute(pathMatch);
     resetRoute(); // 删除/重置路由
