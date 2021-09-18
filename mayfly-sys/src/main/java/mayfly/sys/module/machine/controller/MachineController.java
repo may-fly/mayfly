@@ -1,6 +1,6 @@
 package mayfly.sys.module.machine.controller;
 
-import mayfly.core.log.MethodLog;
+import mayfly.core.log.Log;
 import mayfly.core.model.PageQuery;
 import mayfly.core.model.result.PageResult;
 import mayfly.core.model.result.Response2Result;
@@ -35,7 +35,7 @@ public class MachineController {
     @Autowired
     private MachineService machineService;
 
-    @MethodLog(value = "获取机器列表", level = MethodLog.LogLevel.DEBUG)
+    @Log(value = "获取机器列表", level = Log.LogLevel.DEBUG)
     @GetMapping()
     public PageResult<MachineVO> list(PageQuery query) {
         return PageResult.withPageHelper(query, () -> machineService.listAll() , MachineVO.class);
@@ -51,20 +51,20 @@ public class MachineController {
         return machineService.getTopInfo(id);
     }
 
-    @MethodLog("机器管理：新增机器")
+    @Log("机器管理：新增机器")
     @PostMapping()
     public void add(@RequestBody @Valid MachineForm form) {
         machineService.create(form);
     }
 
-    @MethodLog("机器管理：更新机器")
+    @Log("机器管理：更新机器")
     @PutMapping("/{id}")
     public void update(@PathVariable Long id, @RequestBody @Valid MachineForm form) {
         form.setId(id);
         machineService.create(form);
     }
 
-    @MethodLog("机器管理：删除机器")
+    @Log("机器管理：删除机器")
     @DeleteMapping("/{machineId}")
     public void del(@PathVariable Long machineId) {
         machineService.deleteById(machineId);

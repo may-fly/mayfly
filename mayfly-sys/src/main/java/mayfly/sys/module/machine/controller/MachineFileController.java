@@ -1,7 +1,7 @@
 package mayfly.sys.module.machine.controller;
 
 import mayfly.core.exception.BizAssert;
-import mayfly.core.log.MethodLog;
+import mayfly.core.log.Log;
 import mayfly.core.log.NoNeedLogParam;
 import mayfly.core.model.result.Response2Result;
 import mayfly.core.permission.Permission;
@@ -45,7 +45,7 @@ public class MachineFileController {
     @Autowired
     private MachineService machineService;
 
-    @MethodLog(value = "获取文件配置列表", level = MethodLog.LogLevel.DEBUG)
+    @Log(value = "获取文件配置列表", level = Log.LogLevel.DEBUG)
     @GetMapping("/{machineId}/files")
     public List<MachineFileDO> files(@PathVariable Long machineId) {
         return machineFileService.listByMachineId(machineId);
@@ -63,7 +63,7 @@ public class MachineFileController {
     }
 
     @Permission(code = "machine:file:write")
-    @MethodLog("机器文件下载")
+    @Log("机器文件下载")
     @GetMapping("/{machineId}/files/{id}/download")
     public void download(@PathVariable Long id, String path, @NoNeedLogParam HttpServletResponse response) {
         byte[] bytes = machineFileService.getFileContent(id, path);
@@ -71,20 +71,20 @@ public class MachineFileController {
     }
 
     @Permission(code = "machine:file:write")
-    @MethodLog("修改文件内容")
+    @Log("修改文件内容")
     @PostMapping("/{machineId}/files/{id}/write")
     public void updateFileContent(@PathVariable Long id, @RequestBody @Valid MachineConfContentForm form) {
         machineFileService.updateFileContent(id, form.getPath(), form.getContent());
     }
 
     @Permission
-    @MethodLog("新增文件配置")
+    @Log("新增文件配置")
     @PostMapping("/{machineId}/files")
     public MachineFileDO addConf(@PathVariable Long machineId, @RequestBody @Valid MachineFileForm form) {
         return machineFileService.create(machineId, form);
     }
 
-    @MethodLog("删除文件配置")
+    @Log("删除文件配置")
     @DeleteMapping("/files/{id}")
     public void delConf(@PathVariable Long id) {
         machineFileService.deleteById(id);

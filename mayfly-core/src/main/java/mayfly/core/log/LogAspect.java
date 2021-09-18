@@ -1,12 +1,8 @@
 package mayfly.core.log;
 
-import mayfly.core.exception.BizException;
-import mayfly.core.permission.LoginAccount;
-import mayfly.core.thread.GlobalThreadPool;
-import mayfly.core.util.StringUtils;
-import org.aspectj.lang.JoinPoint;
+import mayfly.core.log.handler.DefaultLogHandler;
+import mayfly.core.log.handler.LogHandler;
 import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
@@ -15,12 +11,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
-import java.util.function.BiConsumer;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 日志切面
@@ -34,149 +28,71 @@ public class LogAspect {
 
     private static final Logger LOG = LoggerFactory.getLogger(LogAspect.class);
 
-    /**
-     * 调用信息前缀
-     */
-    public static final String INVOKER_FLAG = "\n==> ";
+    private static final Map<Method, LogInfo> LOGS = new ConcurrentHashMap<>(128);
 
     /**
-     * 返回结果模板
+     * 日志处理器列表
      */
-    public static final String RESULT_FLAG = "\n<== ";
-
-    /**
-     * 执行时间模板
-     */
-    public static final String TIME_MSG_TEMP = " -> ";
-
-    /**
-     * 异常信息模板
-     */
-    public static final String EXCEPTION_FLAG = "\n<-e ";
-
-    /**
-     * 日志结果消费者（回调）,主要用于保存日志信息等
-     */
-    private BiConsumer<MethodLog.LogLevel, String> logConsumer;
+    private List<LogHandler> logHandlers;
 
     public LogAspect() {
-    }
-
-    public LogAspect(BiConsumer<MethodLog.LogLevel, String> logConsumer) {
-        this.logConsumer = logConsumer;
+        addLogHandler(new DefaultLogHandler());
     }
 
     /**
      * 拦截带有@MethodLog的方法或带有该注解的类
      */
-    @Pointcut("@annotation(mayfly.core.log.MethodLog) || @within(mayfly.core.log.MethodLog)")
+    @Pointcut("@annotation(mayfly.core.log.Log) || @within(mayfly.core.log.Log)")
     private void logPointcut() {
-    }
-
-    @AfterThrowing(pointcut = "logPointcut()", throwing = "e")
-    public void doException(JoinPoint jp, Exception e) {
-        Method method = ((MethodSignature) jp.getSignature()).getMethod();
-        MethodLog methodLog = getMethodLog(method);
-        String logMsg = getInvokeInfo(method, methodLog, jp.getArgs()) + EXCEPTION_FLAG;
-        if (e instanceof BizException) {
-            BizException bizE = (BizException) e;
-            logMsg = logMsg + "[errCode:" + bizE.getErrorCode() + ", errMsg:" + bizE.getMessage() + "]";
-        } else {
-            logMsg = logMsg + "sysErr: " + e.getMessage();
-        }
-        // 执行回调
-        execLogConsumer(MethodLog.LogLevel.ERROR, logMsg);
-        LOG.error(logMsg);
     }
 
     @Around(value = "logPointcut()")
     private Object around(ProceedingJoinPoint pjp) throws Throwable {
         Method method = ((MethodSignature) pjp.getSignature()).getMethod();
-        MethodLog methodLog = getMethodLog(method);
-        int sysLevel = getSysLogLevel().order();
-        MethodLog.LogLevel level = methodLog.level();
+        LogInfo lm = LOGS.computeIfAbsent(method, LogInfo::from);
+        Log.LogLevel sysLevel = getSysLogLevel();
+        Log.LogLevel level = lm.getLevel();
         // 方法的日志级别<系统日志级别直接返回
-        if (level.order() < sysLevel) {
+        if (level.order() < sysLevel.order()) {
             return pjp.proceed();
         }
 
+        InvokeInfo invokeInfo = InvokeInfo.newInstance()
+                .sysLevel(getSysLogLevel())
+                .args(pjp.getArgs());
+
         long startTime = System.currentTimeMillis();
-        Object result = pjp.proceed();
-        String logMsg = getInvokeInfo(method, methodLog, pjp.getArgs()) + TIME_MSG_TEMP + (System.currentTimeMillis() - startTime) + "ms";
-        if (method.getReturnType() != Void.TYPE && methodLog.resultLevel().order() >= sysLevel) {
-            logMsg = logMsg + RESULT_FLAG + result;
+        try {
+            Object result = pjp.proceed();
+            invokeInfo.res(result).execTime(System.currentTimeMillis() - startTime);
+            invokeHandler(lm, invokeInfo);
+            return result;
+        } catch (Exception e) {
+            invokeInfo.exception(e);
+            invokeHandler(lm, invokeInfo);
+            throw e;
+        } finally {
+            LogContext.clear();
         }
-        switch (level) {
-            case DEBUG:
-                LOG.debug(logMsg);
-                break;
-            case WARN:
-                LOG.warn(logMsg);
-                break;
-            case ERROR:
-                LOG.error(logMsg);
-                break;
-            default:
-                LOG.info(logMsg);
-                break;
-        }
-        execLogConsumer(level, logMsg);
-        return result;
-    }
-
-    private String getInvokeInfo(Method m, MethodLog ml, Object[] args) {
-        StringBuilder invokeInfo = new StringBuilder();
-        Arrays.stream(getTags(ml)).forEach(t -> invokeInfo.append("[").append(t).append("]"));
-        invokeInfo.append(INVOKER_FLAG).append(m.getDeclaringClass().getName()).append("#").append(m.getName()).append("(");
-        Parameter[] parameters = m.getParameters();
-        boolean first = true;
-        for (int i = 0; i < args.length; i++) {
-            if (parameters[i].isAnnotationPresent(NoNeedLogParam.class)) {
-                continue;
-            }
-            if (!first) {
-                invokeInfo.append(", ");
-            } else {
-                first = false;
-            }
-            invokeInfo.append("arg").append(i).append(": ").append(args[i]);
-        }
-        return invokeInfo.append(")").toString();
-    }
-
-    private String[] getTags(MethodLog ml) {
-        List<String> tags = new ArrayList<>();
-        LoginAccount la = LoginAccount.getFromContext();
-        if (la != null) {
-            tags.add(String.format("uid=%s, uname=%s", la.getId(), la.getUsername()));
-        }
-        String value = ml.value();
-        if (!StringUtils.isEmpty(value)) {
-            tags.add(value);
-        }
-        return tags.toArray(new String[0]);
-    }
-
-    private MethodLog getMethodLog(Method m) {
-        return Optional.ofNullable(m.getAnnotation(MethodLog.class))
-                .orElse(m.getDeclaringClass().getAnnotation(MethodLog.class));
     }
 
     /**
-     * 执行日志消息消费者
+     * 添加日志处理器
      *
-     * @param level  日志级别
-     * @param logMsg 日志内容
+     * @param logHandler 日志处理器
      */
-    private void execLogConsumer(MethodLog.LogLevel level, String logMsg) {
-        if (logConsumer != null) {
-            GlobalThreadPool.execute(() -> {
-                try {
-                    logConsumer.accept(level, logMsg);
-                } catch (Exception e) {
-                    LOG.error("执行log consumer失败：", e);
-                }
-            });
+    public void addLogHandler(LogHandler logHandler) {
+        if (this.logHandlers == null) {
+            this.logHandlers = new ArrayList<>();
+        }
+        this.logHandlers.add(logHandler);
+    }
+
+    private void invokeHandler(LogInfo metadata, InvokeInfo invokeInfo) {
+        try {
+            logHandlers.forEach(lh -> lh.handle(metadata, invokeInfo));
+        } catch (Exception e) {
+            LOG.error("执行日志处理器失败", e);
         }
     }
 
@@ -185,19 +101,19 @@ public class LogAspect {
      *
      * @return 系统日志级别
      */
-    private MethodLog.LogLevel getSysLogLevel() {
+    private Log.LogLevel getSysLogLevel() {
         if (LOG.isDebugEnabled()) {
-            return MethodLog.LogLevel.DEBUG;
+            return Log.LogLevel.DEBUG;
         }
         if (LOG.isInfoEnabled()) {
-            return MethodLog.LogLevel.INFO;
+            return Log.LogLevel.INFO;
         }
         if (LOG.isWarnEnabled()) {
-            return MethodLog.LogLevel.WARN;
+            return Log.LogLevel.WARN;
         }
         if (LOG.isErrorEnabled()) {
-            return MethodLog.LogLevel.ERROR;
+            return Log.LogLevel.ERROR;
         }
-        return MethodLog.LogLevel.NONE;
+        return Log.LogLevel.NONE;
     }
 }

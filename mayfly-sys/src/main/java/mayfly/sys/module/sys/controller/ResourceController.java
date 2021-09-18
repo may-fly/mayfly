@@ -1,7 +1,10 @@
 package mayfly.sys.module.sys.controller;
 
+import lombok.Data;
 import mayfly.core.exception.BizAssert;
-import mayfly.core.log.MethodLog;
+import mayfly.core.log.Log;
+import mayfly.core.log.LogChange;
+import mayfly.core.log.LogContext;
 import mayfly.core.model.result.Response2Result;
 import mayfly.core.permission.Permission;
 import mayfly.core.util.JsonUtils;
@@ -52,7 +55,7 @@ public class ResourceController {
 
     @Permission
     @PostMapping()
-    @MethodLog("新增资源")
+    @Log("新增资源")
     public void add(@RequestBody @Valid ResourceForm resourceForm) {
         ResourceDO resource = BeanUtils.copyProperties(resourceForm, ResourceDO.class);
         if (ResourceTypeEnum.MENU.getValue().equals(resourceForm.getType())) {
@@ -63,7 +66,7 @@ public class ResourceController {
     }
 
     @Permission
-    @MethodLog("更新资源信息")
+    @Log("更新资源信息")
     @PutMapping("/{id}")
     public void update(@PathVariable Long id, @RequestBody @Valid ResourceForm resourceForm) {
         ResourceDO resource = BeanUtils.copyProperties(resourceForm, ResourceDO.class);
@@ -71,21 +74,40 @@ public class ResourceController {
             BizAssert.notNull(resourceForm.getMeta(), "菜单元数据不能为空");
             resource.setMeta(JsonUtils.toJSONString(resourceForm.getMeta()));
         }
-
+        LogContext.setNewObj(resourceForm);
         resource.setId(id);
         resourceService.update(resource);
     }
 
     @PutMapping("/{id}/{status}")
-    @MethodLog("修改资源状态")
+    @Log("修改资源状态")
     public void changeStatus(@PathVariable Long id, @PathVariable Integer status) {
         resourceService.changeStatus(id, status);
     }
 
     @Permission
     @DeleteMapping("/{id}")
-    @MethodLog("删除资源")
+    @Log("删除资源")
     public void del(@PathVariable Long id) {
         resourceService.delete(id);
+    }
+
+    @Data
+    public static class TestClass {
+        @LogChange(name = "值", enumValue = ResourceTypeEnum.class)
+        private Integer value;
+
+        @LogChange(name = "值2")
+        private String value2;
+    }
+
+    @Log("测试日志信息")
+    @PostMapping("/test")
+    public TestClass captcha(@RequestBody TestClass testClass) {
+        TestClass old = new TestClass();
+        old.setValue(2);
+        old.setValue2("hahah");
+        LogContext.setOldObj(old);
+        return testClass;
     }
 }
