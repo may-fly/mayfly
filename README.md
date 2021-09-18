@@ -8,7 +8,7 @@ github: <https://github.com/may-fly/mayfly>
 gitee: <https://gitee.com/objs/mayfly>
 
 ### golang版
-<https://gitee.com/objs/mayfly-go>
+<https://gitee.com/objs/mayfly-go> （功能较为齐全，因golang支持交叉编译等特性比较适合开发该类系统 故重点开发）
 
 ### 系统环境及框架
 - 前端：typescript，  vue3，  element-plus
@@ -38,15 +38,15 @@ gitee: <https://gitee.com/objs/mayfly>
 ### 项目特点 
 
 - #### 方法日志记录(记录方法出入参以及执行时间或异常)
-日志记录采用AOP（mayfly.sys.aop.log.LogAspect）类进行拦截带有@MethodLog注解的所有方法或者带有@MethodLog类下的所有方法，进行出入参以及运行时间的记录，
+日志记录采用AOP（mayfly.core.log.LogAspect）类进行拦截带有@Log注解的所有方法或者带有@Log类下的所有方法，进行出入参以，对象实体字段变化记录及运行时间的记录，
 也包含异常日志的记录，也可以设置按指定的日志级别打印日志.
 使用方式大致如下：
 ```
 /**
-*如果有时候返回值太多，也可将@MethodLog注解中的result属性去掉（默认为false）
+*如果有时候返回值太多，也可将@Log注解中的result属性去掉（默认为false）
 *也可以使用@NoNeedLogParam注解作用于参数上，让其不记录该参数值,可以用来去除一些系统参数，如HttpServletResponse等
 */
-@MethodLog(value = "获取权限列表", time = true)
+@Log(value = "获取权限列表", time = true)
 @GetMapping("/v1/permissions")
 public Result list(PermissionQuery condition){}
 
@@ -54,12 +54,19 @@ public Result list(PermissionQuery condition){}
 /**
 *也可以用于类上,如下，只有在DEBUG级别下才会打印返回值【在返回值为列表时可用，防止记录过多日志】
 */
-@MethodLog(resultLevel = MethodLog.LogLevel.DEBUG)
+@Log(resultLevel = Log.LogLevel.DEBUG)
 public class PermissionServiceImpl{}
+
+/**
+* 可对实体字段加该注解，用于字段变更时更精细化描述，如 type(类型): 1[类型1] -> 2[类型2]
+*/
+@LogChange(name = "类型", enumValue = "TypeEnum.class")
+private Integer type;
 ```
+
 打印结果如图：
-正常日志：
-![正常日志](https://images.gitee.com/uploads/images/2021/0105/145732_56963e85_1240250.png "日志.png")
+正常日志：记录日志出入参，字段变更内容信息等
+![日志](https://images.gitee.com/uploads/images/2021/0918/172725_b913b9c1_1240250.png "正常日志.png")
 
 异常日志：业务异常只打印与本系统相关的堆栈信息，即只打印以本项目包开头的类调用堆栈信息
 ![异常日志](https://images.gitee.com/uploads/images/2021/0105/145526_e0a16cf0_1240250.png "异常日志.png")
