@@ -1,4 +1,4 @@
-FROM sapmachine/jdk11
+FROM openjdk:11
 VOLUME /tmp
 ENV LANG C.UTF-8
 # dockerfile-maven-plugin配置
