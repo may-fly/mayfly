@@ -1,6 +1,6 @@
 package mayfly.sys.module.redis.controller;
 
-import mayfly.core.log.Log;
+import mayfly.core.log.annotation.Log;
 import mayfly.core.permission.Permission;
 import mayfly.core.model.result.Result;
 import mayfly.core.util.bean.BeanUtils;
@@ -39,7 +39,7 @@ public class ServerController {
 
     private AtomicInteger tempId = new AtomicInteger(0);
 
-    @Log(value = "获取redis列表", level = Log.LogLevel.DEBUG)
+    @Log(value = "获取redis列表", level = Log.Level.DEBUG)
     @GetMapping()
     public Result<?> list(RedisForm query) {
         return Result.success(BeanUtils.copyProperties(redisService

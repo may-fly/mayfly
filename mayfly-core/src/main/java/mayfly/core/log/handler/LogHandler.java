@@ -1,7 +1,6 @@
 package mayfly.core.log.handler;
 
-import mayfly.core.log.InvokeInfo;
-import mayfly.core.log.LogInfo;
+import mayfly.core.log.InvokeLog;
 
 /**
  * @author meilin.huang
@@ -12,8 +11,7 @@ public interface LogHandler {
     /**
      * 日志处理
      *
-     * @param metadata   日志信息
-     * @param invokeInfo 方法调用信息
+     * @param invokeLog 方法调用日志信息
      */
-    void handle(LogInfo metadata, InvokeInfo invokeInfo);
+    void handle(InvokeLog invokeLog);
 }

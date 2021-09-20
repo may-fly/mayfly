@@ -3,7 +3,7 @@ package mayfly.sys.module.sys.controller.form;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import mayfly.core.log.LogChange;
+import mayfly.core.log.annotation.LogChange;
 import mayfly.core.validation.annotation.EnumValue;
 import mayfly.sys.module.sys.enums.ResourceTypeEnum;
 
@@ -37,6 +37,7 @@ public class ResourceForm {
     @EnumValue(value = ResourceTypeEnum.class, name = "资源类型")
     private Integer type;
 
+    @LogChange(name = "顺序")
     @NotNull
     private Integer weight;
 }

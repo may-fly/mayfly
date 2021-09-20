@@ -1,8 +1,8 @@
 package mayfly.sys.module.machine.controller;
 
 import mayfly.core.exception.BizAssert;
-import mayfly.core.log.Log;
-import mayfly.core.log.NoNeedLogParam;
+import mayfly.core.log.annotation.Log;
+import mayfly.core.log.annotation.NoNeedLogParam;
 import mayfly.core.model.result.Response2Result;
 import mayfly.core.permission.Permission;
 import mayfly.core.util.FileUtils;
@@ -45,7 +45,7 @@ public class MachineFileController {
     @Autowired
     private MachineService machineService;
 
-    @Log(value = "获取文件配置列表", level = Log.LogLevel.DEBUG)
+    @Log(value = "获取文件配置列表", level = Log.Level.DEBUG)
     @GetMapping("/{machineId}/files")
     public List<MachineFileDO> files(@PathVariable Long machineId) {
         return machineFileService.listByMachineId(machineId);

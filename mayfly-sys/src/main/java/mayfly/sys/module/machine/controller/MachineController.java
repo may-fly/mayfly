@@ -1,6 +1,6 @@
 package mayfly.sys.module.machine.controller;
 
-import mayfly.core.log.Log;
+import mayfly.core.log.annotation.Log;
 import mayfly.core.model.PageQuery;
 import mayfly.core.model.result.PageResult;
 import mayfly.core.model.result.Response2Result;
@@ -35,7 +35,7 @@ public class MachineController {
     @Autowired
     private MachineService machineService;
 
-    @Log(value = "获取机器列表", level = Log.LogLevel.DEBUG)
+    @Log(value = "获取机器列表", level = Log.Level.DEBUG)
     @GetMapping()
     public PageResult<MachineVO> list(PageQuery query) {
         return PageResult.withPageHelper(query, () -> machineService.listAll() , MachineVO.class);

@@ -2,7 +2,7 @@ package mayfly.sys.module.sys.service.impl;
 
 import mayfly.core.base.service.impl.BaseServiceImpl;
 import mayfly.core.exception.BizAssert;
-import mayfly.core.log.Log;
+import mayfly.core.log.annotation.Log;
 import mayfly.sys.module.sys.entity.AccountRoleDO;
 import mayfly.sys.module.sys.entity.RoleDO;
 import mayfly.sys.module.sys.entity.RoleResourceDO;

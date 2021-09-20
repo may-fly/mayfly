@@ -1,10 +1,10 @@
-package mayfly.core.log;
+package mayfly.core.log.annotation;
 
 import java.lang.annotation.*;
 
 /**
  * 可用于类和方法，用于类则该类的方法都会记录日志 <br/>
- * 如果方法和类都有该注解，result和time属性则使用方法级的注解属性描述，而value信息则为两则相加 </br>
+ * 如果方法和类都有该注解，res属性则使用方法级的注解属性描述，而value信息则为两则相加 </br>
  * 如果方法的返回值为void则不记录返回结果
  *
  * @author meilin.huang
@@ -28,17 +28,17 @@ public @interface Log {
     /**
      * 打印日志的级别，默认info级别
      */
-    LogLevel level() default LogLevel.INFO;
+    Level level() default Level.INFO;
 
     /**
      * 只有日志级别为该级别时，才会打印方法返回结果（用于灵活控制避免打印很大的结果列表等）
      */
-    LogLevel resLevel() default LogLevel.INFO;
+    Level resLevel() default Level.INFO;
 
     /**
      * 打印日志的级别
      */
-    enum LogLevel {
+    enum Level {
         /**
          * 不打印日志
          */
@@ -54,7 +54,7 @@ public @interface Log {
 
         private final int order;
 
-        LogLevel(int order) {
+        Level(int order) {
             this.order = order;
         }
 

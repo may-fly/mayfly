@@ -1,4 +1,4 @@
-package mayfly.core.log;
+package mayfly.core.log.annotation;
 
 import mayfly.core.util.enums.NameValueEnum;
 import mayfly.core.validation.annotation.EnumValue;

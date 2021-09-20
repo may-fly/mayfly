@@ -1,4 +1,4 @@
-package mayfly.core.log;
+package mayfly.core.log.annotation;
 
 import java.lang.annotation.*;
 

@@ -1,6 +1,6 @@
 package mayfly.sys.module.sys.controller;
 
-import mayfly.core.log.Log;
+import mayfly.core.log.annotation.Log;
 import mayfly.core.model.result.PageResult;
 import mayfly.core.model.result.Response2Result;
 import mayfly.core.exception.BizAssert;

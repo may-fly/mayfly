@@ -1,6 +1,7 @@
 package mayfly.sys.module.sys.controller.form;
 
 import lombok.Data;
+import mayfly.core.log.annotation.LogChange;
 
 import javax.validation.constraints.NotBlank;
 
@@ -14,6 +15,7 @@ public class RoleForm {
 
     private Long id;
 
+    @LogChange(name = "角色名")
     @NotBlank
     private String name;
 

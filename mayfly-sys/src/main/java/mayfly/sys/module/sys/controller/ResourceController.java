@@ -2,8 +2,8 @@ package mayfly.sys.module.sys.controller;
 
 import lombok.Data;
 import mayfly.core.exception.BizAssert;
-import mayfly.core.log.Log;
-import mayfly.core.log.LogChange;
+import mayfly.core.log.annotation.Log;
+import mayfly.core.log.annotation.LogChange;
 import mayfly.core.log.LogContext;
 import mayfly.core.model.result.Response2Result;
 import mayfly.core.permission.Permission;
@@ -101,9 +101,10 @@ public class ResourceController {
         private String value2;
     }
 
-    @Log("测试日志信息")
+    @Log(value = "测试日志信息")
     @PostMapping("/test")
     public TestClass captcha(@RequestBody TestClass testClass) {
+//        int i = 1/0;
         TestClass old = new TestClass();
         old.setValue(2);
         old.setValue2("hahah");
