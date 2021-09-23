@@ -10,6 +10,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * 启用日志切面
+ *
  * @author meilin.huang
  * @version 1.0
  * @date 2018-11-06 10:41 AM

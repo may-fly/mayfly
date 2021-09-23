@@ -101,7 +101,7 @@ public class ResourceController {
         private String value2;
     }
 
-    @Log(value = "测试日志信息")
+    @Log(value = "'测试使用: ' + #res?.value", el = true)
     @PostMapping("/test")
     public TestClass captcha(@RequestBody TestClass testClass) {
 //        int i = 1/0;
@@ -109,6 +109,6 @@ public class ResourceController {
         old.setValue(2);
         old.setValue2("hahah");
         LogContext.setOldObj(old);
-        return testClass;
+        return null;
     }
 }

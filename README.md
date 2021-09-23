@@ -54,8 +54,13 @@ public Result list(PermissionQuery condition){}
 /**
 *也可以用于类上,如下，只有在DEBUG级别下才会打印返回值【在返回值为列表时可用，防止记录过多日志】
 */
-@Log(resultLevel = Log.LogLevel.DEBUG)
+@Log(resLevel = Log.Level.DEBUG)
 public class PermissionServiceImpl{}
+
+@Log(value = "'测试使用: ' + #res?.fieldName", el = true) // 使用spel表达式，res表示返回值
+@Log(value = "'测试使用: ' + #tc?.fieldName", el = true)  // 使用spel表达式，tc表示请求参数名
+@GetMapping("/v1/test")
+public TestClass list(@RequestBody TestClass tc){}
 
 /**
 * 可对实体字段加该注解，用于字段变更时更精细化描述，如 type(类型): 1[类型1] -> 2[类型2]

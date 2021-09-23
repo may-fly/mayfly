@@ -1,6 +1,9 @@
 package mayfly.core.log;
 
 import mayfly.core.log.annotation.Log;
+import org.springframework.expression.Expression;
+import org.springframework.expression.ExpressionParser;
+import org.springframework.expression.spel.standard.SpelExpressionParser;
 
 import java.lang.reflect.Method;
 import java.util.Optional;
@@ -12,6 +15,12 @@ import java.util.Optional;
  * @date 2021-09-17 7:40 下午
  */
 public class LogInfo {
+
+    /**
+     * 解析spel表达式
+     */
+    private static final ExpressionParser parser = new SpelExpressionParser();
+
     /**
      * 日志信息
      */
@@ -33,6 +42,11 @@ public class LogInfo {
     private boolean logRes;
 
     /**
+     * 使用spel表达式会有该值
+     */
+    private Expression expression;
+
+    /**
      * 从方法获取对应的日志元信息
      *
      * @param method 方法
@@ -46,6 +60,13 @@ public class LogInfo {
         li.level = ml.level();
         li.resLevel = ml.resLevel();
         li.logRes = ml.res();
+        if (ml.el()) {
+            try {
+                li.expression = parser.parseExpression(li.content);
+            } catch (Exception e) {
+                // skip
+            }
+        }
         return li;
     }
 
@@ -79,5 +100,9 @@ public class LogInfo {
 
     public void setLogRes(boolean logRes) {
         this.logRes = logRes;
+    }
+
+    public Expression getExpression() {
+        return expression;
     }
 }

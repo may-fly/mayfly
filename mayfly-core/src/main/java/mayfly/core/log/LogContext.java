@@ -63,6 +63,10 @@ public final class LogContext {
         putVar(NEW_OBJ_KEY, newObj);
     }
 
+    public static Map<String, Object> getVars() {
+        return VAR_MAP.get();
+    }
+
     /**
      * 获取默认的日志信息内容
      *

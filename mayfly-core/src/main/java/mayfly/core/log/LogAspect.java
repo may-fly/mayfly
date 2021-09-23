@@ -3,6 +3,7 @@ package mayfly.core.log;
 import mayfly.core.log.annotation.Log;
 import mayfly.core.log.annotation.LogChange;
 import mayfly.core.log.annotation.NoNeedLogParam;
+import mayfly.core.log.expression.LogEvaluationContext;
 import mayfly.core.log.handler.LogHandler;
 import mayfly.core.util.ReflectionUtils;
 import mayfly.core.util.StringUtils;
@@ -19,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.expression.Expression;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -91,7 +93,6 @@ public class LogAspect implements ApplicationContextAware {
         }
 
         InvokeLog invokeLog = InvokeLog.newInstance()
-                .description(logInfo.getContent())
                 .method(method)
                 // 过滤掉不需要记录的参数
                 .args(getArgs(method, pjp.getArgs()));
@@ -107,13 +108,22 @@ public class LogAspect implements ApplicationContextAware {
                     .logRes(method.getReturnType() != Void.TYPE && logInfo.getResLevel().order() >= sysLevel)
                     // 字段值变化列表
                     .fieldChanges(getChange(invokeLog.getArgs()));
-            invokeHandler(invokeLog);
             return result;
         } catch (Exception e) {
             invokeLog.exception(e);
-            invokeHandler(invokeLog);
             throw e;
         } finally {
+            String content = logInfo.getContent();
+            Expression expression = logInfo.getExpression();
+            if (expression != null) {
+                try {
+                    content = expression.getValue(LogEvaluationContext.from(invokeLog), String.class);
+                } catch (Exception e) {
+                    LOG.error("获取spel日志描述失败", e);
+                }
+            }
+            invokeLog.description(content);
+            invokeHandler(invokeLog);
             LogContext.clear();
         }
     }
