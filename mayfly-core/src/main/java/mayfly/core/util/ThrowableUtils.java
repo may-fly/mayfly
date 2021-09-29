@@ -51,7 +51,7 @@ public final class ThrowableUtils {
         StringBuilder s = new StringBuilder("\n").append(e);
         for (StackTraceElement traceElement : e.getStackTrace()) {
             if (!traceElement.getClassName().startsWith(packagePrefix)) {
-                break;
+                continue;
             }
             s.append("\n\tat ").append(traceElement);
         }

@@ -104,7 +104,6 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourceMapper, Long, R
             }
         }
         updateByIdSelective(resource);
-        operationLogService.asyncUpdateLog("更新权限&菜单", resource, old);
     }
 
     @Override

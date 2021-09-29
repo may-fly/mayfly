@@ -24,6 +24,6 @@ public class DbLogHandler implements LogHandler {
 
     @Override
     public void handle(InvokeLog invokeLog) {
-        logService.asyncLog(LogContext.getDefaultLogMsg(), invokeLog.getException() != null ? LogTypeEnum.SYS_LOG : LogTypeEnum.ERR_LOG);
+        logService.asyncLog(LogContext.getDefaultLogMsg(), invokeLog.getException() == null ? LogTypeEnum.SYS_LOG : LogTypeEnum.ERR_LOG);
     }
 }

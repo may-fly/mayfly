@@ -8,5 +8,6 @@ export const imports = {
     "ResourceList": () => import('@/views/system/resource'),
     "RoleList": () => import('@/views/system/role'),
     "AccountList": () => import('@/views/system/account'),
+    "LogList": () => import('@/views/system/log'),
     "SelectData": () => import('@/views/ops/db'),
 }

@@ -25,6 +25,7 @@ public class OperationLogController {
     @Autowired
     private OperationLogService operationLogService;
 
+    @Permission
     @GetMapping
     public PageResult<OperationLogDO> list(OperationLogQuery query) {
         return operationLogService.listByCondition(BeanUtils.copyProperties(query, OperationLogDO.class), query);
