@@ -218,7 +218,7 @@ public class PermissionController
 ![角色分配菜单&权限页](https://images.gitee.com/uploads/images/2021/0611/155919_c3aaa930_1240250.png "屏幕截图.png")
 
 操作日志
-![操作日志](https://images.gitee.com/uploads/images/2020/0311/105025_2d59ed81_1240250.png "操作日志.png")
+![操作日志](https://images.gitee.com/uploads/images/2021/0929/162505_0f9f4770_1240250.png "屏幕截图.png")
 
 #### 机器管理
 机器ssh终端
