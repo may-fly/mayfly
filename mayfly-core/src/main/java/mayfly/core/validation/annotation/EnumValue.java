@@ -119,7 +119,8 @@ public @interface EnumValue {
         @SuppressWarnings({"rawtypes"})
         private void setErrorEnumPlaceholderValue(Object[] values, ConstraintValidatorContext context) {
             String message = enumValue.message();
-            if (!"{name}".equals(message) && !"{enum}".equals(message)) {
+            // message如果不包含name和enums占位符，则直接返回
+            if (!message.contains("{name}") && !message.contains("{enums}")) {
                 return;
             }
             Class<? extends Enum<? extends ValueEnum>> enumClass = enumValue.value();

@@ -159,7 +159,7 @@ export default defineComponent({
             dialogForm: {
                 title: '',
                 visible: false,
-                data: { pid: 0, type: 1 },
+                data: { pid: 0, type: 1, weight: 1 },
                 // 资源类型选择是否选
                 typeDisabled: true,
             },
@@ -209,7 +209,7 @@ export default defineComponent({
 
         const addResource = (data: any) => {
             let dialog = state.dialogForm;
-            dialog.data = { pid: 0, type: 1 };
+            dialog.data = { pid: 0, type: 1, weight: 1 };
             // 添加顶级菜单情况
             if (!data) {
                 dialog.typeDisabled = true;
@@ -239,6 +239,7 @@ export default defineComponent({
                 } else {
                     dialog.data.type = state.menuTypeValue;
                 }
+                dialog.data.weight = data.children.length + 1;
             }
             dialog.visible = true;
         };
