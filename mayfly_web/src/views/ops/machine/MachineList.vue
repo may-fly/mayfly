@@ -2,12 +2,12 @@
     <div>
         <div class="toolbar">
             <div style="float: left">
-                <el-button v-auth="'machine:add'" type="primary" icon="el-icon-plus" size="mini" @click="openFormDialog(false)" plain>添加</el-button>
+                <el-button v-auth="'machine:add'" type="primary" icon="plus" @click="openFormDialog(false)" plain>添加</el-button>
                 <el-button
                     v-auth="'machine:edit'"
                     type="primary"
-                    icon="el-icon-edit"
-                    size="mini"
+                    icon="edit"
+                    size="small"
                     :disabled="currentId == null"
                     @click="openFormDialog(currentData)"
                     plain
@@ -18,18 +18,17 @@
                     :disabled="currentId == null"
                     @click="deleteMachine(currentId)"
                     type="danger"
-                    icon="el-icon-delete"
-                    size="mini"
+                    icon="delete"
                     >删除</el-button
                 >
-                <el-button v-auth="'machine:file'" type="success" :disabled="currentId == null" @click="fileManage(currentData)" size="mini" plain
+                <el-button v-auth="'machine:file'" icon="files" type="success" :disabled="currentId == null" @click="fileManage(currentData)" plain
                     >文件管理</el-button
                 >
             </div>
 
             <div style="float: right">
-                <el-input placeholder="host" size="mini" style="width: 140px" v-model="params.host" @clear="search" plain clearable></el-input>
-                <el-button @click="search" type="success" icon="el-icon-search" size="mini"></el-button>
+                <el-input placeholder="host" size="small" style="width: 140px" v-model="params.host" @clear="search" plain clearable></el-input>
+                <el-button @click="search" type="success" icon="el-icon-search" size="small"></el-button>
             </div>
         </div>
 
@@ -59,9 +58,9 @@
             <el-table-column prop="modifier" label="修改者" :min-width="50"></el-table-column>
             <el-table-column label="操作" min-width="200px">
                 <template #default="scope">
-                    <!-- <el-button type="primary" @click="monitor(scope.row.id)" icom="el-icon-tickets" size="mini" plain>监控</el-button> -->
-                    <!-- <el-button type="success" @click="serviceManager(scope.row)" size="mini" plain>脚本管理</el-button> -->
-                    <el-button v-auth="'machine:terminal'" type="success" @click="showTerminal(scope.row)" size="mini" plain>终端</el-button>
+                    <!-- <el-button type="primary" @click="monitor(scope.row.id)" icom="el-icon-tickets" size="small" plain>监控</el-button> -->
+                    <!-- <el-button type="success" @click="serviceManager(scope.row)" size="small" plain>脚本管理</el-button> -->
+                    <el-button v-auth="'machine:terminal'" type="success" @click="showTerminal(scope.row)" size="small" plain>终端</el-button>
                 </template>
             </el-table-column>
         </el-table>

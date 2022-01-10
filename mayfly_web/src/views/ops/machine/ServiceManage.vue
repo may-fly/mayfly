@@ -3,25 +3,25 @@
         <el-dialog :title="title" v-model="visible" :destroy-on-close="true" :show-close="true" :before-close="handleClose" width="60%">
             <div class="toolbar">
                 <div style="float: left">
-                    <el-select v-model="type" @change="getScripts" size="mini" placeholder="请选择">
+                    <el-select v-model="type" @change="getScripts" size="small" placeholder="请选择">
                         <el-option :key="0" label="私有" :value="0"> </el-option>
                         <el-option :key="1" label="公共" :value="1"> </el-option>
                     </el-select>
                 </div>
                 <div style="float: right">
-                    <el-button @click="editScript(currentData)" :disabled="currentId == null" type="primary" icon="el-icon-tickets" size="mini" plain
+                    <el-button @click="editScript(currentData)" :disabled="currentId == null" type="primary" icon="el-icon-tickets" size="small" plain
                         >查看</el-button
                     >
-                    <el-button v-auth="'machine:script:save'" type="primary" @click="editScript(null)" icon="el-icon-plus" size="mini" plain
+                    <el-button v-auth="'machine:script:save'" type="primary" @click="editScript(null)" icon="el-icon-plus" size="small" plain
                         >添加</el-button
                     >
-                    <el-button :disabled="currentId == null" type="danger" @click="deleteRow(currentData)" icon="el-icon-delete" size="mini" plain
+                    <el-button :disabled="currentId == null" type="danger" @click="deleteRow(currentData)" icon="el-icon-delete" size="small" plain
                         >删除</el-button
                     >
                 </div>
             </div>
 
-            <el-table :data="scriptTable" @current-change="choose" stripe border size="mini" style="width: 100%">
+            <el-table :data="scriptTable" @current-change="choose" stripe border size="small" style="width: 100%">
                 <el-table-column label="选择" width="55px">
                     <template #default="scope">
                         <el-radio v-model="currentId" :label="scope.row.id">
@@ -38,7 +38,7 @@
                 </el-table-column>
                 <el-table-column label="操作">
                     <template #default="scope">
-                        <el-button v-if="scope.row.id == null" @click="addFiles(scope.row)" type="success" icon="el-icon-success" size="mini" plain
+                        <el-button v-if="scope.row.id == null" @click="addFiles(scope.row)" type="success" icon="el-icon-success" size="small" plain
                             >确定</el-button
                         >
 
@@ -48,7 +48,7 @@
                             @click="runScript(scope.row)"
                             type="primary"
                             icon="el-icon-tickets"
-                            size="mini"
+                            size="small"
                             plain
                             >执行</el-button
                         >

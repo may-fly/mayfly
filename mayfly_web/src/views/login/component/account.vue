@@ -1,18 +1,10 @@
 <template>
-    <el-form ref="loginFormRef" :model="loginForm" :rules="rules" class="login-content-form">
+    <el-form ref="loginFormRef" :model="loginForm" :rules="rules" class="login-content-form" size="large">
         <el-form-item prop="username">
-            <el-input type="text" placeholder="请输入用户名" prefix-icon="el-icon-user" v-model="loginForm.username" clearable autocomplete="off">
-            </el-input>
+            <el-input type="text" placeholder="请输入用户名" prefix-icon="user" v-model="loginForm.username" clearable autocomplete="off"> </el-input>
         </el-form-item>
         <el-form-item prop="password">
-            <el-input
-                type="password"
-                placeholder="请输入密码"
-                prefix-icon="el-icon-lock"
-                v-model="loginForm.password"
-                autocomplete="off"
-                show-password
-            >
+            <el-input type="password" placeholder="请输入密码" prefix-icon="lock" v-model="loginForm.password" autocomplete="off" show-password>
             </el-input>
         </el-form-item>
         <el-form-item prop="captcha">
@@ -22,7 +14,7 @@
                         type="text"
                         maxlength="4"
                         placeholder="请输入验证码"
-                        prefix-icon="el-icon-position"
+                        prefix-icon="position"
                         v-model="loginForm.captcha"
                         clearable
                         autocomplete="off"
@@ -169,7 +161,7 @@ export default defineComponent({
                 ElMessage.success(`${currentTimeInfo}，欢迎回来！`);
             }, 300);
         };
-        
+
         return {
             getCaptcha,
             currentTime,

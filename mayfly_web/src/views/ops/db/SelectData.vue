@@ -2,28 +2,28 @@
     <div>
         <div class="toolbar">
             <div class="fl">
-                <el-select size="small" v-model="dbId" placeholder="请选择数据库" @change="changeDb" @clear="clearDb" clearable filterable>
+                <el-select v-model="dbId" placeholder="请选择数据库" @change="changeDb" @clear="clearDb" clearable filterable>
                     <el-option v-for="item in dbs" :key="item.id" :label="`${item.name} [${dbTypeName(item.type)}]`" :value="item.id"> </el-option>
                 </el-select>
             </div>
         </div>
 
-        <el-container style="height: 50%; border: 1px solid #eee; margin-top: 1px">
-            <el-aside width="70%" style="background-color: rgb(238, 241, 246)">
+        <el-container style="height: 50%; border: 1px solid #eee; margin-top: 1px; height: 549px">
+            <el-aside id="sqlcontent" width="65%" style="background-color: rgb(238, 241, 246)">
                 <div class="toolbar">
                     <div class="fl">
-                        <el-button @click="runSql" type="success" icon="el-icon-video-play" size="mini" plain>执行</el-button>
+                        <el-button @click="runSql" type="success" icon="video-play" plain>执行</el-button>
 
-                        <el-button @click="formatSql" type="primary" icon="el-icon-magic-stick" size="mini" plain>格式化</el-button>
+                        <el-button @click="formatSql" type="primary" icon="magic-stick" plain>格式化</el-button>
 
-                        <el-button @click="saveSql" type="primary" icon="el-icon-document-add" size="mini" plain>保存</el-button>
+                        <el-button @click="saveSql" type="primary" icon="document-add" plain>保存</el-button>
                     </div>
                 </div>
-                <codemirror class="codesql" ref="cmEditor" language="sql" v-model="sql" :options="cmOptions" />
+                <codemirror @beforeChange="onBeforeChange" class="codesql" ref="cmEditor" language="sql" v-model="sql" :options="cmOptions" />
             </el-aside>
 
             <el-container style="margin-left: 2px">
-                <el-header style="text-align: left; height: 45px; font-size: 12px; padding: 0px">
+                <el-header style="text-align: left; height: 35px; font-size: 12px; padding: 0px">
                     <el-select v-model="tableName" placeholder="请选择表" @change="changeTable" clearable filterable style="width: 99%">
                         <el-option
                             v-for="item in tableMetadata"
@@ -36,7 +36,7 @@
                 </el-header>
 
                 <el-main style="padding: 0px; height: 100%; overflow: hidden">
-                    <el-table :data="columnMetadata" height="100%" size="mini">
+                    <el-table :data="columnMetadata" height="100%">
                         <el-table-column prop="name" label="名称"> </el-table-column>
                         <el-table-column prop="type" label="类型">
                             <template #default="scope">
@@ -48,19 +48,19 @@
                 </el-main>
             </el-container>
         </el-container>
-        <el-table style="margin-top: 1px" :data="selectRes.data" size="mini" max-height="300" stripe border>
-            <el-table-column min-width="92" align="center" v-for="item in selectRes.tableColumn" :key="item" :prop="item" :label="item">
+        <el-table style="margin-top: 1px" :data="selectRes.data" size="small" max-height="300" stripe border>
+            <el-table-column
+                :width="flexColumnWidth(item, selectRes.data)"
+                min-width="100"
+                show-overflow-tooltip
+                align="center"
+                v-for="item in selectRes.tableColumn"
+                :key="item"
+                :prop="item"
+                :label="item"
+            >
             </el-table-column>
         </el-table>
-
-        <!-- <el-pagination
-      style="text-align: center"
-      background
-      layout="prev, pager, next, total, jumper"
-      :total="data.total"
-      :current-page.sync="params.pageNum"
-      :page-size="params.pageSize"
-    /> -->
     </div>
 </template>
 
@@ -133,7 +133,7 @@ export default defineComponent({
             return cmEditor.value.coder;
         });
 
-        const dbTypeName = (type: any) => {
+        const dbTypeName = () => {
             return 'mysql';
         };
 
@@ -148,6 +148,12 @@ export default defineComponent({
             if (/^[a-zA-Z]/.test(changeObj.text[0])) {
                 showHint();
             }
+        };
+
+        const onBeforeChange = (instance: any, changeObj: any) => {
+            var text = changeObj.text[0];
+            // 将sql提示去除
+            changeObj.text[0] = text.split('  ')[0];
         };
 
         /**
@@ -272,25 +278,93 @@ export default defineComponent({
             state.dbs = await dbApi.dbs.request(state.params);
         };
 
+        const flexColumnWidth = (str: any, tableData: any, flag = 'equal') => {
+            // str为该列的字段名(传字符串);tableData为该表格的数据源(传变量);
+            // flag为可选值，可不传该参数,传参时可选'max'或'equal',默认为'max'
+            // flag为'max'则设置列宽适配该列中最长的内容,flag为'equal'则设置列宽适配该列中第一行内容的长度。
+            str = str + '';
+            let columnContent = '';
+            if (!tableData || !tableData.length || tableData.length === 0 || tableData === undefined) {
+                return;
+            }
+            if (!str || !str.length || str.length === 0 || str === undefined) {
+                return;
+            }
+            if (flag === 'equal') {
+                // 获取该列中第一个不为空的数据(内容)
+                for (let i = 0; i < tableData.length; i++) {
+                    if (tableData[i][str].length > 0) {
+                        columnContent = tableData[i][str];
+                        break;
+                    }
+                }
+            } else {
+                // 获取该列中最长的数据(内容)
+                let index = 0;
+                for (let i = 0; i < tableData.length; i++) {
+                    if (tableData[i][str] === null) {
+                        return;
+                    }
+                    const now_temp = tableData[i][str] + '';
+                    const max_temp = tableData[index][str] + '';
+                    if (now_temp.length > max_temp.length) {
+                        index = i;
+                    }
+                }
+                columnContent = tableData[index][str];
+            }
+            // 以下分配的单位长度可根据实际需求进行调整
+            let flexWidth = 0;
+            for (const char of columnContent) {
+                if ((char >= 'A' && char <= 'Z') || (char >= 'a' && char <= 'z')) {
+                    // 如果是英文字符，为字符分配8个单位宽度
+                    flexWidth += 8;
+                } else if (char >= '\u4e00' && char <= '\u9fa5') {
+                    // 如果是中文字符，为字符分配15个单位宽度
+                    flexWidth += 16;
+                } else {
+                    // 其他种类字符，为字符分配10个单位宽度
+                    flexWidth += 10;
+                }
+            }
+            if (flexWidth < 80) {
+                // 设置最小宽度
+                flexWidth = 80;
+            }
+            if (flexWidth > 500) {
+                // 设置最大宽度
+                flexWidth = 500;
+            }
+            return flexWidth + 'px';
+        };
+
         return {
             ...toRefs(state),
             cmEditor,
             dbTypeName,
             inputRead,
             changeTable,
+            onBeforeChange,
             runSql,
             saveSql,
             changeDb,
             clearDb,
             formatSql,
+            flexColumnWidth,
         };
     },
 });
 </script>
 
-<style>
+<style scoped lang="scss">
 .codesql {
     font-size: 10pt;
+    font-weight: 600;
     font-family: Consolas, Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace, serif;
+}
+#sqlcontent {
+    .CodeMirror {
+        height: 300px !important;
+    }
 }
 </style>

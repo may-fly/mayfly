@@ -4,7 +4,7 @@
       <el-button
         type="primary"
         icon="el-icon-plus"
-        size="mini"
+        size="small"
         @click="openFormDialog(false)"
         plain
       >添加</el-button>
@@ -12,7 +12,7 @@
         type="primary"
         icon="el-icon-edit"
         :disabled="currentId == null"
-        size="mini"
+        size="small"
         @click="openFormDialog(currentData)"
         plain
       >编辑</el-button>
@@ -20,24 +20,24 @@
         type="danger"
         icon="el-icon-delete"
         :disabled="currentId == null"
-        size="mini"
+        size="small"
         @click="deleteNode"
         plain
       >删除</el-button>
       <div style="float: right;">
         <el-input
           placeholder="host"
-          size="mini"
+          size="small"
           style="width: 140px;"
           v-model="params.host"
           @clear="search"
           plain
           clearable
         ></el-input>
-        <el-select v-model="params.clusterId" size="mini" clearable placeholder="集群选择">
+        <el-select v-model="params.clusterId" size="small" clearable placeholder="集群选择">
           <el-option v-for="item in clusters" :key="item.id" :value="item.id" :label="item.name"></el-option>
         </el-select>
-        <el-button @click="search" type="success" icon="el-icon-search" size="mini"></el-button>
+        <el-button @click="search" type="success" icon="el-icon-search" size="small"></el-button>
       </div>
     </div>
     <el-table :data="redisTable" stripe style="width: 100%" @current-change="choose">
@@ -60,7 +60,7 @@
             @click="info(scope.row)"
             :ref="scope.row"
             icom="el-icon-tickets"
-            size="mini"
+            size="small"
             plain
           >info</el-button>
           <el-button
@@ -68,7 +68,7 @@
             type="success"
             @click="manage(scope.row)"
             :ref="scope.row"
-            size="mini"
+            size="small"
             plain
           >数据管理</el-button>
         </template>

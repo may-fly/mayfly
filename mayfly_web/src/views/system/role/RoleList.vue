@@ -1,14 +1,14 @@
 <template>
     <div class="role-list">
         <div class="toolbar">
-            <el-button v-auth="'role:add'" type="primary" icon="el-icon-plus" size="mini" @click="editRole(false)">添加</el-button>
+            <el-button v-auth="'role:add'" type="primary" icon="plus" @click="editRole(false)">添加</el-button>
             <el-button
                 v-auth="'role:update'"
                 :disabled="chooseId == null"
                 @click="editRole(chooseData)"
                 type="primary"
-                icon="el-icon-edit"
-                size="mini"
+                icon="edit"
+               
                 >编辑</el-button
             >
             <el-button
@@ -16,8 +16,8 @@
                 :disabled="chooseId == null"
                 @click="editResource(chooseData)"
                 type="success"
-                icon="el-icon-setting"
-                size="mini"
+                icon="setting"
+               
                 >分配菜单&权限</el-button
             >
             <el-button
@@ -25,14 +25,14 @@
                 :disabled="chooseId == null"
                 @click="deleteRole(chooseData)"
                 type="danger"
-                icon="el-icon-delete"
-                size="mini"
+                icon="delete"
+               
                 >删除</el-button
             >
 
             <div style="float: right">
-                <el-input placeholder="请输入角色名称！" size="small" style="width: 140px" v-model="query.name" @clear="search" clearable></el-input>
-                <el-button @click="search" type="success" icon="el-icon-search" size="mini"></el-button>
+                <el-input placeholder="请输入角色名称！" style="width: 140px" v-model="query.name" @clear="search" clearable></el-input>
+                <el-button @click="search" type="success" icon="search"></el-button>
             </div>
         </div>
         <el-table :data="roles" @current-change="choose" border ref="table" style="width: 100%">

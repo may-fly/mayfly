@@ -1,27 +1,20 @@
 <template>
     <div class="role-list">
         <div class="toolbar">
-            <el-button :disabled="currentId == null" @click="deleteAccount()" type="danger" icon="el-icon-delete" size="mini">删除</el-button>
+            <el-button :disabled="currentId == null" @click="deleteAccount()" type="danger" icon="delete">删除</el-button>
             <div style="float: right">
-                <el-select size="small" style="width: 120px" v-model="query.type" placeholder="状态">
-                    <el-option label="全部" :value="null"></el-option>
+                <el-select style="width: 120px" v-model="query.type" placeholder="状态">
+                    <el-option label="全部" :value="false"></el-option>
                     <el-option v-for="item in enums.logType" :key="item.value" :label="item.label" :value="item.value"></el-option>
                 </el-select>
-                <el-input
-                    placeholder="请输入账号名"
-                    size="small"
-                    style="width: 140px"
-                    v-model="query.creator"
-                    @clear="query.creator = null"
-                    clearable
-                ></el-input>
-                <el-button @click="search(true)" type="success" icon="el-icon-search" size="mini"></el-button>
+                <el-input placeholder="请输入账号名" style="width: 140px" v-model="query.creator" @clear="query.creator = null" clearable></el-input>
+                <el-button @click="search(true)" type="success" icon="search"></el-button>
             </div>
         </div>
         <el-table :data="datas" border ref="table">
             <el-table-column min-width="600" prop="operation" label="操作记录"></el-table-column>
             <el-table-column min-width="80" prop="type" label="操作类型" align="center">
-                <template  #default="scope">
+                <template #default="scope">
                     <el-tag type="info" effect="plain">{{ enums.logType.getLabelByValue(scope.row.type) }}</el-tag>
                 </template>
             </el-table-column>
@@ -77,6 +70,9 @@ export default defineComponent({
         const search = async (resetPageNum: boolean) => {
             if (resetPageNum) {
                 state.query.pageNum = 1;
+            }
+            if (!state.query.type) {
+                state.query.type = null;
             }
             let res = await logApi.list.request(state.query);
             state.datas = res.list;

@@ -1,8 +1,10 @@
 <template>
     <div class="layout-navbars-breadcrumb-user" :style="{ flex: layoutUserFlexNum }">
-        <el-dropdown :show-timeout="70" :hide-timeout="50" trigger="click" @command="onComponentSizeChange">
+        <!-- <el-dropdown :show-timeout="70" :hide-timeout="50" trigger="click" @command="onComponentSizeChange">
             <div class="layout-navbars-breadcrumb-user-icon">
-                <i class="el-icon-plus" title="组件大小"></i>
+                <el-icon title="组件大小">
+                    <plus />
+                </el-icon>
             </div>
             <template #dropdown>
                 <el-dropdown-menu>
@@ -12,12 +14,16 @@
                     <el-dropdown-item command="mini" :disabled="disabledSize === 'mini'">超小</el-dropdown-item>
                 </el-dropdown-menu>
             </template>
-        </el-dropdown>
+        </el-dropdown> -->
         <div class="layout-navbars-breadcrumb-user-icon" @click="onSearchClick">
-            <i class="el-icon-search" title="菜单搜索"></i>
+            <el-icon title="菜单搜索">
+                <search />
+            </el-icon>
         </div>
         <div class="layout-navbars-breadcrumb-user-icon" @click="onLayoutSetingClick">
-            <i class="el-icon-setting" title="布局设置"></i>
+            <el-icon title="布局设置">
+                <setting />
+            </el-icon>
         </div>
         <div class="layout-navbars-breadcrumb-user-icon">
             <el-popover
@@ -29,7 +35,9 @@
             >
                 <template #reference>
                     <el-badge :is-dot="true" @click="isShowUserNewsPopover = !isShowUserNewsPopover">
-                        <i class="el-icon-bell" title="消息"></i>
+                        <el-icon title="消息">
+                            <bell />
+                        </el-icon>
                     </el-badge>
                 </template>
                 <transition name="el-zoom-in-top">
@@ -38,13 +46,20 @@
             </el-popover>
         </div>
         <div class="layout-navbars-breadcrumb-user-icon mr10" @click="onScreenfullClick">
-            <i class="iconfont" :title="isScreenfull ? '开全屏' : '关全屏'" :class="!isScreenfull ? 'el-icon-full-screen' : 'el-icon-crop'"></i>
+            <el-icon v-if="!isScreenfull" title="关全屏">
+                <full-screen />
+            </el-icon>
+            <el-icon v-else title="开全屏">
+                <crop />
+            </el-icon>
         </div>
         <el-dropdown :show-timeout="70" :hide-timeout="50" @command="onHandleCommandClick">
             <span class="layout-navbars-breadcrumb-user-link" style="cursor: pointer">
                 <img :src="getUserInfos.photo" class="layout-navbars-breadcrumb-user-link-photo mr5" />
                 {{ getUserInfos.username === '' ? 'test' : getUserInfos.username }}
-                <i class="el-icon-arrow-down el-icon--right"></i>
+                <el-icon class="el-icon--right">
+                    <arrow-down />
+                </el-icon>
             </span>
             <template #dropdown>
                 <el-dropdown-menu>
@@ -54,7 +69,7 @@
                 </el-dropdown-menu>
             </template>
         </el-dropdown>
-        <Search ref="searchRef" />
+        <SearchMenu ref="searchRef" />
     </div>
 </template>
 
@@ -70,7 +85,7 @@ import UserNews from '@/views/layout/navBars/breadcrumb/userNews.vue';
 import Search from '@/views/layout/navBars/breadcrumb/search.vue';
 export default {
     name: 'layoutBreadcrumbUser',
-    components: { UserNews, Search },
+    components: { UserNews, SearchMenu: Search },
     setup() {
         const { proxy } = getCurrentInstance() as any;
         const router = useRouter();

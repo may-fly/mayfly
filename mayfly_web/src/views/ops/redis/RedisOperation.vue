@@ -6,13 +6,13 @@
           placeholder="请输入key"
           style="width: 180px"
           v-model="scanParam.match"
-          size="mini"
+          size="small"
           @clear="clear()"
           clearable
         ></el-input>
-        <el-button @click="search()" type="success" icon="el-icon-search" size="mini" plain>搜索</el-button>
-        <el-button type="primary" icon="el-icon-plus" size="mini" @click="save(false)" plain>添加</el-button>
-        <el-button @click="scan()" icon="el-icon-refresh" size="mini" plain>换一批</el-button>
+        <el-button @click="search()" type="success" icon="el-icon-search" size="small" plain>搜索</el-button>
+        <el-button type="primary" icon="el-icon-plus" size="small" @click="save(false)" plain>添加</el-button>
+        <el-button @click="scan()" icon="el-icon-refresh" size="small" plain>换一批</el-button>
       </div>
       <div style="float: right;">
         <!-- <el-button @click="scan()" icon="el-icon-refresh" size="small" plain>刷新</el-button> -->
@@ -42,7 +42,7 @@
             @click="getValue(scope.row.key)"
             type="success"
             icon="el-icon-search"
-            size="mini"
+            size="small"
             plain
           >查看</el-button>
           <el-button
@@ -50,14 +50,14 @@
             @click="update(scope.row.key)"
             type="primary"
             icon="el-icon-edit"
-            size="mini"
+            size="small"
             plain
           >修改</el-button>
           <el-button
             v-permission="permission.del.code"
             @click="del(scope.row.key)"
             type="danger"
-            size="mini"
+            size="small"
             icon="el-icon-delete"
             plain
           >删除</el-button>
