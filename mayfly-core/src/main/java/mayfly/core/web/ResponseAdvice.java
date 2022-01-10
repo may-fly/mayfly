@@ -21,6 +21,9 @@ import java.lang.reflect.Method;
  */
 @RestControllerAdvice
 public class ResponseAdvice implements ResponseBodyAdvice<Object> {
+
+    private static final MediaType MEDIA_TYPE = MediaType.parseMediaType(MediaType.APPLICATION_JSON_VALUE);
+    
     /**
      * 若方法或方法声明类有{@link Response2Result}注解，则将其reponse body封装为{@link Result}统一结果对象
      *
@@ -54,6 +57,7 @@ public class ResponseAdvice implements ResponseBodyAdvice<Object> {
         }
         // string特殊处理，返回类型为string 会使用StringHttpMessageConverter会报错
         if (body instanceof String) {
+            response.getHeaders().setContentType(MEDIA_TYPE);
             return JsonUtils.toJSONString(Result.success(body));
         }
         return Result.success(body);

@@ -114,7 +114,7 @@ public class DbServiceImpl extends BaseServiceImpl<DbMapper, Long, DbDO> impleme
                 if (StringUtils.isEmpty(comment)) {
                     columns.add(c.getName());
                 } else {
-                    columns.add(c.getName() + " /*" + comment + "*/");
+                    columns.add(c.getName() + "  " + comment);
                 }
             }
             res.put(t.getName(), columns);

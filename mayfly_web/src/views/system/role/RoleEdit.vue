@@ -1,7 +1,7 @@
 <template>
     <div class="role-dialog">
         <el-dialog :title="title" v-model="dialogVisible" :show-close="false" :before-close="cancel" width="500px">
-            <el-form :model="form" size="small" label-width="90px">
+            <el-form :model="form" label-width="90px">
                 <el-form-item label="角色名称:" required>
                     <el-input v-model="form.name" auto-complete="off"></el-input>
                 </el-form-item>
@@ -11,8 +11,8 @@
             </el-form>
             <template #footer>
                 <div class="dialog-footer">
-                    <el-button type="primary" :loading="btnLoading" @click="btnOk" size="small">确 定</el-button>
-                    <el-button @click="cancel()" size="small">取 消</el-button>
+                    <el-button type="primary" :loading="btnLoading" @click="btnOk">确 定</el-button>
+                    <el-button @click="cancel()">取 消</el-button>
                 </div>
             </template>
         </el-dialog>

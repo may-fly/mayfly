@@ -5,6 +5,9 @@ spring:
   profiles:
     # 环境 激活application-active配置文件
     active: dev
+  main:
+    allow-bean-definition-overriding: true
+    allow-circular-references: true
   http:
     encoding:
       charset: UTF-8
