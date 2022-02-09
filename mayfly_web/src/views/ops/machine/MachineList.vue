@@ -40,10 +40,10 @@
                     </el-radio>
                 </template>
             </el-table-column>
-            <el-table-column prop="name" label="名称" width></el-table-column>
+            <el-table-column prop="name" label="名称" :min-width="60"></el-table-column>
             <el-table-column prop="ip" label="IP" width></el-table-column>
             <el-table-column prop="port" label="端口" :min-width="40"></el-table-column>
-            <el-table-column prop="username" label="用户名" :min-width="40"></el-table-column>
+            <el-table-column prop="username" label="用户名" :min-width="45"></el-table-column>
             <el-table-column prop="createTime" label="创建时间" :min-width="100">
                 <template #default="scope">
                     {{ $filters.dateFormat(scope.row.createTime) }}
@@ -99,7 +99,6 @@ import { ElMessage } from 'element-plus';
 import { DynamicFormDialog } from '@/components/dynamic-form';
 // import Monitor from './Monitor.vue';
 import { machineApi } from './api';
-import SshTerminal from './SshTerminal.vue';
 import ServiceManage from './ServiceManage.vue';
 import FileManage from './FileManage.vue';
 
@@ -107,7 +106,6 @@ export default defineComponent({
     name: 'MachineList',
     components: {
         // Monitor,
-        SshTerminal,
         ServiceManage,
         FileManage,
         DynamicFormDialog,

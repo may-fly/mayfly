@@ -17,7 +17,7 @@ export default defineComponent({
 			type: String,
 		},
 	},
-	setup(props) {
+	setup(props: any) {
         return () => h('i', { class: 'el-icon', style: `--font-size: ${props.size};--color: ${props.color}` }, [h(resolveComponent(props.name))]);
 	},
 });

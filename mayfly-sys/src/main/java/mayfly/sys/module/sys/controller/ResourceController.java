@@ -1,10 +1,8 @@
 package mayfly.sys.module.sys.controller;
 
-import lombok.Data;
 import mayfly.core.exception.BizAssert;
-import mayfly.core.log.annotation.Log;
-import mayfly.core.log.annotation.LogChange;
 import mayfly.core.log.LogContext;
+import mayfly.core.log.annotation.Log;
 import mayfly.core.model.result.Response2Result;
 import mayfly.core.permission.Permission;
 import mayfly.core.util.JsonUtils;
@@ -90,25 +88,5 @@ public class ResourceController {
     @Log("删除资源")
     public void del(@PathVariable Long id) {
         resourceService.delete(id);
-    }
-
-    @Data
-    public static class TestClass {
-        @LogChange(name = "值", enumValue = ResourceTypeEnum.class)
-        private Integer value;
-
-        @LogChange(name = "值2")
-        private String value2;
-    }
-
-    @Log(value = "'测试使用: ' + #res?.value", el = true)
-    @PostMapping("/test")
-    public TestClass captcha(@RequestBody TestClass testClass) {
-//        int i = 1/0;
-        TestClass old = new TestClass();
-        old.setValue(2);
-        old.setValue2("hahah");
-        LogContext.setOldObj(old);
-        return null;
     }
 }

@@ -1,6 +1,6 @@
 const config = {
-    baseApiUrl: import.meta.env.VITE_API_URL,
-    baseSocketUrl: 'ws://localhost:8080'
+    baseApiUrl:  `${(window as any).globalConfig.BaseApiUrl}`,
+    baseSocketUrl: `${(window as any).globalConfig.BaseWsUrl}`
 }
 
 export default config

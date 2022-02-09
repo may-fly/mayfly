@@ -1,9 +1,9 @@
 <template>
     <div class="file-manage">
-        <el-dialog :title="title" v-model="visible" :show-close="true" :before-close="handleClose" width="800px">
+        <el-dialog :title="title" v-model="dialogVisible" :show-close="true" :before-close="handleClose" width="800px">
             <div class="toolbar">
                 <div style="float: right">
-                    <el-button v-auth="'machine:file:add'" type="primary" @click="add" icon="el-icon-plus" size="small" plain>添加</el-button>
+                    <el-button v-auth="'machine:file:add'" type="primary" @click="add" icon="plus" size="small" plain>添加</el-button>
                 </div>
             </div>
             <!-- <div style="float: right;">
@@ -29,17 +29,17 @@
                 </el-table-column>
                 <el-table-column label="操作" width>
                     <template #default="scope">
-                        <el-button v-if="scope.row.id == null" @click="addFiles(scope.row)" type="success" icon="el-icon-success" size="small" plain
+                        <el-button v-if="scope.row.id == null" @click="addFiles(scope.row)" type="success" icon="success" size="small" plain
                             >确定</el-button
                         >
-                        <el-button v-if="scope.row.id != null" @click="getConf(scope.row)" type="primary" icon="el-icon-tickets" size="small" plain
+                        <el-button v-if="scope.row.id != null" @click="getConf(scope.row)" type="primary" icon="tickets" size="small" plain
                             >查看</el-button
                         >
                         <el-button
                             v-auth="'machine:file:del'"
                             type="danger"
                             @click="deleteRow(scope.$index, scope.row)"
-                            icon="el-icon-delete"
+                            icon="delete"
                             size="small"
                             plain
                             >删除</el-button
@@ -51,17 +51,17 @@
 
         <el-dialog :title="tree.title" v-model="tree.visible" :close-on-click-modal="false" width="680px">
             <div style="height: 45vh; overflow: auto">
-                <el-tree ref="fileTree" :load="loadNode" :props="props" lazy node-key="id" :expand-on-click-node="false">
+                <el-tree v-if="tree.visible" ref="fileTree" :load="loadNode" :props="props" lazy node-key="id" :expand-on-click-node="false">
                     <template #default="{ node, data }">
                         <span class="custom-tree-node">
                             <span v-if="data.type == 'd' && !node.expanded">
-                                <i class="el-icon-folder"></i>
+                                <SvgIcon name="folder" />
                             </span>
                             <span v-if="data.type == 'd' && node.expanded">
-                                <i class="el-icon-folder-opened"></i>
+                                <SvgIcon name="folder-opened" />
                             </span>
                             <span v-if="data.type == '-'">
-                                <i class="el-icon-document"></i>
+                                <SvgIcon name="document" />
                             </span>
 
                             <span style="display: inline-block; width: 430px">
@@ -74,7 +74,7 @@
                                     @click.prevent="getFileContent(tree.folder.id, data.path)"
                                     v-if="data.type == '-' && data.size < 1 * 1024 * 1024"
                                     type="info"
-                                    icon="el-icon-view"
+                                    icon="view"
                                     :underline="false"
                                 />
 
@@ -93,13 +93,7 @@
                                     :limit="100"
                                     style="display: inline-block; margin-left: 2px"
                                 >
-                                    <el-link
-                                        v-auth="'machine:file:upload'"
-                                        v-if="data.type == 'd'"
-                                        @click.prevent
-                                        icon="el-icon-upload"
-                                        :underline="false"
-                                    />
+                                    <el-link v-auth="'machine:file:upload'" v-if="data.type == 'd'" @click.prevent icon="upload" :underline="false" />
                                 </el-upload>
 
                                 <el-link
@@ -107,7 +101,7 @@
                                     v-if="data.type == '-'"
                                     @click.prevent="downloadFile(node, data)"
                                     type="danger"
-                                    icon="el-icon-download"
+                                    icon="download"
                                     :underline="false"
                                     style="margin-left: 2px"
                                 />
@@ -117,7 +111,7 @@
                                     v-if="!dontOperate(data)"
                                     @click.prevent="deleteFile(node, data)"
                                     type="danger"
-                                    icon="el-icon-delete"
+                                    icon="delete"
                                     :underline="false"
                                     style="margin-left: 2px"
                                 />
@@ -175,7 +169,6 @@ export default defineComponent({
         const addFile = machineApi.addConf;
         const delFile = machineApi.delConf;
         const updateFileContent = machineApi.updateFileContent;
-        const uploadFile = machineApi.uploadFile;
         const files = machineApi.files;
         const fileTree: any = ref(null);
         const token = getSession('token');
@@ -201,7 +194,7 @@ export default defineComponent({
             },
         };
         const state = reactive({
-            visible: false,
+            dialogVisible: false,
             form: {
                 id: null,
                 type: null,
@@ -234,11 +227,11 @@ export default defineComponent({
             },
         });
 
-        watch(props, (newValue, oldValue) => {
+        watch(props, (newValue) => {
             if (newValue.machineId) {
                 getFiles();
             }
-            state.visible = newValue.visible;
+            state.dialogVisible = newValue.visible;
         });
 
         const getFiles = async () => {
@@ -283,7 +276,7 @@ export default defineComponent({
                             machineId: props.machineId,
                             id: row.id,
                         })
-                        .then((res) => {
+                        .then(() => {
                             state.fileTable.splice(idx, 1);
                         });
                 });
@@ -296,7 +289,6 @@ export default defineComponent({
             if (row.type == 1) {
                 state.tree.folder = row;
                 state.tree.title = row.name;
-                const treeNode = (state.tree.node.childNodes = []);
                 loadNode(state.tree.node, state.tree.resolve);
                 state.tree.visible = true;
                 return;
@@ -427,7 +419,7 @@ export default defineComponent({
                             path: file,
                             machineId: props.machineId,
                         })
-                        .then((res) => {
+                        .then(() => {
                             ElMessage.success('删除成功');
                             fileTree.value.remove(node);
                         });
@@ -447,8 +439,8 @@ export default defineComponent({
             a.click();
         };
 
-        const getUploadFile = (data: any) => {
-            return `${config.baseApiUrl}/machines/${props.machineId}/files/${state.tree.folder.id}/upload?token=${token}`;
+        const getUploadFile = () => {
+            return `${config.baseApiUrl}/machines/files/upload?token=${token}`;
         };
 
         const uploadSuccess = (res: any) => {

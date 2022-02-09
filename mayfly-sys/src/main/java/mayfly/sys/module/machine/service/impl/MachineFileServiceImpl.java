@@ -4,7 +4,6 @@ import mayfly.core.base.service.impl.BaseServiceImpl;
 import mayfly.core.exception.BizAssert;
 import mayfly.core.permission.LoginAccount;
 import mayfly.core.thread.GlobalThreadPool;
-import mayfly.core.util.IOUtils;
 import mayfly.core.util.bean.BeanUtils;
 import mayfly.sys.common.utils.ssh.ShellCmd;
 import mayfly.sys.common.websocket.MessageTypeEnum;
@@ -57,24 +56,16 @@ public class MachineFileServiceImpl extends BaseServiceImpl<MachineFileMapper, L
     }
 
     @Override
-    public byte[] getFileContent(Long fileId, String path) {
+    public MachineFileDO checkFile(Long fileId, String path) {
         MachineFileDO file = getById(fileId);
         checkPath(path, file);
-        return machineService.sftpOperate(file.getMachineId(), channelSftp -> {
-           try {
-               InputStream inputStream = channelSftp.get(path);
-               return IOUtils.readByte(inputStream, true);
-           } catch (Exception e) {
-               throw BizAssert.newException("读取文件失败");
-           }
-        });
+        return file;
     }
 
     @Override
     public void updateFileContent(Long confId, String path, String content) {
         BizAssert.notEmpty(content, "内容不能为空");
-        MachineFileDO file = getById(confId);
-        checkPath(path, file);
+        MachineFileDO file = checkFile(confId, path);
 
         machineService.sftpOperate(file.getMachineId(), channelSftp -> {
             try {
@@ -101,8 +92,7 @@ public class MachineFileServiceImpl extends BaseServiceImpl<MachineFileMapper, L
 
     @Override
     public List<LsVO> ls(Long fileId, String path) {
-        MachineFileDO machineFile = getById(fileId);
-        checkPath(path, machineFile);
+        MachineFileDO machineFile = checkFile(fileId, path);
 
         List<LsVO> ls = new ArrayList<>(16);
         String pathPrefix = path.endsWith("/") ? path : path + "/";
@@ -134,8 +124,7 @@ public class MachineFileServiceImpl extends BaseServiceImpl<MachineFileMapper, L
 
     @Override
     public void uploadFile(Long fileId, String filePath, InputStream inputStream) {
-        MachineFileDO file = getById(fileId);
-        checkPath(filePath, file);
+        MachineFileDO file = checkFile(fileId, filePath);
 
         LoginAccount account = LoginAccount.getFromContext();
         // 异步上传，成功与否都webscoket通知上传者
@@ -163,8 +152,7 @@ public class MachineFileServiceImpl extends BaseServiceImpl<MachineFileMapper, L
 
     @Override
     public void rmFile(Long fileId, String path) {
-        MachineFileDO file = getById(fileId);
-        checkPath(path, file);
+        MachineFileDO file = checkFile(fileId, path);
         machineService.sftpOperate(file.getMachineId(), channelSftp -> {
             try {
                 channelSftp.rm(path);

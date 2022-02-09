@@ -6,6 +6,7 @@ import mayfly.core.log.annotation.NoNeedLogParam;
 import mayfly.core.model.result.Response2Result;
 import mayfly.core.permission.Permission;
 import mayfly.core.util.FileUtils;
+import mayfly.core.util.IOUtils;
 import mayfly.core.web.WebUtils;
 import mayfly.sys.module.machine.controller.form.MachineConfContentForm;
 import mayfly.sys.module.machine.controller.form.MachineFileForm;
@@ -27,6 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -58,16 +60,31 @@ public class MachineFileController {
     }
 
     @GetMapping("/{machineId}/files/{id}/read")
-    public String cat(@PathVariable Long id, String path) {
-        return new String(machineFileService.getFileContent(id, path));
+    public String getFileContent(@PathVariable Long id, String path) throws Exception {
+        MachineFileDO file = machineFileService.checkFile(id, path);
+        return machineService.sftpOperate(file.getMachineId(), channelSftp -> {
+            try {
+                InputStream inputStream = channelSftp.get(path);
+                return new String(IOUtils.readByte(inputStream, true));
+            } catch (Exception e) {
+                throw BizAssert.newException("写入文件内容失败");
+            }
+        });
     }
 
     @Permission(code = "machine:file:write")
     @Log("机器文件下载")
     @GetMapping("/{machineId}/files/{id}/download")
     public void download(@PathVariable Long id, String path, @NoNeedLogParam HttpServletResponse response) {
-        byte[] bytes = machineFileService.getFileContent(id, path);
-        WebUtils.downloadStream(response, FileUtils.getFileNameByPath(path), bytes);
+        MachineFileDO file = machineFileService.checkFile(id, path);
+        machineService.sftpOperate(file.getMachineId(), channelSftp -> {
+            try {
+                WebUtils.downloadStream(response, FileUtils.getFileNameByPath(path), channelSftp.get(path));
+            } catch (Exception e) {
+                throw BizAssert.newException("写入文件内容失败");
+            }
+            return null;
+        });
     }
 
     @Permission(code = "machine:file:write")

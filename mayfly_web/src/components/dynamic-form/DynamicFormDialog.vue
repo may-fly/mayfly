@@ -3,9 +3,9 @@
 		<el-dialog :title="title" v-model="visible" :width="dialogWidth ? dialogWidth : '500px'">
 			<dynamic-form ref="df" :form-info="formInfo" :form-data="formData" @submitSuccess="submitSuccess">
 				<template #btns="props">
-					<slot name="btns">
-						<el-button :disabled="props.submitDisabled" type="primary" @click="props.submit" size="small">保 存</el-button>
-						<el-button :disabled="props.submitDisabled" @click="close()" size="small">取 消</el-button>
+					<slot name="btns" class="mt5">
+						<el-button :disabled="props.submitDisabled" type="primary" @click="props.submit">保 存</el-button>
+						<el-button :disabled="props.submitDisabled" @click="close()">取 消</el-button>
 					</slot>
 				</template>
 			</dynamic-form>

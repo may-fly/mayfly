@@ -340,7 +340,6 @@ export default defineComponent({
 .menu {
     .el-tree-node__content {
         height: 40px;
-        line-height: 40px;
     }
 }
 

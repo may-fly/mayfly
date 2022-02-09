@@ -25,14 +25,14 @@ const viteConfig: UserConfig = {
 		host: '0.0.0.0',
 		port: VITE_PORT,
 		open: VITE_OPEN,
-		proxy: {
-			'/api': {
-				target: 'localhost:8888',
-				ws: true,
-				changeOrigin: true,
-				// rewrite: (path) => path.replace(/^\/api/, ''),
-			},
-		},
+		// proxy: {
+		// 	'/api': {
+		// 		target: 'localhost:8888',
+		// 		ws: true,
+		// 		changeOrigin: true,
+		// 		// rewrite: (path) => path.replace(/^\/api/, ''),
+		// 	},
+		// },
 	},
 	build: {
 		outDir: 'dist',
