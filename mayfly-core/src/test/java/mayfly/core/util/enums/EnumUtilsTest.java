@@ -5,14 +5,14 @@ import org.junit.Test;
 
 public class EnumUtilsTest {
 
-    enum Test1 implements NameValueEnum<String> {
+    enum TestStrEnum implements NameValueEnum<String> {
         T1("01", "String类型测试1"),
         T2("02", "String类型测试2");
 
-        private String value;
-        private String name;
+        private final String value;
+        private final String name;
 
-        Test1(String value, String name) {
+        TestStrEnum(String value, String name) {
             this.value = value;
             this.name = name;
         }
@@ -28,14 +28,14 @@ public class EnumUtilsTest {
         }
     }
 
-    enum Test2 implements NameValueEnum<Integer> {
+    enum TestIntEnum implements NameValueEnum<Integer> {
         T1(1, "Integer类型测试1"),
         T2(2, "Integer类型测试2");
 
-        private Integer value;
-        private String name;
+        private final Integer value;
+        private final String name;
 
-        Test2(Integer value, String name) {
+        TestIntEnum(Integer value, String name) {
             this.value = value;
             this.name = name;
         }
@@ -53,31 +53,31 @@ public class EnumUtilsTest {
 
     @Test
     public void isExist() {
-        Assert.assertTrue(EnumUtils.isExist(Test1.values(), "01"));
-        Assert.assertFalse(EnumUtils.isExist(Test1.values(), "03"));
-        Assert.assertTrue(EnumUtils.isExist(Test2.values(), 2));
-        Assert.assertFalse(EnumUtils.isExist(Test2.values(), 8));
+        Assert.assertTrue(EnumUtils.isExist(TestStrEnum.values(), "01"));
+        Assert.assertFalse(EnumUtils.isExist(TestStrEnum.values(), "03"));
+        Assert.assertTrue(EnumUtils.isExist(TestIntEnum.values(), 2));
+        Assert.assertFalse(EnumUtils.isExist(TestIntEnum.values(), 8));
     }
 
     @Test
     public void getNameByValue() {
-        String name = EnumUtils.getNameByValue(Test1.values(), "01");
-        String name2 = EnumUtils.getNameByValue(Test2.values(), 2);
+        String name = EnumUtils.getNameByValue(TestStrEnum.values(), "01");
+        String name2 = EnumUtils.getNameByValue(TestIntEnum.values(), 2);
         System.out.println(name);
         System.out.println(name2);
     }
 
     @Test
     public void getValueByName() {
-        String value = EnumUtils.getValueByName(Test1.values(), "String类型测试1");
-        Integer value2 = EnumUtils.getValueByName(Test2.values(), "Integer类型测试2");
+        String value = EnumUtils.getValueByName(TestStrEnum.values(), "String类型测试1");
+        Integer value2 = EnumUtils.getValueByName(TestIntEnum.values(), "Integer类型测试2");
         System.out.println(value);
         System.out.println(value2);
     }
 
     @Test
     public void getEnumByValue() {
-        Test2 enumByValue = EnumUtils.getEnumByValue(Test2.values(), 1);
-        Test1 test = EnumUtils.getEnumByValue(Test1.class, "02");
+        TestIntEnum enumByValue = EnumUtils.getEnumByValue(TestIntEnum.values(), 1);
+        TestStrEnum test = EnumUtils.getEnumByValue(TestStrEnum.class, "02");
     }
 }

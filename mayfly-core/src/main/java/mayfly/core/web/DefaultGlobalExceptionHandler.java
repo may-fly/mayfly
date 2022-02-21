@@ -31,7 +31,7 @@ public class DefaultGlobalExceptionHandler {
     
     @ExceptionHandler(BizException.class)
     public Result<?> handleBusinessException(BizException e) {
-        // 只记录与本系统相关的类调用堆栈信息
+        // 只记录与本系统相关的类调用堆栈信息，即只有以mayfly.开头的包名下的类才会记录到日志中
         LOG.error("业务异常：{}", ThrowableUtils.getStackTraceByPn(e, "mayfly."));
         return Result.of(e.getErrorCode(), e.getMessage());
     }

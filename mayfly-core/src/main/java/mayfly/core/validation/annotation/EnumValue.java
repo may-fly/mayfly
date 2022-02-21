@@ -1,13 +1,12 @@
 package mayfly.core.validation.annotation;
 
-import mayfly.core.exception.BizAssert;
 import mayfly.core.util.ArrayUtils;
-import mayfly.core.util.Assert;
-import mayfly.core.util.StringUtils;
 import mayfly.core.util.enums.EnumUtils;
 import mayfly.core.util.enums.NameValueEnum;
 import mayfly.core.util.enums.ValueEnum;
 import org.hibernate.validator.constraintvalidation.HibernateConstraintValidatorContext;
+import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
 import javax.validation.Constraint;
 import javax.validation.ConstraintValidator;
@@ -81,65 +80,63 @@ public @interface EnumValue {
 
             String[] values = enumValue.values();
             Class<? extends Enum<? extends ValueEnum>> enumClass = enumValue.value();
-            Assert.isTrue(!ArrayUtils.isEmpty(values) || enumClass != DefaultEnum.class, "@EnumValue注解的values和value不能同时为默认值");
-            // 如果限制了可选枚举值，则使用可选枚举值判断
-            if (!ArrayUtils.isEmpty(values)) {
-                if (value instanceof Integer) {
-                    for (String v : values) {
-                        if (value.equals(Integer.parseInt(v))) {
-                            return true;
-                        }
-                    }
-                    setErrorEnumPlaceholderValue(Arrays.stream(values).map(Integer::parseInt).toArray(), context);
-                    return false;
-                } else if (value instanceof String) {
-                    if (ArrayUtils.contains(values, value)) {
-                        return true;
-                    }
-                    setErrorEnumPlaceholderValue(values, context);
-                    return false;
+            Assert.isTrue(!ArrayUtils.isEmpty(values) || enumClass != DefaultEnum.class,
+                    "@EnumValue注解的values和value不能同时为默认值");
+
+            // 如果没有限制枚举值，则直接强转判断即可
+            if (ArrayUtils.isEmpty(values)) {
+                if (EnumUtils.isExist((ValueEnum[]) enumValue.value().getEnumConstants(), value)) {
+                    return true;
                 }
-                throw BizAssert.newException("@EnumValue只支持Integer和String类型的枚举值参数，暂不支持其他类型！");
+                // 添加枚举值占位符值参数，校验失败的时候可用
+                setErrorEnumPlaceholderValue(value, null, context);
+                return false;
             }
 
-            if (EnumUtils.isExist((ValueEnum[]) enumValue.value().getEnumConstants(), value)) {
+            // 如果限制了可选枚举值，则使用可选枚举值判断
+            // 如果value为Number或者Enum类型，则也将其统统转为字符串比较，方便些(Enum对象toString即为对象名)
+            if (ArrayUtils.contains(values, value.toString())) {
                 return true;
             }
-            // 添加枚举值占位符值参数，校验失败的时候可用
-            setErrorEnumPlaceholderValue(null, context);
+            setErrorEnumPlaceholderValue(value, values, context);
             return false;
         }
 
         /**
          * 设置错误提示消息中的enum和name占位符值
          *
+         * @param value   枚举字段值
          * @param values  可选值数组
          * @param context context
          */
-        @SuppressWarnings({"rawtypes"})
-        private void setErrorEnumPlaceholderValue(Object[] values, ConstraintValidatorContext context) {
+        @SuppressWarnings({"all"})
+        private void setErrorEnumPlaceholderValue(Object value, Object[] values, ConstraintValidatorContext context) {
             String message = enumValue.message();
             // message如果不包含name和enums占位符，则直接返回
             if (!message.contains("{name}") && !message.contains("{enums}")) {
                 return;
             }
-            Class<? extends Enum<? extends ValueEnum>> enumClass = enumValue.value();
+            // 值类型是否为枚举值类型，如为枚举值类型提示值需为枚举类实例对象名（即需调用枚举的toString方法）
+            boolean valueTypeIsEnum = value instanceof NameValueEnum && value instanceof Enum;
+            // 如果值为枚举类型，则直接获取值对应的枚举值class即可
+            Class<? extends Enum<? extends ValueEnum>> enumClass = valueTypeIsEnum ? (Class<? extends Enum<? extends ValueEnum>>) value.getClass() : enumValue.value();
 
             String enumsPlaceholderValue;
-            // 如果是NameValueEnum类型，则返回的错误信息带有name属性值
             if (enumClass == DefaultEnum.class) {
                 enumsPlaceholderValue = Arrays.stream(values).map(Object::toString).collect(Collectors.joining(", "));
             } else {
                 Enum<? extends ValueEnum>[] enums = enumClass.getEnumConstants();
                 ValueEnum[] valueEnums = (ValueEnum[]) enums;
+                // 如果是NameValueEnum类型，则返回的错误信息带有name属性值
                 if (NameValueEnum.class.isAssignableFrom(enumClass)) {
+                    // 如果限制可选值为空，则全量输出
                     if (ArrayUtils.isEmpty(values)) {
                         enumsPlaceholderValue = Arrays.stream((NameValueEnum[]) enums).map(nv -> nv.getValue() + ":" + nv.getName())
                                 .collect(Collectors.joining(", "));
                     } else {
                         enumsPlaceholderValue = Arrays.stream((NameValueEnum[]) enums)
-                                .filter(x -> ArrayUtils.contains(values, x.getValue()))
-                                .map(nv -> nv.getValue() + ":" + nv.getName())
+                                .filter(x -> ArrayUtils.contains(values, valueTypeIsEnum ? x.toString() : String.valueOf(x.getValue())))
+                                .map(nv -> ((valueTypeIsEnum ? nv.toString() : nv.getValue()) + ":" + nv.getName()))
                                 .collect(Collectors.joining(", "));
                     }
                 } else {
@@ -148,7 +145,7 @@ public @interface EnumValue {
                                 .collect(Collectors.joining(", "));
                     } else {
                         enumsPlaceholderValue = Arrays.stream(valueEnums)
-                                .filter(x -> ArrayUtils.contains(values, x.getValue()))
+                                .filter(x -> ArrayUtils.contains(values, x.getValue().toString()))
                                 .map(nv -> Objects.toString(nv.getValue()))
                                 .collect(Collectors.joining(", "));
                     }
