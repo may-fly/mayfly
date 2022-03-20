@@ -1,14 +1,10 @@
 package mayfly.core.util;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
+
+import static java.util.Collections.emptyList;
+import static java.util.Collections.emptySet;
 
 /**
  * @author meilin.huang
@@ -88,36 +84,134 @@ public class CollectionUtils {
     }
 
     /**
-     * 根据比较器比较两个collection中哪些是新增的对象以及删除的对象和没有改变的对象
+     * 根据 元素自带的比较器 比较两个collection中哪些是新增的对象以及删除的对象和没有改变的对象
      *
-     * @param newCollection 新list
-     * @param oldCollection 旧list
-     * @param comparator    集合对象比较器
-     * @param <T>           集合元素泛型对象
+     * @param newCollection 新集合
+     * @param oldCollection 旧集合
+     * @param <T>           集合元素泛型对象, 该类型必须实现Comparable接口
      * @return 比较结果 {@link CompareResult}
      */
-    public static <T> CompareResult<T> compare(Set<T> newCollection, Set<T> oldCollection, Comparator<T> comparator) {
-        Set<T> unmodifiedValue = new HashSet<>();
+    public static <T extends Comparable<T>>
+    CompareResult<T> compare(Collection<T> newCollection, Collection<T> oldCollection) {
+        Set<T> newSet = isEmpty(newCollection) ?
+                emptySet() : newCollection instanceof Set ?
+                (Set<T>) newCollection : new HashSet<>(newCollection);
+        Set<T> oldSet = isEmpty(oldCollection) ?
+                emptySet() : oldCollection instanceof Set ?
+                (Set<T>) oldCollection : new HashSet<>(oldCollection);
 
-        Iterator<T> newIte = newCollection.iterator();
-        while (newIte.hasNext()) {
-            T newObj = newIte.next();
-            //遍历旧数组
-            Iterator<T> oldIte = oldCollection.iterator();
-            while (oldIte.hasNext()) {
-                //如果新旧数组中的对象相同，则为没有改变的对象
-                T oldObj = oldIte.next();
-                if (comparator.compare(newObj, oldObj) == 0) {
-                    unmodifiedValue.add(oldObj);
-                    oldIte.remove();
-                    newIte.remove();
+        Set<T> addSet, deleteSet, unmodifiedSet;
+        if (newSet.isEmpty()) {
+            addSet = emptySet();
+            deleteSet = oldSet;
+            unmodifiedSet = emptySet();
+        } else if (oldSet.isEmpty()) {
+            addSet = newSet;
+            deleteSet = emptySet();
+            unmodifiedSet = emptySet();
+        } else {
+            deleteSet = new HashSet<>();
+            unmodifiedSet = new HashSet<>(oldSet.size());
+            // 避免直接操作传入集合
+            addSet = new HashSet<>(newSet);
+            for (T old : oldSet) {
+                // 相同元素
+                if (addSet.contains(old)) {
+                    unmodifiedSet.add(old);
+                    // 移除相同元素后剩余的是新增元素
+                    addSet.remove(old);
+                } else {
+                    deleteSet.add(old);
                 }
             }
         }
-
-        return new CompareResult<T>(newCollection, oldCollection, unmodifiedValue);
+        return new CompareResult<>(addSet, deleteSet, unmodifiedSet);
     }
 
+    /**
+     * 根据 指定比较器 比较两个collection中哪些是新增的对象以及删除的对象和没有改变的对象
+     *
+     * @param newCollection 新集合
+     * @param oldCollection 旧集合
+     * @param comparator    比较器
+     * @param <T>           集合元素泛型对象
+     * @return 比较结果 {@link CompareResult}
+     */
+    public static <T>
+    CompareResult<T> compare(Collection<T> newCollection, Collection<T> oldCollection, Comparator<T> comparator) {
+        List<T> newList = isEmpty(newCollection) ?
+                emptyList() : newCollection instanceof List ?
+                (List<T>) newCollection : new ArrayList<>(newCollection);
+        List<T> oldList = isEmpty(oldCollection) ?
+                emptyList() : oldCollection instanceof List ?
+                (List<T>) oldCollection : new ArrayList<>(oldCollection);
+        return compare(newList, oldList, comparator);
+    }
+
+    /**
+     * 根据 指定比较器 比较两个collection中哪些是新增的对象以及删除的对象和没有改变的对象
+     *
+     * @param newList    新集合
+     * @param oldList    旧集合
+     * @param comparator 比较器
+     * @param <T>        集合元素泛型对象
+     * @return 比较结果 {@link CompareResult}
+     */
+    public static <T> CompareResult<T> compare(List<T> newList, List<T> oldList, Comparator<T> comparator) {
+        Set<T> addSet, deleteSet, unmodifiedSet;
+        if (isEmpty(newList)) {
+            addSet = emptySet();
+            deleteSet = isEmpty(oldList) ? emptySet() : new HashSet<>(oldList);
+            unmodifiedSet = emptySet();
+        } else if (isEmpty(oldList)) {
+            addSet = isEmpty(newList) ? emptySet() : new HashSet<>(newList);
+            deleteSet = emptySet();
+            unmodifiedSet = emptySet();
+        } else {
+            final int newSize = newList.size(), oldSize = oldList.size();
+            int newIdx = 0, oldIdx = 0;
+            // 根据比较器排序
+            newList.sort(comparator);
+            oldList.sort(comparator);
+            addSet = new HashSet<>(newSize);
+            deleteSet = new HashSet<>();
+            unmodifiedSet = new HashSet<>(oldSize);
+            // 遍历两个列表长度相等的部分
+            while (newIdx < newSize && oldIdx < oldSize) {
+                final T newOne = newList.get(newIdx);
+                final T oldOne = oldList.get(oldIdx);
+                final int compare = comparator.compare(newOne, oldOne);
+                // 相等
+                if (compare == 0) {
+                    unmodifiedSet.add(oldOne);
+                    // 跳过相同的元素
+                    do {
+                        oldIdx++;
+                    } while (oldIdx < oldSize && comparator.compare(oldOne, oldList.get(oldIdx)) == 0);
+                    do {
+                        newIdx++;
+                    } while (newIdx < newSize && comparator.compare(newOne, newList.get(newIdx)) == 0);
+                } else if (compare < 0) {
+                    // 新增元素
+                    addSet.add(newOne);
+                    newIdx++;
+                } else {
+                    // 删除元素
+                    deleteSet.add(oldOne);
+                    oldIdx++;
+                }
+            }
+            // 最后的新增元素
+            if (newIdx < newSize) {
+                addSet.addAll(newList.subList(newIdx, newSize));
+            }
+            // 最后的删除元素
+            if (oldIdx < oldSize) {
+                deleteSet.addAll(oldList.subList(oldIdx, oldSize));
+            }
+        }
+        return new CompareResult<>(addSet, deleteSet, unmodifiedSet);
+    }
 
     /**
      * 列表比较结果对象

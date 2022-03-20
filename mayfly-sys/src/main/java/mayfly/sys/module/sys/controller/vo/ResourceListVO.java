@@ -16,7 +16,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @ToString
-public class ResourceListVO implements TreeUtils.TreeNode<Long> {
+public class ResourceListVO implements TreeUtils.TreeNode<Long, ResourceListVO> {
 
     private Long id;
 
@@ -50,7 +50,7 @@ public class ResourceListVO implements TreeUtils.TreeNode<Long> {
     }
 
     @Override
-    public void setChildren(List children) {
+    public void setChildren(List<ResourceListVO> children) {
         this.children = children;
     }
 }

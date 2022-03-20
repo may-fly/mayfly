@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -46,8 +45,7 @@ public class AccountRoleServiceImpl extends BaseServiceImpl<AccountRoleMapper, L
         List<Long> oldRoles = listRoleIdByAccountId(accountId);
 
         //和之前存的角色列表id比较，哪些是新增，哪些是修改以及不变的
-        CollectionUtils.CompareResult<Long> compareResult = CollectionUtils
-                .compare(new HashSet<>(roleIds), new HashSet<>(oldRoles), (Long i1, Long i2) -> i1.equals(i2) ? 0 : 1);
+        CollectionUtils.CompareResult<Long> compareResult = CollectionUtils.compare(roleIds, oldRoles);
         Set<Long> delIds = compareResult.getDelValue();
         Set<Long> addIds = compareResult.getAddValue();
 

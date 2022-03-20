@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -46,10 +45,9 @@ public class RoleResourceServiceImpl extends BaseServiceImpl<RoleResourceMapper,
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void saveResource(Long roleId, List<Long> resourceIds) {
-        Set<Long> oldIds = new HashSet<>(listResourceId(roleId));
+        List<Long> oldIds = listResourceId(roleId);
         //和之前存的权限列表id比较，哪些是新增已经哪些是修改以及不变的
-        CollectionUtils.CompareResult<Long> compareResult = CollectionUtils
-                .compare(new HashSet<>(resourceIds), oldIds, (Long i1, Long i2) -> i1.equals(i2) ? 0 : 1);
+        CollectionUtils.CompareResult<Long> compareResult = CollectionUtils.compare(resourceIds, oldIds);
         Set<Long> delIds = compareResult.getDelValue();
         Set<Long> addIds = compareResult.getAddValue();
 
