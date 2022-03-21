@@ -32,7 +32,7 @@ public final class EnumUtils {
     }
 
     /**
-     * 判断枚举值是否存与指定枚举类中（尽量显示调用Enum.values()方法获取所有枚举类，此方法内部反射调用values方法）
+     * 判断枚举值是否存与指定枚举类中
      *
      * @param enumClass 枚举类
      * @param value     枚举值

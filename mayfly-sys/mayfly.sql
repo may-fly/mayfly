@@ -307,26 +307,26 @@ CREATE TABLE `t_resource` (
   `create_time` datetime NOT NULL,
   `update_time` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=48 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=50 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- ----------------------------
 -- Records of t_resource
 -- ----------------------------
 BEGIN;
-INSERT INTO `t_resource` VALUES (1, 0, 1, 1, '首页', '/home', 1, '{\"component\":\"Home\",\"icon\":\"el-icon-s-home\",\"isAffix\":true,\"isKeepAlive\":true,\"routeName\":\"Home\"}', 1, 'admin', 1, 'admin', '2021-05-25 16:44:41', '2021-05-27 09:12:56');
-INSERT INTO `t_resource` VALUES (2, 0, 1, 1, '运维', '/ops', 3, '{\"icon\":\"el-icon-monitor\",\"isKeepAlive\":true,\"redirect\":\"machine/list\",\"routeName\":\"Ops\"}', 1, 'admin', 1, 'admin', '2021-05-25 16:48:16', '2021-06-08 14:20:24');
-INSERT INTO `t_resource` VALUES (3, 2, 1, 1, '机器列表', 'machines', 1, '{\"component\":\"MachineList\",\"icon\":\"el-icon-menu\",\"isKeepAlive\":true,\"routeName\":\"MachineList\"}', 2, 'admin', 1, 'admin', '2021-05-25 16:50:04', '2021-06-03 10:03:29');
-INSERT INTO `t_resource` VALUES (4, 0, 1, 1, '系统管理', '/sys', 4, '{\"icon\":\"el-icon-setting\",\"isKeepAlive\":true,\"redirect\":\"/sys/resources\",\"routeName\":\"sys\"}', 1, 'admin', 1, 'admin', '2021-05-26 15:20:20', '2021-06-08 14:20:34');
-INSERT INTO `t_resource` VALUES (5, 4, 1, 1, '资源管理', 'resources', 3, '{\"component\":\"ResourceList\",\"icon\":\"el-icon-menu\",\"isKeepAlive\":true,\"routeName\":\"ResourceList\"}', 1, 'admin', 1, 'admin', '2021-05-26 15:23:07', '2021-06-08 11:27:55');
-INSERT INTO `t_resource` VALUES (9, 0, 1, 1, 'iframes', '/iframes', 4, '{\"component\":\"RouterParent\",\"icon\":\"el-icon-pear\",\"isIframe\":true,\"isKeepAlive\":true,\"link\":\"https://www.baidu.com\",\"routeName\":\"Iframe\"}', 1, 'admin', 1, 'admin', '2021-05-27 09:58:37', '2021-06-02 11:23:23');
-INSERT INTO `t_resource` VALUES (11, 4, 1, 1, '角色管理', 'roles', 2, '{\"component\":\"RoleList\",\"icon\":\"el-icon-menu\",\"isKeepAlive\":true,\"routeName\":\"RoleList\"}', 1, 'admin', 1, 'admin', '2021-05-27 11:15:35', '2021-06-03 09:59:41');
+INSERT INTO `t_resource` VALUES (1, 0, 1, 1, '首页', '/home', 1, '{\"component\":\"Home\",\"icon\":\"HomeFilled\",\"isAffix\":true,\"isKeepAlive\":true,\"routeName\":\"Home\"}', 1, 'admin', 1, 'admin', '2021-05-25 16:44:41', '2021-05-27 09:12:56');
+INSERT INTO `t_resource` VALUES (2, 0, 1, 1, '运维', '/ops', 3, '{\"routeName\":\"Ops\",\"isKeepAlive\":true,\"redirect\":\"machine/list\",\"icon\":\"Monitor\"}', 1, 'admin', 1, 'admin', '2021-05-25 16:48:16', '2022-01-10 14:19:08');
+INSERT INTO `t_resource` VALUES (3, 2, 1, 1, '机器列表', 'machines', 1, '{\"component\":\"MachineList\",\"icon\":\"Menu\",\"isKeepAlive\":true,\"routeName\":\"MachineList\"}', 2, 'admin', 1, 'admin', '2021-05-25 16:50:04', '2021-06-03 10:03:29');
+INSERT INTO `t_resource` VALUES (4, 0, 1, 1, '系统管理', '/sys', 4, '{\"icon\":\"Setting\",\"isKeepAlive\":true,\"redirect\":\"/sys/resources\",\"routeName\":\"sys\"}', 1, 'admin', 1, 'admin', '2021-05-26 15:20:20', '2021-06-08 14:20:34');
+INSERT INTO `t_resource` VALUES (5, 4, 1, 1, '资源管理', 'resources', 3, '{\"component\":\"ResourceList\",\"icon\":\"Menu\",\"isKeepAlive\":true,\"routeName\":\"ResourceList\"}', 1, 'admin', 1, 'admin', '2021-05-26 15:23:07', '2021-06-08 11:27:55');
+INSERT INTO `t_resource` VALUES (9, 0, 1, 1, 'iframes', '/iframes', 5, '{\"routeName\":\"Iframe\",\"isKeepAlive\":true,\"isIframe\":true,\"link\":\"https://www.baidu.com\",\"component\":\"RouterParent\",\"icon\":\"el-icon-pear\"}', 1, 'admin', 1, 'admin', '2021-05-27 09:58:37', '2021-09-23 16:32:45');
+INSERT INTO `t_resource` VALUES (11, 4, 1, 1, '角色管理', 'roles', 2, '{\"component\":\"RoleList\",\"icon\":\"Menu\",\"isKeepAlive\":true,\"routeName\":\"RoleList\"}', 1, 'admin', 1, 'admin', '2021-05-27 11:15:35', '2021-06-03 09:59:41');
 INSERT INTO `t_resource` VALUES (12, 3, 2, 1, '机器终端按钮', 'machine:terminal', 4, '', 1, 'admin', 1, 'admin', '2021-05-28 14:06:02', '2021-05-31 17:47:59');
-INSERT INTO `t_resource` VALUES (14, 4, 1, 1, '账号管理', 'accounts', 1, '{\"component\":\"AccountList\",\"icon\":\"el-icon-menu\",\"isKeepAlive\":true,\"routeName\":\"AccountList\"}', 1, 'admin', 1, 'admin', '2021-05-28 14:56:25', '2021-06-03 09:39:22');
+INSERT INTO `t_resource` VALUES (14, 4, 1, 1, '账号管理', 'accounts', 1, '{\"component\":\"AccountList\",\"icon\":\"Menu\",\"isKeepAlive\":true,\"routeName\":\"AccountList\"}', 1, 'admin', 1, 'admin', '2021-05-28 14:56:25', '2021-06-03 09:39:22');
 INSERT INTO `t_resource` VALUES (15, 3, 2, 1, '文件管理按钮', 'machine:file', 5, NULL, 1, 'admin', 1, 'admin', '2021-05-31 17:44:37', '2021-05-31 17:48:07');
-INSERT INTO `t_resource` VALUES (16, 3, 2, 1, '机器添加按钮', 'machine:add', 1, NULL, 1, 'admin', 1, 'admin', '2021-05-31 17:46:11', '2021-08-26 14:20:33');
+INSERT INTO `t_resource` VALUES (16, 3, 2, 1, '机器添加按钮', 'machine:add', 1, NULL, 1, 'admin', 1, 'admin', '2021-05-31 17:46:11', '2022-01-10 16:13:24');
 INSERT INTO `t_resource` VALUES (17, 3, 2, 1, '机器编辑按钮', 'machine:update', 2, NULL, 1, 'admin', 1, 'admin', '2021-05-31 17:46:23', '2021-05-31 19:34:18');
-INSERT INTO `t_resource` VALUES (18, 3, 2, 1, '机器删除按钮', 'machine:del', 3, NULL, 1, 'admin', 1, 'admin', '2021-05-31 17:46:36', '2021-05-31 19:34:17');
-INSERT INTO `t_resource` VALUES (19, 14, 2, 1, '角色分配按钮', 'account:saveRoles', 1, NULL, 1, 'admin', 1, 'admin', '2021-05-31 17:50:51', '2021-05-31 19:19:30');
+INSERT INTO `t_resource` VALUES (18, 3, 2, 1, '机器删除按钮', 'machine:del', 3, NULL, 1, 'admin', 1, 'admin', '2021-05-31 17:46:36', '2021-12-31 14:23:02');
+INSERT INTO `t_resource` VALUES (19, 14, 2, 1, '角色分配按钮', 'account:saveRoles', 1, NULL, 1, 'admin', 1, 'admin', '2021-05-31 17:50:51', '2022-01-07 11:23:22');
 INSERT INTO `t_resource` VALUES (20, 11, 2, 1, '分配菜单&权限按钮', 'role:saveResources', 1, NULL, 1, 'admin', 1, 'admin', '2021-05-31 17:51:41', '2021-05-31 19:33:37');
 INSERT INTO `t_resource` VALUES (21, 14, 2, 1, '账号删除按钮', 'account:del', 2, 'null', 1, 'admin', 1, 'admin', '2021-05-31 18:02:01', '2021-06-10 17:12:17');
 INSERT INTO `t_resource` VALUES (22, 11, 2, 1, '角色删除按钮', 'role:del', 2, NULL, 1, 'admin', 1, 'admin', '2021-05-31 18:02:29', '2021-05-31 19:33:38');
@@ -338,14 +338,14 @@ INSERT INTO `t_resource` VALUES (27, 5, 2, 1, '资源编辑按钮', 'resource:up
 INSERT INTO `t_resource` VALUES (28, 5, 2, 1, '资源禁用启用按钮', 'resource:changeStatus', 4, NULL, 1, 'admin', 1, 'admin', '2021-05-31 18:04:33', '2021-05-31 18:04:33');
 INSERT INTO `t_resource` VALUES (29, 14, 2, 1, '账号添加按钮', 'account:add', 3, NULL, 1, 'admin', 1, 'admin', '2021-05-31 19:23:42', '2021-05-31 19:23:42');
 INSERT INTO `t_resource` VALUES (30, 14, 2, 1, '账号编辑修改按钮', 'account:update', 4, NULL, 1, 'admin', 1, 'admin', '2021-05-31 19:23:58', '2021-05-31 19:23:58');
-INSERT INTO `t_resource` VALUES (31, 14, 2, 1, '账号管理基本权限', 'account', 0, NULL, 1, 'admin', 1, 'admin', '2021-05-31 21:25:06', '2021-05-31 21:25:06');
+INSERT INTO `t_resource` VALUES (31, 14, 2, 1, '账号管理基本权限', 'account', 0, NULL, 1, 'admin', 1, 'admin', '2021-05-31 21:25:06', '2022-01-10 16:15:20');
 INSERT INTO `t_resource` VALUES (32, 5, 2, 1, '资源管理基本权限', 'resource', 0, NULL, 1, 'admin', 1, 'admin', '2021-05-31 21:25:25', '2021-05-31 21:25:25');
 INSERT INTO `t_resource` VALUES (33, 11, 2, 1, '角色管理基本权限', 'role', 0, NULL, 1, 'admin', 1, 'admin', '2021-05-31 21:25:40', '2021-05-31 21:25:40');
 INSERT INTO `t_resource` VALUES (34, 14, 2, 1, '账号启用禁用按钮', 'account:changeStatus', 5, NULL, 1, 'admin', 1, 'admin', '2021-05-31 21:29:48', '2021-05-31 21:29:48');
-INSERT INTO `t_resource` VALUES (36, 2, 1, 1, 'DBMS', 'dbms', 2, '{\"icon\":\"el-icon-date\",\"isKeepAlive\":true,\"routeName\":\"DBMS\"}', 1, 'admin', 1, 'admin', '2021-06-01 14:01:33', '2021-06-03 09:58:54');
+INSERT INTO `t_resource` VALUES (36, 2, 1, 1, 'DBMS', 'dbms', 2, '{\"routeName\":\"DBMS\",\"isKeepAlive\":true,\"icon\":\"Grid\"}', 1, 'admin', 1, 'admin', '2021-06-01 14:01:33', '2022-01-10 14:42:28');
 INSERT INTO `t_resource` VALUES (37, 3, 2, 1, '添加文件配置', 'machine:addFile', 6, 'null', 1, 'admin', 1, 'admin', '2021-06-01 19:54:23', '2021-06-01 19:54:23');
-INSERT INTO `t_resource` VALUES (38, 36, 1, 1, '数据查询', 'select-data', 1, '{\"component\":\"SelectData\",\"icon\":\"el-icon-search\",\"isKeepAlive\":true,\"routeName\":\"SelectData\"}', 1, 'admin', 1, 'admin', '2021-06-03 09:09:29', '2021-06-03 14:34:01');
-INSERT INTO `t_resource` VALUES (39, 0, 1, 1, '个人中心', '/personal', 2, '{\"component\":\"Personal\",\"icon\":\"el-icon-user\",\"isKeepAlive\":true,\"routeName\":\"Personal\"}', 1, 'admin', 1, 'admin', '2021-06-03 14:25:35', '2021-06-11 10:50:45');
+INSERT INTO `t_resource` VALUES (38, 36, 1, 1, '数据查询', 'select-data', 1, '{\"component\":\"SelectData\",\"icon\":\"Search\",\"isKeepAlive\":true,\"routeName\":\"SelectData\"}', 1, 'admin', 1, 'admin', '2021-06-03 09:09:29', '2021-06-03 14:34:01');
+INSERT INTO `t_resource` VALUES (39, 0, 1, 1, '个人中心', '/personal', 2, '{\"component\":\"Personal\",\"icon\":\"User\",\"isKeepAlive\":true,\"routeName\":\"Personal\"}', 1, 'admin', 1, 'admin', '2021-06-03 14:25:35', '2021-06-11 10:50:45');
 INSERT INTO `t_resource` VALUES (40, 3, 2, 1, '文件管理-新增按钮', 'machine:file:add', 7, 'null', 1, 'admin', 1, 'admin', '2021-06-08 11:06:26', '2021-06-08 11:12:28');
 INSERT INTO `t_resource` VALUES (41, 3, 2, 1, '文件管理-删除按钮', 'machine:file:del', 8, 'null', 1, 'admin', 1, 'admin', '2021-06-08 11:06:49', '2021-06-08 11:06:49');
 INSERT INTO `t_resource` VALUES (42, 3, 2, 1, '文件管理-写入or下载文件权限', 'machine:file:write', 9, 'null', 1, 'admin', 1, 'admin', '2021-06-08 11:07:27', '2021-06-08 11:07:27');
@@ -354,6 +354,8 @@ INSERT INTO `t_resource` VALUES (44, 3, 2, 1, '文件管理-删除文件按钮',
 INSERT INTO `t_resource` VALUES (45, 3, 2, 1, '脚本管理-保存脚本按钮', 'machine:script:save', 12, 'null', 1, 'admin', 1, 'admin', '2021-06-08 11:09:01', '2021-06-08 11:09:01');
 INSERT INTO `t_resource` VALUES (46, 3, 2, 1, '脚本管理-删除按钮', 'machine:script:del', 13, 'null', 1, 'admin', 1, 'admin', '2021-06-08 11:09:27', '2021-06-08 11:09:27');
 INSERT INTO `t_resource` VALUES (47, 3, 2, 1, '脚本管理-执行按钮', 'machine:script:run', 14, 'null', 1, 'admin', 1, 'admin', '2021-06-08 11:09:50', '2021-06-08 11:09:50');
+INSERT INTO `t_resource` VALUES (48, 4, 1, 1, '操作日志', 'logs', 4, '{\"routeName\":\"LogList\",\"isKeepAlive\":true,\"component\":\"LogList\",\"icon\":\"Tickets\"}', 1, 'admin', 1, 'admin', '2021-09-29 15:44:04', '2021-09-29 15:46:38');
+INSERT INTO `t_resource` VALUES (49, 48, 2, 1, '日志查看', 'log:list', 1, NULL, 1, 'admin', 1, 'admin', '2021-09-29 15:44:39', '2021-09-29 15:47:55');
 COMMIT;
 
 -- ----------------------------

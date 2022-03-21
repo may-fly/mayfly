@@ -11,7 +11,7 @@ import 'element-plus/dist/index.css';
 import '@/theme/index.scss';
 import mitt from 'mitt';
 import { ElMessage } from 'element-plus';
-import locale from 'element-plus/lib/locale/lang/zh-cn'
+import zhCn from 'element-plus/es/locale/lang/zh-cn'
 
 import * as svg from '@element-plus/icons-vue';
 import SvgIcon from '@/components/svgIcon/index.vue';
@@ -37,7 +37,7 @@ directive(app);
 
 app.use(router)
     .use(store, key)
-    .use(ElementPlus, { size: globalComponentSize, locale: locale })
+    .use(ElementPlus, { size: globalComponentSize, locale: zhCn })
     .mount('#app');
 
 // 自定义全局过滤器

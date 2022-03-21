@@ -8,7 +8,6 @@ import mayfly.core.permission.Permission;
 import mayfly.core.util.JsonUtils;
 import mayfly.core.util.bean.BeanUtils;
 import mayfly.sys.module.sys.controller.form.ResourceForm;
-import mayfly.sys.module.sys.controller.query.ResourceQuery;
 import mayfly.sys.module.sys.controller.vo.ResourceDetailVO;
 import mayfly.sys.module.sys.controller.vo.ResourceListVO;
 import mayfly.sys.module.sys.entity.ResourceDO;
@@ -41,8 +40,8 @@ public class ResourceController {
     @Autowired
     private ResourceService resourceService;
 
-    @GetMapping()
-    public List<ResourceListVO> list(ResourceQuery queryForm) {
+    @GetMapping
+    public List<ResourceListVO> list() {
         return resourceService.listResource();
     }
 
