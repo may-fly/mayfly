@@ -9,7 +9,7 @@ spring:
     # 连接超时时间（毫秒）
     timeout: 1000
       #    lettuce:
-      #      pool:
+    #      pool:
     # 连接池最大连接数（使用负值表示没有限制）
   #         max-active: 9
   #         # 连接池最大阻塞等待时间（使用负值表示没有限制）
@@ -38,11 +38,10 @@ spring:
     multipart:
       max-file-size: 200MB
       max-request-size: 200MB
-
 #日志
 logging:
   #  level:
   #    root: INFO
   #    mayfly: DEBUG
-  config: classpath:logback-spring-prod.xml
+  config: classpath:logback-spring.xml
 savelog: true

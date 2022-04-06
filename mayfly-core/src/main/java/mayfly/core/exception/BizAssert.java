@@ -4,18 +4,32 @@ import mayfly.core.model.result.CodeMessage;
 import mayfly.core.model.result.CommonCodeEnum;
 import mayfly.core.util.ArrayUtils;
 import mayfly.core.util.CollectionUtils;
+import mayfly.core.util.MapUtils;
 import mayfly.core.util.StringUtils;
 
 import java.util.Collection;
+import java.util.Map;
 import java.util.Objects;
 import java.util.function.Supplier;
 
 /**
- * 业务断言类，不满足断言条件的都抛{@link BizException}（默认错误码为{@link CommonCodeEnum#PARAM_ERROR}）
+ * 业务断言类，不满足断言条件的都抛{@link BizException}
+ * (默认{@link BizException#getErrorCode()}  errorCode}错误码为{@link CommonCodeEnum#PARAM_ERROR}中的{@code code}值,即'403').
+ * <br/>
+ * <br/>
+ * 各个系统可通过{@link #setDefaultErrorCode}为其指定独有的默认错误码,方便问题溯源.
+ * 如微服务系统中为sys服务设置默认错误码,则可以在main方法中进行如下设置: {@code BizAssert.setDefaultErrorCode("SYSOO1")},
+ * 那么如果使用该类对业务进行逻辑断言时,不满足期望时业务异常({@link BizException})中的错误码都将会是SYS001.
+ * <br/>
+ * <br/>
+ * 若存在不方便使用断言的情况,需手动抛业务异常,也可使用{@link #newException(String)}的简单工厂来生成业务异常,
+ * 如{@code throw BizAssert.newException("该用户名已存在")},
+ * 那么该业务异常的错误码也会使用全局设置的默认错误码,避免手动为业务异常赋值错误码.
  *
  * @author meilin.huang
  * @version 1.0
- * @date 2019-07-14 18:24
+ * @see BizException
+ * @see CodeMessage
  */
 public final class BizAssert {
 
@@ -158,6 +172,36 @@ public final class BizAssert {
      */
     public static void notEmpty(Collection<?> collection, CodeMessage errorEnum, Object... params) {
         isTrue(CollectionUtils.isNotEmpty(collection), errorEnum, params);
+    }
+
+    /**
+     * 断言map不为空
+     *
+     * @param map map
+     * @param msg 不满足断言的异常信息
+     */
+    public static void notEmpty(Map<?, ?> map, String msg) {
+        isTrue(!MapUtils.isEmpty(map), msg);
+    }
+
+    /**
+     * 断言map不为空
+     *
+     * @param map      map
+     * @param supplier 错误消息供应器
+     */
+    public static void notEmpty(Map<?, ?> map, Supplier<String> supplier) {
+        isTrue(!MapUtils.isEmpty(map), supplier);
+    }
+
+    /**
+     * 断言map不为空
+     *
+     * @param map       map
+     * @param errorEnum 错误枚举
+     */
+    public static void notEmpty(Map<?, ?> map, CodeMessage errorEnum, Object... params) {
+        isTrue(!MapUtils.isEmpty(map), errorEnum, params);
     }
 
     /**
