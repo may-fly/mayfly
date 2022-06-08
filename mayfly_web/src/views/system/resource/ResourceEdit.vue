@@ -13,7 +13,7 @@
                     </el-col>
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb10">
                         <el-form-item prop="name" label="名称" required>
-                            <el-input v-model.trim="form.name" placeholder="资源名[菜单名]" auto-complete="off" style="width:100%"></el-input>
+                            <el-input v-model.trim="form.name" placeholder="资源名[菜单名]" auto-complete="off" style="width: 100%"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb10">
@@ -28,7 +28,7 @@
                     </el-col>
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb10">
                         <el-form-item v-if="form.type === enums.ResourceTypeEnum.MENU.value" label="图标">
-                            <icon-selector v-model="form.meta.icon" type="ele"/>
+                            <icon-selector v-model="form.meta.icon" type="ele" />
                         </el-form-item>
                     </el-col>
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb10">
@@ -70,21 +70,19 @@
                         </el-form-item>
                     </el-col>
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb10">
-                        <el-form-item
-                            v-if="form.type === enums.ResourceTypeEnum.MENU.value && form.meta.isIframe"
-                            prop="code"
-                            label="iframe地址"
-                        >
+                        <el-form-item v-if="form.type === enums.ResourceTypeEnum.MENU.value && form.meta.isIframe" prop="code" label="iframe地址">
                             <el-input v-model.trim="form.meta.link" placeholder="请输入iframe url"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
             </el-form>
 
-            <div style="text-align: center" class="dialog-footer mt10">
-                <el-button type="primary" :loading="btnLoading" @click="btnOk">确 定</el-button>
-                <el-button @click="cancel()">取 消</el-button>
-            </div>
+            <template #footer>
+                <div>
+                    <el-button @click="cancel()">取 消</el-button>
+                    <el-button type="primary" :loading="btnLoading" @click="btnOk">确 定</el-button>
+                </div>
+            </template>
         </el-dialog>
     </div>
 </template>
@@ -281,12 +279,7 @@ export default defineComponent({
 
         const cancel = () => {
             emit('update:visible', false);
-            setTimeout(() => {
-                emit('cancel');
-                menuForm.value.resetFields();
-                //  重置对象属性为null
-                state.form = {} as any;
-            }, 200);
+            emit('cancel');
         };
 
         return {

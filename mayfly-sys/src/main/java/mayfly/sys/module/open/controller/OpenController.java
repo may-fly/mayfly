@@ -10,7 +10,6 @@ import mayfly.core.util.HttpUtils;
 import mayfly.core.util.JsonUtils;
 import mayfly.core.util.MapUtils;
 import mayfly.core.util.PlaceholderResolver;
-import mayfly.sys.config.MailProperties;
 import mayfly.sys.module.open.controller.form.AccountLoginForm;
 import mayfly.sys.module.open.controller.vo.CaptchaVO;
 import mayfly.sys.module.open.service.OpenService;
@@ -55,8 +54,6 @@ public class OpenController {
     private OpenService openService;
     @Autowired
     private OperationLogService operationLogService;
-    @Autowired
-    private MailProperties mailProperties;
 
     //    @NeedSign()
     @GetMapping("/captcha")
