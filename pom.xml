@@ -32,7 +32,7 @@
         <mybatis.pagehelper.version>1.2.3</mybatis.pagehelper.version>
         <mysql.connector.version>8.0.16</mysql.connector.version>
         <alibaba.druid.version>1.1.22</alibaba.druid.version>
-        <alibaba.fastjson.version>1.2.54</alibaba.fastjson.version>
+        <alibaba.fastjson.version>1.2.83</alibaba.fastjson.version>
         <lombok.version>1.18.16</lombok.version>
         <mail.version>1.6.2</mail.version>
         <junit.version>4.13.1</junit.version>
