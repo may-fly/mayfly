@@ -46,13 +46,13 @@ public class RoleController {
 
     @GetMapping()
     public PageResult<RoleDO> list(RoleQuery query) {
-        return roleService.listByCondition(BeanUtils.copyProperties(query, RoleDO.class), query);
+        return roleService.listByCondition(BeanUtils.copy(query, RoleDO.class), query);
     }
 
     @Log("新建角色")
     @PostMapping()
     public int add(@Valid @RequestBody RoleForm roleForm) {
-        RoleDO role = BeanUtils.copyProperties(roleForm, RoleDO.class);
+        RoleDO role = BeanUtils.copy(roleForm, RoleDO.class);
         role.setStatus(EnableDisableEnum.ENABLE.getValue());
         return roleService.insert(role);
     }
@@ -61,7 +61,7 @@ public class RoleController {
     @PutMapping("/{id}")
     public void update(@PathVariable Long id, @Valid @RequestBody RoleForm roleForm) {
         roleForm.setId(id);
-        roleService.update(BeanUtils.copyProperties(roleForm, RoleDO.class));
+        roleService.update(BeanUtils.copy(roleForm, RoleDO.class));
     }
 
     @Log("删除角色")

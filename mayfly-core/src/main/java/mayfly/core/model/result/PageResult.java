@@ -160,7 +160,7 @@ public class PageResult<T> {
      * @return 分页对象
      */
     public static <T> PageResult<T> with(Long total, List<?> data, Class<T> toType) {
-        return with(total, BeanUtils.copyProperties(data, toType));
+        return with(total, BeanUtils.copy(data, toType));
     }
 
     /**

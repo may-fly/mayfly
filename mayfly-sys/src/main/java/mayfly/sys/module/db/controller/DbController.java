@@ -40,7 +40,7 @@ public class DbController {
 
     @GetMapping()
     public List<DbVO> getDbs() {
-        return BeanUtils.copyProperties(dbService.listAll(), DbVO.class);
+        return BeanUtils.copy(dbService.listAll(), DbVO.class);
     }
 
     @GetMapping("/{dbId}/t-metadata")

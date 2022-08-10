@@ -59,7 +59,7 @@ public class RedisServiceImpl extends BaseServiceImpl<RedisMapper, Long, RedisDO
 
     @Override
     public void saveNode(RedisForm redisForm) {
-        RedisDO redis = BeanUtils.copyProperties(redisForm, RedisDO.class);
+        RedisDO redis = BeanUtils.copy(redisForm, RedisDO.class);
         // 测试连接
         RedisConnectionRegistry.RedisConnection redisConnection = RedisConnectionRegistry.RedisConnection.connectStandalone(toRedisInfo(redis));
         redisConnection.close();

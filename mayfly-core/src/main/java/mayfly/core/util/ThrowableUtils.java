@@ -1,5 +1,6 @@
 package mayfly.core.util;
 
+import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
@@ -23,6 +24,7 @@ public final class ThrowableUtils {
 
     /**
      * 获取指定层级堆栈信心
+     * 实现参照 {@link  Throwable#printStackTrace(PrintStream)}
      *
      * @param e     异常信息
      * @param level 堆栈层级
@@ -42,6 +44,7 @@ public final class ThrowableUtils {
 
     /**
      * 获取以指定包名为前缀的堆栈信息
+     * 实现参照 {@link  Throwable#printStackTrace(PrintStream)}
      *
      * @param e             异常
      * @param packagePrefix 包前缀

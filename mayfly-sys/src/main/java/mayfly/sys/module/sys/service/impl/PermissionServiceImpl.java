@@ -73,7 +73,7 @@ public class PermissionServiceImpl implements PermissionService {
         LoginAccount loginAccount = LoginAccount.create(account.getId()).username(account.getUsername()).permissions(permissionCodes);
         loginAccountRegistryHandler.saveLoginAccount(token, loginAccount, CacheKey.SESSION_EXPIRE_TIME, TimeUnit.MINUTES);
 
-        return LoginSuccessVO.builder().admin(BeanUtils.copyProperties(account, AccountVO.class))
+        return LoginSuccessVO.builder().admin(BeanUtils.copy(account, AccountVO.class))
                 .token(token).menus(TreeUtils.generateTrees(menus)).codes(permissionCodes).build();
     }
 

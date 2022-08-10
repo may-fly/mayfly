@@ -58,7 +58,7 @@ public class RedisController {
     @PostMapping("/{cluster}/{id}/value")
     public Result<?> addKeyValue(@PathVariable Boolean cluster, @PathVariable Long id, @Valid KeyValueForm keyValue) {
         BaseRedisCommands<String, byte[]> cmds = cluster ? redisService.getClusterCmds(id) : redisService.getCmds(id);
-        KeyValueCommand.addKeyValue(cmds, BeanUtils.copyProperties(keyValue, KeyInfo.class));
+        KeyValueCommand.addKeyValue(cmds, BeanUtils.copy(keyValue, KeyInfo.class));
         return Result.success();
     }
 

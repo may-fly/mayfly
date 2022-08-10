@@ -94,7 +94,7 @@ public class AccountController {
 
     @GetMapping("/{id}/roles")
     public List<AccountRoleVO> roles(@PathVariable Long id) {
-        return BeanUtils.copyProperties(accountRoleService.listRoleByAccountId(id), AccountRoleVO.class);
+        return BeanUtils.copy(accountRoleService.listRoleByAccountId(id), AccountRoleVO.class);
     }
 
     @GetMapping("/{id}/resources")

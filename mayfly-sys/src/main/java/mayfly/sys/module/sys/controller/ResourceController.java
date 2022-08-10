@@ -47,14 +47,14 @@ public class ResourceController {
 
     @GetMapping("/{id}")
     public ResourceDetailVO detail(@PathVariable Long id) {
-        return BeanUtils.copyProperties(resourceService.getById(id), ResourceDetailVO.class);
+        return BeanUtils.copy(resourceService.getById(id), ResourceDetailVO.class);
     }
 
     @Permission
     @PostMapping()
     @Log("新增资源")
     public void add(@RequestBody @Valid ResourceForm resourceForm) {
-        ResourceDO resource = BeanUtils.copyProperties(resourceForm, ResourceDO.class);
+        ResourceDO resource = BeanUtils.copy(resourceForm, ResourceDO.class);
         if (ResourceTypeEnum.MENU.getValue().equals(resourceForm.getType())) {
             BizAssert.notNull(resourceForm.getMeta(), "菜单元数据不能为空");
             resource.setMeta(JsonUtils.toJSONString(resourceForm.getMeta()));
@@ -66,7 +66,7 @@ public class ResourceController {
     @Log("更新资源信息")
     @PutMapping("/{id}")
     public void update(@PathVariable Long id, @RequestBody @Valid ResourceForm resourceForm) {
-        ResourceDO resource = BeanUtils.copyProperties(resourceForm, ResourceDO.class);
+        ResourceDO resource = BeanUtils.copy(resourceForm, ResourceDO.class);
         if (ResourceTypeEnum.MENU.getValue().equals(resourceForm.getType())) {
             BizAssert.notNull(resourceForm.getMeta(), "菜单元数据不能为空");
             resource.setMeta(JsonUtils.toJSONString(resourceForm.getMeta()));

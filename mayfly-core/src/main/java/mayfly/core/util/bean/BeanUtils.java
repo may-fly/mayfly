@@ -1,5 +1,7 @@
 package mayfly.core.util.bean;
 
+import com.github.dozermapper.core.DozerBeanMapperBuilder;
+import com.github.dozermapper.core.Mapper;
 import mayfly.core.util.Assert;
 import mayfly.core.util.CollectionUtils;
 import mayfly.core.util.ObjectUtils;
@@ -39,6 +41,8 @@ public class BeanUtils {
     @SuppressWarnings("all")
     private static Map<Class<? extends FieldValueConverter>, FieldValueConverter> converterCache = Collections.synchronizedMap(new WeakHashMap<>(8));
 
+    private static final Mapper DEFAULT_MAPPER = DozerBeanMapperBuilder.buildDefault();
+
     /**
      * 实例化对象
      *
@@ -70,29 +74,25 @@ public class BeanUtils {
         }
     }
 
-    public static void copyProperties(Object source, Object target) {
-        org.springframework.beans.BeanUtils.copyProperties(source, target);
+    public static void copy(Object source, Object target) {
+        if (source == null) {
+            return;
+        }
+        DEFAULT_MAPPER.map(source, target);
     }
 
-    public static <T> T copyProperties(Object source, Class<T> targetClass) {
+    public static <T> T copy(Object source, Class<T> targetClass) {
         if (source == null) {
             return null;
         }
-        T target;
-        try {
-            target = instantiate(targetClass);
-            copyProperties(source, target);
-        } catch (Exception e) {
-            throw new IllegalArgumentException(e);
-        }
-        return target;
+        return DEFAULT_MAPPER.map(source, targetClass);
     }
 
-    public static <T> List<T> copyProperties(List<?> source, Class<T> targetClass) {
+    public static <T> List<T> copy(List<?> source, Class<T> targetClass) {
         if (CollectionUtils.isEmpty(source)) {
             return Collections.emptyList();
         }
-        return source.stream().map(s -> copyProperties(s, targetClass)).collect(Collectors.toList());
+        return source.stream().map(s -> copy(s, targetClass)).collect(Collectors.toList());
     }
 
     /**

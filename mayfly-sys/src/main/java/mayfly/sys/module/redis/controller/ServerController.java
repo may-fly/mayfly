@@ -42,8 +42,8 @@ public class ServerController {
     @Log(value = "获取redis列表", level = Log.Level.DEBUG)
     @GetMapping()
     public Result<?> list(RedisForm query) {
-        return Result.success(BeanUtils.copyProperties(redisService
-                .listByCondition(BeanUtils.copyProperties(query, RedisDO.class)), RedisVO.class));
+        return Result.success(BeanUtils.copy(redisService
+                .listByCondition(BeanUtils.copy(query, RedisDO.class)), RedisVO.class));
     }
 
     @PostMapping()

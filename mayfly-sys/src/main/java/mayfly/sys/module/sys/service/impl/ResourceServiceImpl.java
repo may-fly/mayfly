@@ -42,12 +42,12 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourceMapper, Long, R
 
     @Override
     public List<ResourceListVO> listByAccountId(Long userId) {
-        return BeanUtils.copyProperties(mapper.selectByAccountId(userId), ResourceListVO.class);
+        return BeanUtils.copy(mapper.selectByAccountId(userId), ResourceListVO.class);
     }
 
     @Override
     public List<ResourceListVO> listResource() {
-        return TreeUtils.generateTrees(BeanUtils.copyProperties(listAll("pid ASC, weight ASC"),
+        return TreeUtils.generateTrees(BeanUtils.copy(listAll("pid ASC, weight ASC"),
                 ResourceListVO.class));
     }
 

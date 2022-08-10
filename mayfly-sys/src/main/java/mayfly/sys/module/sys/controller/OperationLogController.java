@@ -28,6 +28,6 @@ public class OperationLogController {
     @Permission
     @GetMapping
     public PageResult<OperationLogDO> list(OperationLogQuery query) {
-        return operationLogService.listByCondition(BeanUtils.copyProperties(query, OperationLogDO.class), query);
+        return operationLogService.listByCondition(BeanUtils.copy(query, OperationLogDO.class), query);
     }
 }

@@ -83,7 +83,7 @@ public class MachineFileServiceImpl extends BaseServiceImpl<MachineFileMapper, L
         String res = machineService.exec(machineId, isFile ? ShellCmd.fileExist(form.getPath()) : ShellCmd.directoryExist(form.getPath()));
         BizAssert.equals(res, "1\n", () -> isFile ? "该文件不存在" : "该目录不存在");
 
-        MachineFileDO file = BeanUtils.copyProperties(form, MachineFileDO.class);
+        MachineFileDO file = BeanUtils.copy(form, MachineFileDO.class);
         file.setMachineId(machineId);
         file.setCreateTime(LocalDateTime.now());
         insert(file);

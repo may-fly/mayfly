@@ -51,7 +51,7 @@ public class MachineServiceImpl extends BaseServiceImpl<MachineMapper, Long, Mac
             throw BizAssert.newException("信息不正确：" + e.getMessage());
         }
 
-        MachineDO machine = BeanUtils.copyProperties(form, MachineDO.class);
+        MachineDO machine = BeanUtils.copy(form, MachineDO.class);
         insert(machine);
     }
 

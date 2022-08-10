@@ -57,7 +57,7 @@ public class AccountServiceImpl extends BaseServiceImpl<AccountMapper, Long, Acc
     public void create(AccountForm accountForm) {
         BizAssert.equals(countByCondition(new AccountDO().setUsername(accountForm.getUsername())), 0L,
                 "该用户名已存在");
-        AccountDO account = BeanUtils.copyProperties(accountForm, AccountDO.class);
+        AccountDO account = BeanUtils.copy(accountForm, AccountDO.class);
         account.setPassword(DigestUtils.md5DigestAsHex(accountForm.getPassword()));
         // 默认启用状态
         account.setStatus(EnableDisableEnum.ENABLE.getValue());
