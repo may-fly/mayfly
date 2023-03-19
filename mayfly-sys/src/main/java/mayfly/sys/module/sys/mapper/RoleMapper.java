@@ -9,5 +9,5 @@ import mayfly.sys.module.sys.entity.RoleDO;
  * @author: hml
  * @date: 2018/6/27 下午2:37
  */
-public interface RoleMapper extends BaseMapper<Long, RoleDO> {
+public interface RoleMapper extends BaseMapper<RoleDO> {
 }

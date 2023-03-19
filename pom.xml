@@ -12,7 +12,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.7.2</version>
+        <version>3.0.3</version>
     </parent>
 
     <modules>
@@ -21,7 +21,7 @@
     </modules>
 
     <properties>
-        <java.version>11</java.version>
+        <java.version>17</java.version>
         <!--项目编码以及编译版本-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>${java.version}</maven.compiler.source>
@@ -29,8 +29,9 @@
 
         <!--统一版本管理-->
         <dozer.version>6.5.2</dozer.version>
-        <mybatis.version>3.5.6</mybatis.version>
-        <mybatis.pagehelper.version>1.2.3</mybatis.pagehelper.version>
+        <mybatis.version>3.5.11</mybatis.version>
+        <mybatis-spring-boot.version>3.0.1</mybatis-spring-boot.version>
+        <mybatis.pagehelper.version>1.4.6</mybatis.pagehelper.version>
         <mysql.connector.version>8.0.28</mysql.connector.version>
         <alibaba.druid.version>1.1.22</alibaba.druid.version>
         <alibaba.fastjson.version>1.2.83</alibaba.fastjson.version>
@@ -52,6 +53,16 @@
                 <groupId>org.mybatis</groupId>
                 <artifactId>mybatis</artifactId>
                 <version>${mybatis.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mybatis.spring.boot</groupId>
+                <artifactId>mybatis-spring-boot-autoconfigure</artifactId>
+                <version>${mybatis-spring-boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <version>3.5.3.1</version>
             </dependency>
             <!--mybatis自动分页插件-->
             <dependency>

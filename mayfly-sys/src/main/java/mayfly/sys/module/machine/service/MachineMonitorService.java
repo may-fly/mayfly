@@ -11,7 +11,7 @@ import java.util.Map;
  * @version 1.0
  * @date 2019-11-04 3:04 下午
  */
-public interface MachineMonitorService extends BaseService<Long, MachineMonitorDO> {
+public interface MachineMonitorService extends BaseService<MachineMonitorDO> {
 
     /**
      * 获取并保存监控信息

@@ -31,10 +31,9 @@ import java.util.stream.Stream;
  * 通用Mapper，实现基本功能
  *
  * @author meilin.huang
- * @param <I>  主键类型
  * @param <E>  实体类型
  */
-public interface BaseMapper<I, E> {
+public interface BaseMapper<E> {
 
     /**
      * 插入新对象,并返回主键id值(id通过实体获取)
@@ -90,7 +89,7 @@ public interface BaseMapper<I, E> {
      * @return  影响条数
      */
     @DeleteProvider(type = DeleteSqlProvider.class, method = "sql")
-    int deleteByPrimaryKey(I id);
+    int deleteByPrimaryKey(Long id);
 
     /**
      * 伪删除，即将is_deleted字段更新为1
@@ -99,7 +98,7 @@ public interface BaseMapper<I, E> {
      * @return  影响条数
      */
     @UpdateProvider(type = FakeDeleteSqlProvider.class, method = "sql")
-    int fakeDeleteByPrimaryKey(I id);
+    int fakeDeleteByPrimaryKey(Long id);
 
     /**
      * 根据实体条件删除
@@ -117,7 +116,7 @@ public interface BaseMapper<I, E> {
      * @return    实体
      */
     @SelectProvider(type = SelectOneSqlProvider.class, method = "sql")
-    E selectByPrimaryKey(I id);
+    E selectByPrimaryKey(Long id);
 
     /**
      * 查询所有实体
@@ -134,7 +133,7 @@ public interface BaseMapper<I, E> {
      * @return  list
      */
     @SelectProvider(type = SelectByPrimaryKeyInSqlProvider.class, method = "sql")
-    List<E> selectByPrimaryKeyIn(@Param("ids") List<I> ids);
+    List<E> selectByPrimaryKeyIn(@Param("ids") List<Long> ids);
 
     /**
      * 根据实体条件查询符合条件的实体list
@@ -577,7 +576,7 @@ public interface BaseMapper<I, E> {
                     .map(ParameterizedType.class::cast)
                     .filter(type -> type.getRawType() == BaseMapper.class)
                     .findFirst()
-                    .map(type -> type.getActualTypeArguments()[1])
+                    .map(type -> type.getActualTypeArguments()[0])
                     .filter(Class.class::isInstance).map(Class.class::cast)
                     .orElseThrow(() -> new IllegalStateException("未找到BaseMapper的泛型类 " + mapperType.getName() + "."));
         }

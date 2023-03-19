@@ -11,7 +11,7 @@ import mayfly.sys.module.redis.entity.RedisDO;
  * @version 1.0
  * @date 2019-01-07 4:07 PM
  */
-public interface RedisService extends BaseService<Long, RedisDO> {
+public interface RedisService extends BaseService<RedisDO> {
 
     /**
      * 获取单台机器的redis命令操作对象，可以是单机版也可以是集群版

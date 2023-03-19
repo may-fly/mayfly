@@ -1,5 +1,7 @@
 package mayfly.sys.module.sys.service.impl;
 
+import jakarta.annotation.Resource;
+import mayfly.core.base.mapper.BaseMapper;
 import mayfly.core.base.service.impl.BaseServiceImpl;
 import mayfly.core.exception.BizAssert;
 import mayfly.core.util.CollectionUtils;
@@ -23,14 +25,22 @@ import java.util.stream.Collectors;
  * @date 2019-08-19 20:13
  */
 @Service
-public class AccountRoleServiceImpl extends BaseServiceImpl<AccountRoleMapper, Long, AccountRoleDO> implements AccountRoleService {
+public class AccountRoleServiceImpl extends BaseServiceImpl<AccountRoleDO> implements AccountRoleService {
+
+    @Resource
+    private AccountRoleMapper accountRoleMapper;
+
+    @Override
+    public BaseMapper<AccountRoleDO> getMapper() {
+        return accountRoleMapper;
+    }
 
     @Autowired
     private RoleService roleService;
 
     @Override
     public List<RoleDO> listRoleByAccountId(Long accountId) {
-        return mapper.selectRoleByAccountId(accountId);
+        return accountRoleMapper.selectRoleByAccountId(accountId);
     }
 
     @Override

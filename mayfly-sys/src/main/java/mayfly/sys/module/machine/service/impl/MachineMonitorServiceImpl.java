@@ -1,6 +1,8 @@
 package mayfly.sys.module.machine.service.impl;
 
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import mayfly.core.base.mapper.BaseMapper;
 import mayfly.core.base.service.impl.BaseServiceImpl;
 import mayfly.core.util.BracePlaceholder;
 import mayfly.sys.module.machine.entity.MachineDO;
@@ -22,12 +24,19 @@ import java.util.Objects;
  */
 @Slf4j
 @Service
-public class MachineMonitorServiceImpl extends BaseServiceImpl<MachineMonitorMapper, Long, MachineMonitorDO> implements MachineMonitorService {
+public class MachineMonitorServiceImpl extends BaseServiceImpl<MachineMonitorDO> implements MachineMonitorService {
 
     private static final String MONITOR_TEMP = "cpuRate:{cpuRate}%,memRate:{memRate}%,sysLoad:{sysLoad}\n";
 
     @Autowired
     private MachineService machineService;
+    @Resource
+    private MachineMonitorMapper machineMonitorMapper;
+
+    @Override
+    public BaseMapper<MachineMonitorDO> getMapper() {
+        return machineMonitorMapper;
+    }
 
     @Override
     public void getAndSaveMonitor() {
@@ -45,7 +54,7 @@ public class MachineMonitorServiceImpl extends BaseServiceImpl<MachineMonitorMap
 
     @Override
     public List<Map<String, Object>> listByQuery(Long machineId, String beginTime, String endTime) {
-        return mapper.selectByDate(machineId, beginTime, endTime);
+        return machineMonitorMapper.selectByDate(machineId, beginTime, endTime);
     }
 
     private MachineMonitorDO getMonitor(Long machineId) {

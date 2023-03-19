@@ -1,7 +1,5 @@
 package mayfly.core.util.bean;
 
-import com.github.dozermapper.core.DozerBeanMapperBuilder;
-import com.github.dozermapper.core.Mapper;
 import mayfly.core.util.Assert;
 import mayfly.core.util.CollectionUtils;
 import mayfly.core.util.ObjectUtils;
@@ -41,7 +39,7 @@ public class BeanUtils {
     @SuppressWarnings("all")
     private static Map<Class<? extends FieldValueConverter>, FieldValueConverter> converterCache = Collections.synchronizedMap(new WeakHashMap<>(8));
 
-    private static final Mapper DEFAULT_MAPPER = DozerBeanMapperBuilder.buildDefault();
+//    private static final Mapper DEFAULT_MAPPER = DozerBeanMapperBuilder.buildDefault();
 
     /**
      * 实例化对象
@@ -78,14 +76,18 @@ public class BeanUtils {
         if (source == null) {
             return;
         }
-        DEFAULT_MAPPER.map(source, target);
+        org.springframework.beans.BeanUtils.copyProperties(source, target);
+//        DEFAULT_MAPPER.map(source, target);
     }
 
     public static <T> T copy(Object source, Class<T> targetClass) {
         if (source == null) {
             return null;
         }
-        return DEFAULT_MAPPER.map(source, targetClass);
+        T target = instantiate(targetClass);
+        org.springframework.beans.BeanUtils.copyProperties(source, target);
+        return target;
+//        return DEFAULT_MAPPER.map(source, targetClass);
     }
 
     public static <T> List<T> copy(List<?> source, Class<T> targetClass) {

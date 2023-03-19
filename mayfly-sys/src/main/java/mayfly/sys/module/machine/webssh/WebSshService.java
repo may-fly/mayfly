@@ -2,6 +2,7 @@ package mayfly.sys.module.machine.webssh;
 
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelShell;
+import jakarta.websocket.Session;
 import lombok.extern.slf4j.Slf4j;
 import mayfly.core.util.JsonUtils;
 import mayfly.sys.common.utils.ssh.SSHUtils;
@@ -10,7 +11,6 @@ import mayfly.sys.module.machine.service.MachineService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.websocket.Session;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;

@@ -14,7 +14,7 @@ import java.util.Map;
  * @version 1.0
  * @date 2020-01-03 9:19 上午
  */
-public interface DbService extends BaseService<Long, DbDO> {
+public interface DbService extends BaseService<DbDO> {
 
     /**
      * 获取数据库所有表信息

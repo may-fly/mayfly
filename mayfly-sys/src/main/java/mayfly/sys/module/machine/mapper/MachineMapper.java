@@ -8,5 +8,5 @@ import mayfly.sys.module.machine.entity.MachineDO;
  * @version 1.0
  * @date 2019-11-04 3:03 下午
  */
-public interface MachineMapper extends BaseMapper<Long, MachineDO> {
+public interface MachineMapper extends BaseMapper<MachineDO> {
 }

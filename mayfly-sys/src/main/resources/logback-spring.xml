@@ -92,7 +92,7 @@
 
     <springProfile name="dev">
         <!--root logger日志级别-->
-        <root level="debug">
+        <root level="info">
             <appender-ref ref="STDOUT"/>
         </root>
 

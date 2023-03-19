@@ -1,5 +1,7 @@
 package mayfly.core.permission;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import mayfly.core.exception.BizException;
 import mayfly.core.model.result.CommonCodeEnum;
 import mayfly.core.model.result.Result;
@@ -10,8 +12,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
 
 /**

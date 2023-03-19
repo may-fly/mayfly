@@ -8,10 +8,6 @@ spring:
   main:
     allow-bean-definition-overriding: true
     allow-circular-references: true
-  http:
-    encoding:
-      charset: UTF-8
-      enabled: true
 management:
   endpoints:
     web:

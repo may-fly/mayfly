@@ -11,7 +11,7 @@ import java.util.List;
  * @version 1.0
  * @date 2019-06-30 11:58
  */
-public interface RoleResourceService extends BaseService<Long, RoleResourceDO> {
+public interface RoleResourceService extends BaseService<RoleResourceDO> {
 
     /**
      * 获取角色拥有的资源id列表

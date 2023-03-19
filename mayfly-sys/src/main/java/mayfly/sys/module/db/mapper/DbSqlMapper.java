@@ -7,5 +7,5 @@ import mayfly.sys.module.db.entity.DbSqlDO;
  * @author meilin.huang
  * @date 2021-01-08 4:16 下午
  */
-public interface DbSqlMapper extends BaseMapper<Long, DbSqlDO> {
+public interface DbSqlMapper extends BaseMapper<DbSqlDO> {
 }

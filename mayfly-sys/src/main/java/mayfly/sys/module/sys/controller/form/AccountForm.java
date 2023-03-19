@@ -2,7 +2,7 @@ package mayfly.sys.module.sys.controller.form;
 
 import lombok.Data;
 
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 
 /**
  * @author meilin.huang

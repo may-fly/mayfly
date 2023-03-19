@@ -1,8 +1,8 @@
 package mayfly.sys.common.websocket;
 
+import jakarta.websocket.Session;
 import mayfly.core.util.Assert;
 
-import javax.websocket.Session;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Objects;

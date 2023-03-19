@@ -1,5 +1,7 @@
 package mayfly.sys.module.sys.service.impl;
 
+import jakarta.annotation.Resource;
+import mayfly.core.base.mapper.BaseMapper;
 import mayfly.core.base.service.impl.BaseServiceImpl;
 import mayfly.core.exception.BizAssert;
 import mayfly.core.log.LogContext;
@@ -31,8 +33,9 @@ import java.util.Objects;
  * @date 2018/6/27 下午4:09
  */
 @Service
-public class ResourceServiceImpl extends BaseServiceImpl<ResourceMapper, Long, ResourceDO> implements ResourceService {
-
+public class ResourceServiceImpl extends BaseServiceImpl<ResourceDO> implements ResourceService {
+    @Resource
+    private ResourceMapper resourceMapper;
     @Autowired
     private RoleResourceService roleResourceService;
     @Autowired
@@ -41,8 +44,13 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourceMapper, Long, R
     private OperationLogService operationLogService;
 
     @Override
+    public BaseMapper<ResourceDO> getMapper() {
+        return resourceMapper;
+    }
+
+    @Override
     public List<ResourceListVO> listByAccountId(Long userId) {
-        return BeanUtils.copy(mapper.selectByAccountId(userId), ResourceListVO.class);
+        return BeanUtils.copy(resourceMapper.selectByAccountId(userId), ResourceListVO.class);
     }
 
     @Override

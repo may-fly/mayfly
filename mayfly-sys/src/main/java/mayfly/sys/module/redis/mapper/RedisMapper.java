@@ -8,5 +8,5 @@ import mayfly.sys.module.redis.entity.RedisDO;
  * @version 1.0
  * @date 2019-01-07 4:07 PM
  */
-public interface RedisMapper extends BaseMapper<Long, RedisDO> {
+public interface RedisMapper extends BaseMapper<RedisDO> {
 }

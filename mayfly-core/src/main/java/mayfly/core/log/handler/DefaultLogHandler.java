@@ -55,18 +55,10 @@ public class DefaultLogHandler implements LogHandler {
         }
 
         switch (invokeLog.getLevel()) {
-            case DEBUG:
-                LOG.debug(logMsg);
-                break;
-            case WARN:
-                LOG.warn(logMsg);
-                break;
-            case ERROR:
-                LOG.error(logMsg);
-                break;
-            default:
-                LOG.info(logMsg);
-                break;
+            case DEBUG -> LOG.debug(logMsg);
+            case WARN -> LOG.warn(logMsg);
+            case ERROR -> LOG.error(logMsg);
+            default -> LOG.info(logMsg);
         }
     }
 

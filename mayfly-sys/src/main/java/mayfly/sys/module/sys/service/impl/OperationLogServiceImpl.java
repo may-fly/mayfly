@@ -1,7 +1,9 @@
 package mayfly.sys.module.sys.service.impl;
 
-import mayfly.core.model.BaseDO;
+import jakarta.annotation.Resource;
+import mayfly.core.base.mapper.BaseMapper;
 import mayfly.core.base.service.impl.BaseServiceImpl;
+import mayfly.core.model.BaseDO;
 import mayfly.core.permission.LoginAccount;
 import mayfly.core.thread.GlobalThreadPool;
 import mayfly.core.util.ArrayUtils;
@@ -22,7 +24,7 @@ import java.util.stream.Collectors;
  * @date 2020-03-05 1:30 下午
  */
 @Service
-public class OperationLogServiceImpl extends BaseServiceImpl<OperationLogMapper, Long, OperationLogDO> implements OperationLogService {
+public class OperationLogServiceImpl extends BaseServiceImpl<OperationLogDO> implements OperationLogService {
 
     /**
      * 不需要记录变化的字段值
@@ -30,6 +32,13 @@ public class OperationLogServiceImpl extends BaseServiceImpl<OperationLogMapper,
     public static String[] ignoreFields = new String[]{BaseDO.UPDATE_TIME, BaseDO.MODIFIER_ID,
             BaseDO.MODIFIER, BaseDO.CREATOR, BaseDO.CREATOR_ID};
 
+    @Resource
+    private OperationLogMapper mapper;
+
+    @Override
+    public BaseMapper<OperationLogDO> getMapper() {
+        return mapper;
+    }
 
     @Override
     public void asyncLog(String log, LogTypeEnum type) {

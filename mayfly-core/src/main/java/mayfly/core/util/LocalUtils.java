@@ -1,8 +1,5 @@
 package mayfly.core.util;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 import java.net.Inet6Address;
 import java.net.InetAddress;
@@ -17,9 +14,6 @@ import java.util.regex.Pattern;
  * @date 2018-12-29 4:49 PM
  */
 public final class LocalUtils {
-
-    private static final Logger logger = LoggerFactory.getLogger(LocalUtils.class);
-
     private static final String ANYHOST_VALUE = "0.0.0.0";
     private static final String LOCALHOST_VALUE = "127.0.0.1";
     private static final Pattern IP_PATTERN = Pattern.compile("\\d{1,3}(\\.\\d{1,3}){3,5}$");
@@ -49,7 +43,7 @@ public final class LocalUtils {
      *
      * @return String
      */
-    public static String getIp(){
+    public static String getIp() {
         return getLocalAddress().getHostAddress();
     }
 
@@ -59,19 +53,19 @@ public final class LocalUtils {
      * @param port
      * @return String
      */
-    public static String getIpPort(int port){
+    public static String getIpPort(int port) {
         String ip = getIp();
         return getIpPort(ip, port);
     }
 
-    public static String getIpPort(String ip, int port){
+    public static String getIpPort(String ip, int port) {
         if (ip == null) {
             return null;
         }
         return ip.concat(":").concat(String.valueOf(port));
     }
 
-    public static Object[] parseIpPort(String address){
+    public static Object[] parseIpPort(String address) {
         String[] array = address.split(":");
 
         String host = array[0];
@@ -140,7 +134,7 @@ public final class LocalUtils {
                 return InetAddress.getByName(addr.substring(0, i) + '%' + address.getScopeId());
             } catch (UnknownHostException e) {
                 // ignore
-                logger.debug("Unknown IPV6 address: ", e);
+                throw new RuntimeException(e);
             }
         }
         return address;
@@ -158,7 +152,7 @@ public final class LocalUtils {
                 return addressItem;
             }
         } catch (Throwable e) {
-            logger.error(e.getMessage(), e);
+            throw new RuntimeException(e);
         }
 
         try {
@@ -175,7 +169,7 @@ public final class LocalUtils {
                             InetAddress addressItem = toValidAddress(addresses.nextElement());
                             if (addressItem != null) {
                                 try {
-                                    if(addressItem.isReachable(100)){
+                                    if (addressItem.isReachable(100)) {
                                         return addressItem;
                                     }
                                 } catch (IOException e) {
@@ -183,15 +177,15 @@ public final class LocalUtils {
                                 }
                             }
                         } catch (Throwable e) {
-                            logger.error(e.getMessage(), e);
+                            throw new RuntimeException(e);
                         }
                     }
                 } catch (Throwable e) {
-                    logger.error(e.getMessage(), e);
+                    throw new RuntimeException(e);
                 }
             }
         } catch (Throwable e) {
-            logger.error(e.getMessage(), e);
+            throw new RuntimeException(e);
         }
         return localAddress;
     }

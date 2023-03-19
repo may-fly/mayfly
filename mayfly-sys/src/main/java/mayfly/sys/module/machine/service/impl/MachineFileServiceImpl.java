@@ -1,5 +1,6 @@
 package mayfly.sys.module.machine.service.impl;
 
+import mayfly.core.base.mapper.BaseMapper;
 import mayfly.core.base.service.impl.BaseServiceImpl;
 import mayfly.core.exception.BizAssert;
 import mayfly.core.permission.LoginAccount;
@@ -35,7 +36,7 @@ import java.util.Objects;
  * @date 2019-11-04 3:04 下午
  */
 @Service
-public class MachineFileServiceImpl extends BaseServiceImpl<MachineFileMapper, Long, MachineFileDO> implements MachineFileService {
+public class MachineFileServiceImpl extends BaseServiceImpl<MachineFileDO> implements MachineFileService {
 
     public static char file = '-';
     public static char directory = 'd';
@@ -49,6 +50,10 @@ public class MachineFileServiceImpl extends BaseServiceImpl<MachineFileMapper, L
     @Autowired
     private OperationLogService operationLogService;
 
+    @Override
+    public BaseMapper<MachineFileDO> getMapper() {
+        return machineFileMapper;
+    }
 
     @Override
     public List<MachineFileDO> listByMachineId(Long machineId) {

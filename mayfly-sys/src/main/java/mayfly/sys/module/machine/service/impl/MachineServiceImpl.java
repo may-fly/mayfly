@@ -1,8 +1,10 @@
 package mayfly.sys.module.machine.service.impl;
 
 import com.jcraft.jsch.Session;
+import jakarta.annotation.Resource;
 import lombok.Data;
 import lombok.experimental.Accessors;
+import mayfly.core.base.mapper.BaseMapper;
 import mayfly.core.base.service.impl.BaseServiceImpl;
 import mayfly.core.exception.BizAssert;
 import mayfly.core.util.ArrayUtils;
@@ -33,12 +35,20 @@ import java.util.concurrent.ConcurrentHashMap;
  * @date 2019-11-04 3:04 下午
  */
 @Service
-public class MachineServiceImpl extends BaseServiceImpl<MachineMapper, Long, MachineDO> implements MachineService {
+public class MachineServiceImpl extends BaseServiceImpl<MachineDO> implements MachineService {
 
     private static final Map<String, String> SHELL_CACHE = new ConcurrentHashMap<>();
 
+    @Resource
+    private MachineMapper machineMapper;
+
     @Autowired
     private MachineFileService machineFileService;
+
+    @Override
+    public BaseMapper<MachineDO> getMapper() {
+        return machineMapper;
+    }
 
     @Override
     public void create(MachineForm form) {

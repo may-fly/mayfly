@@ -15,7 +15,7 @@ import java.util.List;
  * @version 1.0
  * @date 2018-12-06 2:19 PM
  */
-public interface BaseService<T, E extends BaseDO> {
+public interface BaseService<E extends BaseDO> {
 
     /**
      * 根据主键查询数据
@@ -23,7 +23,7 @@ public interface BaseService<T, E extends BaseDO> {
      * @param id  id
      * @return    实体
      */
-    E getById(T id);
+    E getById(Long id);
 
     /**
      * 保存实体同时自动更新基本信息，如创建时间、创建人等 <br/>
@@ -74,14 +74,14 @@ public interface BaseService<T, E extends BaseDO> {
      * @param id   id
      * @return  影响条数
      */
-    int deleteById(T id);
+    int deleteById(Long id);
 
     /**
      * 伪删除（即将is_deleted更新为1）
      * @param id  实体id
      * @return     影响条数
      */
-    int fakeDeleteById(T id);
+    int fakeDeleteById(Long id);
 
     /**
      * 根据条件删除
@@ -120,7 +120,7 @@ public interface BaseService<T, E extends BaseDO> {
      * @param ids  id列表
      * @return      list
      */
-    List<E> listByIdIn(List<T> ids);
+    List<E> listByIdIn(List<Long> ids);
 
     /**
      * 根据实体条件查询实体列表

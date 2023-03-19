@@ -1,5 +1,7 @@
 package mayfly.sys.module.db.service.impl;
 
+import jakarta.annotation.Resource;
+import mayfly.core.base.mapper.BaseMapper;
 import mayfly.core.base.service.impl.BaseServiceImpl;
 import mayfly.core.exception.BizAssert;
 import mayfly.core.util.StringUtils;
@@ -26,7 +28,15 @@ import java.util.Map;
  * @date 2021-01-07 4:46 下午
  */
 @Service
-public class DbServiceImpl extends BaseServiceImpl<DbMapper, Long, DbDO> implements DbService {
+public class DbServiceImpl extends BaseServiceImpl<DbDO> implements DbService {
+
+    @Resource
+    private DbMapper dbMapper;
+    @Override
+    public BaseMapper<DbDO> getMapper() {
+        return dbMapper;
+    }
+
     @Override
     public List<TableVO> listTable(Long dbId) {
         DbConn dc = getConnection(dbId);

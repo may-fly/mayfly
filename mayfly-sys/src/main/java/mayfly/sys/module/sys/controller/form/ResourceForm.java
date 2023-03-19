@@ -7,9 +7,9 @@ import mayfly.core.log.annotation.LogChange;
 import mayfly.core.validation.annotation.EnumValue;
 import mayfly.sys.module.sys.enums.ResourceTypeEnum;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import java.util.Map;
 
 /**

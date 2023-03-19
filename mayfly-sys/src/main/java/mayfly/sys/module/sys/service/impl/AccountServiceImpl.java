@@ -1,5 +1,7 @@
 package mayfly.sys.module.sys.service.impl;
 
+import jakarta.annotation.Resource;
+import mayfly.core.base.mapper.BaseMapper;
 import mayfly.core.base.service.impl.BaseServiceImpl;
 import mayfly.core.exception.BizAssert;
 import mayfly.core.model.result.PageResult;
@@ -24,17 +26,23 @@ import org.springframework.stereotype.Service;
  * @date 2019-07-06 14:57
  */
 @Service
-public class AccountServiceImpl extends BaseServiceImpl<AccountMapper, Long, AccountDO> implements AccountService {
+public class AccountServiceImpl extends BaseServiceImpl<AccountDO> implements AccountService {
 
+    @Resource
+    private AccountMapper accountMapper;
     @Autowired
     private AccountRoleService accountRoleService;
     @Autowired
     private PermissionService permissionService;
 
+    @Override
+    public BaseMapper<AccountDO> getMapper() {
+        return accountMapper;
+    }
 
     @Override
     public PageResult<AccountVO> listByQuery(AccountQuery query) {
-        return PageResult.withPageHelper(query, () -> mapper.selectByQuery(query), AccountVO.class);
+        return PageResult.withPageHelper(query, () -> accountMapper.selectByQuery(query), AccountVO.class);
     }
 
     @Override

@@ -3,9 +3,9 @@ package mayfly.core.validation;
 import mayfly.core.constant.PatternConst;
 import mayfly.core.util.CollectionUtils;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.Validator;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
 import java.util.Set;
 import java.util.regex.Pattern;
 

@@ -2,6 +2,7 @@ package mayfly.sys.module.redis.service.impl;
 
 import io.lettuce.core.api.sync.RedisCommands;
 import io.lettuce.core.cluster.api.sync.RedisClusterCommands;
+import mayfly.core.base.mapper.BaseMapper;
 import mayfly.core.base.service.impl.BaseServiceImpl;
 import mayfly.core.exception.BizAssert;
 import mayfly.core.util.Assert;
@@ -25,11 +26,15 @@ import java.util.stream.Collectors;
  * @date 2019-01-07 4:08 PM
  */
 @Service
-public class RedisServiceImpl extends BaseServiceImpl<RedisMapper, Long, RedisDO> implements RedisService {
+public class RedisServiceImpl extends BaseServiceImpl<RedisDO> implements RedisService {
 
     @Autowired
     private RedisMapper redisMapper;
 
+    @Override
+    public BaseMapper<RedisDO> getMapper() {
+        return redisMapper;
+    }
 
     private RedisConnectionRegistry registry = RedisConnectionRegistry.getInstance();
 

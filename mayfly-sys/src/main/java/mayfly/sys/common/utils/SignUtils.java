@@ -1,9 +1,9 @@
 package mayfly.sys.common.utils;
 
 
+import jakarta.servlet.http.HttpServletRequest;
 import mayfly.core.util.ArrayUtils;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;

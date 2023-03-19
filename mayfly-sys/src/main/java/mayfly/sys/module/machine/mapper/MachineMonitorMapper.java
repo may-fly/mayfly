@@ -1,7 +1,6 @@
 package mayfly.sys.module.machine.mapper;
 
 import mayfly.core.base.mapper.BaseMapper;
-import mayfly.sys.module.machine.entity.MachineDO;
 import mayfly.sys.module.machine.entity.MachineMonitorDO;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -14,7 +13,7 @@ import java.util.Map;
  * @version 1.0
  * @date 2019-11-04 3:03 下午
  */
-public interface MachineMonitorMapper extends BaseMapper<Long, MachineMonitorDO> {
+public interface MachineMonitorMapper extends BaseMapper<MachineMonitorDO> {
 
     @Select("<script>" +
             "SELECT " +

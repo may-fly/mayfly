@@ -12,7 +12,7 @@ import java.util.List;
  * @author hml
  * @date 2018/6/27 下午2:36
  */
-public interface ResourceMapper extends BaseMapper<Long, ResourceDO> {
+public interface ResourceMapper extends BaseMapper<ResourceDO> {
 
     @Select("SELECT m.id, m.pid, m.weight, m.name, m.code, m.type, m.status, m.meta " +
             "FROM t_resource m WHERE " +

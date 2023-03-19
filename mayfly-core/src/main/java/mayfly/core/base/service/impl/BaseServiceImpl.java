@@ -1,40 +1,32 @@
 package mayfly.core.base.service.impl;
 
-
 import mayfly.core.base.mapper.BaseMapper;
+import mayfly.core.base.service.BaseService;
 import mayfly.core.model.BaseDO;
 import mayfly.core.model.PageQuery;
 import mayfly.core.model.result.PageResult;
-import mayfly.core.base.service.BaseService;
 import mayfly.core.util.CollectionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Collections;
 import java.util.List;
 
 /**
- * @param <M> mapper类型
- * @param <T> 主键类型
  * @param <E> 实体类型
- *
  * @author meilin.huang
  * @version 1.0
  * @date 2018-12-06 2:21 PM
  */
-public class BaseServiceImpl<M extends BaseMapper<T, E>, T, E extends BaseDO> implements BaseService<T, E> {
+public abstract class BaseServiceImpl<E extends BaseDO> implements BaseService<E> {
 
     /**
-     * 实体Mapper，子服务类无需再注入本实体的Mapper，如需要直接调用本类mapper即可
+     * 获取服务对应的mapper
+     *
+     * @return BaseMapper
      */
-    @Autowired
-    protected M mapper;
-
-    protected void setMapper(M mapper) {
-        this.mapper = mapper;
-    }
+    public abstract BaseMapper<E> getMapper();
 
     @Override
-    public E getById(T id) {
+    public E getById(Long id) {
         if (id == null) {
             return null;
         }
@@ -42,7 +34,7 @@ public class BaseServiceImpl<M extends BaseMapper<T, E>, T, E extends BaseDO> im
     }
 
     @Override
-    public List<E> listByIdIn(List<T> ids) {
+    public List<E> listByIdIn(List<Long> ids) {
         if (CollectionUtils.isEmpty(ids)) {
             return Collections.emptyList();
         }
@@ -97,7 +89,7 @@ public class BaseServiceImpl<M extends BaseMapper<T, E>, T, E extends BaseDO> im
     }
 
     @Override
-    public int deleteById(T id) {
+    public int deleteById(Long id) {
         if (id == null) {
             return 0;
         }
@@ -105,7 +97,7 @@ public class BaseServiceImpl<M extends BaseMapper<T, E>, T, E extends BaseDO> im
     }
 
     @Override
-    public int fakeDeleteById(T id) {
+    public int fakeDeleteById(Long id) {
         if (id == null) {
             return 0;
         }
@@ -130,10 +122,5 @@ public class BaseServiceImpl<M extends BaseMapper<T, E>, T, E extends BaseDO> im
     @Override
     public List<E> listAll() {
         return getMapper().selectAll("id DESC");
-    }
-
-
-    protected BaseMapper<T, E> getMapper() {
-        return mapper;
     }
 }

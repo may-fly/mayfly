@@ -1,5 +1,7 @@
 package mayfly.sys.module.sys.service.impl;
 
+import jakarta.annotation.Resource;
+import mayfly.core.base.mapper.BaseMapper;
 import mayfly.core.base.service.impl.BaseServiceImpl;
 import mayfly.core.exception.BizAssert;
 import mayfly.core.log.annotation.Log;
@@ -22,8 +24,9 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Log("角色管理:")
 @Service
-public class RoleServiceImpl extends BaseServiceImpl<RoleMapper, Long, RoleDO> implements RoleService {
-
+public class RoleServiceImpl extends BaseServiceImpl<RoleDO> implements RoleService {
+    @Resource
+    private RoleMapper roleMapper;
     @Autowired
     private RoleResourceService roleResourceService;
     @Autowired
@@ -31,6 +34,10 @@ public class RoleServiceImpl extends BaseServiceImpl<RoleMapper, Long, RoleDO> i
     @Autowired
     private OperationLogService logService;
 
+    @Override
+    public BaseMapper<RoleDO> getMapper() {
+        return roleMapper;
+    }
 
     @Override
     public void update(RoleDO role) {

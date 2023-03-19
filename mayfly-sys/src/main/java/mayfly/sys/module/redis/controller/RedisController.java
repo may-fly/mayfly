@@ -2,10 +2,11 @@ package mayfly.sys.module.redis.controller;
 
 import io.lettuce.core.api.sync.BaseRedisCommands;
 import io.lettuce.core.api.sync.RedisKeyCommands;
+import jakarta.validation.Valid;
 import mayfly.core.log.annotation.Log;
 import mayfly.core.model.result.CommonCodeEnum;
-import mayfly.core.permission.Permission;
 import mayfly.core.model.result.Result;
+import mayfly.core.permission.Permission;
 import mayfly.core.util.StringUtils;
 import mayfly.core.util.bean.BeanUtils;
 import mayfly.sys.module.redis.commands.KeyInfo;
@@ -21,8 +22,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.validation.Valid;
 
 /**
  * @author meilin.huang

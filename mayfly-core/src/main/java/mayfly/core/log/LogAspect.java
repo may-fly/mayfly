@@ -93,6 +93,7 @@ public class LogAspect implements ApplicationContextAware {
         }
 
         InvokeLog invokeLog = InvokeLog.newInstance()
+                .level(level)
                 .method(method)
                 // 过滤掉不需要记录的参数
                 .args(getArgs(method, pjp.getArgs()));
@@ -103,7 +104,6 @@ public class LogAspect implements ApplicationContextAware {
             invokeLog.res(result)
                     // 执行时间
                     .execTime(System.currentTimeMillis() - startTime)
-                    .level(level)
                     // 是否需要记录执行结果
                     .logRes(method.getReturnType() != Void.TYPE && logInfo.getResLevel().order() >= sysLevel)
                     // 字段值变化列表

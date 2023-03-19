@@ -1,9 +1,7 @@
 package mayfly.sys.module.redis.controller.vo;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
-
-import javax.validation.constraints.NotBlank;
-
 
 /**
  * @author meilin.huang

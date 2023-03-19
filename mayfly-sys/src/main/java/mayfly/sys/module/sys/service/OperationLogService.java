@@ -10,7 +10,7 @@ import mayfly.sys.module.sys.enums.LogTypeEnum;
  * @author meilin.huang
  * @date 2020-03-05 1:29 下午
  */
-public interface OperationLogService extends BaseService<Long, OperationLogDO> {
+public interface OperationLogService extends BaseService<OperationLogDO> {
 
     /**
      * 异步记录日志

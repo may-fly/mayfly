@@ -1,10 +1,10 @@
 package mayfly.core.web;
 
+import jakarta.servlet.http.HttpServletResponse;
 import mayfly.core.exception.BizAssert;
 import mayfly.core.util.IOUtils;
 import mayfly.core.util.JsonUtils;
 
-import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;

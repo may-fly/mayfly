@@ -1,7 +1,5 @@
 package mayfly.core.util;
 
-import org.springframework.lang.Nullable;
-
 /**
  * @author meilin.huang
  * @version 1.0

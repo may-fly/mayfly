@@ -20,7 +20,7 @@ import java.util.function.Function;
  * @version 1.0
  * @date 2019-11-04 3:04 下午
  */
-public interface MachineService extends BaseService<Long, MachineDO> {
+public interface MachineService extends BaseService<MachineDO> {
 
     /**
      * 保存新增的机器信息

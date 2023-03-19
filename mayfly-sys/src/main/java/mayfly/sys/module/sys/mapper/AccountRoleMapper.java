@@ -12,7 +12,7 @@ import java.util.List;
  * @version 1.0
  * @date 2019-08-19 20:13
  */
-public interface AccountRoleMapper extends BaseMapper<Long, AccountRoleDO> {
+public interface AccountRoleMapper extends BaseMapper<AccountRoleDO> {
 
     @Select("SELECT r.status, r.name, ar.create_time AS createTime, ar.creator AS creator " +
             "FROM t_role r JOIN t_account_role ar ON r.id = ar.role_id AND ar.account_id = #{accountId} " +
